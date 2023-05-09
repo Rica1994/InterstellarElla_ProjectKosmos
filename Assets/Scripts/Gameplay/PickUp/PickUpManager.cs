@@ -5,10 +5,9 @@ using UnityEngine;
 public class PickUpManager : Service
 {
     private List<PickUp> _pickUps = new List<PickUp>();
-    private List<PickUp> _ellaPickUps = new List<PickUp>();
     
     private int _pickUpsPickedUp = 0;
-    private int _ellaPickUpsPickedUp = 0;
+    private string _foundEllaPickUps;
     
     private void Awake()
     {
@@ -30,7 +29,7 @@ public class PickUpManager : Service
 
     private void OnPickUpPickedUp(PickUp pickup)
     {
-        if (pickup.IsSpecial) _ellaPickUpsPickedUp++;
+        if (pickup as EllaPickUp) _foundEllaPickUps += ((EllaPickUp)pickup).Letter;
         else _pickUpsPickedUp++;
     }
 }

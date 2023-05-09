@@ -8,7 +8,6 @@ public class PickUp : MonoBehaviour
 {
     public delegate void PickUpCallback(PickUp pickUp);
     public event PickUpCallback OnPickUp;
-    public bool IsSpecial = false;
     
     private void Awake()
     {
