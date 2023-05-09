@@ -12,6 +12,11 @@ public class InputChainAction : ChainAction
         base.Execute();
     }
 
+    private void OnValidate()
+    {
+        _useUserBasedAction = true;
+    }
+
     public override void UpdateAction(float elapsedTime)
     {
         if (_userBasedActionCompleted == false)
