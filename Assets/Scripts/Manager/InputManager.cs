@@ -14,11 +14,27 @@ public class InputManager : Service
     {
         _input = new PI_InputElla();
         base.Awake();
-        //PlayerInput.Move.performed += x => 
     }
 
-    //private void OnEnable()
-    //{
-    //    PlayerInput.Enable();
-    //}
+    public void EnablePlayerInput(bool shouldEnable)
+    {
+        if (shouldEnable)
+        {
+            PlayerInput.Enable();
+        }
+        else
+        {
+            PlayerInput.Disable();
+        }
+    }
+
+    private void OnEnable()
+    {
+        _input.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _input.Disable();
+    }
 }
