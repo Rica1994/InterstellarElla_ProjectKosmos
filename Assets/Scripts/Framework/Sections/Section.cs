@@ -25,7 +25,7 @@ public class Section : MonoBehaviour
 
 
 
-    private void OnEnable()
+    private void Start()
     {
         Loaded?.Invoke(this);
     }
