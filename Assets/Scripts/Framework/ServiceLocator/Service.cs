@@ -8,7 +8,6 @@ public class Service : MonoBehaviour
     {
         if (ServiceLocator.Instance.Contains(this))
         {
-            // Destroy gameobject as well?
             Destroy(this);
         }
         else
