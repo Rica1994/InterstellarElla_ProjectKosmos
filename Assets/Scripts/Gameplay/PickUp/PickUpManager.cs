@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickUpManager : MonoBehaviour
+public class PickUpManager : Service
 {
     private List<PickUp> _pickUps = new List<PickUp>();
     private List<PickUp> _ellaPickUps = new List<PickUp>();
@@ -12,7 +12,9 @@ public class PickUpManager : MonoBehaviour
     
     private void Awake()
     {
-        LevelManager.Instance.Sections.ForEach(x => x.Loaded += OnSectionLoaded);
+        base.Awake();
+        var serviceLocator = ServiceLocator.Instance;
+        serviceLocator.GetService<LevelManager>().Sections.ForEach(x => x.Loaded += OnSectionLoaded);
     }
 
     private void OnSectionLoaded(Section section)

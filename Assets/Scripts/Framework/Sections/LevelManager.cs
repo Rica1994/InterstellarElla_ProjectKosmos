@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviourSingleton<LevelManager>
+public class LevelManager : Service
 {
     [SerializeField]
     private List<Section> _sections = new List<Section>();
