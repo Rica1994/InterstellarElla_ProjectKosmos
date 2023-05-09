@@ -41,6 +41,11 @@ public class ServiceLocator : MonoBehaviourSingleton<ServiceLocator>
         }
         return CreateService(type);
     }
+    
+    public T GetService<T>() where T : Service
+    {
+        return (T)GetService(typeof(T));
+    }
 
     private Service CreateService(Type type)
     {
