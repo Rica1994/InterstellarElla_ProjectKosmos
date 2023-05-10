@@ -9,7 +9,7 @@ public class PickUpManager : Service
     private int _pickUpsPickedUp = 0;
     private string _foundEllaPickUps;
     
-    private void Awake()
+    protected override void Awake()
     {
         base.Awake();
         var serviceLocator = ServiceLocator.Instance;

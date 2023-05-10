@@ -8,7 +8,6 @@ public class InputManager : Service
     private PI_InputElla _input;
 
     public PI_InputElla.PlayerActions PlayerInput => _input.Player;
-    public PI_InputElla.UIActions UiInput => _input.UI;
 
     protected override void Awake()
     {
@@ -25,6 +24,18 @@ public class InputManager : Service
         else
         {
             PlayerInput.Disable();
+        }
+    }
+
+    public void EnableUiInput(bool shouldEnable)
+    {
+        if (shouldEnable)
+        {
+            _input.UI.Enable();
+        }
+        else
+        {
+            _input.UI.Disable();
         }
     }
 
