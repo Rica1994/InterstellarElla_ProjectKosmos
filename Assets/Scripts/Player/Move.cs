@@ -20,7 +20,7 @@ public class Move : MonoBehaviour
 
         playerInput.Move.performed += x => Rotate(x.ReadValue<Vector2>());
         playerInput.Move.canceled += x => Rotate(x.ReadValue<Vector2>());
-        playerInput.Action.performed += x => Click();
+        playerInput.Action.started += x => Click();
         playerInput.Action.canceled += x => Click();
     }
 
