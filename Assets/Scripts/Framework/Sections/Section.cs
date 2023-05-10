@@ -14,6 +14,9 @@ public class Section : MonoBehaviour
     /// </summary>
     private List<PickUp> _pickUps = new List<PickUp>();
 
+    [Header("Respawn Point")]
+    [SerializeField]
+    private GameObject _checkPoint;
 
     [Header("Assign my 2 children")]
     [SerializeField]
@@ -25,8 +28,22 @@ public class Section : MonoBehaviour
 
 
 
-    private void Start()
+    #region Public Functions
+
+    public void RespawnPlayer()
+    {
+
+    }
+
+    #endregion
+
+
+    #region Private Functions
+
+    private void OnEnable()
     {
         Loaded?.Invoke(this);
     }
+
+    #endregion
 }
