@@ -12,7 +12,7 @@ public class LevelManager : Service
     
     public List<Section> Sections => _sections;
     
-    private void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _endGameTrigger.OnTriggered += OnEndGameTriggered;

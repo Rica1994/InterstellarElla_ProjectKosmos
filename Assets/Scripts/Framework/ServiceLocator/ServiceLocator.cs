@@ -7,17 +7,11 @@ public class ServiceLocator : MonoBehaviourSingleton<ServiceLocator>
 {
     private Dictionary<Type, Service> _services = new Dictionary<Type, Service>();
 
-    public InputManager InputManager
-    {
-        get
-        {
-            return (InputManager)GetService(typeof(InputManager));
-        }
-    }
+    public InputManager InputManager => GetService<InputManager>();
 
     public void Register(Service service)
     {
-        if(!Contains(service))
+        if(!Contains(service.GetType()))
         {
             _services[service.GetType()] = service;
         }
@@ -50,11 +44,10 @@ public class ServiceLocator : MonoBehaviourSingleton<ServiceLocator>
     private Service CreateService(Type type)
     {
         // Create new object and component
-        var newObject = new GameObject();
+        var newObject = new GameObject(type.Name);
         var newComponent = newObject.AddComponent(type) as Service;
 
-        // Set name and parent to this gameobject
-        newObject.name = type.Name;
+        // Set parent to this gameobject
         newObject.transform.parent = transform;
 
         // Add service

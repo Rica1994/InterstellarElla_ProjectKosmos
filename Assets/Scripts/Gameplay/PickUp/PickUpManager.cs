@@ -17,7 +17,6 @@ public class PickUpManager : Service
     
     private void Start()
     {
-        base.Awake();
         var serviceLocator = ServiceLocator.Instance;
         serviceLocator.GetService<LevelManager>().Sections.ForEach(x => x.Loaded += OnSectionLoaded);
     }
