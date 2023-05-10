@@ -8,17 +8,44 @@ public class InputManager : Service
     private PI_InputElla _input;
 
     public PI_InputElla.PlayerActions PlayerInput => _input.Player;
-    public PI_InputElla.UIActions UiInput => _input.UI;
 
     protected override void Awake()
     {
         _input = new PI_InputElla();
         base.Awake();
-        //PlayerInput.Move.performed += x => 
     }
 
-    //private void OnEnable()
-    //{
-    //    PlayerInput.Enable();
-    //}
+    public void EnablePlayerInput(bool shouldEnable)
+    {
+        if (shouldEnable)
+        {
+            PlayerInput.Enable();
+        }
+        else
+        {
+            PlayerInput.Disable();
+        }
+    }
+
+    public void EnableUiInput(bool shouldEnable)
+    {
+        if (shouldEnable)
+        {
+            _input.UI.Enable();
+        }
+        else
+        {
+            _input.UI.Disable();
+        }
+    }
+
+    private void OnEnable()
+    {
+        _input.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _input.Disable();
+    }
 }
