@@ -103,7 +103,7 @@ public class SectionCreationTool : EditorWindow
                 }
 
                 // naming logic //
-                SelectedLevelSectionCreator.Section.name = "P_LevelSection_" + SceneManager.GetActiveScene().name + "_" + SelectedLevelSectionCreator.SectionIndex;
+                SelectedLevelSectionCreator.Section.name = "PV_LevelSection_" + SceneManager.GetActiveScene().name + "_" + SelectedLevelSectionCreator.SectionIndex;
                 SelectedLevelSectionCreator.Section.ParentEnvironment.name = "Environment_" + SelectedLevelSectionCreator.SectionIndex;
                 SelectedLevelSectionCreator.Section.ParentPickups.name = "Pickups_" + SelectedLevelSectionCreator.SectionIndex;
 

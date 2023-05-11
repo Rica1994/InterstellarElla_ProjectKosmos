@@ -13,4 +13,9 @@ public class GameManager : Service
         Debug.Log($"You collected {pickUpsCollected} / {pickUpManager.PickUps.Count}");
         Debug.Log($"You collected Ella's letters: {ellaPickUpsCollected}");
     }
+
+    public void RespawnPlayer(GameObject player, GameObject checkpoint)
+    {
+        player.transform.position = checkpoint.transform.position;
+    }
 }
