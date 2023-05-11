@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 
-public class SpeederMovement : MonoBehaviour
+public class SpeederGround : MonoBehaviour
 {
     [SerializeField] private CharacterController _characterController;
 
@@ -24,10 +24,33 @@ public class SpeederMovement : MonoBehaviour
     private bool _isJumping = false;
     private bool _isBoosting = false;
 
+    private MoveComponent _moveComponent;
+    private JumpComponent _jumpComponent;
+    private GravityComponent _gravityComponent;
+    private ImpactRecieverComponent _impactRecieverComponent;
+
+    public void Boost()
+    {
+        _isBoosting = true;
+        StopCoroutine(BoostTimer().ToString());
+        StartCoroutine(BoostTimer());
+    }
+
+    public void ForceJump()
+    {
+        _isJumping = true;
+        Jump();
+    }
+
     private void Awake()
     {
         // Fixes character controller not grounded bug
         _characterController.minMoveDistance = 0f;
+
+        _moveComponent = new MoveComponent();
+        _jumpComponent = new JumpComponent();
+        _gravityComponent = new GravityComponent();
+        _impactRecieverComponent = new ImpactRecieverComponent(_characterController, 3f);
     }
 
     private void Update()
@@ -35,48 +58,27 @@ public class SpeederMovement : MonoBehaviour
         // !!Keep this execution order!!
         bool isGrounded = _characterController.isGrounded;
         Move();
-        Jump(isGrounded);
+        if (isGrounded) Jump();
+        ApplyGravity(isGrounded);
+        _impactRecieverComponent.Update();
     }
 
     private void Move()
     {
         float boostMultiplier = _isBoosting ? _boostSpeedMultiplier : 1f;
-
-        Vector3 move = new Vector3(_input.x * _speedSideways, 0, 1f * _speedForward);
-        _characterController.Move(move * boostMultiplier * Time.deltaTime);
+        _moveComponent.Move(_characterController, new Vector3(_input.x, 0f, 1f), new Vector3(_speedSideways, 0f, _speedForward) * boostMultiplier);
     }
 
-    private void Jump(bool isGrounded)
-    {
-        if (isGrounded)
-        {
-            if (_yVelocity < 0) _yVelocity = 0f;
-            if (_isJumping)
-            {
-                ForceJump();
-            }
-        }
-        _isJumping = false;
-
-        _yVelocity += _gravityValue * Time.deltaTime;
-        _characterController.Move(new Vector3(0f, _yVelocity * Time.deltaTime, 0f));
-    }
-
-    /// <summary>
-    /// Forces the player to jump even if they are not grounded or the jumpinput has been pressed.
-    /// Can cause the player to jump even if they are already high up in the air!!
-    /// </summary>
-    public void ForceJump()
+    private void Jump()
     {
         float boostMultiplier = _isBoosting ? _boostJumpMultiplier : 1f;
-        _yVelocity += Mathf.Sqrt(-2.0f * _jumpHeight * _gravityValue * boostMultiplier);
+        if (_isJumping) _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * boostMultiplier);
+        _isJumping = false;
     }
 
-    public void Boost()
+    private void ApplyGravity(bool isGrounded)
     {
-        _isBoosting = true;
-        StopCoroutine(BoostTimer().ToString());
-        StartCoroutine(BoostTimer());
+        _gravityComponent.ApplyGravity(_characterController, ref _yVelocity, _gravityValue, isGrounded);
     }
 
     private IEnumerator BoostTimer()

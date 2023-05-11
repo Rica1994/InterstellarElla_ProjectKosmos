@@ -8,7 +8,7 @@ public class BoostRamp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("Player") && other.TryGetComponent(out SpeederMovement speeder))
+        if (other.tag.Equals("Player") && other.TryGetComponent(out SpeederGround speeder))
         {
             speeder.Boost();
         }
@@ -16,7 +16,7 @@ public class BoostRamp : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (_shouldJump && other.tag.Equals("Player") && other.TryGetComponent(out SpeederMovement speeder))
+        if (_shouldJump && other.tag.Equals("Player") && other.TryGetComponent(out SpeederGround speeder))
         {
             speeder.ForceJump();
         }

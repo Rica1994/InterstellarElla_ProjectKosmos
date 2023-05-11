@@ -4,15 +4,16 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 
 // https://answers.unity.com/questions/242648/force-on-character-controller-knockback.html
-public class ImpactReciever : MonoBehaviour
+public class ImpactRecieverComponent
 {
     private CharacterController _characterController;
     private Vector3 _impact = Vector3.zero;
-    private float mass = 3f;
+    private float _mass;
 
-    private void Start()
+    public ImpactRecieverComponent(CharacterController characterController, float mass)
     {
-        _characterController = GetComponent<CharacterController>();
+        _characterController = characterController;
+        _mass = mass;
     }
 
     public void AddImpact(Vector3 direction, float force)
@@ -23,10 +24,10 @@ public class ImpactReciever : MonoBehaviour
             direction.y *= -1f;
         }
 
-        _impact += direction * force * mass;
+        _impact += direction * force * _mass;
     }
 
-    private void Update()
+    public void Update()
     {
         if (_impact.sqrMagnitude > Mathf.Pow(0.2f, 2f))
         {
