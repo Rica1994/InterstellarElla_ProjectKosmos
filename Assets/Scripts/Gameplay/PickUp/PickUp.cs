@@ -32,7 +32,7 @@ public class PickUp : MonoBehaviour
     private void PickedUp()
     {
         // particle effects
-        Debug.Log("PickedUp");
+        //Debug.Log("PickedUp");
         OnPickUp?.Invoke(this);
         Destroy(gameObject);
     }

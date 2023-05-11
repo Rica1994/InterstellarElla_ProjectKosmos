@@ -17,6 +17,7 @@ public class Section : MonoBehaviour
     [Header("Respawn Point")]
     [SerializeField]
     private GameObject _checkPoint;
+    public GameObject Checkpoint => _checkPoint;
 
     [Header("Assign my 2 children")]
     [SerializeField]
@@ -42,6 +43,19 @@ public class Section : MonoBehaviour
 
     private void OnEnable()
     {
+        //Debug.Log("Enabled a Section");
+        Loaded?.Invoke(this);
+
+        // delaying the logic allow the pickupManager to properly subscribe to Loaded
+        //StartCoroutine(DelayEnable());      
+    }
+
+
+    IEnumerator DelayEnable()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        Debug.Log("Enabled a Section");
         Loaded?.Invoke(this);
     }
 
