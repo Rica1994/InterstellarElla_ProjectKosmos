@@ -11,7 +11,8 @@ public class BoostRamp : MonoBehaviour
         // TODO: use something other than player tag
         if (other.tag.Equals("Player") && other.TryGetComponent(out SpeederGround speeder))
         {
-            speeder.Boost();
+            speeder.BoostSpeed();
+            speeder.BoostJump();
         }
     }
 
