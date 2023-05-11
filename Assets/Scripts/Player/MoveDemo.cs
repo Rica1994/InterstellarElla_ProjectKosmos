@@ -4,7 +4,7 @@ using System.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Move : MonoBehaviour
+public class MoveDemo : MonoBehaviour
 {
     [SerializeField] private Canvas Player;
     [SerializeField] private Canvas Ui;
@@ -24,7 +24,7 @@ public class Move : MonoBehaviour
         playerInput.Action.canceled += x => Click();
     }
 
-    // TODO: subscribe somwhere else or cache value?
+    // TODO: subscribe somwhere else or cache value of servicelocator?
     private void OnDisable()
     {
         // Unsubscribe to player input events

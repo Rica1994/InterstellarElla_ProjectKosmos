@@ -9,4 +9,9 @@ public class MoveComponent
         Vector3 move = new Vector3(direction.x * speed.x, direction.y * speed.y, direction.z * speed.z);
         characterController.Move(move * Time.deltaTime);
     }
+
+    public void Move(CharacterController characterController, Vector3 direction, float speed)
+    {
+        Move(characterController, direction, new Vector3(speed, speed, speed));
+    }
 }
