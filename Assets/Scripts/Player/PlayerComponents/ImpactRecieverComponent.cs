@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// https://answers.unity.com/questions/242648/force-on-character-controller-knockback.html
+// Reference: https://answers.unity.com/questions/242648/force-on-character-controller-knockback.html
 public class ImpactRecieverComponent
 {
     private CharacterController _characterController;

@@ -90,6 +90,7 @@ public class SpeederGround : MonoBehaviour
         // Add boost multiplier to move when nessescary
         float boostMultiplier = _isBoosting ? _boostSpeedMultiplier : 1f;
         _moveComponent.Move(_characterController, new Vector3(_input.x, 0f, 1f), new Vector3(_speedSideways, 0f, _speedForward) * boostMultiplier);
+        //_moveComponent.Move(_characterController, new Vector3(_input.x, 0f, _input.y), new Vector3(_speedSideways, 0f, _speedForward) * boostMultiplier);
     }
 
     private void Jump()
