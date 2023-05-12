@@ -24,6 +24,7 @@ public class SpeederGround : MonoBehaviour
     private Vector2 _input;
     private float _yVelocity = 0f;
     private bool _isJumping = false;
+    private bool _isGrounded = false;
 
     private MoveComponent _moveComponent;
     private JumpComponent _jumpComponent;
@@ -80,13 +81,13 @@ public class SpeederGround : MonoBehaviour
         _previousPosition = gameObject.transform.position;
 
         // !!Keep this execution order!!
-        bool isGrounded = _characterController.isGrounded;
+        _isGrounded = _characterController.isGrounded;
         if (!_impactRecieverComponent._isColliding)
         {
             Move();
-            if (isGrounded) Jump();
+            if (_isGrounded) Jump();
         }
-        ApplyGravity(isGrounded);
+        ApplyGravity();
         _impactRecieverComponent.Update();
 
         // Calculate and save player velocity
@@ -113,9 +114,9 @@ public class SpeederGround : MonoBehaviour
         _isJumping = false;
     }
 
-    private void ApplyGravity(bool isGrounded)
+    private void ApplyGravity()
     {
-        _gravityComponent.ApplyGravity(_characterController, ref _yVelocity, _gravityValue, isGrounded);
+        _gravityComponent.ApplyGravity(_characterController, ref _yVelocity, _gravityValue, _isGrounded);
     }
 
     private void OnEnable()
@@ -143,6 +144,9 @@ public class SpeederGround : MonoBehaviour
 
     private void OnJumpInput()
     {
-        _isJumping = true;
+        if (_isGrounded)
+        {
+            _isJumping = true;
+        }
     }
 }
