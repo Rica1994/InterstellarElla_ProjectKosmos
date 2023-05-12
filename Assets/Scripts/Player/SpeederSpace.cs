@@ -12,6 +12,9 @@ public class SpeederSpace : MonoBehaviour
 
     [SerializeField] private float _moveSpeed = 20f;
 
+    private Vector3 _velocity;
+    private Vector3 _previousPosition;
+
     private CinemachineDollyCart _dollyCart; 
 
     private CharacterController _characterController;
@@ -33,6 +36,8 @@ public class SpeederSpace : MonoBehaviour
         _moveComponent = new MoveComponent();
         _boostComponent = new BoostComponent(_boostDuration, _boostMultiplier);
         _impactRecieverComponent = new ImpactRecieverComponent(_characterController, 3f);
+
+        _previousPosition = transform.position;
     }
 
     public void Boost()
@@ -41,8 +46,19 @@ public class SpeederSpace : MonoBehaviour
         _dollyCart.m_Speed = _baseSpeed * _boostComponent.BoostMultiplier;
     }
 
+    //public void Collide()
+    //{
+    //    // Knockback backwards and whatever velocity on x
+    //    var velocity = _velocity.normalized;
+    //    Vector3 knockbackDirection = new Vector3(-velocity.x, -velocity.y, -velocity.z);
+    //    _impactRecieverComponent.AddImpact(knockbackDirection.normalized, _knockbackForce);
+    //}
+
     private void Update()
     {
+        // Remember previous location
+        _previousPosition = gameObject.transform.position;
+
         // If is not boosting but was boosting prevoius frame
         if (!_boostComponent.IsBoosting && !_dollyCart.m_Speed.Equals(_baseSpeed))
         {
@@ -50,6 +66,9 @@ public class SpeederSpace : MonoBehaviour
         }
 
         Move();
+
+        // Calculate and save player velocity
+        _velocity = (transform.position - _previousPosition) / Time.deltaTime;
     }
 
     private void Move()

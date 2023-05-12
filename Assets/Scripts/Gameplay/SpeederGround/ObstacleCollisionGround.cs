@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObstacleCollision : MonoBehaviour
+public class ObstacleCollisionGround : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
