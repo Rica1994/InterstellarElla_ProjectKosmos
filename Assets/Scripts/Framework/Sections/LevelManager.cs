@@ -28,6 +28,11 @@ public class LevelManager : Service
     public List<Section> SectionsInstantiated => _sectionsInstantiated;
     public List<Section> Sections => _sectionPrefabs;
 
+    // to delete
+    [Header("Testing particles")]
+    public ParticleType ParticleWorld;
+    public ParticleType ParticleLocal;
+
 
     #region Unity Functions
 
@@ -128,6 +133,11 @@ public class LevelManager : Service
 
                 // set checkpoint
                 _currentCheckpoint = instantiatedSection.Checkpoint;
+
+                // testing particles
+                ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleWorldSpace(ParticleWorld, _currentCheckpoint.transform.position);
+                var player = FindAnyObjectByType<ToDeleteMoveScript>();
+                ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleLocalSpace(ParticleLocal, player.transform);
 
                 // call PickupManager logic
                 ServiceLocator.Instance.GetService<PickUpManager>().SectionLoaded(instantiatedSection);
