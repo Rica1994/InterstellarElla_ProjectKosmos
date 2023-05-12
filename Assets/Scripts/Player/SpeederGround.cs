@@ -46,7 +46,6 @@ public class SpeederGround : MonoBehaviour
     public void ForceJump()
     {
         _isJumping = true;
-        Jump();
     }
 
     public void Collide()
@@ -85,7 +84,7 @@ public class SpeederGround : MonoBehaviour
         if (!_impactRecieverComponent._isColliding)
         {
             Move();
-            if (_isGrounded) Jump();
+            Jump();
         }
         ApplyGravity();
         _impactRecieverComponent.Update();
