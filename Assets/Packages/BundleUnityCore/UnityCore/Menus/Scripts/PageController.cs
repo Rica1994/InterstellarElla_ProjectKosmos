@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -10,7 +11,8 @@ namespace UnityCore
         public class PageController : MonoBehaviourSingleton<PageController>
         {
             public PageType EntryPage;
-            public Page[] PagesScene;
+
+            public List<Page> PagesScene;
 
             private Hashtable m_Pages;
 
@@ -91,7 +93,7 @@ namespace UnityCore
             // custom methods below
             public void TurnAllPagesOffExcept(PageType turnOn)
             {
-                for (int i = 0; i < PagesScene.Length; i++)
+                for (int i = 0; i < PagesScene.Count; i++)
                 {
                     var page = PagesScene[i];
                     if (PageIsOn(page.Type) == true || GetPage(page.Type).gameObject.activeSelf)
@@ -139,6 +141,24 @@ namespace UnityCore
                 }
             }
 
+            public void VerifyPages()
+            {
+                for (int i = 0; i < PagesScene.Count; i++)
+                {
+                    Debug.Log("Checking page index -> " + i);
+                    Page pageToCheck = PagesScene[i];
+                    RemoveNullPage(pageToCheck);
+                }
+            }
+
+            public void RegisterOutsiderPage(Page pageToRegister)
+            {
+                if (PageExists(pageToRegister.Type) == false)
+                {
+                    RegisterPage(pageToRegister);
+                }       
+            }
+
             #endregion
 
 
@@ -156,7 +176,7 @@ namespace UnityCore
 
             private void RegisterAllPages()
             {
-                for (int i = 0; i < PagesScene.Length; i++)
+                for (int i = 0; i < PagesScene.Count; i++)
                 {
                     RegisterPage(PagesScene[i]);
                 }
@@ -188,6 +208,18 @@ namespace UnityCore
             private bool PageExists(PageType type)
             {
                 return m_Pages.ContainsKey(type);
+            }
+
+
+            private void RemoveNullPage(Page pageToCheck)
+            {
+                if (pageToCheck == null)
+                {
+                    Debug.Log("Removing page -> " + pageToCheck);
+
+                    PagesScene.Remove(pageToCheck);
+                    m_Pages.Remove(pageToCheck.Type);
+                }
             }
 
             #endregion
