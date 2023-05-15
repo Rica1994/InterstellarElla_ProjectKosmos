@@ -70,6 +70,14 @@ namespace UnityCore
                 StartCoroutine(LoadScene());
             }
 
+            public void LoadIntermissionLoading(SceneType scene, SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
+                PageType loadingPage = PageType.None, float timeDelayToStartFirstLoad = 1)
+            {
+                StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading));
+            }
+
+
+
             #endregion
 
 
@@ -85,6 +93,16 @@ namespace UnityCore
 
                 string targetSceneName = SceneTypeToString(m_TargetScene);
                 SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
+            }
+            private IEnumerator LoadLoadingIntoTarget(float timeDelay, SceneType sceneToLoad,
+                                                      SceneLoadDelegate sceneLoadDelegate = null, bool reload = false, 
+                                                      PageType loadingPage = PageType.None)
+            {
+                yield return new WaitForSeconds(timeDelay);
+                Load(SceneType.S_Loading, null, false, PageType.Loading);
+
+                yield return new WaitForSeconds(3);
+                Load(sceneToLoad, null, false, PageType.Loading);
             }
             private async void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
             {

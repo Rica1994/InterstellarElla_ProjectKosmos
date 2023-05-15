@@ -91,8 +91,10 @@ public class MainMenuManager : Service
                 sceneToLoad = ChooseCorrectSceneFinal();
                 break;
         }
+
+        // load the loading scene first, then the actual scene for gameplay
+        _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);
         
-        StartCoroutine(DelayLoad(0.8f, sceneToLoad));
     }
 
 
@@ -249,13 +251,6 @@ public class MainMenuManager : Service
             default:
                 return SceneType.None;
         }
-    }
-
-    private IEnumerator DelayLoad(float timeDelay, SceneType sceneToLoad)
-    {
-        yield return new WaitForSeconds(timeDelay);
-
-        _sceneController.Load(sceneToLoad, null, false, PageType.Loading);
     }
 }
 
