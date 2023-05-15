@@ -8,6 +8,8 @@ public class ButtonExecuteLevelClicked : ButtonExecuteBase
     {
         base.MyLogic();
 
+        MainMenuManager menuManager = ServiceLocator.Instance.GetService<MainMenuManager>();
 
+        menuManager.LoadLevel();
     }
 }
