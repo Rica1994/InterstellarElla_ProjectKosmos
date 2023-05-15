@@ -8,7 +8,7 @@ namespace UnityCore
 {
     namespace Menus
     {
-        public class PageController : MonoBehaviourSingleton<PageController>
+        public class PageController : Service
         {
             public PageType EntryPage;
 

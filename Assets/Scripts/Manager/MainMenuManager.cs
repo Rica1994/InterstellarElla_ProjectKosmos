@@ -21,6 +21,8 @@ public class MainMenuManager : Service
 
     private List<MenuLevel> _levels = new List<MenuLevel>();
 
+    private SceneController _sceneController;
+
     // animation strings
     private const string _levelScaleUp = "A_MenuLevelScaleUp";
     private const string _levelScaleDown = "A_MenuLevelScaleDown";
@@ -48,6 +50,8 @@ public class MainMenuManager : Service
 
     private void Start()
     {
+        _sceneController = ServiceLocator.Instance.GetService<SceneController>();
+
         _levels = _menuAnimator.MenuLevels;
 
         _levelIndex = 0;
@@ -251,7 +255,7 @@ public class MainMenuManager : Service
     {
         yield return new WaitForSeconds(timeDelay);
 
-        SceneController.Instance.Load(sceneToLoad, null, false, PageType.Loading);
+        _sceneController.Load(sceneToLoad, null, false, PageType.Loading);
     }
 }
 

@@ -8,10 +8,8 @@ namespace UnityCore
 {
     namespace Audio
     {
-        public class AudioController : MonoBehaviour
+        public class AudioController : Service
         {
-            public static AudioController Instance;
-
             [Header("Tracks things")]
             public List<AudioTrack> TracksOST;
             public List<AudioTrack> TracksUI;
@@ -93,12 +91,9 @@ namespace UnityCore
 
             #region Unity Functions
 
-            private void Awake()
+            protected override void Awake()
             {
-                if (Instance == null)
-                {
-                    Instance = this;
-                }
+                base.Awake();
 
                 _currentMixerType = MixerType.MixerNormal;
             }

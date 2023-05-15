@@ -10,25 +10,17 @@ namespace UnityCore
 {
     namespace Scene
     {
-        public class SceneController : MonoBehaviourSingleton<SceneController>
+        public class SceneController : Service
         {
             public delegate void SceneLoadDelegate(SceneType scene);
-
-            private PageController _pageController
-            {
-                get
-                {
-                    var instance = PageController.Instance;
-                    if (instance == null)
-                        Debug.Log("You are trying to access the Pagecontroller, but no instance was found.");
-                    return instance;
-                }
-            }
 
             private SceneType m_TargetScene;
             private PageType m_LoadingPage;
             private SceneLoadDelegate m_SceneLoadDelegate;
             private bool m_SceneIsLoading;
+
+            private AudioController _audioController;
+            private PageController _pageController;
 
             private string CurrentSceneName
             {
@@ -41,6 +33,11 @@ namespace UnityCore
             {
                 base.Awake();
                 Configure();
+            }
+            protected virtual void Start()
+            {
+                _audioController = ServiceLocator.Instance.GetService<AudioController>();
+                _pageController = ServiceLocator.Instance.GetService<PageController>();
             }
             private void OnDisable()
             {
@@ -115,10 +112,10 @@ namespace UnityCore
                 }
 
                 // remove audio tracks where source is null
-                AudioController.Instance.VerifyAudioTracks();
+                _audioController.VerifyAudioTracks();
 
                 // remove pages that are null
-                PageController.Instance.VerifyPages();
+                _pageController.VerifyPages();
 
                 if (m_LoadingPage != PageType.None)
                 {

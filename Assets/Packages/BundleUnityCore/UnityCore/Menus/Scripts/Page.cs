@@ -21,6 +21,8 @@ namespace UnityCore
 
             private Animator m_Animator;
 
+            private PageController _pageController;
+
             private bool m_IsOn;
             public bool isOn
             {
@@ -35,6 +37,11 @@ namespace UnityCore
             }
 
             #region Unity Functions
+
+            //private void Start()
+            //{
+            //    _pageController = ServiceLocator.Instance.GetService<PageController>();
+            //}
 
             private void OnEnable()
             {
@@ -53,8 +60,9 @@ namespace UnityCore
                 {
                     m_Animator.SetBool("On", on);
 
-                    PageController.Instance.StopCoroutine(AwaitAnimation(on));
-                    PageController.Instance.StartCoroutine(AwaitAnimation(on));
+                    _pageController = ServiceLocator.Instance.GetService<PageController>();
+                    _pageController.StopCoroutine(AwaitAnimation(on));
+                    _pageController.StartCoroutine(AwaitAnimation(on));
                 }
                 else
                 {
