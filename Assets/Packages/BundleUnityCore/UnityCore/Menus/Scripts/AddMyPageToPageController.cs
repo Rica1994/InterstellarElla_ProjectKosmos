@@ -21,7 +21,9 @@ namespace UnityCore
                 else
                 {
                     Debug.LogWarning("You forgot to assign my page on object -> " + this.gameObject);
-                }            
+                }
+
+                this.gameObject.SetActive(false);
             }
         }
     } 
