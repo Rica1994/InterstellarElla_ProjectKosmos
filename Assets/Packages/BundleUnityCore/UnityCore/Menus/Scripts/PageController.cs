@@ -8,7 +8,7 @@ namespace UnityCore
 {
     namespace Menus
     {
-        public class PageController : MonoBehaviourSingleton<PageController>
+        public class PageController : Service
         {
             public PageType EntryPage;
 
@@ -145,7 +145,7 @@ namespace UnityCore
             {
                 for (int i = 0; i < PagesScene.Count; i++)
                 {
-                    Debug.Log("Checking page index -> " + i);
+                    //Debug.Log("Checking page index -> " + i);
                     Page pageToCheck = PagesScene[i];
                     RemoveNullPage(pageToCheck);
                 }
@@ -192,6 +192,8 @@ namespace UnityCore
                 }
 
                 m_Pages.Add(page.Type, page);
+                PagesScene.Add(page);
+
             }
 
             private Page GetPage(PageType type)
@@ -215,7 +217,7 @@ namespace UnityCore
             {
                 if (pageToCheck == null)
                 {
-                    Debug.Log("Removing page -> " + pageToCheck);
+                    //Debug.Log("Removing page -> " + pageToCheck);
 
                     PagesScene.Remove(pageToCheck);
                     m_Pages.Remove(pageToCheck.Type);

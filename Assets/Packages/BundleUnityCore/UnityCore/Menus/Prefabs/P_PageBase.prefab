@@ -28,7 +28,6 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6127659390008892714}
   m_RootOrder: 0
@@ -86,10 +85,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6127659390008892714}
   - component: {fileID: 6127659390008892711}
-  - component: {fileID: 6127659390008892710}
   - component: {fileID: 6127659390008892709}
   - component: {fileID: 6127659390008892708}
   - component: {fileID: 6127659390008892715}
+  - component: {fileID: 6127659390008892710}
   m_Layer: 5
   m_Name: P_PageBase
   m_TagString: Untagged
@@ -107,7 +106,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6127659389301544320}
   m_Father: {fileID: 0}
@@ -126,20 +124,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6127659390008892713}
   m_CullTransparentMesh: 1
---- !u!114 &6127659390008892710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6127659390008892713}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e0f9bea63ef5f843850e14dcc722374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: 1
-  useFadeAnimation: 1
 --- !u!225 &6127659390008892709
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -154,7 +138,7 @@ CanvasGroup:
   m_IgnoreParentGroups: 0
 --- !u!95 &6127659390008892708
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -171,7 +155,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!65 &6127659390008892715
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -180,8 +165,22 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6127659390008892713}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 2000, y: 1100, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6127659390008892710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6127659390008892713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e0f9bea63ef5f843850e14dcc722374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  useFadeAnimation: 1
