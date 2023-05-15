@@ -117,6 +117,9 @@ namespace UnityCore
                 // remove audio tracks where source is null
                 AudioController.Instance.VerifyAudioTracks();
 
+                // remove pages that are null
+                PageController.Instance.VerifyPages();
+
                 if (m_LoadingPage != PageType.None)
                 {
                     await Task.Delay(1000);

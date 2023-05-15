@@ -10,6 +10,10 @@ public class ButtonBase : MonoBehaviour, IClickable
     [SerializeField]
     private float _waitTimeBeforeExecutingLogic = 0.3f;
 
+    [Header("Button Logics to Execute")]
+    [SerializeField]
+    private List<ButtonExecuteBase> _buttonExecutes = new List<ButtonExecuteBase>();
+
     [Header("Animation stuff")]
     [SerializeField]
     protected Animation _animationComponent;
@@ -54,7 +58,10 @@ public class ButtonBase : MonoBehaviour, IClickable
 
     protected virtual void ExecuteLogic()
     {
-
+        for (int i = 0; i < _buttonExecutes.Count; i++)
+        {
+            _buttonExecutes[i].MyLogic();
+        }
     }
 
 

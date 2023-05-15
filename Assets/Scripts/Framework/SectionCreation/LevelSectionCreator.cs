@@ -10,9 +10,6 @@ public class LevelSectionCreator : MonoBehaviour
     public List<BoxCollider> CollidersDefiningMySection => _collidersDefiningMySection;
 
     [Header("my section index")]
-    //[SerializeField]
-    //private LevelType _typeOfLevel;
-    //public LevelType TypeOfLevel => _typeOfLevel;
     [SerializeField]
     private int _sectionIndex;
     public int SectionIndex => _sectionIndex;
@@ -22,14 +19,3 @@ public class LevelSectionCreator : MonoBehaviour
     private Section _levelSectionChild;
     public Section Section => _levelSectionChild;
 }
-
-
-
-public enum LevelType
-{
-    SpeederGround = 0,
-    SpeederSpace = 1,
-    Exploring = 2,
-    Car = 3,
-    All = 4
-};
