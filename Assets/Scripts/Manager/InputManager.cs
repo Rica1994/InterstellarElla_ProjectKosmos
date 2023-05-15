@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,10 +10,9 @@ public class InputManager : Service
 
     public PI_InputElla.PlayerActions PlayerInput => _input.Player;
 
-    protected override void Awake()
+    private void Awake()
     {
         _input = new PI_InputElla();
-        base.Awake();
     }
 
     public void EnablePlayerInput(bool shouldEnable)
@@ -39,12 +39,12 @@ public class InputManager : Service
         }
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         _input.Enable();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
         _input.Disable();
     }
