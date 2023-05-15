@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityCore.Menus;
+using UnityCore.Scene;
 using UnityEngine;
 
 public class MainMenuManager : Service
 {
+    [Header("What types of scenes do I load ?")]
+    public SceneChoice ScenesToLoad;
+
     private int _levelIndex = 0;
     private MenuLevel _currentLevel;
     public MenuLevel CurrentLevel => _currentLevel;
@@ -52,6 +57,30 @@ public class MainMenuManager : Service
 
         // size up level 1
         _levels[0].AnimationScaler.Play(_levelScaleUp);
+    }
+
+
+
+    public void LoadLevel()
+    {
+        // slowly scale up the clicked level, as a fade out takes place
+
+
+        SceneType sceneToLoad = SceneType.None;
+        switch (ScenesToLoad)
+        {
+            case SceneChoice.Blockout:
+                sceneToLoad = ChooseCorrectSceneBlockout();
+                break;
+            case SceneChoice.Art:
+                sceneToLoad = ChooseCorrectSceneArt();
+                break;
+            case SceneChoice.Final:
+                sceneToLoad = ChooseCorrectSceneFinal();
+                break;
+        }
+
+        SceneController.Instance.Load(sceneToLoad, null, false, PageType.Loading);
     }
 
 
@@ -154,5 +183,67 @@ public class MainMenuManager : Service
     {
         _currentLevel.AnimationScaler.Play(_levelScaleDown);
     }
+
+    private SceneType ChooseCorrectSceneBlockout()
+    {
+        switch (_levelIndex)
+        {
+            case 0:
+                return SceneType.S_Level_1_Blockout;
+            case 1:
+                return SceneType.S_Level_2_Blockout;
+            case 2:
+                return SceneType.S_Level_3_Blockout;
+            case 3:
+                return SceneType.S_Level_4_Blockout;
+            case 4:
+                return SceneType.S_Level_5_Blockout;
+            default:
+                return SceneType.None;
+        }
+    }
+    private SceneType ChooseCorrectSceneArt()
+    {
+        switch (_levelIndex)
+        {
+            case 0:
+                return SceneType.S_Level_1_Art;
+            case 1:
+                return SceneType.S_Level_2_Art;
+            case 2:
+                return SceneType.S_Level_3_Art;
+            case 3:
+                return SceneType.S_Level_4_Art;
+            case 4:
+                return SceneType.S_Level_5_Art;
+            default:
+                return SceneType.None;
+        }
+    }
+    private SceneType ChooseCorrectSceneFinal()
+    {
+        switch (_levelIndex)
+        {
+            case 0:
+                return SceneType.S_Level_1_Final;
+            case 1:
+                return SceneType.S_Level_2_Final;
+            case 2:
+                return SceneType.S_Level_3_Final;
+            case 3:
+                return SceneType.S_Level_4_Final;
+            case 4:
+                return SceneType.S_Level_5_Final;
+            default:
+                return SceneType.None;
+        }
+    }
+}
+
+public enum SceneChoice
+{
+    Blockout = 0,
+    Art = 1,
+    Final = 2
 }
 
