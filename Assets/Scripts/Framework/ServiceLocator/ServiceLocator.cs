@@ -17,6 +17,14 @@ public class ServiceLocator : MonoBehaviourSingleton<ServiceLocator>
         }
     }
 
+    public void UnRegister(Service service)
+    {
+        if(Contains(service.GetType()))
+        {
+            _services.Remove(service.GetType());
+        }
+    }
+
     public bool Contains(Type type)
     {
         return _services.ContainsKey(type);
