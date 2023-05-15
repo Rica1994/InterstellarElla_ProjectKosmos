@@ -73,12 +73,7 @@ public class SectionCreationTool : EditorWindow
                 List<GameObject> tempList = new List<GameObject>();
                 foreach (GameObject obj in UnityEngine.Object.FindObjectsOfType<GameObject>())
                 {
-                    Debug.Log(obj.gameObject.name);
-                    // first fill list with objects that do not have a parent...
-                    // if (obj.transform.parent == null)
-                    // {
                     tempList.Add(obj);
-                    // }
                 }
 
                 foreach (BoxCollider coll in SelectedLevelSectionCreator.CollidersDefiningMySection)
@@ -89,7 +84,14 @@ public class SectionCreationTool : EditorWindow
                     {
                         if (coll.bounds.Contains(obj.transform.position))
                         {
-                            
+                            var parent = obj.transform.parent;
+                            // Check if the parent of this object is within the bounds of the section
+                            // If it is, then we don't want to parent it to the section
+                            if (parent != null && coll.bounds.Contains(parent.position))
+                            {
+                                continue;
+                            }
+
                             objectsAdded.Add(obj);
                             if (obj.TryGetComponent(out PickUp pickUp))
                             {
