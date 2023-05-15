@@ -6,6 +6,8 @@ public class MainMenuManager : Service
 {
     private int _levelIndex = 0;
     private MenuLevel _currentLevel;
+    public MenuLevel CurrentLevel => _currentLevel;
+    
 
     [Header("Menu Animator")]
     [SerializeField]

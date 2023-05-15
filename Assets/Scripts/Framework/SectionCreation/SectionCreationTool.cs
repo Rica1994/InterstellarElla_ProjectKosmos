@@ -1,8 +1,14 @@
+
+
+
+#if UNITY_EDITOR
+
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+
 
 public class SectionCreationTool : EditorWindow
 {
@@ -294,3 +300,5 @@ public class SectionCreationTool : EditorWindow
         return count;
     }
 }
+
+#endif

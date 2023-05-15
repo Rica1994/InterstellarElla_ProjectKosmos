@@ -31,12 +31,12 @@ namespace UnityCore
                     //}, 
                     //false, 
                     //PageType.Loading);
-                    SceneControllerScript.Load(SceneType.Level_01, null, false, PageType.Loading);
+                    SceneControllerScript.Load(SceneType.S_Level_1_Blockout, null, false, PageType.Loading);
                 }
 
                 if (Input.GetKeyUp(KeyCode.G))
                 {
-                    SceneControllerScript.Load(SceneType.Level_02, null, false, PageType.Loading);
+                    SceneControllerScript.Load(SceneType.S_Level_1_Blockout, null, false, PageType.Loading);
                 }
             }
         }

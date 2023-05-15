@@ -158,9 +158,23 @@ namespace UnityCore
             {
                 switch (scene)
                 {
-                    case SceneType.MainMenu: return "MainMenu";
-                    case SceneType.Level_01: return "Level_01";
-                    case SceneType.Level_02: return "Level_02";
+                    case SceneType.S_MainMenu: return "S_MainMenu";
+                    case SceneType.S_Loading: return "S_MainMenu";
+                    case SceneType.S_Level_1_Blockout: return "S_MainMenu";
+                    case SceneType.S_Level_1_Art: return "S_MainMenu";
+                    case SceneType.S_Level_1_Final: return "S_MainMenu";
+                    case SceneType.S_Level_2_Blockout: return "S_MainMenu";
+                    case SceneType.S_Level_2_Art: return "S_MainMenu";
+                    case SceneType.S_Level_2_Final: return "S_MainMenu";
+                    case SceneType.S_Level_3_Blockout: return "S_MainMenu";
+                    case SceneType.S_Level_3_Art: return "S_MainMenu";
+                    case SceneType.S_Level_3_Final: return "S_MainMenu";
+                    case SceneType.S_Level_4_Blockout: return "S_MainMenu";
+                    case SceneType.S_Level_4_Art: return "S_MainMenu";
+                    case SceneType.S_Level_4_Final: return "S_MainMenu";
+                    case SceneType.S_Level_5_Blockout: return "S_MainMenu";
+                    case SceneType.S_Level_5_Art: return "S_MainMenu";
+                    case SceneType.S_Level_5_Final: return "S_MainMenu";
                     default:
                         Debug.Log("Scene [" + scene + "] does not contain a string for a valid scene. ");
                         return string.Empty;
@@ -170,9 +184,9 @@ namespace UnityCore
             {
                 switch (scene)
                 {
-                    case "MainMenu": return SceneType.MainMenu;
-                    case "Level_01": return SceneType.Level_01;
-                    case "Level_02": return SceneType.Level_02;
+                    case "MainMenu": return SceneType.S_MainMenu;
+                    case "Level_01": return SceneType.S_Loading;
+                    case "Level_02": return SceneType.S_Level_1_Blockout;
                     default:
                         Debug.Log("Scene [" + scene + "] does not contain a type for a valid scene. ");
                         return SceneType.None;
