@@ -5,6 +5,7 @@ using UnityCore.Menus;
 using UnityEngine;
 using UnityEngine.UI;
 
+[DefaultExecutionOrder(100)]
 public class ButtonBase : MonoBehaviour, IClickable
 {
     [SerializeField]
@@ -106,6 +107,11 @@ public class ButtonBase : MonoBehaviour, IClickable
             // instantly disable collider and button components
             _myTrigger.enabled = false;
             _myButton.enabled = false;
+
+            //Debug.Log("disabling button " + gameObject.name);
+
+            //Debug.Log("accessing pagecontroller " + _pageController.name); // null for something
+            
 
             // disable gameobject
             _pageController.StartCoroutine(DisableGameObject(0));
