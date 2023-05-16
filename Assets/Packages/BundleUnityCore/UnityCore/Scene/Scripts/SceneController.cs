@@ -29,8 +29,10 @@ namespace UnityCore
 
             #region Unity Functions
 
-            private void Awake()
+
+            protected override void OnEnable()
             {
+                base.OnEnable();
                 Configure();
             }
             protected virtual void Start()
@@ -140,6 +142,20 @@ namespace UnityCore
                     await Task.Delay(1000);
                     _pageController.TurnPageOff(m_LoadingPage);
                 }
+
+                // showcase the UI_persistent(pause_button) when needed
+                if (m_TargetScene == SceneType.S_MainMenu || m_TargetScene == SceneType.S_Loading)
+                {
+                    _pageController.ShowPauseButton(false);
+                }
+                else
+                {
+                    _pageController.ShowPauseButton(true);
+
+                    var playerController = FindObjectOfType<PlayerController>();
+                    ServiceLocator.Instance.GetService<GameManager>().SetPlayerController(playerController);
+                }
+
 
                 m_SceneIsLoading = false;
             }

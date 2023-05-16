@@ -91,8 +91,10 @@ namespace UnityCore
 
             #region Unity Functions
 
-            private void Awake()
+            protected override void OnEnable()
             {
+                base.OnEnable();
+
                 _currentMixerType = MixerType.MixerNormal;
             }
 

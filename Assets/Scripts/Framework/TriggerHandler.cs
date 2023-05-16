@@ -7,6 +7,7 @@ using UnityEngine;
 public class TriggerHandler : MonoBehaviour
 {
     public delegate void TriggerHandlerCallBack(TriggerHandler me, Collider other, bool hasEntered);
+
     public event TriggerHandlerCallBack OnTriggered;
 
     private void Awake()
@@ -21,17 +22,11 @@ public class TriggerHandler : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<ToDeleteMoveScript>() != null)
-        {
-            OnTriggered?.Invoke(this, other, true);
-        }
+        OnTriggered?.Invoke(this, other, true);
     }
-    
+
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<ToDeleteMoveScript>() != null)
-        {
-            OnTriggered?.Invoke(this, other, false);
-        }
+        OnTriggered?.Invoke(this, other, false);
     }
 }

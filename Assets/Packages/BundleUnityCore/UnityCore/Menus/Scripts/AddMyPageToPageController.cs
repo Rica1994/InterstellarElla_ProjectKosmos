@@ -7,6 +7,7 @@ namespace UnityCore
 {
     namespace Menus
     {
+        [DefaultExecutionOrder(200)]
         public class AddMyPageToPageController : MonoBehaviour
         {
             [SerializeField]

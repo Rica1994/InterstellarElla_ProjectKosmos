@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Android;
 
-public class SpeederSpace : MonoBehaviour
+public class SpeederSpace : PlayerController
 {
     [SerializeField] private float _boostDuration = 3.0f;
     [SerializeField] private float _boostMultiplier = 1.5f;
@@ -82,8 +82,10 @@ public class SpeederSpace : MonoBehaviour
     //    _impactRecieverComponent.AddImpact(knockbackDirection.normalized, _knockbackForce);
     //}
 
-    private void Update()
+    public override void UpdateController()
     {
+        base.UpdateController();
+        
         // Remember previous location
         _previousPosition = gameObject.transform.position;
 

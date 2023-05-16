@@ -13,11 +13,17 @@ public class MainMenuManager : Service
     private MenuLevel _currentLevel;
     public MenuLevel CurrentLevel => _currentLevel;
     
-
     [Header("Menu Animator")]
     [SerializeField]
     private MenuAnimator _menuAnimator;
 
+    [Header("Buttons for level selection")]
+    [SerializeField]
+    private ButtonBase _buttonForward;
+    [SerializeField]
+    private ButtonBase _buttonBackward;
+    [SerializeField]
+    private ButtonBase _buttonLevelSelect;
 
     private List<MenuLevel> _levels = new List<MenuLevel>();
 
@@ -65,12 +71,20 @@ public class MainMenuManager : Service
 
         // size up level 1
         _levels[0].AnimationScaler.Play(_levelScaleUp);
+
+        // show buttons after delay
+        StartCoroutine(EnableButtonsDelay());
     }
 
 
 
     public void LoadLevel()
     {
+        // hide the forward & backward buttons
+        _buttonBackward.DisableButton();
+        _buttonForward.DisableButton();
+        _buttonLevelSelect.DisableButton();
+
         // slowly scale up the clicked level, as a fade out takes place
         _currentLevel.AnimationScaler.Play(_levelScalePop);
         _currentLevel.AnimationRotater.Play(_levelRotateFast);
@@ -93,8 +107,7 @@ public class MainMenuManager : Service
         }
 
         // load the loading scene first, then the actual scene for gameplay
-        _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);
-        
+        _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);       
     }
 
 
@@ -251,6 +264,14 @@ public class MainMenuManager : Service
             default:
                 return SceneType.None;
         }
+    }
+    private IEnumerator EnableButtonsDelay()
+    {
+        yield return new WaitForSeconds(1);
+
+        _buttonBackward.EnableButton();
+        _buttonForward.EnableButton();
+        _buttonLevelSelect.EnableButton();
     }
 }
 
