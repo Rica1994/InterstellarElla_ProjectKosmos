@@ -50,9 +50,9 @@ public class MoveDemo : MonoBehaviour
     {
         _isPaused = !_isPaused;
         //Ui.gameObject.SetActive(_isPaused);
-        ServiceLocator.Instance.InputManager.EnableUiInput(_isPaused);
+        ServiceLocator.Instance.GetService<InputManager>().EnableUiInput(_isPaused);
         //Player.gameObject.SetActive(!_isPaused);
-        ServiceLocator.Instance.InputManager.EnablePlayerInput(_isPaused);
+        ServiceLocator.Instance.GetService<InputManager>().EnablePlayerInput(_isPaused);
 
         Debug.Log(_isPaused);
     }
