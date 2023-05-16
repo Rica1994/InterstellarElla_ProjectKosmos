@@ -7,4 +7,9 @@ public abstract class PlayerController : MonoBehaviour
     public virtual void UpdateController()
     {
     }
+
+    public virtual void Collide()
+    {
+        
+    }
 }

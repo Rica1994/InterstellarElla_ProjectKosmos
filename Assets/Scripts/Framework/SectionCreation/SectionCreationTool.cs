@@ -95,10 +95,10 @@ public class SectionCreationTool : EditorWindow
                             objectsAdded.Add(obj);
                             if (obj.TryGetComponent(out PickUp pickUp))
                             {
-                                Undo.SetTransformParent(obj.transform, SelectedLevelSectionCreator.Section.ParentPickups.transform,
+                                Undo.SetTransformParent(obj.transform, SelectedLevelSectionCreator.Section.PickupsParent.gameObject.transform,
                                     "Parenting objects in colliders");
                                 Undo.RegisterCompleteObjectUndo(obj, "Undo Parenting");
-                                obj.transform.SetParent(SelectedLevelSectionCreator.Section.ParentPickups.transform);
+                                obj.transform.SetParent(SelectedLevelSectionCreator.Section.PickupsParent.gameObject.transform);
                             }
                             else
                             {
@@ -127,7 +127,7 @@ public class SectionCreationTool : EditorWindow
                                                            "_" + SelectedLevelSectionCreator.SectionIndex;
                 SelectedLevelSectionCreator.Section.ParentEnvironment.name =
                     "Environment_" + SelectedLevelSectionCreator.SectionIndex;
-                SelectedLevelSectionCreator.Section.ParentPickups.name =
+                SelectedLevelSectionCreator.Section.PickupsParent.gameObject.name =
                     "Pickups_" + SelectedLevelSectionCreator.SectionIndex;
 
                 // Collapse the parenting operations for undo
@@ -166,18 +166,18 @@ public class SectionCreationTool : EditorWindow
 
                         // objects
                         countObjects += GetChildren(section.ParentEnvironment);
-                        countObjects += GetChildren(section.ParentPickups);
+                        countObjects += GetChildren(section.PickupsParent.gameObject);
 
                         // tris
                         countTriangles += GetTriangleCount(section.ParentEnvironment);
-                        countTriangles += GetTriangleCount(section.ParentPickups);
+                        countTriangles += GetTriangleCount(section.PickupsParent.gameObject);
 
                         // vertices
                         countVertices += GetVertexCount(section.ParentEnvironment);
-                        countVertices += GetVertexCount(section.ParentPickups);
+                        countVertices += GetVertexCount(section.PickupsParent.gameObject);
 
                         // pickUps
-                        countPickups += GetPickupCount(section.ParentPickups);
+                        countPickups += GetPickupCount(section.PickupsParent.gameObject);
                     }
 
                     Debug.Log("--This Level has " + countObjects + " GameObjects !");
@@ -204,7 +204,7 @@ public class SectionCreationTool : EditorWindow
                 // debug object counts
                 Debug.Log("-This Section has " + GetChildren(SelectedSection.ParentEnvironment) +
                           " GameObjects in Environment");
-                Debug.Log("-This Section has " + GetChildren(SelectedSection.ParentPickups) +
+                Debug.Log("-This Section has " + GetChildren(SelectedSection.PickupsParent.gameObject) +
                           " GameObjects in Pickups");
             }
             else
@@ -221,7 +221,7 @@ public class SectionCreationTool : EditorWindow
                 // debug triangle count
                 Debug.Log("This Section has " + GetTriangleCount(SelectedSection.ParentEnvironment) +
                           " Triangles in Environment");
-                Debug.Log("This Section has " + GetTriangleCount(SelectedSection.ParentPickups) +
+                Debug.Log("This Section has " + GetTriangleCount(SelectedSection.PickupsParent.gameObject) +
                           " Triangles in Pickups");
             }
             else
@@ -238,7 +238,7 @@ public class SectionCreationTool : EditorWindow
                 // debug triangle count
                 Debug.Log("This Section has " + GetVertexCount(SelectedSection.ParentEnvironment) +
                           " Vertices in Environment");
-                Debug.Log("This Section has " + GetVertexCount(SelectedSection.ParentPickups) + " Vertices in Pickups");
+                Debug.Log("This Section has " + GetVertexCount(SelectedSection.PickupsParent.gameObject) + " Vertices in Pickups");
             }
             else
             {
@@ -252,7 +252,7 @@ public class SectionCreationTool : EditorWindow
             if (SelectedSection != null)
             {
                 // debug pickup count
-                Debug.Log("-This Section has " + GetPickupCount(SelectedSection.ParentPickups) + " Pickups");
+                Debug.Log("-This Section has " + GetPickupCount(SelectedSection.PickupsParent.gameObject) + " Pickups");
             }
             else
             {

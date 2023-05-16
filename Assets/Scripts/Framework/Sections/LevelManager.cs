@@ -5,6 +5,13 @@ using UnityEngine;
 
 public class LevelManager : Service
 {
+    #region Events
+
+    public delegate void SectionCallback(Section section);
+    public event SectionCallback OnSectionLoaded;
+
+    #endregion
+    
     [Header("Assign prefabs")]
     [SerializeField]
     private List<Section> _sectionPrefabs = new List<Section>();
@@ -68,15 +75,16 @@ public class LevelManager : Service
             trigger.OnTriggered += OnDeathTriggered;
         }
 
+
+        if (_sectionsInstantiated.Count <= 0) return;
         // check what sections are currently instantiated in the scene (typically 1 or 2 sections)
         // this decides from what point we start instantiating new segments (decides index)
         _currentSectionIndex = _sectionsInstantiated.Count - 1;
 
         // don't forget to call loading logic for already existing segments
-        PickUpManager pickupManager = ServiceLocator.Instance.GetService<PickUpManager>();
         for (int i = 0; i < _sectionsInstantiated.Count; i++)
         {
-            pickupManager.SectionLoaded(_sectionsInstantiated[i]);
+            OnSectionLoaded?.Invoke(_sectionsInstantiated[i]);
         }
         // set initial checkpoint
         _currentCheckpoint = _sectionsInstantiated[0].Checkpoint;
@@ -142,8 +150,8 @@ public class LevelManager : Service
                 var player = FindAnyObjectByType<PlayerController>();
                 ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleLocalSpace(ParticleLocal, player.transform);
 
-                // call PickupManager logic
-                ServiceLocator.Instance.GetService<PickUpManager>().SectionLoaded(instantiatedSection);
+                // calls the PickupManager logic
+                OnSectionLoaded?.Invoke(instantiatedSection);
             }
             else
             {
