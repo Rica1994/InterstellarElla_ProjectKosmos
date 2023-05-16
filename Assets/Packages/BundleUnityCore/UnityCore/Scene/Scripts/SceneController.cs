@@ -29,9 +29,10 @@ namespace UnityCore
 
             #region Unity Functions
 
-            protected override void Awake()
+
+            protected override void OnEnable()
             {
-                base.Awake();
+                base.OnEnable();
                 Configure();
             }
             protected virtual void Start()
@@ -39,8 +40,9 @@ namespace UnityCore
                 _audioController = ServiceLocator.Instance.GetService<AudioController>();
                 _pageController = ServiceLocator.Instance.GetService<PageController>();
             }
-            private void OnDisable()
+            protected override void OnDisable()
             {
+                base.OnDisable();
                 Dispose();
             }
 

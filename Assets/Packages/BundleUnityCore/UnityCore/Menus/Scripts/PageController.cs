@@ -20,9 +20,10 @@ namespace UnityCore
 
             #region Unity Functions
 
-            protected override void Awake()
+            protected override void OnEnable()
             {
-                base.Awake();
+                base.OnEnable();
+
                 m_Pages = new Hashtable();
                 RegisterAllPages();
                 TurnAllPagesOffExcept(EntryPage);

@@ -18,6 +18,9 @@ public class MainMenuManager : Service
     [SerializeField]
     private MenuAnimator _menuAnimator;
 
+    //[Header("Buttons for level selection")]
+    //[SerializeField]
+    //private 
 
     private List<MenuLevel> _levels = new List<MenuLevel>();
 
