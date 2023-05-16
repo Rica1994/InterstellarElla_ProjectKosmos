@@ -23,7 +23,7 @@ public class PickUp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<ToDeleteMoveScript>() != null)
+        if (other.GetComponent<PlayerController>() != null)
         {
             PickedUp();
         }

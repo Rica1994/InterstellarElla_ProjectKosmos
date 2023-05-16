@@ -6,9 +6,9 @@ public class ObstacleCollisionGround : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag.Equals("Player") && collision.gameObject.TryGetComponent(out SpeederGround speeder))
+        if (collision.gameObject.TryGetComponent(out PlayerController player))
         {
-            speeder.Collide();
+            player.Collide();
         }
     }
 }

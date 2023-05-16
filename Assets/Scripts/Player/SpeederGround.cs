@@ -50,7 +50,7 @@ public class SpeederGround : PlayerController
         _isJumping = true;
     }
 
-    public void Collide()
+    public override void Collide()
     {
         // Knockback backwards and whatever velocity on x
         var velocity = _velocity.normalized;
