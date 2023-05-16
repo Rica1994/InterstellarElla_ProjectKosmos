@@ -18,7 +18,16 @@ public class ButtonBase : MonoBehaviour, IClickable
     [SerializeField]
     protected Animation _animationComponent;
     [SerializeField]
+    protected string _animationNameAppear;
+    [SerializeField]
+    protected string _animationNameIdle;
+    [SerializeField]
     protected string _animationNameClicked;
+    [SerializeField]
+    protected string _animationNamePoof;
+
+    [SerializeField]
+    private bool _isIdleAfterClick;
 
     [Header("Audio")]
     [SerializeField]
@@ -34,38 +43,96 @@ public class ButtonBase : MonoBehaviour, IClickable
     private Button _myButton;
     public Button MyButton => _myButton;
 
-
     protected AudioController _audioController;
     protected PageController _pageController;
 
 
-
+    #region UNITY FUNCTIONS
     protected virtual void Start()
     {
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
         _pageController = ServiceLocator.Instance.GetService<PageController>();
-    }
 
+        DisableButton(true);
+    }
+    #endregion
+
+
+    #region PUBLIC FUNCTIONS
     public virtual void Click()
     {
         ClickedButton();
     }
-
     public virtual void ClickedButton()
     {
         // only do all of this if there currently is not an assigned IEnumerator for buttons
         if (_pageController.ButtonRunner == null)
         {
             // player feedback
-            PlayAnimationPress();
+            PlayAnimation(_animationNameClicked);
+            if (_isIdleAfterClick == true)
+            {
+                PlayAnimationQueued(_animationNameIdle);
+            }
             PlaySoundEffect();
+
+            // make it so I cannot press another button as long as this is running
+
 
             // actual logic
             _pageController.ButtonRunner = ExecuteLogicRoutine();
             _pageController.StartCoroutine(_pageController.ButtonRunner);
         }
     }
+    public virtual void DisableButton(bool isInstant = false)
+    {
+        if (isInstant == false)
+        {
+            // instantly disable collider and button components
+            _myTrigger.enabled = false;
+            _myButton.enabled = false;
 
+            // play animation
+            PlayAnimation(_animationNamePoof);
+
+            // wait for animation to end to disable the gameobject
+            float poofTime = _animationComponent.GetClip(_animationNamePoof).length;
+            _pageController.StartCoroutine(DisableGameObject(poofTime));
+        }
+        else
+        {
+            // instantly disable collider and button components
+            _myTrigger.enabled = false;
+            _myButton.enabled = false;
+
+            // disable gameobject
+            _pageController.StartCoroutine(DisableGameObject(0));
+        }
+
+    }
+    public virtual void EnableButton()
+    {
+        // instantly disable collider and button components
+        _myTrigger.enabled = false;
+        _myButton.enabled = false;
+
+        // enable this object
+        this.gameObject.SetActive(true);
+
+        // play animation
+        PlayAnimation(_animationNameAppear);
+        // play idle afterwards
+        _animationComponent.PlayQueued(_animationNameIdle);
+
+        // enable components after appear animation
+        float appearTime = _animationComponent.GetClip(_animationNameAppear).length;
+        _pageController.StartCoroutine(EnableComponents(appearTime));
+    }
+    #endregion
+
+
+
+    #region PRIVATE FUNCTIONS
     protected virtual void ExecuteLogic()
     {
         for (int i = 0; i < _buttonExecutes.Count; i++)
@@ -73,8 +140,6 @@ public class ButtonBase : MonoBehaviour, IClickable
             _buttonExecutes[i].MyLogic();
         }
     }
-
-
     protected virtual IEnumerator ExecuteLogicRoutine()
     {
         yield return new WaitForSeconds(_waitTimeBeforeExecutingLogic);
@@ -89,13 +154,34 @@ public class ButtonBase : MonoBehaviour, IClickable
             _audioController.PlayAudio(_soundEffect);
         }
     }
-    protected virtual void PlayAnimationPress()
+    protected virtual void PlayAnimation(string animationString)
     {
         if (_animationComponent != null)
         {
-            _animationComponent.Play(_animationNameClicked);
+            _animationComponent.Play(animationString);
         }
     }
+    protected virtual void PlayAnimationQueued(string animationString)
+    {
+        if (_animationComponent != null)
+        {
+            _animationComponent.PlayQueued(animationString);
+        }
+    }
+    protected virtual IEnumerator DisableGameObject(float poofDuration)
+    {
+        yield return new WaitForSeconds(poofDuration);
+
+        this.gameObject.SetActive(false);
+    }
+    protected virtual IEnumerator EnableComponents(float appearDuration)
+    {
+        yield return new WaitForSeconds(appearDuration);
+
+        _myTrigger.enabled = true;
+        _myButton.enabled = true;
+    }
+    #endregion
 
 
 
