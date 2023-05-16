@@ -27,12 +27,12 @@ public class MoveDemo : MonoBehaviour
     private void OnDisable()
     {
         // Unsubscribe to player input events
-        var playerInput = ServiceLocator.Instance.InputManager.PlayerInput;
+        //var playerInput = ServiceLocator.Instance.InputManager.PlayerInput;
 
-        playerInput.Move.performed -= x => Rotate(x.ReadValue<Vector2>());
-        playerInput.Move.canceled -= x => Rotate(x.ReadValue<Vector2>());
-        playerInput.Action.performed -= x => Click();
-        playerInput.Action.canceled -= x => Click();
+        //playerInput.Move.performed -= x => Rotate(x.ReadValue<Vector2>());
+        //playerInput.Move.canceled -= x => Rotate(x.ReadValue<Vector2>());
+        //playerInput.Action.performed -= x => Click();
+        //playerInput.Action.canceled -= x => Click();
     }
 
     private void Rotate(Vector2 input)
@@ -49,12 +49,12 @@ public class MoveDemo : MonoBehaviour
     public void Pause()
     {
         _isPaused = !_isPaused;
-        Ui.gameObject.SetActive(_isPaused);
+        //Ui.gameObject.SetActive(_isPaused);
         ServiceLocator.Instance.InputManager.EnableUiInput(_isPaused);
-        Player.gameObject.SetActive(!_isPaused);
+        //Player.gameObject.SetActive(!_isPaused);
         ServiceLocator.Instance.InputManager.EnablePlayerInput(_isPaused);
 
-        Debug.Log("Pause");
+        Debug.Log(_isPaused);
     }
 
     private void Update()

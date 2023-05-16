@@ -12,15 +12,15 @@ public class SwitchPath : MonoBehaviour
     private bool _hitTrigger = false;
     private CinemachineDollyCart _playerDollyCart;
 
-    private int FindClosestWaypointIndex(GameObject go)
+    private int FindClosestWaypointIndex(Vector3 position, CinemachineSmoothPath path)
     {
         int closestWaypointIndex = 0;
         float smallestMagnitude = float.MaxValue;
 
         // Check each waypoint which one is closer
-        for (int i = 0; i < _fromSmoothPath.m_Waypoints.Length; i++)
+        for (int i = 0; i < path.m_Waypoints.Length; i++)
         {
-            float magnitude = Vector3.Magnitude(go.transform.position - _fromSmoothPath.m_Waypoints[i].position);
+            float magnitude = Vector3.Magnitude(position - path.m_Waypoints[i].position);
 
             // Check if current waypoint magnitude is closer than previous
             if (magnitude < smallestMagnitude)
@@ -44,7 +44,7 @@ public class SwitchPath : MonoBehaviour
         // Find closest waypoint
         if (_closestWaypointIndex == -1)
         {
-            _closestWaypointIndex = FindClosestWaypointIndex(other.gameObject);
+            _closestWaypointIndex = FindClosestWaypointIndex(other.gameObject.transform.position, _fromSmoothPath);
         }
 
         _hitTrigger = true;
