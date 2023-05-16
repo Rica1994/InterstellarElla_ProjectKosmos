@@ -76,8 +76,10 @@ public class ButtonBase : MonoBehaviour, IClickable
             }
             PlaySoundEffect();
 
-            // make it so I cannot press another button as long as this is running
-
+            // PROBLEM - I want to make it so I cannot press another button as long as this buttons logic is running
+            // (1) (if I'm dependant on Unity Button, then I need to access all of the available ones and disable them == likely to check 4-8 buttons whenever called)
+            // (2) (if I'm dependant on IClick, then I could just toggle on a bool in a possible "system" that detects clicks == one more update loop to check raycasts)
+            ServiceLocator.Instance.GetService<InputManager>().EnableUiInput(false);
 
             // actual logic
             _pageController.ButtonRunner = ExecuteLogicRoutine();
@@ -172,7 +174,10 @@ public class ButtonBase : MonoBehaviour, IClickable
     {
         yield return new WaitForSeconds(poofDuration);
 
-        this.gameObject.SetActive(false);
+        if (this.gameObject != null)
+        {
+            this.gameObject.SetActive(false);
+        }     
     }
     protected virtual IEnumerator EnableComponents(float appearDuration)
     {

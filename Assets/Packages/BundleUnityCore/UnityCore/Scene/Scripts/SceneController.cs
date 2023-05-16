@@ -143,6 +143,17 @@ namespace UnityCore
                     _pageController.TurnPageOff(m_LoadingPage);
                 }
 
+                // showcase the UI_persistent (pause_button) when needed
+                if (m_TargetScene == SceneType.S_MainMenu || m_TargetScene == SceneType.S_Loading)
+                {
+                    _pageController.ShowPauseButton(false);
+                }
+                else
+                {
+                    _pageController.ShowPauseButton(true);
+                }
+                
+
                 m_SceneIsLoading = false;
             }
             private bool SceneCanBeLoaded(SceneType scene, bool reload)
