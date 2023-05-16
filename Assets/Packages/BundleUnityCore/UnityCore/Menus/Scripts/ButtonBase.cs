@@ -108,11 +108,6 @@ public class ButtonBase : MonoBehaviour, IClickable
             _myTrigger.enabled = false;
             _myButton.enabled = false;
 
-            Debug.Log("disabling button " + gameObject.name);
-
-            Debug.Log("accessing pagecontroller " + _pageController.name); // null for something
-
-
             // disable gameobject
             _pageController.StartCoroutine(DisableGameObject(0));
         }
