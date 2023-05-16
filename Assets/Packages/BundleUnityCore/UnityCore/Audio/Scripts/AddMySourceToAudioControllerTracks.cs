@@ -14,24 +14,28 @@ public class AddMySourceToAudioControllerTracks : MonoBehaviour
     [SerializeField]
     private AudioTrack _myAudioTrack;
 
+    private AudioController _audioController;
 
     void Start()
     {
+        _audioController = ServiceLocator.Instance.GetService<AudioController>();
+
+
         if (_myAudioTrack.Source != null)
         {
             switch (_myAudioTrack.Type)
             {
                 case UnityCore.Audio.AudioType.OST:
-                    AudioController.Instance.TracksOST.Add(_myAudioTrack);
+                    _audioController.TracksOST.Add(_myAudioTrack);
                     break;
                 case UnityCore.Audio.AudioType.SFX_UI:
-                    AudioController.Instance.TracksUI.Add(_myAudioTrack);
+                    _audioController.TracksUI.Add(_myAudioTrack);
                     break;
                 case UnityCore.Audio.AudioType.SFX_Player:
-                    AudioController.Instance.TracksPlayer.Add(_myAudioTrack);
+                    _audioController.TracksPlayer.Add(_myAudioTrack);
                     break;
                 case UnityCore.Audio.AudioType.SFX_World:
-                    AudioController.Instance.TracksWorld.Add(_myAudioTrack);
+                    _audioController.TracksWorld.Add(_myAudioTrack);
                     break;
                 default:
                     Debug.Log("You forgot to assign an AudioType to " + this.gameObject);

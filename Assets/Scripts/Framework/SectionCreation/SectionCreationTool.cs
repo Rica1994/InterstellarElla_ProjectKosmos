@@ -1,6 +1,3 @@
-
-
-
 #if UNITY_EDITOR
 
 using UnityEngine;
@@ -26,7 +23,6 @@ public class SectionCreationTool : EditorWindow
         PressedButton();
     }
 
-
     public void PressedButton()
     {
         // Get selected object in hierarchy
@@ -42,8 +38,8 @@ public class SectionCreationTool : EditorWindow
             {
                 SelectedSection = SelectedLevelSectionCreator.Section;
             }
-            else 
-            { 
+            else
+            {
                 SelectedSection = selectedObject.GetComponent<Section>();
             }
         }
@@ -53,7 +49,6 @@ public class SectionCreationTool : EditorWindow
         //    return;
         //}
 
-        //Undo.RecordObject(selectedObject, "Undo-ing parenting");
 
         // button parenting objects
         ParentObjectsWithinColliders();
@@ -69,31 +64,49 @@ public class SectionCreationTool : EditorWindow
         {
             if (SelectedLevelSectionCreator != null)
             {
+                // Begin grouping the parenting operations for undo
+                Undo.IncrementCurrentGroup();
+                Undo.SetCurrentGroupName("Parenting objects in colliders");
+                
+
                 // parenting logic //
                 List<GameObject> tempList = new List<GameObject>();
                 foreach (GameObject obj in UnityEngine.Object.FindObjectsOfType<GameObject>())
                 {
-                    // first fill list with objects that do not have a parent...
-                    if (obj.transform.parent == null)
-                    {
-                        tempList.Add(obj);
-                    }
+                    tempList.Add(obj);
                 }
+
                 foreach (BoxCollider coll in SelectedLevelSectionCreator.CollidersDefiningMySection)
                 {
                     List<GameObject> objectsAdded = new List<GameObject>();
+                    Undo.RecordObjects(tempList.ToArray(), "Parenting objects in colliders");
                     foreach (GameObject obj in tempList)
                     {
                         if (coll.bounds.Contains(obj.transform.position))
                         {
+                            var parent = obj.transform.parent;
+                            // Check if the parent of this object is within the bounds of the section
+                            // If it is, then we don't want to parent it to the section
+                            if (parent != null && coll.bounds.Contains(parent.position))
+                            {
+                                continue;
+                            }
+
                             objectsAdded.Add(obj);
                             if (obj.TryGetComponent(out PickUp pickUp))
                             {
+                                Undo.SetTransformParent(obj.transform, SelectedLevelSectionCreator.Section.ParentPickups.transform,
+                                    "Parenting objects in colliders");
+                                Undo.RegisterCompleteObjectUndo(obj, "Undo Parenting");
                                 obj.transform.SetParent(SelectedLevelSectionCreator.Section.ParentPickups.transform);
                             }
                             else
                             {
-                                obj.transform.SetParent(SelectedLevelSectionCreator.Section.ParentEnvironment.transform);
+                                Undo.SetTransformParent(obj.transform, SelectedLevelSectionCreator.Section.ParentEnvironment.transform,
+                                    "Parenting objects in colliders");
+                                Undo.RegisterCompleteObjectUndo(obj, "Undo Parenting");
+                                obj.transform.SetParent(SelectedLevelSectionCreator.Section.ParentEnvironment
+                                    .transform);
                             }
                         }
                     }
@@ -105,13 +118,20 @@ public class SectionCreationTool : EditorWindow
                             tempList.Remove(obj);
                         }
                     }
+
                     objectsAdded.Clear();
                 }
 
                 // naming logic //
-                SelectedLevelSectionCreator.Section.name = "PV_LevelSection_" + SceneManager.GetActiveScene().name + "_" + SelectedLevelSectionCreator.SectionIndex;
-                SelectedLevelSectionCreator.Section.ParentEnvironment.name = "Environment_" + SelectedLevelSectionCreator.SectionIndex;
-                SelectedLevelSectionCreator.Section.ParentPickups.name = "Pickups_" + SelectedLevelSectionCreator.SectionIndex;
+                SelectedLevelSectionCreator.Section.name = "PV_LevelSection_" + SceneManager.GetActiveScene().name +
+                                                           "_" + SelectedLevelSectionCreator.SectionIndex;
+                SelectedLevelSectionCreator.Section.ParentEnvironment.name =
+                    "Environment_" + SelectedLevelSectionCreator.SectionIndex;
+                SelectedLevelSectionCreator.Section.ParentPickups.name =
+                    "Pickups_" + SelectedLevelSectionCreator.SectionIndex;
+
+                // Collapse the parenting operations for undo
+                Undo.CollapseUndoOperations(Undo.GetCurrentGroup());
 
                 // inform the editor that the scene has changed
                 EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
@@ -182,8 +202,10 @@ public class SectionCreationTool : EditorWindow
             if (SelectedSection != null)
             {
                 // debug object counts
-                Debug.Log("-This Section has " + GetChildren(SelectedSection.ParentEnvironment) + " GameObjects in Environment");
-                Debug.Log("-This Section has " + GetChildren(SelectedSection.ParentPickups) + " GameObjects in Pickups");
+                Debug.Log("-This Section has " + GetChildren(SelectedSection.ParentEnvironment) +
+                          " GameObjects in Environment");
+                Debug.Log("-This Section has " + GetChildren(SelectedSection.ParentPickups) +
+                          " GameObjects in Pickups");
             }
             else
             {
@@ -197,8 +219,10 @@ public class SectionCreationTool : EditorWindow
             if (SelectedSection != null)
             {
                 // debug triangle count
-                Debug.Log("This Section has " + GetTriangleCount(SelectedSection.ParentEnvironment) + " Triangles in Environment");
-                Debug.Log("This Section has " + GetTriangleCount(SelectedSection.ParentPickups) + " Triangles in Pickups");
+                Debug.Log("This Section has " + GetTriangleCount(SelectedSection.ParentEnvironment) +
+                          " Triangles in Environment");
+                Debug.Log("This Section has " + GetTriangleCount(SelectedSection.ParentPickups) +
+                          " Triangles in Pickups");
             }
             else
             {
@@ -212,7 +236,8 @@ public class SectionCreationTool : EditorWindow
             if (SelectedSection != null)
             {
                 // debug triangle count
-                Debug.Log("This Section has " + GetVertexCount(SelectedSection.ParentEnvironment) + " Vertices in Environment");
+                Debug.Log("This Section has " + GetVertexCount(SelectedSection.ParentEnvironment) +
+                          " Vertices in Environment");
                 Debug.Log("This Section has " + GetVertexCount(SelectedSection.ParentPickups) + " Vertices in Pickups");
             }
             else
@@ -237,9 +262,6 @@ public class SectionCreationTool : EditorWindow
     }
 
 
-
-
-
     private int GetChildren(GameObject obj)
     {
         int count = 0;
@@ -249,8 +271,10 @@ public class SectionCreationTool : EditorWindow
             count++;
             Counter(obj.transform.GetChild(i).gameObject, ref count);
         }
+
         return count;
     }
+
     private void Counter(GameObject currentObj, ref int count)
     {
         for (int i = 0; i < currentObj.transform.childCount; i++)
@@ -259,6 +283,7 @@ public class SectionCreationTool : EditorWindow
             Counter(currentObj.transform.GetChild(i).gameObject, ref count);
         }
     }
+
     private int GetVertexCount(GameObject obj)
     {
         int count = 0;
@@ -273,6 +298,7 @@ public class SectionCreationTool : EditorWindow
 
         return count;
     }
+
     private int GetTriangleCount(GameObject obj)
     {
         int count = 0;

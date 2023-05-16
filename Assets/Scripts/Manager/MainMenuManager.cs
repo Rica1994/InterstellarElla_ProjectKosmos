@@ -21,9 +21,13 @@ public class MainMenuManager : Service
 
     private List<MenuLevel> _levels = new List<MenuLevel>();
 
+    private SceneController _sceneController;
+
     // animation strings
     private const string _levelScaleUp = "A_MenuLevelScaleUp";
     private const string _levelScaleDown = "A_MenuLevelScaleDown";
+    private const string _levelScalePop = "A_MenuLevelScalePop";
+    private const string _levelRotateFast = "A_MenuLevelRotateFast";
 
     // Animator strings
     private const string _triggerForward = "GoForward";
@@ -40,10 +44,14 @@ public class MainMenuManager : Service
     private const string _level_5_1 = "A_Rotate_L5-L1";
     private const string _level_5_4 = "A_Rotate_L5-L4";
 
+    private const string _camZoom = "A_CameraLevelZoom";
+
 
 
     private void Start()
     {
+        _sceneController = ServiceLocator.Instance.GetService<SceneController>();
+
         _levels = _menuAnimator.MenuLevels;
 
         _levelIndex = 0;
@@ -64,7 +72,11 @@ public class MainMenuManager : Service
     public void LoadLevel()
     {
         // slowly scale up the clicked level, as a fade out takes place
+        _currentLevel.AnimationScaler.Play(_levelScalePop);
+        _currentLevel.AnimationRotater.Play(_levelRotateFast);
 
+        // zoom camera (needs to be animation
+        _menuAnimator.CameraAnimation.Play(_camZoom);
 
         SceneType sceneToLoad = SceneType.None;
         switch (ScenesToLoad)
@@ -80,7 +92,9 @@ public class MainMenuManager : Service
                 break;
         }
 
-        SceneController.Instance.Load(sceneToLoad, null, false, PageType.Loading);
+        // load the loading scene first, then the actual scene for gameplay
+        _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);
+        
     }
 
 

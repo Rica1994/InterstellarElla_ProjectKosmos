@@ -12,46 +12,53 @@ namespace UnityCore
             public List<AudioElement> AudioOST = new List<AudioElement>();
             public List<AudioElement> AudioUI = new List<AudioElement>();
 
+            private AudioController _audioController;
+
+            private void Start()
+            {
+                _audioController = ServiceLocator.Instance.GetService<AudioController>();
+            }
+
 
             private void Update()
             {
                 /// world sounds testing ///
                 if (Input.GetKeyUp(KeyCode.T))
                 {
-                    AudioController.Instance.PlayAudio(AudioWorld[0]); 
+                    _audioController.PlayAudio(AudioWorld[0]); 
                 }
                 if (Input.GetKeyUp(KeyCode.G))
                 {
-                    AudioController.Instance.StopAudio(AudioWorld[0].Type);
+                    _audioController.StopAudio(AudioWorld[0].Type);
                 }
                 if (Input.GetKeyUp(KeyCode.B))
                 {
-                    AudioController.Instance.RestartAudio(AudioWorld[0].Type);
+                    _audioController.RestartAudio(AudioWorld[0].Type);
                 }
 
                 if (Input.GetKeyUp(KeyCode.Y))
                 {
-                    AudioController.Instance.PlayAudio(AudioWorld[1]);
+                    _audioController.PlayAudio(AudioWorld[1]);
                 }
 
 
                 /// OST testing ///
                 if (Input.GetKeyUp(KeyCode.U))
                 {
-                    AudioController.Instance.PlayAudio(AudioOST[0]);
+                     _audioController.PlayAudio(AudioOST[0]);
                 }
                 if (Input.GetKeyUp(KeyCode.J))
                 {
-                    AudioController.Instance.StopAudio(AudioOST[0].Type);
+                    _audioController.StopAudio(AudioOST[0].Type);
                 }
                 if (Input.GetKeyUp(KeyCode.M))
                 {
-                    AudioController.Instance.RestartAudio(AudioOST[0].Type);
+                    _audioController.RestartAudio(AudioOST[0].Type);
                 }
 
                 if (Input.GetKeyUp(KeyCode.I))
                 {
-                    AudioController.Instance.PlayAudio(AudioOST[1]);
+                    _audioController.PlayAudio(AudioOST[1]);
                 }
 
 
@@ -59,20 +66,20 @@ namespace UnityCore
                 /// UI testing ///
                 if (Input.GetKeyUp(KeyCode.E))
                 {
-                    AudioController.Instance.PlayAudio(AudioUI[0]);
+                    _audioController.PlayAudio(AudioUI[0]);
                 }
                 if (Input.GetKeyUp(KeyCode.D))
                 {
-                    AudioController.Instance.StopAudio(AudioUI[0].Type);
+                    _audioController.StopAudio(AudioUI[0].Type);
                 }
                 if (Input.GetKeyUp(KeyCode.C))
                 {
-                    AudioController.Instance.RestartAudio(AudioUI[0].Type);
+                    _audioController.RestartAudio(AudioUI[0].Type);
                 }
 
                 if (Input.GetKeyUp(KeyCode.R))
                 {
-                    AudioController.Instance.PlayAudio(AudioUI[1]);
+                    _audioController.PlayAudio(AudioUI[1]);
                 }
             }
         }

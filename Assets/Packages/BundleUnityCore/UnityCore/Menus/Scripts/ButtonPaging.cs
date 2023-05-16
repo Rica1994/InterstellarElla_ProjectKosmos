@@ -38,13 +38,13 @@ public class ButtonPaging : ButtonBase
     protected override void PlaySoundEffect()
     {
         // if this page is alrdy on...
-        if (PageController.Instance.PageIsOn(_turnThisPage) == true)
+        if (_pageController.PageIsOn(_turnThisPage) == true)
         {
-            _audioInstance.PlayAudio(_soundEffectOff);
+            _audioController.PlayAudio(_soundEffectOff);
         }
         else
         {
-            _audioInstance.PlayAudio(_soundEffect);
+            _audioController.PlayAudio(_soundEffect);
         }
     }
 

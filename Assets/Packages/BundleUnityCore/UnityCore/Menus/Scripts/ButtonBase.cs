@@ -25,15 +25,15 @@ public class ButtonBase : MonoBehaviour, IClickable
     protected AudioElement _soundEffect;
 
 
-    protected AudioController _audioInstance;
+    protected AudioController _audioController;
     protected PageController _pageController;
 
 
 
     protected virtual void Start()
     {
-        _audioInstance = AudioController.Instance;
-        _pageController = PageController.Instance;
+        _audioController = ServiceLocator.Instance.GetService<AudioController>();
+        _pageController = ServiceLocator.Instance.GetService<PageController>();
     }
 
     public virtual void Click()
@@ -76,7 +76,7 @@ public class ButtonBase : MonoBehaviour, IClickable
     {
         if (_soundEffect != null)
         {
-            _audioInstance.PlayAudio(_soundEffect);
+            _audioController.PlayAudio(_soundEffect);
         }
     }
     protected virtual void PlayAnimationPress()
