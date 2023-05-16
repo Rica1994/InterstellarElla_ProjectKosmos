@@ -20,4 +20,24 @@ public class Service : MonoBehaviour
     {
         ServiceLocator.Instance.UnRegister(this);
     }
+
+
+
+    //virtual protected void Awake()
+    //{
+    //    if (ServiceLocator.Instance.Contains(this))
+    //    {
+    //        Destroy(this);
+    //    }
+    //    else
+    //    {
+    //        ServiceLocator.Instance.Register(this);
+    //    }
+    //}
+
+    //virtual protected void OnDestroy()
+    //{
+    //    ServiceLocator.Instance.UnRegister(this);
+    //}
+
 }

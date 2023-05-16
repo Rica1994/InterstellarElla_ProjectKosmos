@@ -147,6 +147,7 @@ namespace UnityCore
                 if (m_TargetScene == SceneType.S_MainMenu || m_TargetScene == SceneType.S_Loading)
                 {
                     _pageController.ShowPauseButton(false);
+                    ServiceLocator.Instance.GetService<GameManager>().SetPlayerController(null);
                 }
                 else
                 {

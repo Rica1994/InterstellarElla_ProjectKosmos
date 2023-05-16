@@ -7,10 +7,21 @@ public class GameManager : Service
 {
     private PlayerController _playerController;
 
-    private void Awake()
+    //private void Awake()
+    //{
+    //    _playerController = FindObjectOfType<PlayerController>();
+    //    if (_playerController == null) throw new Exception("No PlayerController found in scene");
+    //}
+
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         _playerController = FindObjectOfType<PlayerController>();
-        if (_playerController == null) throw new Exception("No PlayerController found in scene");
+        if (_playerController == null)
+        {
+            Debug.LogWarning("No player controller found in this scene");
+        }
     }
 
     public void EndGame()
@@ -30,10 +41,13 @@ public class GameManager : Service
 
     private void Update()
     {
-        _playerController.UpdateController();
+        if (_playerController != null)
+        {
+            _playerController.UpdateController();
+        }       
     }
     
-    public void SetPlayerController(PlayerController playerController)
+    public void SetPlayerController(PlayerController playerController = null)
     {
         _playerController = playerController;
     }
