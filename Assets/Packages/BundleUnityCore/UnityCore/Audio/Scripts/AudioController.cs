@@ -91,10 +91,8 @@ namespace UnityCore
 
             #region Unity Functions
 
-            protected override void Awake()
+            private void Awake()
             {
-                base.Awake();
-
                 _currentMixerType = MixerType.MixerNormal;
             }
 
