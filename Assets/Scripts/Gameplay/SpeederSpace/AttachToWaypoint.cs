@@ -17,79 +17,39 @@ public class AttachToWaypoint : MonoBehaviour
         {
             return;
         }
-        var worldPosition = waypointsFrom[0].position + _pathToAttachFrom.gameObject.transform.position;
-        var targetStartPoint = _pathToAttachTo.FindClosestPoint(worldPosition, 0, -1, 50);
 
+        // Get the world position of waypoint 0 
+        Vector3 worldPosition = waypointsFrom[0].position + _pathToAttachFrom.gameObject.transform.position;
+        // Find the closest path on the other track, close to waypoint 0
+        float targetStartDistance = _pathToAttachTo.FindClosestPoint(worldPosition, 0, -1, 50);
+
+        // Get the world position of waypoint last
         worldPosition = waypointsFrom[waypointsFrom.Length - 1].position + _pathToAttachFrom.gameObject.transform.position;
-        var targetEndPoint = _pathToAttachTo.FindClosestPoint(worldPosition, 0, -1, 50);
+        // Find the closest path on the other track, close to waypoint last
+        float targetEndDistance = _pathToAttachTo.FindClosestPoint(worldPosition, 0, -1, 50);
 
         List<CinemachineSmoothPath.Waypoint> newWaypoints = new List<CinemachineSmoothPath.Waypoint>();
+        newWaypoints.AddRange(waypointsFrom);
 
         CinemachineSmoothPath.Waypoint newPoint = new CinemachineSmoothPath.Waypoint();
 
         // Get position from targetstart point in path units
-        newPoint.position = _pathToAttachTo.EvaluatePositionAtUnit(targetStartPoint, CinemachinePathBase.PositionUnits.PathUnits);
+        newPoint.position = _pathToAttachTo.EvaluatePositionAtUnit(targetStartDistance, CinemachinePathBase.PositionUnits.PathUnits);
+        // Transform position to local space
         newPoint.position -= _pathToAttachFrom.transform.position;
 
-        newWaypoints.AddRange(waypointsFrom);
-        newWaypoints.RemoveAt(0);
-        newWaypoints.RemoveAt(newWaypoints.Count - 1);
+        // Replace first waypoint with new waypoint
+        newWaypoints[0] = newPoint;
 
-        newWaypoints.Insert(0, newPoint);
-        newPoint.position = _pathToAttachTo.EvaluatePositionAtUnit(targetEndPoint, CinemachinePathBase.PositionUnits.PathUnits);
+        // Get position from target end 
+        newPoint.position = _pathToAttachTo.EvaluatePositionAtUnit(targetEndDistance, CinemachinePathBase.PositionUnits.PathUnits);
+        // Transform position to local space
         newPoint.position -= _pathToAttachFrom.transform.position;
-        newWaypoints.Add(newPoint);
 
+        // Replace last waypoint with new wayopint
+        newWaypoints[newWaypoints.Count - 1] = newPoint;
+
+        // Convert list to array and save as waypoints
         _pathToAttachFrom.m_Waypoints = newWaypoints.ToArray();
     }
-
-    private float FindPreviousWaypointDistance(CinemachineSmoothPath.Waypoint[] waypointsFrom, int index, bool isClosestToStart = true)
-    {
-        var point = _pathToAttachTo.FindClosestPoint(waypointsFrom[index].position, 0, -1, 50);
-        var waypointIndex = FindClosestWaypointIndex(waypointsFrom[index].position, _pathToAttachTo);
-        var waypoint = _pathToAttachTo.FindClosestPoint(_pathToAttachTo.m_Waypoints[waypointIndex].position, 0, -1, 50);
-        if (isClosestToStart && waypoint < point || waypoint > point)
-        {
-            return waypoint;
-        }
-        else if (isClosestToStart && waypointIndex > 0)
-        {
-            waypoint = _pathToAttachTo.FindClosestPoint(_pathToAttachTo.m_Waypoints[waypointIndex - 1].position, 0, -1, 50);
-            if (waypoint < point)
-            {
-                return waypoint;
-            }
-        }
-        else if (!isClosestToStart && waypointIndex < _pathToAttachTo.m_Waypoints.Length - 1)
-        {
-            waypoint = _pathToAttachTo.FindClosestPoint(_pathToAttachTo.m_Waypoints[waypointIndex + 1].position, 0, -1, 50);
-            if (waypoint > point)
-            {
-                return waypoint;
-            }
-        }
-        return point;
-    }
-
-    private int FindClosestWaypointIndex(Vector3 position, CinemachineSmoothPath path)
-    {
-        int closestWaypointIndex = 0;
-        float smallestMagnitude = float.MaxValue;
-
-        // Check each waypoint which one is closer
-        for (int i = 0; i < path.m_Waypoints.Length; i++)
-        {
-            float magnitude = Vector3.Magnitude(position - path.m_Waypoints[i].position);
-
-            // Check if current waypoint magnitude is closer than previous
-            if (magnitude < smallestMagnitude)
-            {
-                smallestMagnitude = magnitude;
-                closestWaypointIndex = i;
-            }
-        }
-
-        return closestWaypointIndex;
-    }
-
 }
