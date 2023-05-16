@@ -151,6 +151,9 @@ namespace UnityCore
                 else
                 {
                     _pageController.ShowPauseButton(true);
+
+                    var playerController = FindObjectOfType<PlayerController>();
+                    ServiceLocator.Instance.GetService<GameManager>().SetPlayerController(playerController);
                 }
 
 

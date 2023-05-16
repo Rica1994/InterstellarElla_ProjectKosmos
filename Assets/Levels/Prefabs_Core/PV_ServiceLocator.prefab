@@ -1,5 +1,48 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7611290037075368373
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7205242741470952655}
+  - component: {fileID: 4703180265123017060}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7205242741470952655
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7611290037075368373}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7926606816940189294}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4703180265123017060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7611290037075368373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ea8eedbff484454a883325709d301cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8249913654616286930
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -66,6 +109,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2052904917930377395, guid: 5a2489fb24f134149ba4394a6a511e3d, type: 3}
   m_PrefabInstance: {fileID: 8249913654616286930}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &7926606816940189294 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2052904917930377404, guid: 5a2489fb24f134149ba4394a6a511e3d, type: 3}
+  m_PrefabInstance: {fileID: 8249913654616286930}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7926606816200636129 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2052904917459816499, guid: 5a2489fb24f134149ba4394a6a511e3d, type: 3}
@@ -96,3 +144,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonPause: {fileID: 0}
+  ButtonContinue: {fileID: 0}
+  ButtonBack: {fileID: 0}
