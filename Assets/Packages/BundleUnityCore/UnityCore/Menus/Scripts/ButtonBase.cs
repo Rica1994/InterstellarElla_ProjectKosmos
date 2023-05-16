@@ -24,6 +24,16 @@ public class ButtonBase : MonoBehaviour, IClickable
     [SerializeField]
     protected AudioElement _soundEffect;
 
+    [Header("Trigger")]
+    [SerializeField]
+    private Collider _myTrigger;
+    public Collider MyTrigger => _myTrigger;
+
+    [Header("Unity Button Component")]
+    [SerializeField]
+    private Button _myButton;
+    public Button MyButton => _myButton;
+
 
     protected AudioController _audioController;
     protected PageController _pageController;
