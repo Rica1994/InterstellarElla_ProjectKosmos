@@ -71,6 +71,9 @@ public class MainMenuManager : Service
 
         // size up level 1
         _levels[0].AnimationScaler.Play(_levelScaleUp);
+
+        // show buttons after delay
+        StartCoroutine(EnableButtonsDelay());
     }
 
 
@@ -78,7 +81,9 @@ public class MainMenuManager : Service
     public void LoadLevel()
     {
         // hide the forward & backward buttons
-        //_buttonBackward
+        _buttonBackward.DisableButton();
+        _buttonForward.DisableButton();
+        _buttonLevelSelect.DisableButton();
 
         // slowly scale up the clicked level, as a fade out takes place
         _currentLevel.AnimationScaler.Play(_levelScalePop);
@@ -259,6 +264,14 @@ public class MainMenuManager : Service
             default:
                 return SceneType.None;
         }
+    }
+    private IEnumerator EnableButtonsDelay()
+    {
+        yield return new WaitForSeconds(1);
+
+        _buttonBackward.EnableButton();
+        _buttonForward.EnableButton();
+        _buttonLevelSelect.EnableButton();
     }
 }
 
