@@ -101,13 +101,18 @@ public class LevelManager : Service
     {
         if (hasEntered)
         {
-            var tempPlayer = FindAnyObjectByType<ToDeleteMoveScript>().gameObject;
+            var tempPlayer = FindAnyObjectByType<PlayerController>().gameObject;
             ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint);
         }
     }
 
     private void OnLoadingTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
     {
+        if (other.gameObject.GetComponent<PlayerController>() == null)
+        {
+            return;
+        }
+        
         // double check if we have already entered this trigger
         if (hasEntered && _lastLoadingTrigger != trigger)
         {
@@ -134,7 +139,7 @@ public class LevelManager : Service
 
                 // testing particles
                 ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleWorldSpace(ParticleWorld, _currentCheckpoint.transform.position);
-                var player = FindAnyObjectByType<ToDeleteMoveScript>();
+                var player = FindAnyObjectByType<PlayerController>();
                 ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleLocalSpace(ParticleLocal, player.transform);
 
                 // call PickupManager logic

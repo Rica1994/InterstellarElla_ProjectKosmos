@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Transactions;
 using UnityEngine;
 
-public class SpeederGround : MonoBehaviour
+public class SpeederGround : PlayerController
 {
     [Header ("Speed")]
     [SerializeField] private float _speedForward = 50f;
@@ -76,8 +76,10 @@ public class SpeederGround : MonoBehaviour
         _previousPosition = gameObject.transform.position;
     }
 
-    private void Update()
+    public override void UpdateController()
     {
+        base.UpdateController();
+
         // Remember previous location
         _previousPosition = gameObject.transform.position;
 
@@ -135,7 +137,6 @@ public class SpeederGround : MonoBehaviour
         {
             return;
         }
-
 
         // If service locator does not exist anymore, there is no need to unsubscribe:
         // References of this script will not be saved by the input manager anyway since this is also destroyed
