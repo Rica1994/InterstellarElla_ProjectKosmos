@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Transactions;
 using UnityEngine;
 
 public class SpeederGround : MonoBehaviour
@@ -25,6 +26,7 @@ public class SpeederGround : MonoBehaviour
     private float _yVelocity = 0f;
     private bool _isJumping = false;
     private bool _isGrounded = false;
+    private bool _isApplicationQuitting = false;
 
     private MoveComponent _moveComponent;
     private JumpComponent _jumpComponent;
@@ -129,11 +131,25 @@ public class SpeederGround : MonoBehaviour
 
     private void OnDisable()
     {
-        // Unsubscribe to events
+        if (_isApplicationQuitting)
+        {
+            return;
+        }
+
+
+        // If service locator does not exist anymore, there is no need to unsubscribe:
+        // References of this script will not be saved by the input manager anyway since this is also destroyed
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
+
+        // Unsubscribe to events
         playerInput.Move.performed -= x => OnMoveInput(x.ReadValue<Vector2>());
         playerInput.Move.canceled -= x => OnMoveInput(x.ReadValue<Vector2>());
         playerInput.Action.started -= x => OnJumpInput();
+    }
+
+    private void OnApplicationQuit()
+    {
+        _isApplicationQuitting = true;
     }
 
     private void OnMoveInput(Vector2 input)

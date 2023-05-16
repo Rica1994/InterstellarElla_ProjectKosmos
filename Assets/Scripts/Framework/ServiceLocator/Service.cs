@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Service : MonoBehaviour
 {
-    virtual protected void Awake()
+    virtual protected void OnEnable()
     {
         if (ServiceLocator.Instance.Contains(this))
         {
@@ -14,5 +14,10 @@ public class Service : MonoBehaviour
         {
             ServiceLocator.Instance.Register(this);
         }
+    }
+
+    virtual protected void OnDisable()
+    {
+        ServiceLocator.Instance.UnRegister(this);
     }
 }
