@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
@@ -9,6 +10,8 @@ public class SpeederGround : PlayerController
     [SerializeField] private float _speedForward = 50f;
     [SerializeField] private float _speedSideways = 15f;
 
+    public static float SpeedForward;
+    
     [Header ("Boost")]
     [SerializeField] private float _boostSpeedMultiplier = 2f;
     [SerializeField] private float _boostJumpMultiplier = 2f;
@@ -34,6 +37,11 @@ public class SpeederGround : PlayerController
     private ImpactRecieverComponent _impactRecieverComponent;
     private BoostComponent _speedBoostComponent;
     private BoostComponent _jumpBoostComponent;
+
+    private void OnValidate()
+    {
+        SpeedForward = _speedForward;
+    }
 
     public void BoostSpeed()
     {

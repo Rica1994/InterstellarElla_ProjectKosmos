@@ -6,7 +6,6 @@ using UnityEngine;
 public class GameManager : Service
 {
     private PlayerController _playerController;
-
     //private void Awake()
     //{
     //    _playerController = FindObjectOfType<PlayerController>();

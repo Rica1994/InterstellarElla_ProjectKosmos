@@ -45,6 +45,8 @@ public class Section : MonoBehaviour
 
     private void OnEnable()
     {
+        Physics.gravity = Vector3.down * 9.81f;
+    
         //Debug.Log("Enabled a Section");
         Loaded?.Invoke(this);
         _pickUps = GetComponentsInChildren<PickUp>().ToList();
