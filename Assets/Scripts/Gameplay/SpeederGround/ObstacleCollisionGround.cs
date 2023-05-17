@@ -8,6 +8,8 @@ public class ObstacleCollisionGround : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent(out PlayerController player))
         {
+            //var direction = collision.GetContact(0).point - collision.gameObject.transform.position;
+            //var direction = collision.relativeVelocity;
             player.Collide();
         }
     }

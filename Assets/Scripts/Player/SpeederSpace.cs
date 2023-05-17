@@ -89,24 +89,30 @@ public class SpeederSpace : PlayerController
         }
     }
 
-    //public void Collide()
-    //{
-    //    // Knockback backwards and whatever velocity on x
-    //    var velocity = _velocity.normalized;
-    //    Vector3 knockbackDirection = new Vector3(-velocity.x, -velocity.y, -velocity.z);
-    //    _impactRecieverComponent.AddImpact(knockbackDirection.normalized, _knockbackForce);
-    //}
+    public override void Collide()
+    {
+        _dollyCart.m_Speed = 0f;
+        transform.parent = null;
+
+        Debug.Log("COLLIDE");
+
+        // Knockback backwards and whatever velocity on x
+        var velocity = _velocity.normalized;
+        //Vector3 knockbackDirection = new Vector3(-velocity.x, -velocity.y, -velocity.z);
+        Vector3 knockbackDirection = new Vector3(0f, 0f, -1f);
+        _impactRecieverComponent.AddImpact(-_velocity, _knockbackForce);
+    }
 
     public override void UpdateController()
     {
         base.UpdateController();
         
         // Remember previous location
-        _previousPosition = gameObject.transform.position;
+        _previousPosition = transform.position;
 
         _boostComponent.Update();
         // If is not boosting but was boosting prevoius frame
-        if (!_boostComponent.IsBoosting && !_dollyCart.m_Speed.Equals(_baseSpeed))
+        if (!_boostComponent.IsBoosting && _dollyCart.m_Speed > _baseSpeed)
         {
             _dollyCart.m_Speed = _baseSpeed;
 
@@ -117,11 +123,19 @@ public class SpeederSpace : PlayerController
                 virtualCamera.m_Lens.FieldOfView = 60f;
             }
         }
+        _impactRecieverComponent.Update();
+        if (!_impactRecieverComponent.IsColliding)
+        {
+            Move();
+        }
 
-        Move();
+    }
 
+    private void LateUpdate()
+    {
         // Calculate and save player velocity
         _velocity = (transform.position - _previousPosition) / Time.deltaTime;
+        Debug.Log(_velocity);
     }
 
     private void CheckBounds()

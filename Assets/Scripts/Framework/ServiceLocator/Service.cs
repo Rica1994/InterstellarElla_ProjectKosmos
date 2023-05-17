@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Service : MonoBehaviour
 {
+    private bool _isApplicationQuitting = false;
+
     virtual protected void OnEnable()
     {
         if (ServiceLocator.Instance.Contains(this))
@@ -18,26 +20,14 @@ public class Service : MonoBehaviour
 
     virtual protected void OnDisable()
     {
-        ServiceLocator.Instance.UnRegister(this);
+        if (!_isApplicationQuitting)
+        {
+            ServiceLocator.Instance.UnRegister(this);
+        }
     }
 
-
-
-    //virtual protected void Awake()
-    //{
-    //    if (ServiceLocator.Instance.Contains(this))
-    //    {
-    //        Destroy(this);
-    //    }
-    //    else
-    //    {
-    //        ServiceLocator.Instance.Register(this);
-    //    }
-    //}
-
-    //virtual protected void OnDestroy()
-    //{
-    //    ServiceLocator.Instance.UnRegister(this);
-    //}
-
+    private void OnApplicationQuit()
+    {
+        _isApplicationQuitting = true;
+    }
 }
