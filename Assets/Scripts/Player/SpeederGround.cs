@@ -85,11 +85,8 @@ public class SpeederGround : PlayerController
 
         // !!Keep this execution order!!
         _isGrounded = _characterController.isGrounded;
-        if (!_impactRecieverComponent._isColliding)
-        {
-            Move();
-            Jump();
-        }
+        Move();
+        Jump();
         ApplyGravity();
         _impactRecieverComponent.Update();
 
@@ -99,10 +96,19 @@ public class SpeederGround : PlayerController
 
     private void Move()
     {
+        // Adjust forward and sideways speed while colliding
+        float speedForward = _speedForward;
+        float speedSideways = _speedSideways;
+        if (_impactRecieverComponent.IsColliding)
+        {
+            speedForward = 0f;
+            speedSideways /= 2f;
+        }
+
         // Input only allowed for left and right (x)
         Vector3 direction = new Vector3(_input.x, 0f, 1f);
         
-        Vector3 speed = new Vector3(_speedSideways, 0f, _speedForward) * _speedBoostComponent.BoostMultiplier;
+        Vector3 speed = new Vector3(speedSideways, 0f, speedForward) * _speedBoostComponent.BoostMultiplier;
 
         _moveComponent.Move(_characterController, direction, speed);
     }
