@@ -7,10 +7,11 @@ public class ImpactRecieverComponent
 {
     private CharacterController _characterController;
     private Vector3 _impact = Vector3.zero;
-    private float _mass;
-    private float _lerpSpeed;
+    private readonly float _mass;
+    private readonly float _lerpSpeed;
 
-    public bool _isColliding = false;
+    private bool _isColliding = false;
+    public bool IsColliding => _isColliding;
 
     public ImpactRecieverComponent(CharacterController characterController, float mass, float lerpSpeed = 5f)
     {

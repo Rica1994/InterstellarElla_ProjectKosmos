@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class SwitchPath : MonoBehaviour
@@ -71,9 +72,10 @@ public class SwitchPath : MonoBehaviour
             _playerDollyCart.m_Position = _playerDollyCart.m_Path.FromPathNativeUnits(targetPoint, CinemachinePathBase.PositionUnits.Distance); ;
 
             // Adjust priority in cameras so new track camera is active
-            var virtualCamera = _toSmoothPath.gameObject.GetComponentInChildren<CinemachineVirtualCamera>();
+            var virtualCamera = _toSmoothPath.gameObject.GetComponentInChildren<CinemachineVirtualCamera>(true);
             if (virtualCamera)
             {
+                virtualCamera.gameObject.SetActive(true);
                 virtualCamera.MoveToTopOfPrioritySubqueue();
             }
 
