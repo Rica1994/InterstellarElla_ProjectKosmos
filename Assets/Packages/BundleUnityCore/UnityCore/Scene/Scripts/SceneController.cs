@@ -192,21 +192,16 @@ namespace UnityCore
                 {
                     case SceneType.S_MainMenu: return "S_MainMenu";
                     case SceneType.S_Loading: return "S_Loading";
-                    case SceneType.S_Level_1_Blockout: return "S_Level_1_Blockout";
-                    case SceneType.S_Level_1_Art: return "S_Level_1_Art";
-                    case SceneType.S_Level_1_Final: return "S_Level_1_Final";
-                    case SceneType.S_Level_2_Blockout: return "S_Level_2_Blockout";
-                    case SceneType.S_Level_2_Art: return "S_Level_2_Art";
-                    case SceneType.S_Level_2_Final: return "S_Level_2_Final";
-                    case SceneType.S_Level_3_Blockout: return "S_Level_3_Blockout";
-                    case SceneType.S_Level_3_Art: return "S_Level_3_Art";
-                    case SceneType.S_Level_3_Final: return "S_Level_3_Final";
-                    case SceneType.S_Level_4_Blockout: return "S_Level_4_Blockout";
-                    case SceneType.S_Level_4_Art: return "S_Level_4_Art";
-                    case SceneType.S_Level_4_Final: return "S_Level_4_Final";
-                    case SceneType.S_Level_5_Blockout: return "S_Level_5_Blockout";
-                    case SceneType.S_Level_5_Art: return "S_Level_5_Art";
-                    case SceneType.S_Level_5_Final: return "S_Level_5_Final";
+                    case SceneType.S_Level_1_Work: return "S_Level_1_Work";
+                    case SceneType.S_Level_1_Build: return "S_Level_1_Build";
+                    case SceneType.S_Level_2_Work: return "S_Level_2_Work";
+                    case SceneType.S_Level_2_Build: return "S_Level_2_Build";
+                    case SceneType.S_Level_3_Work: return "S_Level_3_Work";
+                    case SceneType.S_Level_3_Build: return "S_Level_3_Build";
+                    case SceneType.S_Level_4_Work: return "S_Level_4_Work";
+                    case SceneType.S_Level_4_Build: return "S_Level_4_Build";
+                    case SceneType.S_Level_5_Work: return "S_Level_5_Work";
+                    case SceneType.S_Level_5_Build: return "S_Level_5_Build";
                     default:
                         Debug.Log("Scene [" + scene + "] does not contain a string for a valid scene. ");
                         return string.Empty;
@@ -218,21 +213,16 @@ namespace UnityCore
                 {
                     case "S_MainMenu": return SceneType.S_MainMenu;
                     case "S_Loading": return SceneType.S_Loading;
-                    case "S_Level_1_Blockout": return SceneType.S_Level_1_Blockout;
-                    case "S_Level_1_Art": return SceneType.S_Level_1_Art;
-                    case "S_Level_1_Final": return SceneType.S_Level_1_Final;
-                    case "S_Level_2_Blockout": return SceneType.S_Level_2_Blockout;
-                    case "S_Level_2_Art": return SceneType.S_Level_2_Art;
-                    case "S_Level_2_Final": return SceneType.S_Level_2_Final;
-                    case "S_Level_3_Blockout": return SceneType.S_Level_3_Blockout;
-                    case "S_Level_3_Art": return SceneType.S_Level_3_Art;
-                    case "S_Level_3_Final": return SceneType.S_Level_3_Final;
-                    case "S_Level_4_Blockout": return SceneType.S_Level_4_Blockout;
-                    case "S_Level_4_Art": return SceneType.S_Level_4_Art;
-                    case "S_Level_4_Final": return SceneType.S_Level_4_Final;
-                    case "S_Level_5_Blockout": return SceneType.S_Level_5_Blockout;
-                    case "S_Level_5_Art": return SceneType.S_Level_5_Art;
-                    case "S_Level_5_Final": return SceneType.S_Level_5_Final;
+                    case "S_Level_1_Work": return SceneType.S_Level_1_Work;
+                    case "S_Level_1_Build": return SceneType.S_Level_1_Build;
+                    case "S_Level_2_Work": return SceneType.S_Level_2_Work;
+                    case "S_Level_2_Build": return SceneType.S_Level_2_Build;
+                    case "S_Level_3_Work": return SceneType.S_Level_3_Work;
+                    case "S_Level_3_Build": return SceneType.S_Level_3_Build;
+                    case "S_Level_4_Work": return SceneType.S_Level_4_Work;
+                    case "S_Level_4_Build": return SceneType.S_Level_4_Build;
+                    case "S_Level_5_Work": return SceneType.S_Level_5_Work;
+                    case "S_Level_5_Build": return SceneType.S_Level_5_Build;
 
                     default:
                         Debug.Log("Scene [" + scene + "] does not contain a type for a valid scene. ");

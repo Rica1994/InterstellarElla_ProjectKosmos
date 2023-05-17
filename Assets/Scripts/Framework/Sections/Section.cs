@@ -18,8 +18,8 @@ public class Section : MonoBehaviour
 
     [Header("Respawn Point")]
     [SerializeField]
-    private GameObject _checkPoint;
-    public GameObject Checkpoint => _checkPoint;
+    private List<GameObject> _checkPoints = new List<GameObject>();
+    public List<GameObject> Checkpoints => _checkPoints;
     
     [SerializeField]
     private Transform _pickupsParentPickUps;
