@@ -18,39 +18,29 @@ public class PickUpManager : Service
     private void Start()
     {
         var serviceLocator = ServiceLocator.Instance;
-
+        var levelManager = ServiceLocator.Instance.GetService<LevelManager>();
+        if (levelManager == null) throw new System.Exception("No LevelManager found in scene");
+        levelManager.OnSectionLoaded += OnSectionLoaded;
 
         /// Disabling the event subscriptions as they don't really function ///
         // this will only subscribe the prefabs in the SCENE (works as long as script execution order is taken into account)
-        //serviceLocator.GetService<LevelManager>().SectionsInstantiated.ForEach(x => x.Loaded += OnSectionLoaded);
 
         // this will only subscribe the prefabs in the ASSETS (is an issue !)
         //serviceLocator.GetService<LevelManager>().Sections.ForEach(x => x.Loaded += OnSectionLoaded);
     }
 
+    /// <summary>
+    /// Gets called this whenever a new segment is loaded with the LevelManager
+    /// </summary>
+    /// <param name="section"></param>
     private void OnSectionLoaded(Section section)
     {
-        Debug.Log("? ! ?");
+        var pickUps = section.PickUps;
 
         // this ...
         // 1) gets all the pickups in 1 section
         // 2) subscribes the pickups to their event
         // 3) adds them to this list
-        SectionLoaded(section);
-    }
-
-    private void OnPickUpPickedUp(PickUp pickup)
-    {
-        if (pickup as EllaPickUp) _foundEllaPickUps += ((EllaPickUp)pickup).Letter;
-        else _pickUpsPickedUp++;
-    }
-
-
-    // call this whenever a new segment is loaded with the LevelManager
-    public void SectionLoaded(Section section)
-    {
-        var pickUps = section.ParentPickups.GetComponentsInChildren<PickUp>(true).ToList();
-
         for (int i = pickUps.Count - 1; i >= 0; i--)
         {
             pickUps[i].OnPickUp += OnPickUpPickedUp;
@@ -59,5 +49,11 @@ public class PickUpManager : Service
 
         // Add all pickups in the section to the list
         _pickUps.AddRange(pickUps);
+    }
+
+    private void OnPickUpPickedUp(PickUp pickup)
+    {
+        if (pickup as EllaPickUp) _foundEllaPickUps += ((EllaPickUp)pickup).Letter;
+        else _pickUpsPickedUp++;
     }
 }

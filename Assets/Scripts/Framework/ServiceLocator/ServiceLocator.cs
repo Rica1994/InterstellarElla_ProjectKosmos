@@ -11,6 +11,7 @@ public class ServiceLocator : MonoBehaviourSingleton<ServiceLocator>
     {
         if(!Contains(service.GetType()))
         {
+            //Debug.Log("adding service -> " + service);
             _services[service.GetType()] = service;
         }
     }
@@ -19,6 +20,8 @@ public class ServiceLocator : MonoBehaviourSingleton<ServiceLocator>
     {
         if(Contains(service.GetType()))
         {
+            //Debug.Log("removing service -> " + service.gameObject.name);
+            //Debug.Log("service count " + _services.Count);
             _services.Remove(service.GetType());
         }
     }

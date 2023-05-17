@@ -54,7 +54,7 @@ public class ButtonBase : MonoBehaviour, IClickable
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
         _pageController = ServiceLocator.Instance.GetService<PageController>();
 
-        DisableButton(true);
+        //DisableButton(true); // gives a problem for if we return to main menu (we try to run acoroutine on buttons that get destroyed)
     }
     #endregion
 
@@ -80,7 +80,7 @@ public class ButtonBase : MonoBehaviour, IClickable
             // PROBLEM - I want to make it so I cannot press another button as long as this buttons logic is running
             // (1) (if I'm dependant on Unity Button, then I need to access all of the available ones and disable them == likely to check 4-8 buttons whenever called)
             // (2) (if I'm dependant on IClick, then I could just toggle on a bool in a possible "system" that detects clicks == one more update loop to check raycasts)
-            ServiceLocator.Instance.GetService<InputManager>().EnableUiInput(false);
+
 
             // actual logic
             _pageController.ButtonRunner = ExecuteLogicRoutine();
@@ -107,11 +107,6 @@ public class ButtonBase : MonoBehaviour, IClickable
             // instantly disable collider and button components
             _myTrigger.enabled = false;
             _myButton.enabled = false;
-
-            //Debug.Log("disabling button " + gameObject.name);
-
-            //Debug.Log("accessing pagecontroller " + _pageController.name); // null for something
-            
 
             // disable gameobject
             _pageController.StartCoroutine(DisableGameObject(0));
@@ -180,9 +175,9 @@ public class ButtonBase : MonoBehaviour, IClickable
     {
         yield return new WaitForSeconds(poofDuration);
 
-        if (this.gameObject != null)
+        if (gameObject != null)
         {
-            this.gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }     
     }
     protected virtual IEnumerator EnableComponents(float appearDuration)

@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Section : MonoBehaviour
 {
@@ -18,16 +20,16 @@ public class Section : MonoBehaviour
     [SerializeField]
     private GameObject _checkPoint;
     public GameObject Checkpoint => _checkPoint;
-
-    [Header("Assign my 2 children")]
+    
     [SerializeField]
-    private GameObject _parentPickups;
-    public GameObject ParentPickups => _parentPickups;
+    private Transform _pickupsParentPickUps;
+    public Transform PickupsParent => _pickupsParentPickUps;
     [SerializeField]
     private GameObject _parentEnvironment;
     public GameObject ParentEnvironment => _parentEnvironment;
 
 
+    public List<PickUp> PickUps => _pickUps;
 
     #region Public Functions
 
@@ -45,7 +47,7 @@ public class Section : MonoBehaviour
     {
         //Debug.Log("Enabled a Section");
         Loaded?.Invoke(this);
-
+        _pickUps = GetComponentsInChildren<PickUp>().ToList();
         // delaying the logic allow the pickupManager to properly subscribe to Loaded
         //StartCoroutine(DelayEnable());      
     }
