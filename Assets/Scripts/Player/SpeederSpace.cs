@@ -2,13 +2,15 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Android;
+using UnityEngine.Assertions;
 
 public class SpeederSpace : PlayerController
 {
     // Parameters
     [SerializeField] private float _boostDuration = 3.0f;
     [SerializeField] private float _boostMultiplier = 1.5f;
+
+    [SerializeField] private GameObject _knockbackPathPrefab;
     [SerializeField] private float _knockbackForce = 20f;
 
     [SerializeField] private float _moveSpeed = 20f;
@@ -26,7 +28,12 @@ public class SpeederSpace : PlayerController
     // Movement
     private Vector2 _input;
     private float _baseSpeed;
-    private Vector3 _knockbackStartPos;
+    private Vector3 _velocity;
+    private Vector3 _previousPoition;
+
+    // Knockback
+    private CinemachineSmoothPath _knockbackPath;
+    private CinemachineVirtualCamera _knockbackCamera;
 
     // Utility
     private bool _isApplicationQuitting = false;
@@ -89,6 +96,11 @@ public class SpeederSpace : PlayerController
         }
     }
 
+    private void LateUpdate()
+    {
+        
+    }
+
     public void Boost()
     {
         _boostComponent.Boost();
@@ -109,54 +121,80 @@ public class SpeederSpace : PlayerController
 
     public override void Collide()
     {
+        // Dolly cart speed and unparent
         _dollyCart.m_Speed = 0f;
         transform.parent = null;
 
-        _knockbackStartPos = transform.position;
+        // Add impact to player
+        _impactRecieverComponent.AddImpact(-transform.forward, _knockbackForce, true);
 
-        Vector3 knockbackDirection = -transform.forward;
-        _impactRecieverComponent.AddImpact(knockbackDirection, _knockbackForce, true);
+        SetupKnockbackPath();
+    }
+
+    private void SetupKnockbackPath()
+    {
+        // Instantiate knockback path
+        GameObject knockbackObject = Instantiate(_knockbackPathPrefab);
+        _knockbackPath = knockbackObject.GetComponentInChildren<CinemachineSmoothPath>();
+        Assert.IsNotNull(knockbackObject, "[SpeederSpace] - Knockback object is null");
+
+        var waypointList = new List<Vector3> { transform.position + _impactRecieverComponent.Destination, transform.position };
+        _knockbackPath.m_Waypoints = CreatePath.CreateNewWaypoints(waypointList);
+
+        // Get camera from track
+        _knockbackCamera = knockbackObject.GetComponentInChildren<CinemachineVirtualCamera>();
+        Assert.IsNotNull(_knockbackCamera, "[SpeederSpace] - VirtualCamera is null");
+
+        _knockbackCamera.gameObject.SetActive(true);
+        _knockbackCamera.MoveToTopOfPrioritySubqueue();
+        _knockbackCamera.Follow = transform;
+        _knockbackCamera.LookAt = _dollyCart.gameObject.transform;
+
+        // Get swith track trigger
+        var collider = knockbackObject.GetComponentInChildren<Collider>();
+        Assert.IsNotNull(collider, "[SpeederSpace] - Collider is null");
+        
+        collider.gameObject.transform.position = _knockbackPath.m_Waypoints[_knockbackPath.m_Waypoints.Length - 1].position;
+
+
+        // Get switch path logic
+        var switchPath = knockbackObject.GetComponentInChildren<SwitchPath>();
+        Assert.IsNotNull(switchPath, "[SpeederSpace] - SwitchPath is null");
+        
+        switchPath.SetPathDestination(_dollyCart.m_Path);
     }
 
     private void OnKnockbackEnded()
     {
-        // Spawn track prefab
-        // With camera
-        // Set waypoints
+        _knockbackPath.m_Waypoints[0].position = transform.position;
 
-        var newPath = CreatePath.CreateNewPath(transform.position, _knockbackStartPos);
+        _knockbackCamera.gameObject.SetActive(true);
+        _knockbackCamera.MoveToTopOfPrioritySubqueue();
+        _knockbackCamera.Follow = _dollyCart.gameObject.transform;
+        _knockbackCamera.LookAt = _dollyCart.gameObject.transform;
+
         _dollyCart.m_Position = 0f;
-        _dollyCart.m_Path = newPath;
+        _dollyCart.m_Path = _knockbackPath;
         _dollyCart.m_Speed = _baseSpeed;
 
         transform.SetParent(_dollyCart.gameObject.transform, true);
         transform.localPosition = Vector3.zero;
-
-        // Spawn switch track prefab, from this track to original track
     }
 
     private void CheckBounds()
     {
-        // If there is input for X
-        if (!Equals(_input.x, 0f))
+        // If player is at the left or right bounds
+        if ((transform.localPosition.x <= (_leftBottomBounds.x + _cameraBoundOffset) && _input.x < 0f) ||
+            (transform.localPosition.x >= (_rightTopBounds.x - _cameraBoundOffset) && _input.x > 0f))
         {
-            // If player is at the left or right bounds
-            if (transform.localPosition.x <= (_leftBottomBounds.x + _cameraBoundOffset) ||
-                transform.localPosition.x >= (_rightTopBounds.x - _cameraBoundOffset))
-            {
-                _input.x = 0f;
-            }
+            _input.x = 0f;
         }
 
-        // If there is input for Y
-        if (!Equals(_input.y, 0f))
+        // If player at the top or bottom bounds
+        if ((transform.localPosition.y <= (_leftBottomBounds.y + _cameraBoundOffset) && _input.y < 0f) ||
+            (transform.localPosition.y >= (_rightTopBounds.y - _cameraBoundOffset) && _input.y > 0f))
         {
-            // If player at the top or bottom bounds
-            if (transform.localPosition.y <= (_leftBottomBounds.y + _cameraBoundOffset) || 
-                transform.localPosition.y >= (_rightTopBounds.y - _cameraBoundOffset))
-            {
-                _input.y = 0f;
-            }
+            _input.y = 0f;
         }
     }
 

@@ -13,6 +13,15 @@ public class SwitchPath : MonoBehaviour
     private bool _hitTrigger = false;
     private CinemachineDollyCart _playerDollyCart;
 
+    public void SetPathDestination(CinemachinePathBase path)
+    {
+        var smoothPath = path as CinemachineSmoothPath;
+        if (!_toSmoothPath && smoothPath)
+        {
+            _toSmoothPath = smoothPath;
+        }
+    }
+
     private int FindClosestWaypointIndex(Vector3 position, CinemachineSmoothPath path)
     {
         int closestWaypointIndex = 0;

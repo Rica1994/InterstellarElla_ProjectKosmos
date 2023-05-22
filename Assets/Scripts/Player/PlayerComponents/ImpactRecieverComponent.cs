@@ -15,6 +15,7 @@ public class ImpactRecieverComponent
 
     private bool _isColliding = false;
     public bool IsColliding => _isColliding;
+    public Vector3 Destination => _impact / _lerpSpeed;
 
     public ImpactRecieverComponent(CharacterController characterController, float mass, float lerpSpeed = 5f)
     {

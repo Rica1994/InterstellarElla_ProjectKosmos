@@ -993,7 +993,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 838638351}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.1, z: 33.38}
+  m_LocalPosition: {x: 0, y: 3.95, z: 33.38}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1218,7 +1218,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  m_CustomBlends: {fileID: 0}
+  m_CustomBlends: {fileID: 11400000, guid: 2d9ae212572b6754fbe7ca483aeba37c, type: 2}
   m_CameraCutEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -2618,6 +2618,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6558799607497181079, guid: e4c96257a3c7f194cad663df3f51175e, type: 3}
+      propertyPath: m_Waypoints.Array.data[1].position.z
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 6558799608458996977, guid: e4c96257a3c7f194cad663df3f51175e, type: 3}
       propertyPath: m_Follow
       value: 
@@ -2633,6 +2637,10 @@ PrefabInstance:
     - target: {fileID: 6558799608458996978, guid: e4c96257a3c7f194cad663df3f51175e, type: 3}
       propertyPath: m_LocalPosition.z
       value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6558799608458996979, guid: e4c96257a3c7f194cad663df3f51175e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4c96257a3c7f194cad663df3f51175e, type: 3}
@@ -2695,10 +2703,22 @@ PrefabInstance:
       propertyPath: m_Path
       value: 
       objectReference: {fileID: 226275332}
+    - target: {fileID: 6629664248069557019, guid: eabc4a8261bc5f74a96dbb19e8ff7802, type: 3}
+      propertyPath: m_Position
+      value: -0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 6629664249610622412, guid: eabc4a8261bc5f74a96dbb19e8ff7802, type: 3}
+      propertyPath: _moveSpeed
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6629664249610622412, guid: eabc4a8261bc5f74a96dbb19e8ff7802, type: 3}
       propertyPath: _boostMultiplier
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 6629664249610622412, guid: eabc4a8261bc5f74a96dbb19e8ff7802, type: 3}
+      propertyPath: _knockbackPathPrefab
+      value: 
+      objectReference: {fileID: 6770629837365416198, guid: 1f101230b916a57499b43d734b57b4c9, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eabc4a8261bc5f74a96dbb19e8ff7802, type: 3}
 --- !u!1 &6629664248126144740 stripped
