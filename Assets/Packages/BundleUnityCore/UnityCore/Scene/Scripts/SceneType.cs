@@ -14,25 +14,20 @@ namespace UnityCore
             S_MainMenu = 1,
             S_Loading = 2,
 
-            S_Level_1_Blockout = 3,
-            S_Level_1_Art = 4,
-            S_Level_1_Final = 5,
+            S_Level_1_Work = 3,
+            S_Level_1_Build = 4,
 
-            S_Level_2_Blockout = 6,
-            S_Level_2_Art = 7,
-            S_Level_2_Final = 8,
+            S_Level_2_Work = 6,
+            S_Level_2_Build = 7,
 
-            S_Level_3_Blockout = 9,
-            S_Level_3_Art = 10,
-            S_Level_3_Final = 11,
+            S_Level_3_Work = 9,
+            S_Level_3_Build = 10,
 
-            S_Level_4_Blockout = 12,
-            S_Level_4_Art = 13,
-            S_Level_4_Final = 14,
+            S_Level_4_Work = 12,
+            S_Level_4_Build = 13,
 
-            S_Level_5_Blockout = 15,
-            S_Level_5_Art = 16,
-            S_Level_5_Final = 17,
+            S_Level_5_Work = 15,
+            S_Level_5_Build = 16
         }
     }
 }

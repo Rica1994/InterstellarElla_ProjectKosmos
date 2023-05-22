@@ -73,7 +73,7 @@ public class MainMenuManager : Service
         _levels[0].AnimationScaler.Play(_levelScaleUp);
 
         // show buttons after delay
-        StartCoroutine(EnableButtonsDelay());
+        StartCoroutine(EnableButtonsDelay(0));
     }
 
 
@@ -95,14 +95,11 @@ public class MainMenuManager : Service
         SceneType sceneToLoad = SceneType.None;
         switch (ScenesToLoad)
         {
-            case SceneChoice.Blockout:
-                sceneToLoad = ChooseCorrectSceneBlockout();
+            case SceneChoice.Work:
+                sceneToLoad = ChooseCorrectSceneWork();
                 break;
-            case SceneChoice.Art:
-                sceneToLoad = ChooseCorrectSceneArt();
-                break;
-            case SceneChoice.Final:
-                sceneToLoad = ChooseCorrectSceneFinal();
+            case SceneChoice.Build:
+                sceneToLoad = ChooseCorrectSceneBuild();
                 break;
         }
 
@@ -211,63 +208,45 @@ public class MainMenuManager : Service
         _currentLevel.AnimationScaler.Play(_levelScaleDown);
     }
 
-    private SceneType ChooseCorrectSceneBlockout()
+    private SceneType ChooseCorrectSceneWork()
     {
         switch (_levelIndex)
         {
             case 0:
-                return SceneType.S_Level_1_Blockout;
+                return SceneType.S_Level_1_Work;
             case 1:
-                return SceneType.S_Level_2_Blockout;
+                return SceneType.S_Level_2_Work;
             case 2:
-                return SceneType.S_Level_3_Blockout;
+                return SceneType.S_Level_3_Work;
             case 3:
-                return SceneType.S_Level_4_Blockout;
+                return SceneType.S_Level_4_Work;
             case 4:
-                return SceneType.S_Level_5_Blockout;
+                return SceneType.S_Level_5_Work;
             default:
                 return SceneType.None;
         }
     }
-    private SceneType ChooseCorrectSceneArt()
+    private SceneType ChooseCorrectSceneBuild()
     {
         switch (_levelIndex)
         {
             case 0:
-                return SceneType.S_Level_1_Art;
+                return SceneType.S_Level_1_Build;
             case 1:
-                return SceneType.S_Level_2_Art;
+                return SceneType.S_Level_2_Build;
             case 2:
-                return SceneType.S_Level_3_Art;
+                return SceneType.S_Level_3_Build;
             case 3:
-                return SceneType.S_Level_4_Art;
+                return SceneType.S_Level_4_Build;
             case 4:
-                return SceneType.S_Level_5_Art;
+                return SceneType.S_Level_5_Build;
             default:
                 return SceneType.None;
         }
     }
-    private SceneType ChooseCorrectSceneFinal()
+    private IEnumerator EnableButtonsDelay(float delayTime)
     {
-        switch (_levelIndex)
-        {
-            case 0:
-                return SceneType.S_Level_1_Final;
-            case 1:
-                return SceneType.S_Level_2_Final;
-            case 2:
-                return SceneType.S_Level_3_Final;
-            case 3:
-                return SceneType.S_Level_4_Final;
-            case 4:
-                return SceneType.S_Level_5_Final;
-            default:
-                return SceneType.None;
-        }
-    }
-    private IEnumerator EnableButtonsDelay()
-    {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(delayTime);
 
         _buttonBackward.EnableButton();
         _buttonForward.EnableButton();
@@ -277,8 +256,7 @@ public class MainMenuManager : Service
 
 public enum SceneChoice
 {
-    Blockout = 0,
-    Art = 1,
-    Final = 2
+    Work = 0,
+    Build = 1
 }
 
