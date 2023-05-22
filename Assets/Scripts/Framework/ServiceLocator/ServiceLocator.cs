@@ -7,8 +7,6 @@ public class ServiceLocator : MonoBehaviourSingleton<ServiceLocator>
 {
     private Dictionary<Type, Service> _services = new Dictionary<Type, Service>();
 
-    public InputManager InputManager => GetService<InputManager>();
-
     public void Register(Service service)
     {
         if(!Contains(service.GetType()))

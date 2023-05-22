@@ -5,20 +5,28 @@ using UnityEngine;
 
 public class CreatePath : MonoBehaviour
 {
-    [SerializeField] private CinemachineSmoothPath _baseSmoothPath;
-    [SerializeField] private List<int> _wayPoints;
-    
-    private CinemachineSmoothPath _smoothPath;
-
-    private void Start()
+    public static CinemachineSmoothPath CreateNewPath(Vector3 startPosition, CinemachineSmoothPath targetPath, float endDistanceOnPath)
     {
-        _smoothPath = GetComponent<CinemachineSmoothPath>();
+        Vector3 endPosition = targetPath.EvaluatePosition(endDistanceOnPath);
+        return CreateNewPath(startPosition, endPosition);
+    }
 
-        List<CinemachineSmoothPath.Waypoint> waypoints = new List<CinemachineSmoothPath.Waypoint>();
-        foreach (int waypoint in _wayPoints)
-        {
-            waypoints.Add(_baseSmoothPath.m_Waypoints[waypoint]);
-        }
-        _smoothPath.m_Waypoints = waypoints.ToArray();
+    public static CinemachineSmoothPath CreateNewPath(Vector3 startPosition, Vector3 endPosition)
+    {
+        CinemachineSmoothPath.Waypoint wayPoint = new CinemachineSmoothPath.Waypoint();
+        wayPoint.position = startPosition;
+
+        List<CinemachineSmoothPath.Waypoint> wayPoints = new List<CinemachineSmoothPath.Waypoint> { };
+        wayPoints.Add(wayPoint);
+
+        wayPoint.position = endPosition;
+        wayPoints.Add(wayPoint);
+
+        // Create gameobject
+        GameObject knockbackObject = new GameObject("KnockbackPath");
+        var knockbackPath = knockbackObject.AddComponent<CinemachineSmoothPath>();
+        knockbackPath.m_Waypoints = wayPoints.ToArray();
+
+        return knockbackPath;
     }
 }

@@ -13,7 +13,7 @@ public class ObstacleFalling : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("Player") && _rigidBody)
+        if (other.gameObject.TryGetComponent(out PlayerController _) && _rigidBody)
         {
             _rigidBody.useGravity = true;
         }

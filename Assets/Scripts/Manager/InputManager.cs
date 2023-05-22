@@ -40,11 +40,13 @@ public class InputManager : Service
 
     protected override void OnEnable()
     {
+        base.OnEnable();
         _input.Enable();
     }
 
     protected override void OnDisable()
     {
+        base.OnDisable();
         _input.Disable();
     }
 }

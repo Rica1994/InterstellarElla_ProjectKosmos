@@ -1,34 +1,84 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class SwitchPath : MonoBehaviour
 {
-    [SerializeField] private CinemachineSmoothPath _targetSmoothPath;
-    [SerializeField] private CinemachineSmoothPath _originalSmoothPath;
-    [SerializeField] private float _smoothPathWaypoint;
+    [SerializeField] private CinemachineSmoothPath _fromSmoothPath;
+    [SerializeField] private CinemachineSmoothPath _toSmoothPath;
+    private int _closestWaypointIndex = -1;
 
-    private void OnTriggerStay(Collider other)
+    private bool _hitTrigger = false;
+    private CinemachineDollyCart _playerDollyCart;
+
+    private int FindClosestWaypointIndex(Vector3 position, CinemachineSmoothPath path)
     {
-        var cart = other.gameObject.GetComponentInParent<CinemachineDollyCart>();
-        if (!cart)
+        int closestWaypointIndex = 0;
+        float smallestMagnitude = float.MaxValue;
+
+        // Check each waypoint which one is closer
+        for (int i = 0; i < path.m_Waypoints.Length; i++)
+        {
+            float magnitude = Vector3.Magnitude(position - path.m_Waypoints[i].position);
+
+            // Check if current waypoint magnitude is closer than previous
+            if (magnitude < smallestMagnitude)
+            {
+                smallestMagnitude = magnitude;
+                closestWaypointIndex = i;
+            }
+        }
+
+        return closestWaypointIndex;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        _playerDollyCart = other.gameObject.GetComponentInParent<CinemachineDollyCart>();
+        if (!_playerDollyCart)
         {
             return;
         }
 
-        var distToWaypoint = cart.m_Path.FromPathNativeUnits(_smoothPathWaypoint, CinemachinePathBase.PositionUnits.Distance);
-        if (cart.m_Position >= distToWaypoint)
+        // Find closest waypoint
+        if (_closestWaypointIndex == -1)
         {
-            cart.m_Path = _targetSmoothPath;
+            _closestWaypointIndex = FindClosestWaypointIndex(other.gameObject.transform.position, _fromSmoothPath);
+        }
 
-            // Temp: switch camera from path -> better, have own camera per path and swtich between these
-            var cmBrain = Camera.main.GetComponent<CinemachineBrain>();
-            var virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
-            var dollyCamera = virtualCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
-            dollyCamera.m_Path = _targetSmoothPath;
-            
-            
+        _hitTrigger = true;
+    }
+
+    private void Update()
+    {
+        if (!_hitTrigger)
+        {
+            return;
+        }
+
+        // How far is player away from this waypoint?
+        var distToWaypoint = _playerDollyCart.m_Path.FromPathNativeUnits(_closestWaypointIndex, CinemachinePathBase.PositionUnits.Distance);
+
+        // Has player reached waypoint
+        if (_playerDollyCart.m_Position >= distToWaypoint)
+        {
+            // Switch track
+            _playerDollyCart.m_Path = _toSmoothPath;
+            // Find point on other track
+            var targetPoint = _toSmoothPath.FindClosestPoint(_playerDollyCart.gameObject.transform.position, 0, -1, 50);
+            // Set position on other track
+            _playerDollyCart.m_Position = _playerDollyCart.m_Path.FromPathNativeUnits(targetPoint, CinemachinePathBase.PositionUnits.Distance); ;
+
+            // Adjust priority in cameras so new track camera is active
+            var virtualCamera = _toSmoothPath.gameObject.GetComponentInChildren<CinemachineVirtualCamera>(true);
+            if (virtualCamera)
+            {
+                virtualCamera.gameObject.SetActive(true);
+                virtualCamera.MoveToTopOfPrioritySubqueue();
+            }
+
             Destroy(gameObject);
         }
     }
