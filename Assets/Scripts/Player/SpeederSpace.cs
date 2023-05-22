@@ -13,9 +13,6 @@ public class SpeederSpace : PlayerController
     [SerializeField] private float _moveSpeed = 20f;
     [SerializeField] private float _cameraBoundOffset = 1f;
 
-    private Vector3 _velocity;
-    private Vector3 _previousPosition;
-
     private CinemachineDollyCart _dollyCart; 
 
     private CharacterController _characterController;
@@ -28,8 +25,9 @@ public class SpeederSpace : PlayerController
     private float _baseSpeed;
     private bool _isApplicationQuitting = false;
 
-    private Vector3 _leftBottom;
-    private Vector3 _rightTop;
+    // Player bounds inside camera
+    private Vector3 _leftBottomBounds;
+    private Vector3 _rightTopBounds;
 
     public bool IsBoosting => _boostComponent.IsBoosting;
 
@@ -42,9 +40,10 @@ public class SpeederSpace : PlayerController
 
         _moveComponent = new MoveComponent();
         _boostComponent = new BoostComponent(_boostDuration, _boostMultiplier);
-        _impactRecieverComponent = new ImpactRecieverComponent(_characterController, 3f);
+        _boostComponent.OnBoostEnded += OnBoostEnded;
 
-        _previousPosition = transform.position;
+        _impactRecieverComponent = new ImpactRecieverComponent(_characterController, 3f);
+        _impactRecieverComponent.OnKnockbackEnded += OnKnockbackEnded;
     }
 
     private void Start()
@@ -63,17 +62,17 @@ public class SpeederSpace : PlayerController
 
             // Set bounds of camera based off of dolly track offset
             float distance = Vector3.Distance(gameObject.transform.position, gameObject.transform.position - offset);
-            _leftBottom = cam.ViewportToWorldPoint(new Vector3(0f, 0f, distance));
-            _rightTop = cam.ViewportToWorldPoint(new Vector3(1f, 1f, distance));
+            _leftBottomBounds = cam.ViewportToWorldPoint(new Vector3(0f, 0f, distance));
+            _rightTopBounds = cam.ViewportToWorldPoint(new Vector3(1f, 1f, distance));
         }
 
         // Destroy camera used for local bound calculation
         Destroy(obj);
 
-        for (int i = 0; i < CinemachineCore.Instance.VirtualCameraCount; i++)
-        {
-            var virtualCamera = CinemachineCore.Instance.GetVirtualCamera(i);
-        }
+        //for (int i = 0; i < CinemachineCore.Instance.VirtualCameraCount; i++)
+        //{
+        //    var virtualCamera = CinemachineCore.Instance.GetVirtualCamera(i);
+        //}
     }
 
     public void Boost()
@@ -81,12 +80,17 @@ public class SpeederSpace : PlayerController
         _boostComponent.Boost();
         _dollyCart.m_Speed = _baseSpeed * _boostComponent.BoostMultiplier;
 
-        if (CinemachineCore.Instance.BrainCount > 0)
-        {
-            CinemachineBrain cmBrain = CinemachineCore.Instance.GetActiveBrain(0);
-            var virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
-            virtualCamera.m_Lens.FieldOfView = 70f;
-        }
+        //if (CinemachineCore.Instance.BrainCount > 0)
+        //{
+        //    CinemachineBrain cmBrain = CinemachineCore.Instance.GetActiveBrain(0);
+        //    var virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
+        //    virtualCamera.m_Lens.FieldOfView = 70f;
+        //}
+    }
+
+    private void OnBoostEnded()
+    {
+        _dollyCart.m_Speed = _baseSpeed;
     }
 
     public override void Collide()
@@ -94,77 +98,66 @@ public class SpeederSpace : PlayerController
         _dollyCart.m_Speed = 0f;
         transform.parent = null;
 
-        Debug.Log("COLLIDE");
+        Vector3 knockbackDirection = -transform.forward;
+        _impactRecieverComponent.AddImpact(knockbackDirection, _knockbackForce, true);
+    }
 
-        // Knockback backwards and whatever velocity on x
-        var velocity = _velocity.normalized;
-        //Vector3 knockbackDirection = new Vector3(-velocity.x, -velocity.y, -velocity.z);
-        Vector3 knockbackDirection = new Vector3(0f, 0f, -1f);
-        _impactRecieverComponent.AddImpact(-_velocity, _knockbackForce);
+    private void OnKnockbackEnded()
+    {
+
     }
 
     public override void UpdateController()
     {
         base.UpdateController();
         
-        // Remember previous location
-        _previousPosition = transform.position;
-
+        // Boost
         _boostComponent.Update();
-        // If is not boosting but was boosting prevoius frame
-        if (!_boostComponent.IsBoosting && _dollyCart.m_Speed > _baseSpeed)
-        {
-            _dollyCart.m_Speed = _baseSpeed;
-
-            if (CinemachineCore.Instance.BrainCount > 0)
-            {
-                CinemachineBrain cmBrain = CinemachineCore.Instance.GetActiveBrain(0);
-                var virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
-                virtualCamera.m_Lens.FieldOfView = 60f;
-            }
-        }
+        
+        // Impact
         _impactRecieverComponent.Update();
+
+        // Move
         if (!_impactRecieverComponent.IsColliding)
         {
             Move();
         }
-
-    }
-
-    private void LateUpdate()
-    {
-        // Calculate and save player velocity
-        _velocity = (transform.position - _previousPosition) / Time.deltaTime;
-        Debug.Log(_velocity);
     }
 
     private void CheckBounds()
     {
-        if (transform.localPosition.x <= (_leftBottom.x + _cameraBoundOffset) && _input.x < 0f)
+        // If there is input for X
+        if (!Equals(_input.x, 0f))
         {
-            _input.x = 0f;
-        }
-        else if (transform.localPosition.x >= (_rightTop.x - _cameraBoundOffset) && _input.x > 0f)
-        {
-            _input.x = 0f;
+            // If player is at the left or right bounds
+            if (transform.localPosition.x <= (_leftBottomBounds.x + _cameraBoundOffset) ||
+                transform.localPosition.x >= (_rightTopBounds.x - _cameraBoundOffset))
+            {
+                _input.x = 0f;
+            }
         }
 
-        if (transform.localPosition.y <= (_leftBottom.y + _cameraBoundOffset) && _input.y < 0f)
+        // If there is input for Y
+        if (!Equals(_input.y, 0f))
         {
-            _input.y = 0f;
-        }
-        else if (transform.localPosition.y >= (_rightTop.y - _cameraBoundOffset) && _input.y > 0f)
-        {
-            _input.y = 0f;
+            // If player at the top or bottom bounds
+            if (transform.localPosition.y <= (_leftBottomBounds.y + _cameraBoundOffset) || 
+                transform.localPosition.y >= (_rightTopBounds.y - _cameraBoundOffset))
+            {
+                _input.y = 0f;
+            }
         }
     }
 
     private void Move()
     {
+        // Adjust input according to bounds
         CheckBounds();
 
+        // Calculate direction to move 
         Vector3 direction = transform.right * _input.x;
         direction += transform.up * _input.y;
+
         _moveComponent.Move(_characterController, direction, _moveSpeed);
     }
 
@@ -182,7 +175,7 @@ public class SpeederSpace : PlayerController
         {
             return;
         }
-        
+
         // Unsubscribe to events
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
         playerInput.Move.performed -= x => OnMoveInput(x.ReadValue<Vector2>());
