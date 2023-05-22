@@ -6,6 +6,7 @@ using UnityEngine.Android;
 
 public class SpeederSpace : PlayerController
 {
+    // Parameters
     [SerializeField] private float _boostDuration = 3.0f;
     [SerializeField] private float _boostMultiplier = 1.5f;
     [SerializeField] private float _knockbackForce = 20f;
@@ -13,16 +14,21 @@ public class SpeederSpace : PlayerController
     [SerializeField] private float _moveSpeed = 20f;
     [SerializeField] private float _cameraBoundOffset = 1f;
 
+    // Controllers
+    private CharacterController _characterController;
     private CinemachineDollyCart _dollyCart; 
 
-    private CharacterController _characterController;
-
+    // Components
     private MoveComponent _moveComponent;
     private BoostComponent _boostComponent;
     private ImpactRecieverComponent _impactRecieverComponent;
 
+    // Movement
     private Vector2 _input;
     private float _baseSpeed;
+    private Vector3 _knockbackStartPos;
+
+    // Utility
     private bool _isApplicationQuitting = false;
 
     // Player bounds inside camera
@@ -68,11 +74,19 @@ public class SpeederSpace : PlayerController
 
         // Destroy camera used for local bound calculation
         Destroy(obj);
+    }
 
-        //for (int i = 0; i < CinemachineCore.Instance.VirtualCameraCount; i++)
-        //{
-        //    var virtualCamera = CinemachineCore.Instance.GetVirtualCamera(i);
-        //}
+    public override void UpdateController()
+    {
+        base.UpdateController();
+
+        _boostComponent.Update();
+        _impactRecieverComponent.Update();
+
+        if (!_impactRecieverComponent.IsColliding)
+        {
+            Move();
+        }
     }
 
     public void Boost()
@@ -98,30 +112,27 @@ public class SpeederSpace : PlayerController
         _dollyCart.m_Speed = 0f;
         transform.parent = null;
 
+        _knockbackStartPos = transform.position;
+
         Vector3 knockbackDirection = -transform.forward;
         _impactRecieverComponent.AddImpact(knockbackDirection, _knockbackForce, true);
     }
 
     private void OnKnockbackEnded()
     {
+        // Spawn track prefab
+        // With camera
+        // Set waypoints
 
-    }
+        var newPath = CreatePath.CreateNewPath(transform.position, _knockbackStartPos);
+        _dollyCart.m_Position = 0f;
+        _dollyCart.m_Path = newPath;
+        _dollyCart.m_Speed = _baseSpeed;
 
-    public override void UpdateController()
-    {
-        base.UpdateController();
-        
-        // Boost
-        _boostComponent.Update();
-        
-        // Impact
-        _impactRecieverComponent.Update();
+        transform.SetParent(_dollyCart.gameObject.transform, true);
+        transform.localPosition = Vector3.zero;
 
-        // Move
-        if (!_impactRecieverComponent.IsColliding)
-        {
-            Move();
-        }
+        // Spawn switch track prefab, from this track to original track
     }
 
     private void CheckBounds()

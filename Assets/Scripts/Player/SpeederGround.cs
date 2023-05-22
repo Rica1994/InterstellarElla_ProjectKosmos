@@ -35,29 +35,6 @@ public class SpeederGround : PlayerController
     private BoostComponent _speedBoostComponent;
     private BoostComponent _jumpBoostComponent;
 
-    public void BoostSpeed()
-    {
-        _speedBoostComponent.Boost();
-    }
-
-    public void BoostJump()
-    {
-        _jumpBoostComponent.Boost();
-    }
-
-    public void ForceJump()
-    {
-        _isJumping = true;
-    }
-
-    public override void Collide()
-    {
-        // Knockback backwards and whatever velocity on x
-        var velocity = _velocity.normalized;
-        Vector3 knockbackDirection = new Vector3(-velocity.x, 0f, -1f);
-        _impactRecieverComponent.AddImpact(knockbackDirection.normalized, _knockbackForce);
-    }
-
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -92,6 +69,29 @@ public class SpeederGround : PlayerController
 
         // Calculate and save player velocity
         _velocity = (transform.position - _previousPosition) / Time.deltaTime;
+    }
+
+    public void BoostSpeed()
+    {
+        _speedBoostComponent.Boost();
+    }
+
+    public void BoostJump()
+    {
+        _jumpBoostComponent.Boost();
+    }
+
+    public void ForceJump()
+    {
+        _isJumping = true;
+    }
+
+    public override void Collide()
+    {
+        // Knockback backwards and whatever velocity on x
+        var velocity = _velocity.normalized;
+        Vector3 knockbackDirection = new Vector3(-velocity.x, 0f, -1f);
+        _impactRecieverComponent.AddImpact(knockbackDirection.normalized, _knockbackForce);
     }
 
     private void Move()
