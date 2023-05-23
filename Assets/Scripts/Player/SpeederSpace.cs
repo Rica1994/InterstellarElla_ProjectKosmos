@@ -1,7 +1,6 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -46,8 +45,10 @@ public class SpeederSpace : PlayerController
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
+        Assert.IsNotNull(_characterController, $"[{GetType()}] - CharacterController is null");
 
         _dollyCart = GetComponentInParent<CinemachineDollyCart>();
+        Assert.IsNotNull(_dollyCart, $"[{GetType()}] - DollyCart is null");
         _baseSpeed = _dollyCart.m_Speed;
 
         _moveComponent = new MoveComponent();

@@ -4,7 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.Assertions;
 
-public class DollyCart : MonoBehaviour
+public class KnockbackDollyCart : MonoBehaviour
 {
     [SerializeField] private GameObject _knockbackPathPrefab;
 
@@ -24,10 +24,12 @@ public class DollyCart : MonoBehaviour
     private void Start()
     {
         _playerSpeeder = GetComponentInChildren<SpeederSpace>();
+        Assert.IsNotNull(_playerSpeeder, $"[{GetType()}] - SpeederSpace is null");
         _playerSpeeder.OnCollision += OnCollision;
         _playerSpeeder.OnKnockbackEnded += OnKnockbackEnded;
 
         _dollyCart = GetComponentInChildren<CinemachineDollyCart>();
+        Assert.IsNotNull(_dollyCart, $"[{GetType()}] - DollyCart is null");
     }
 
     private void OnCollision(Vector3 position)
@@ -69,20 +71,20 @@ public class DollyCart : MonoBehaviour
         // Instantiate knockback path
         GameObject knockbackObject = Instantiate(_knockbackPathPrefab);
         _knockbackPath = knockbackObject.GetComponentInChildren<CinemachineSmoothPath>();
-        Assert.IsNotNull(knockbackObject, "[SpeederSpace] - Knockback object is null");
+        Assert.IsNotNull(knockbackObject, $"[{GetType()}] - Knockback object is null");
         _spawnedKnockbackPaths.Add(knockbackObject);
 
         // Get camera from track
         _knockbackCamera = _knockbackPath.gameObject.GetComponentInChildren<CinemachineVirtualCamera>(true);
-        Assert.IsNotNull(_knockbackCamera, "[SpeederSpace] - VirtualCamera is null");
+        Assert.IsNotNull(_knockbackCamera, $"[{GetType()}] - VirtualCamera is null");
 
         // Get swith track trigger
         _collider = knockbackObject.GetComponentInChildren<Collider>();
-        Assert.IsNotNull(_collider, "[SpeederSpace] - Collider is null");
+        Assert.IsNotNull(_collider, $"[{GetType()}] - Collider is null");
 
         // Get switch path logic
         _switchPath = knockbackObject.GetComponentInChildren<SwitchPath>();
-        Assert.IsNotNull(_switchPath, "[SpeederSpace] - SwitchPath is null");
+        Assert.IsNotNull(_switchPath, $"[{GetType()}] - SwitchPath is null");
     }
 
     private void OnKnockbackEnded(Vector3 position)
