@@ -7,13 +7,18 @@ using UnityEngine.Assertions;
 public class DollyCart : MonoBehaviour
 {
     [SerializeField] private GameObject _knockbackPathPrefab;
+
     private SpeederSpace _playerSpeeder;
     private CinemachineDollyCart _dollyCart;
+
+    private List<GameObject> _spawnedKnockbackPaths = new List<GameObject>();   
     private CinemachineSmoothPath _knockbackPath;
     private CinemachinePathBase _originalPath = null;
+
     private CinemachineVirtualCamera _knockbackCamera;
     private Collider _collider;
     private SwitchPath _switchPath;
+
     private float _lastDistance = -1;
 
     private void Start()
@@ -27,22 +32,7 @@ public class DollyCart : MonoBehaviour
 
     private void OnCollision(Vector3 position)
     {
-        // Instantiate knockback path
-        GameObject knockbackObject = Instantiate(_knockbackPathPrefab);
-        _knockbackPath = knockbackObject.GetComponentInChildren<CinemachineSmoothPath>();
-        Assert.IsNotNull(knockbackObject, "[SpeederSpace] - Knockback object is null");
-
-        // Get camera from track
-        _knockbackCamera = _knockbackPath.gameObject.GetComponentInChildren<CinemachineVirtualCamera>(true);
-        Assert.IsNotNull(_knockbackCamera, "[SpeederSpace] - VirtualCamera is null");
-
-        // Get swith track trigger
-        _collider = knockbackObject.GetComponentInChildren<Collider>();
-        Assert.IsNotNull(_collider, "[SpeederSpace] - Collider is null");
-
-        // Get switch path logic
-        _switchPath = knockbackObject.GetComponentInChildren<SwitchPath>();
-        Assert.IsNotNull(_switchPath, "[SpeederSpace] - SwitchPath is null");
+        InitializePath();
 
         // Check if last waypoint distance has been filled in, only overwrite in once previous last waypoint has been passed
         if (_lastDistance == -1)
@@ -74,6 +64,27 @@ public class DollyCart : MonoBehaviour
         _dollyCart.m_Path = _knockbackPath;
     }
 
+    private void InitializePath()
+    {
+        // Instantiate knockback path
+        GameObject knockbackObject = Instantiate(_knockbackPathPrefab);
+        _knockbackPath = knockbackObject.GetComponentInChildren<CinemachineSmoothPath>();
+        Assert.IsNotNull(knockbackObject, "[SpeederSpace] - Knockback object is null");
+        _spawnedKnockbackPaths.Add(knockbackObject);
+
+        // Get camera from track
+        _knockbackCamera = _knockbackPath.gameObject.GetComponentInChildren<CinemachineVirtualCamera>(true);
+        Assert.IsNotNull(_knockbackCamera, "[SpeederSpace] - VirtualCamera is null");
+
+        // Get swith track trigger
+        _collider = knockbackObject.GetComponentInChildren<Collider>();
+        Assert.IsNotNull(_collider, "[SpeederSpace] - Collider is null");
+
+        // Get switch path logic
+        _switchPath = knockbackObject.GetComponentInChildren<SwitchPath>();
+        Assert.IsNotNull(_switchPath, "[SpeederSpace] - SwitchPath is null");
+    }
+
     private void OnKnockbackEnded(Vector3 position)
     {
         // Adjust first waypoint to where player actually ended
@@ -86,14 +97,23 @@ public class DollyCart : MonoBehaviour
 
     private void LateUpdate()
     {
-        // Is back on path 
-        if (_lastDistance != -1 && _dollyCart.m_Path == _originalPath)
+        // Check if cart is back on original track 
+        if (_lastDistance == -1 || _dollyCart.m_Path != _originalPath)
         {
-            // Reached last position on original path
-            if (_dollyCart.m_Position > _lastDistance)
+            return;
+        }
+
+        // Reached last position on original path
+        if (_dollyCart.m_Position > _lastDistance)
+        {
+            _lastDistance = -1;
+
+            // Cleanup all knockback paths
+            foreach (var path in _spawnedKnockbackPaths)
             {
-                _lastDistance = -1;
+                Destroy(path.gameObject);
             }
+            _spawnedKnockbackPaths.Clear();
         }
     }
 }
