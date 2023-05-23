@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : Service
 {
@@ -20,14 +21,21 @@ public class LevelManager : Service
     [Header("Triggers")]
     [SerializeField]
     private TriggerHandler _endGameTrigger;
+    private List<TriggerHandler> _deathTriggers = new List<TriggerHandler>();
     private TriggerHandler _lastLoadingTrigger;
     private TriggerHandler _lastDestroyingTrigger;
 
     private int _currentSectionIndex;
 
     private GameObject _currentCheckpoint;
-
     public List<Section> Sections => _sectionPrefabs;
+
+    private string _levelIndexString;
+    private int _sectionIndex;
+    private string _sectionIndexString;
+    private string _sectionNameBase;
+    private string _sectionNameToLoad;
+    private int[] _myNumbers;
 
     // to delete
     [Header("Testing particles")]
@@ -42,57 +50,92 @@ public class LevelManager : Service
         // subscribe endgame triggers
         _endGameTrigger.OnTriggered += OnEndGameTriggered;
 
-        // subscribe section triggers // DATED (these triggers are now in Sections, have them subscribe when they are enabled)
-        //List<SectionTrigger> sectionTriggers = GetComponentsInChildren<SectionTrigger>().ToList();
-        //for (int i = 0; i < sectionTriggers.Count; i++)
-        //{
-        //    var trigger = sectionTriggers[i];
-        //    if (trigger.IsSectionLoader == true)
-        //    {
-        //        _loadingTriggers.Add(trigger);
-        //        trigger.OnTriggered += OnLoadingTriggered;
-        //    }
-        //    else
-        //    {
-        //        _destroyingTriggers.Add(trigger);
-        //        trigger.OnTriggered += OnDestroyingTriggered;
-        //    }
-        //}
-
-        //// subscribe death triggers
-        //List<DeathTrigger> deathTriggers = GetComponentsInChildren<DeathTrigger>().ToList();
-        //for (int i = 0; i < deathTriggers.Count; i++)
-        //{
-        //    var trigger = deathTriggers[i];
-
-        //    _deathTriggers.Add(trigger);
-        //    trigger.OnTriggered += OnDeathTriggered;
-        //}
-
-
-        if (SectionsInstantiated.Count <= 0) return;
-        // check what sections are currently instantiated in the scene (typically 1 or 2 sections)
-        // this decides from what point we start instantiating new segments (decides index)
-        _currentSectionIndex = SectionsInstantiated.Count - 1;
-
-        // don't forget to call loading logic for already existing segments
-        for (int i = 0; i < SectionsInstantiated.Count; i++)
+        // subscribe death triggers
+        List<DeathTrigger> deathTriggers = GetComponentsInChildren<DeathTrigger>().ToList();
+        for (int i = 0; i < deathTriggers.Count; i++)
         {
-            OnSectionLoaded?.Invoke(SectionsInstantiated[i]);
+            var trigger = deathTriggers[i];
+
+            _deathTriggers.Add(trigger);
+            trigger.OnTriggered += OnDeathTriggered;
         }
+    }
 
+    private void Start()
+    {
+        _levelIndexString = DecodeSceneString().ToString();
+        _sectionIndex = 0;
+     
+        _sectionNameBase = "PV_LevelSection_S_Level_" + _levelIndexString + "_Work_";
 
-        // set initial checkpoint
-        //_currentCheckpoint = _sectionsInstantiated[0].Checkpoints[0];
+        _sectionIndexString = _sectionIndex.ToString();
+        _sectionNameToLoad = _sectionNameBase + _sectionIndexString;
+        
+        LoadSection();     
     }
 
     #endregion
 
 
+    private void LoadSection()
+    {
+        Object newSectionObject = Resources.Load(_sectionNameToLoad, typeof(GameObject)) as GameObject;
+        if (newSectionObject == null)
+        {
+            Debug.LogWarning("No more sections are left to load!");
+            return;
+        }
+        GameObject newSectionGameobject = Instantiate(newSectionObject) as GameObject;
+        Section newSection = null;
+        if (newSectionGameobject.TryGetComponent(out Section section))
+        {
+            newSection = section;
+        }
+
+        SectionsInstantiated.Add(newSection);
+        OnSectionLoaded?.Invoke(newSection);
+
+        // subscribe section triggers
+        List<SectionTrigger> sectionTriggers = newSection.GetComponentsInChildren<SectionTrigger>().ToList();
+        for (int i = 0; i < sectionTriggers.Count; i++)
+        {
+            var trigger = sectionTriggers[i];
+            if (trigger.IsSectionLoader == true)
+            {
+                trigger.OnTriggered += OnLoadingTriggered;
+            }
+            else
+            {
+                trigger.OnTriggered += OnDestroyingTriggered;
+            }
+        }
+
+        // set checkpoint // NEEDS MORE
+        _currentCheckpoint = newSection.Checkpoints[0];   
+
+        _sectionIndex += 1;
+        _sectionIndexString = _sectionIndex.ToString();
+        _sectionNameToLoad = _sectionNameBase + _sectionIndexString;
+    }
 
 
 
+    private int DecodeSceneString()
+    {
+        // Split myString wherever there's a _ and make a String array out of it.
+        string[] stringArray = SceneManager.GetActiveScene().name.Split("_"[0]);
+        _myNumbers = new int[stringArray.Length];
 
+        for (int num = 0; num < stringArray.Length; num++)
+        {
+            if (int.TryParse(stringArray[num], out int foundInt) == true)
+            {
+                return foundInt;
+            }
+        }
+
+        return 404;
+    }
     private void OnEndGameTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
     {
         if (hasEntered)
@@ -116,51 +159,23 @@ public class LevelManager : Service
         {
             return;
         }
-        
+       
         // double check if we have already entered this trigger
         if (hasEntered && _lastLoadingTrigger != trigger)
         {
-            //Debug.Log("Entered loading trigger");
+            LoadSection();
 
-            // increase index
-            _currentSectionIndex += 1;
+            // store this trigger in last trigger entered
+            _lastLoadingTrigger = trigger;
 
-            // double check if anything exists in this index
-            if (_currentSectionIndex < _sectionPrefabs.Count)
-            {
-                // store this trigger in last trigger entered
-                _lastLoadingTrigger = trigger;
-
-                // disable the trigger
-                _lastLoadingTrigger.GetComponent<Collider>().enabled = false;
-
-                // instantiate section dependant on index
-                Section instantiatedSection = Instantiate(_sectionPrefabs[_currentSectionIndex]);
-                SectionsInstantiated.Add(instantiatedSection);
-
-                // set checkpoint // DATED
-                //_currentCheckpoint = instantiatedSection.Checkpoint;               
-
-                // testing particles
-                ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleWorldSpace(ParticleWorld, _currentCheckpoint.transform.position);
-                var player = FindAnyObjectByType<PlayerController>();
-                ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleLocalSpace(ParticleLocal, player.transform);
-
-                // calls the PickupManager logic
-                OnSectionLoaded?.Invoke(instantiatedSection);
-            }
-            else
-            {
-                Debug.LogWarning("You have entered a trigger for which no Section can be loaded!");
-            }
+            // disable the trigger
+            _lastLoadingTrigger.GetComponent<Collider>().enabled = false;                
         }
     }
     private void OnDestroyingTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
     {
         if (hasEntered && _lastDestroyingTrigger != trigger)
         {
-            //Debug.Log("Entered destroying trigger");
-
             // store this trigger in last trigger entered
             _lastDestroyingTrigger = trigger;
 

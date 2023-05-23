@@ -5,14 +5,30 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-
+using System.IO;
+using System.Linq;
 
 public class SectionCreationTool : EditorWindow
 {
     public LevelSectionCreator SelectedLevelSectionCreator;
     public Section SelectedSection;
 
-    [MenuItem("Window/Section Creation")]
+    private List<LevelSectionCreator> _sectionCreatorsInScene = new List<LevelSectionCreator>();
+    private List<LevelSectionCreator> _sectionCreatorsToCheckOverlap = new List<LevelSectionCreator>();
+    private List<LevelSectionCreator> _sectionCreatorsStructured = new List<LevelSectionCreator>();
+
+    private string[] _toolbarStrings = { "Creation", "Analyze" };
+    int _toolbarSelected = 0;
+
+    string mySceneString;
+    int[] myNumbers;
+
+    // get this from the correct folder
+    public GameObject somePrefab;
+
+
+
+    [MenuItem("Window/Section Tool")]
     public static void ShowWindow()
     {
         GetWindow<SectionCreationTool>("Section Tools");
@@ -20,10 +36,14 @@ public class SectionCreationTool : EditorWindow
 
     private void OnGUI()
     {
-        PressedButton();
+        GUILayout.BeginHorizontal();
+        _toolbarSelected = GUILayout.Toolbar(_toolbarSelected, _toolbarStrings);
+        GUILayout.EndHorizontal();
+
+        ShowButtons();
     }
 
-    public void PressedButton()
+    public void ShowButtons()
     {
         // Get selected object in hierarchy
         SelectedLevelSectionCreator = null;
@@ -43,43 +63,82 @@ public class SectionCreationTool : EditorWindow
                 SelectedSection = selectedObject.GetComponent<Section>();
             }
         }
-        //else
-        //{
-        //    Debug.Log("You have not selected an object -> Doing nothing");
-        //    return;
-        //}
-
-
-        // button parenting objects
-        ParentObjectsWithinColliders();
-
-        // buttons analyzing data
-        AnalyzeDataInSection();
+   
+        if (_toolbarSelected == 0)
+        {
+            // button parenting objects
+            ParentObjectsWithinColliders();
+        }
+        else
+        {
+            // buttons analyzing data
+            AnalyzeDataInSection();
+        }
     }
 
 
     private void ParentObjectsWithinColliders()
     {
-        if (GUILayout.Button("Parent Objects In Selected Colliders"))
+        if (GUILayout.Button("Create Section Prefabs"))
         {
-            if (SelectedLevelSectionCreator != null)
+            // 1) Find the blockout Parent
+            BlockoutParent blockoutParent = FindObjectOfType<BlockoutParent>();
+            if (blockoutParent == null)
             {
-                // Begin grouping the parenting operations for undo
-                Undo.IncrementCurrentGroup();
-                Undo.SetCurrentGroupName("Parenting objects in colliders");
-                
+                Debug.LogWarning("Could not find a BlockoutParent script in the scene!");
+                return;
+            }
 
-                // parenting logic //
-                List<GameObject> tempList = new List<GameObject>();
-                foreach (GameObject obj in UnityEngine.Object.FindObjectsOfType<GameObject>())
+            // 2) Find the sectionCreatorPrefabs and unpack them
+            _sectionCreatorsInScene = FindObjectsOfType<LevelSectionCreator>().ToList();
+            for (int i = 0; i < _sectionCreatorsInScene.Count; i++)
+            {
+                if (PrefabUtility.IsAnyPrefabInstanceRoot(_sectionCreatorsInScene[i].gameObject) == true)
                 {
-                    tempList.Add(obj);
+                    // this being registered as a user action allows it to be Undo-d
+                    PrefabUtility.UnpackPrefabInstance(_sectionCreatorsInScene[i].gameObject, PrefabUnpackMode.OutermostRoot,
+                        InteractionMode.UserAction);
                 }
+            }
 
-                foreach (BoxCollider coll in SelectedLevelSectionCreator.CollidersDefiningMySection)
+            // 2.1) use list of sections we need to check for collision
+            for (int i = 0; i < _sectionCreatorsInScene.Count; i++)
+            {
+                _sectionCreatorsToCheckOverlap.Add(_sectionCreatorsInScene[i]);
+            }
+            // 2.2) Structure the sectionCreators properly into a new list according to overlapping Head/Tails
+            LevelSectionCreator sectionZero = FindStartingSectionCreator();
+            // 2.3) Remove starting section from sectionCreatorsToCheck
+            _sectionCreatorsToCheckOverlap.Remove(sectionZero);
+            // 2.4) Add SectionZero to structured list
+            _sectionCreatorsStructured.Add(sectionZero);
+            // 2.5) use the starting section to progressively find following sections by checking the heads
+            FindFollowingSectionCreator(sectionZero);
+
+
+
+            // 3) get all objects, duplicate them, add to temp list, check tempList objects for inside of bounds, parent objects //
+
+            // 3.1) duplicate the blockout_parent
+            BlockoutParent blockoutCopy = Instantiate(blockoutParent);
+            // 3.2) disable the original blockout
+            blockoutParent.gameObject.SetActive(false);
+            // 3.3) add all children of the copy to a temp list
+            List<GameObject> tempList = new List<GameObject>();
+            for (int i = 0; i < blockoutCopy.transform.childCount; i++)
+            {
+                GameObject objToAdd = blockoutCopy.transform.GetChild(i).gameObject;
+                tempList.Add(objToAdd);
+            }
+
+            // 4) iterate over each sectionCreator... 
+            for (int i = 0; i < _sectionCreatorsStructured.Count; i++)
+            {
+                // 4.1) iterate over each collider...
+                foreach (BoxCollider coll in _sectionCreatorsStructured[i].CollidersDefiningMySection)
                 {
+                    // 4.2) parent any objects that fall within the bounds
                     List<GameObject> objectsAdded = new List<GameObject>();
-                    Undo.RecordObjects(tempList.ToArray(), "Parenting objects in colliders");
                     foreach (GameObject obj in tempList)
                     {
                         if (coll.bounds.Contains(obj.transform.position))
@@ -95,22 +154,17 @@ public class SectionCreationTool : EditorWindow
                             objectsAdded.Add(obj);
                             if (obj.TryGetComponent(out PickUp pickUp))
                             {
-                                Undo.SetTransformParent(obj.transform, SelectedLevelSectionCreator.Section.PickupsParent.gameObject.transform,
-                                    "Parenting objects in colliders");
-                                Undo.RegisterCompleteObjectUndo(obj, "Undo Parenting");
-                                obj.transform.SetParent(SelectedLevelSectionCreator.Section.PickupsParent.gameObject.transform);
+                                obj.transform.SetParent(_sectionCreatorsStructured[i].Section.PickupsParent.gameObject.transform);
                             }
                             else
                             {
-                                Undo.SetTransformParent(obj.transform, SelectedLevelSectionCreator.Section.ParentEnvironment.transform,
-                                    "Parenting objects in colliders");
-                                Undo.RegisterCompleteObjectUndo(obj, "Undo Parenting");
-                                obj.transform.SetParent(SelectedLevelSectionCreator.Section.ParentEnvironment
+                                obj.transform.SetParent(_sectionCreatorsStructured[i].Section.ParentEnvironment
                                     .transform);
                             }
                         }
                     }
 
+                    // 4.3) remove previously added objects from tempList (performance tweak)
                     foreach (GameObject obj in objectsAdded)
                     {
                         if (tempList.Contains(obj))
@@ -118,29 +172,161 @@ public class SectionCreationTool : EditorWindow
                             tempList.Remove(obj);
                         }
                     }
-
                     objectsAdded.Clear();
                 }
 
-                // naming logic //
-                SelectedLevelSectionCreator.Section.name = "PV_LevelSection_" + SceneManager.GetActiveScene().name +
-                                                           "_" + SelectedLevelSectionCreator.SectionIndex;
-                SelectedLevelSectionCreator.Section.ParentEnvironment.name =
-                    "Environment_" + SelectedLevelSectionCreator.SectionIndex;
-                SelectedLevelSectionCreator.Section.PickupsParent.gameObject.name =
-                    "Pickups_" + SelectedLevelSectionCreator.SectionIndex;
-
-                // Collapse the parenting operations for undo
-                Undo.CollapseUndoOperations(Undo.GetCurrentGroup());
-
-                // inform the editor that the scene has changed
-                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+                // 4.4) name our section something fitting
+                _sectionCreatorsStructured[i].Section.name = "PV_LevelSection_" + SceneManager.GetActiveScene().name + "_" + i;
+                _sectionCreatorsStructured[i].Section.ParentEnvironment.name = "Environment_" + i;
+                _sectionCreatorsStructured[i].Section.PickupsParent.gameObject.name = "Pickups_" + i;
             }
-            else
+            // FINISHED PARENTING BLOCKOUT HERE //
+            Debug.Log("finished parenting blockout");
+
+
+
+            // 5) get correct directory dependant on our scene
+            string levelIndexString = DecodeSceneString().ToString();
+            string localPath = "Assets/Levels/Prefabs_Level_0" + levelIndexString + "/Prefabs_Sections/Resources/";
+            // 5.1) delete folder and its contents, then Re-create it
+            if (Directory.Exists(localPath))
             {
-                Debug.LogWarning("You have not selected a LevelSectionCreator -> Doing nothing");
+                Directory.Delete(localPath, true);
+            }
+            Directory.CreateDirectory(localPath);
+
+
+
+            // 6) create prefab of each section
+            for (int i = 0; i < _sectionCreatorsStructured.Count; i++)
+            {
+                Section sectionOfInterest = _sectionCreatorsStructured[i].Section;
+
+                // 6.1) get the Section of interest, Unparent it (prefab will remember it's world position this way)
+                GameObject objectToPrefabify = sectionOfInterest.gameObject;
+                objectToPrefabify.transform.SetParent(null);
+
+                // 6.2) Create the new Prefab.
+                PrefabUtility.SaveAsPrefabAsset(objectToPrefabify, localPath + objectToPrefabify.name + ".prefab");
+
+                // 6.3) Destroy all the children in environment and pickups (wipe clean for a scene reset) of current Section
+                for (int j = sectionOfInterest.ParentEnvironment.transform.childCount - 1; j >= 0; j--)
+                {
+                    DestroyImmediate(sectionOfInterest.ParentEnvironment.transform.GetChild(j).gameObject);
+                }
+                for (int j = sectionOfInterest.PickupsParent.transform.childCount - 1; j >= 0; j--)
+                {
+                    DestroyImmediate(sectionOfInterest.PickupsParent.transform.GetChild(j).gameObject);
+                }
+
+                // 6.4) Re-parent it to its creator
+                objectToPrefabify.transform.SetParent(_sectionCreatorsStructured[i].transform);
+            }
+
+            // 7) reset the scene by destroying duplicates
+            // 7.1) Re-enable the old blockout
+            blockoutParent.gameObject.SetActive(true);
+            // 7.2) destroy copied blockout (should ideally be empty object after all of its children have been re-parented)
+            DestroyImmediate(blockoutCopy.gameObject);
+
+            // 8) undo-ing the unpacking of the section creators
+            Undo.PerformUndo();
+
+
+            // OLDER LOGIC //
+            //OlderSingularSectionLogic(tempList);
+        }
+    }
+
+    private void FindFollowingSectionCreator(LevelSectionCreator currentSectionCreatorToCheck)
+    {        
+        var headBounds = currentSectionCreatorToCheck.ColliderHead.bounds;
+     
+        bool headHasCollided = false;
+        LevelSectionCreator succeedingSection = null;
+        for (int i = 0; i < _sectionCreatorsToCheckOverlap.Count; i++)
+        {
+            // if the head collides with even 1 collider, then we have found our following section
+            for (int j = 0; j < _sectionCreatorsToCheckOverlap[i].CollidersDefiningMySection.Count; j++)
+            {
+                var sectionBounds = _sectionCreatorsToCheckOverlap[i].CollidersDefiningMySection[j].bounds;
+                if (headBounds.Intersects(sectionBounds) == true)
+                {
+                    headHasCollided = true;
+                    succeedingSection = _sectionCreatorsToCheckOverlap[i];
+                    break;
+                }
+            }
+
+            if (headHasCollided)
+            {
+                break;
             }
         }
+
+        if (headHasCollided == true)
+        {
+            // remove the found section from sections to check
+            _sectionCreatorsToCheckOverlap.Remove(succeedingSection);
+            // add to structured list
+            _sectionCreatorsStructured.Add(succeedingSection);
+            // re-do the logic & pass through the found section
+            FindFollowingSectionCreator(succeedingSection);
+        }
+        else
+        {
+            Debug.Log("Finished structuring Sections");
+        }
+    }
+    private LevelSectionCreator FindStartingSectionCreator()
+    {
+        // 2.11) Find the 1 Section whose Tail is not colliding with another segment
+        for (int i = 0; i < _sectionCreatorsInScene.Count; i++)
+        {
+            for (int j = 0; j < _sectionCreatorsInScene.Count; i++)
+            {
+                // don't need to check for Tail collisions with its own section Colliders
+                if (i != j)
+                {
+                    // if the tail collides with even 1 other collider, then we need a different tail
+                    bool tailHasCollided = false;
+                    for (int k = 0; k < _sectionCreatorsInScene[j].CollidersDefiningMySection.Count; k++)
+                    {
+                        var tailBounds = _sectionCreatorsInScene[i].ColliderTail.bounds;
+                        var sectionBounds = _sectionCreatorsInScene[j].CollidersDefiningMySection[k].bounds;
+
+                        if (tailBounds.Intersects(sectionBounds) == true)
+                        {
+                            tailHasCollided = true;
+                        }
+                    }
+
+                    if (tailHasCollided == false)
+                    {
+                        // we have found the starting section !
+                        return _sectionCreatorsInScene[i];
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private int DecodeSceneString()
+    {
+        // Split myString wherever there's a _ and make a String array out of it.
+        string[] stringArray = SceneManager.GetActiveScene().name.Split("_"[0]);
+        myNumbers = new int[stringArray.Length];
+
+        for (int num = 0; num < stringArray.Length; num++)
+        {
+            if (int.TryParse(stringArray[num], out int foundInt) == true)
+            {
+                return foundInt;
+            }        
+        }
+
+        return 404;
     }
 
     private void AnalyzeDataInSection()
@@ -325,6 +511,90 @@ public class SectionCreationTool : EditorWindow
 
         return count;
     }
+
+
+    private void OlderSingularSectionLogic(List<GameObject> tempList)
+    {
+        if (SelectedLevelSectionCreator != null)
+        {
+            // Begin grouping the parenting operations for undo
+            Undo.IncrementCurrentGroup();
+            Undo.SetCurrentGroupName("Parenting objects in colliders");
+
+
+            //// parenting logic //
+            //List<GameObject> tempList = new List<GameObject>();
+            //foreach (GameObject obj in UnityEngine.Object.FindObjectsOfType<GameObject>())
+            //{
+            //    tempList.Add(obj);
+            //}
+
+            foreach (BoxCollider coll in SelectedLevelSectionCreator.CollidersDefiningMySection)
+            {
+                List<GameObject> objectsAdded = new List<GameObject>();
+                Undo.RecordObjects(tempList.ToArray(), "Parenting objects in colliders");
+                foreach (GameObject obj in tempList)
+                {
+                    if (coll.bounds.Contains(obj.transform.position))
+                    {
+                        var parent = obj.transform.parent;
+                        // Check if the parent of this object is within the bounds of the section
+                        // If it is, then we don't want to parent it to the section
+                        if (parent != null && coll.bounds.Contains(parent.position))
+                        {
+                            continue;
+                        }
+
+                        objectsAdded.Add(obj);
+                        if (obj.TryGetComponent(out PickUp pickUp))
+                        {
+                            Undo.SetTransformParent(obj.transform, SelectedLevelSectionCreator.Section.PickupsParent.gameObject.transform,
+                                "Parenting objects in colliders");
+                            Undo.RegisterCompleteObjectUndo(obj, "Undo Parenting");
+                            obj.transform.SetParent(SelectedLevelSectionCreator.Section.PickupsParent.gameObject.transform);
+                        }
+                        else
+                        {
+                            Undo.SetTransformParent(obj.transform, SelectedLevelSectionCreator.Section.ParentEnvironment.transform,
+                                "Parenting objects in colliders");
+                            Undo.RegisterCompleteObjectUndo(obj, "Undo Parenting");
+                            obj.transform.SetParent(SelectedLevelSectionCreator.Section.ParentEnvironment
+                                .transform);
+                        }
+                    }
+                }
+
+                foreach (GameObject obj in objectsAdded)
+                {
+                    if (tempList.Contains(obj))
+                    {
+                        tempList.Remove(obj);
+                    }
+                }
+
+                objectsAdded.Clear();
+            }
+
+            //// naming logic //
+            //SelectedLevelSectionCreator.Section.name = "PV_LevelSection_" + SceneManager.GetActiveScene().name +
+            //                                           "_" + SelectedLevelSectionCreator.SectionIndex;
+            //SelectedLevelSectionCreator.Section.ParentEnvironment.name =
+            //    "Environment_" + SelectedLevelSectionCreator.SectionIndex;
+            //SelectedLevelSectionCreator.Section.PickupsParent.gameObject.name =
+            //    "Pickups_" + SelectedLevelSectionCreator.SectionIndex;
+
+            // Collapse the parenting operations for undo
+            Undo.CollapseUndoOperations(Undo.GetCurrentGroup());
+
+            // inform the editor that the scene has changed
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+        else
+        {
+            Debug.LogWarning("You have not selected a LevelSectionCreator -> Doing nothing");
+        }
+    }
+
 }
 
 #endif

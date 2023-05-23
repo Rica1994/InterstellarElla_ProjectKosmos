@@ -9,10 +9,14 @@ public class LevelSectionCreator : MonoBehaviour
     private List<BoxCollider> _collidersDefiningMySection = new List<BoxCollider>();
     public List<BoxCollider> CollidersDefiningMySection => _collidersDefiningMySection;
 
-    [Header("my section index")]
     [SerializeField]
-    private int _sectionIndex;
-    public int SectionIndex => _sectionIndex;
+    private BoxCollider _colliderTail;
+    public BoxCollider ColliderTail => _colliderTail;
+
+    [SerializeField]
+    private BoxCollider _colliderHead;
+    public BoxCollider ColliderHead => _colliderHead;
+
 
     [Header("Assign the Section child")]
     [SerializeField]
