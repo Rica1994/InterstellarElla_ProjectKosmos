@@ -169,6 +169,7 @@ public class SpeederSpace : PlayerController
 
         _moveComponent.Move(_characterController, direction, _moveSpeed);
 
+        // Allow player to only move/rotate within local bounds and never on the z axis
         _characterController.enabled = false;
         var pos = transform.localPosition;
         transform.localPosition = new Vector3(pos.x, pos.y, 0f);

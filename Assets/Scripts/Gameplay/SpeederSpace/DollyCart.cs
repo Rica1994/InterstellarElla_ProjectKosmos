@@ -44,34 +44,42 @@ public class DollyCart : MonoBehaviour
         _switchPath = knockbackObject.GetComponentInChildren<SwitchPath>();
         Assert.IsNotNull(_switchPath, "[SpeederSpace] - SwitchPath is null");
 
+        // Check if last waypoint distance has been filled in, only overwrite in once previous last waypoint has been passed
         if (_lastDistance == -1)
         {
-            float currentDistance = _dollyCart.m_Path.ToNativePathUnits(_dollyCart.m_Position + 2f, CinemachinePathBase.PositionUnits.Distance);
-            _lastDistance = currentDistance;
+            // Take a new position a few units in front of current position on track
+            _lastDistance = _dollyCart.m_Path.ToNativePathUnits(_dollyCart.m_Position + 2f, CinemachinePathBase.PositionUnits.Distance);
             _originalPath = _dollyCart.m_Path;
-            Debug.Log("Switch");
         }
 
+        // Create waypoint list for new knockback track
         Vector3 lastPoint = _originalPath.EvaluatePosition(_lastDistance);
         var waypointList = new List<Vector3> { position, transform.position, lastPoint };
         _knockbackPath.m_Waypoints = CreatePath.CreateNewWaypoints(waypointList);
 
+        // Set knockback camera
         _knockbackCamera.gameObject.SetActive(true);
         _knockbackCamera.MoveToTopOfPrioritySubqueue();
         _knockbackCamera.Follow = _playerSpeeder.transform;
         _knockbackCamera.LookAt = _playerSpeeder.transform;
 
+        // Position exit collider correctly
         _collider.gameObject.transform.position = _knockbackPath.m_Waypoints[_knockbackPath.m_Waypoints.Length - 1].position;
 
+        // Set switch path destination
         _switchPath.SetPathDestination(_originalPath);
 
+        // Position dolly cart correctly for future forwards movement
         _dollyCart.m_Position = 0f;
         _dollyCart.m_Path = _knockbackPath;
     }
 
     private void OnKnockbackEnded(Vector3 position)
     {
+        // Adjust first waypoint to where player actually ended
         _knockbackPath.m_Waypoints[0].position = _playerSpeeder.transform.position;
+
+        // Adjust knockback camera follow and lookat
         _knockbackCamera.Follow = _dollyCart.transform;
         _knockbackCamera.LookAt = _dollyCart.transform;
     }
