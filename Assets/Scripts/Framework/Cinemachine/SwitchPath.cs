@@ -62,7 +62,7 @@ public class SwitchPath : MonoBehaviour
 
     private void Update()
     {
-        if (!_hitTrigger)
+        if (!_hitTrigger || !_toSmoothPath)
         {
             return;
         }

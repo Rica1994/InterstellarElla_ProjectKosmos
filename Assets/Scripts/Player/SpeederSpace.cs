@@ -6,6 +6,10 @@ using UnityEngine.Assertions;
 
 public class SpeederSpace : PlayerController
 {
+    public delegate void SpeederSpaceKnockbackContext(Vector3 position);
+    public event SpeederSpaceKnockbackContext OnCollision;
+    public event SpeederSpaceKnockbackContext OnKnockbackEnded;
+
     // Parameters
     [SerializeField] private float _boostDuration = 3.0f;
     [SerializeField] private float _boostMultiplier = 1.5f;
@@ -28,8 +32,6 @@ public class SpeederSpace : PlayerController
     // Movement
     private Vector2 _input;
     private float _baseSpeed;
-    private Vector3 _velocity;
-    private Vector3 _previousPoition;
 
     // Knockback
     private CinemachineSmoothPath _knockbackPath;
@@ -56,7 +58,7 @@ public class SpeederSpace : PlayerController
         _boostComponent.OnBoostEnded += OnBoostEnded;
 
         _impactRecieverComponent = new ImpactRecieverComponent(_characterController, 3f);
-        _impactRecieverComponent.OnKnockbackEnded += OnKnockbackEnded;
+        _impactRecieverComponent.OnKnockbackEnded += OnKnockbackFinished;
     }
 
     private void Start()
@@ -96,11 +98,6 @@ public class SpeederSpace : PlayerController
         }
     }
 
-    private void LateUpdate()
-    {
-        
-    }
-
     public void Boost()
     {
         _boostComponent.Boost();
@@ -125,24 +122,37 @@ public class SpeederSpace : PlayerController
         _dollyCart.m_Speed = 0f;
         transform.parent = null;
 
-        // Add impact to player
-        _impactRecieverComponent.AddImpact(-transform.forward, _knockbackForce, true);
+        // Calculate knockback velocity
+        var velocity = -transform.forward;
+        velocity += transform.right * _input.x;
+        velocity += transform.up * _input.y;
+        velocity.Normalize();
 
-        SetupKnockbackPath();
+        // Add impact to player
+        _impactRecieverComponent.AddImpact(velocity, _knockbackForce, true);
+
+        OnCollision?.Invoke(transform.position + _impactRecieverComponent.Destination);
+        //SetupKnockbackPath();
     }
 
-    private void SetupKnockbackPath()
+    private void SetupKnockbackPath(/*Transform follow, Transform lookAt, Vector3 startPos, Vector3 endPos*/)
     {
         // Instantiate knockback path
         GameObject knockbackObject = Instantiate(_knockbackPathPrefab);
         _knockbackPath = knockbackObject.GetComponentInChildren<CinemachineSmoothPath>();
         Assert.IsNotNull(knockbackObject, "[SpeederSpace] - Knockback object is null");
 
-        var waypointList = new List<Vector3> { transform.position + _impactRecieverComponent.Destination, transform.position };
+        // TODO: DOES NOT WORK: dolly path could be previous knockback path!! but on the right track, save in a previous location?
+        // Convert position from Path Units to Distance
+        float trackDistance = _dollyCart.m_Path.ToNativePathUnits(_dollyCart.m_Position, CinemachinePathBase.PositionUnits.Distance);
+        // Get point close to current distance but in front
+        Vector3 lastPoint = _dollyCart.m_Path.EvaluatePosition(trackDistance + 0.1f);
+        // Save these points in a vector to create a smooth path
+        var waypointList = new List<Vector3> { transform.position + _impactRecieverComponent.Destination, transform.position, lastPoint };
         _knockbackPath.m_Waypoints = CreatePath.CreateNewWaypoints(waypointList);
 
         // Get camera from track
-        _knockbackCamera = knockbackObject.GetComponentInChildren<CinemachineVirtualCamera>();
+        _knockbackCamera = knockbackObject.GetComponentInChildren<CinemachineVirtualCamera>(true);
         Assert.IsNotNull(_knockbackCamera, "[SpeederSpace] - VirtualCamera is null");
 
         _knockbackCamera.gameObject.SetActive(true);
@@ -156,7 +166,6 @@ public class SpeederSpace : PlayerController
         
         collider.gameObject.transform.position = _knockbackPath.m_Waypoints[_knockbackPath.m_Waypoints.Length - 1].position;
 
-
         // Get switch path logic
         var switchPath = knockbackObject.GetComponentInChildren<SwitchPath>();
         Assert.IsNotNull(switchPath, "[SpeederSpace] - SwitchPath is null");
@@ -164,17 +173,20 @@ public class SpeederSpace : PlayerController
         switchPath.SetPathDestination(_dollyCart.m_Path);
     }
 
-    private void OnKnockbackEnded()
+    private void OnKnockbackFinished()
     {
-        _knockbackPath.m_Waypoints[0].position = transform.position;
+        OnKnockbackEnded?.Invoke(transform.position);
 
-        _knockbackCamera.gameObject.SetActive(true);
-        _knockbackCamera.MoveToTopOfPrioritySubqueue();
-        _knockbackCamera.Follow = _dollyCart.gameObject.transform;
-        _knockbackCamera.LookAt = _dollyCart.gameObject.transform;
+        //_knockbackPath.m_Waypoints[0].position = transform.position;
 
-        _dollyCart.m_Position = 0f;
-        _dollyCart.m_Path = _knockbackPath;
+        //_knockbackCamera.gameObject.SetActive(true);
+        //_knockbackCamera.MoveToTopOfPrioritySubqueue();
+        //_knockbackCamera.Follow = _dollyCart.gameObject.transform;
+        //_knockbackCamera.LookAt = _dollyCart.gameObject.transform;
+
+        //_dollyCart.m_Position = 0f;
+        //_dollyCart.m_Path = _knockbackPath;
+
         _dollyCart.m_Speed = _baseSpeed;
 
         transform.SetParent(_dollyCart.gameObject.transform, true);
