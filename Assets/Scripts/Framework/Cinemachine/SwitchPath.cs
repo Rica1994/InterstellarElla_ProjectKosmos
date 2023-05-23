@@ -1,7 +1,6 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class SwitchPath : MonoBehaviour
@@ -45,6 +44,11 @@ public class SwitchPath : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (_hitTrigger)
+        {
+            return;
+        }
+
         _playerDollyCart = other.gameObject.GetComponentInParent<CinemachineDollyCart>();
         if (!_playerDollyCart)
         {
@@ -62,7 +66,7 @@ public class SwitchPath : MonoBehaviour
 
     private void Update()
     {
-        if (!_hitTrigger || !_toSmoothPath)
+        if (!_hitTrigger || !_toSmoothPath || !_playerDollyCart)
         {
             return;
         }

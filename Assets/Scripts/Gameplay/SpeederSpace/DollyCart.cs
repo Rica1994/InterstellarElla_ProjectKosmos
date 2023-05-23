@@ -12,8 +12,7 @@ public class DollyCart : MonoBehaviour
     private CinemachineSmoothPath _knockbackPath;
     private CinemachinePathBase _originalPath = null;
     private CinemachineVirtualCamera _knockbackCamera;
-    private Collider _collider;
-    private SwitchPath _switchPath;
+    private SwitchPathEnd _switchPath;
     private float _lastDistance = -1;
 
     private void Start()
@@ -36,12 +35,8 @@ public class DollyCart : MonoBehaviour
         _knockbackCamera = _knockbackPath.gameObject.GetComponentInChildren<CinemachineVirtualCamera>(true);
         Assert.IsNotNull(_knockbackCamera, "[SpeederSpace] - VirtualCamera is null");
 
-        // Get swith track trigger
-        _collider = knockbackObject.GetComponentInChildren<Collider>();
-        Assert.IsNotNull(_collider, "[SpeederSpace] - Collider is null");
-
         // Get switch path logic
-        _switchPath = knockbackObject.GetComponentInChildren<SwitchPath>();
+        _switchPath = knockbackObject.GetComponent<SwitchPathEnd>();
         Assert.IsNotNull(_switchPath, "[SpeederSpace] - SwitchPath is null");
 
         if (_lastDistance == -1)
@@ -59,8 +54,6 @@ public class DollyCart : MonoBehaviour
         _knockbackCamera.MoveToTopOfPrioritySubqueue();
         _knockbackCamera.Follow = _playerSpeeder.transform;
         _knockbackCamera.LookAt = _dollyCart.gameObject.transform;
-
-        _collider.gameObject.transform.position = _knockbackPath.m_Waypoints[_knockbackPath.m_Waypoints.Length - 1].position;
 
         _switchPath.SetPathDestination(_originalPath);
     }
