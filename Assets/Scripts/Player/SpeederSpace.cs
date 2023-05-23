@@ -2,13 +2,19 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Android;
+using UnityEngine.Assertions;
 
 public class SpeederSpace : PlayerController
 {
+    public delegate void SpeederSpaceKnockbackContext(Vector3 position);
+    public event SpeederSpaceKnockbackContext OnCollision;
+    public event SpeederSpaceKnockbackContext OnKnockbackEnded;
+
     // Parameters
     [SerializeField] private float _boostDuration = 3.0f;
     [SerializeField] private float _boostMultiplier = 1.5f;
+
+    [SerializeField] private GameObject _knockbackPathPrefab;
     [SerializeField] private float _knockbackForce = 20f;
 
     [SerializeField] private float _moveSpeed = 20f;
@@ -26,7 +32,6 @@ public class SpeederSpace : PlayerController
     // Movement
     private Vector2 _input;
     private float _baseSpeed;
-    private Vector3 _knockbackStartPos;
 
     // Utility
     private bool _isApplicationQuitting = false;
@@ -40,8 +45,10 @@ public class SpeederSpace : PlayerController
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
+        Assert.IsNotNull(_characterController, $"[{GetType()}] - CharacterController is null");
 
         _dollyCart = GetComponentInParent<CinemachineDollyCart>();
+        Assert.IsNotNull(_dollyCart, $"[{GetType()}] - DollyCart is null");
         _baseSpeed = _dollyCart.m_Speed;
 
         _moveComponent = new MoveComponent();
@@ -49,7 +56,7 @@ public class SpeederSpace : PlayerController
         _boostComponent.OnBoostEnded += OnBoostEnded;
 
         _impactRecieverComponent = new ImpactRecieverComponent(_characterController, 3f);
-        _impactRecieverComponent.OnKnockbackEnded += OnKnockbackEnded;
+        _impactRecieverComponent.OnKnockbackEnded += OnKnockbackFinished;
     }
 
     private void Start()
@@ -109,54 +116,46 @@ public class SpeederSpace : PlayerController
 
     public override void Collide()
     {
+        // Dolly cart speed and unparent
         _dollyCart.m_Speed = 0f;
         transform.parent = null;
 
-        _knockbackStartPos = transform.position;
+        // Calculate knockback velocity
+        var velocity = -_dollyCart.transform.forward;
+        //velocity += transform.right * _input.x;
+        //velocity += transform.up * _input.y;
+        velocity.Normalize();
 
-        Vector3 knockbackDirection = -transform.forward;
-        _impactRecieverComponent.AddImpact(knockbackDirection, _knockbackForce, true);
+        // Add impact to player
+        _impactRecieverComponent.AddImpact(velocity, _knockbackForce, true);
+
+        OnCollision?.Invoke(transform.position + _impactRecieverComponent.Destination);
     }
 
-    private void OnKnockbackEnded()
+    private void OnKnockbackFinished()
     {
-        // Spawn track prefab
-        // With camera
-        // Set waypoints
+        OnKnockbackEnded?.Invoke(transform.position);
 
-        var newPath = CreatePath.CreateNewPath(transform.position, _knockbackStartPos);
-        _dollyCart.m_Position = 0f;
-        _dollyCart.m_Path = newPath;
         _dollyCart.m_Speed = _baseSpeed;
 
         transform.SetParent(_dollyCart.gameObject.transform, true);
         transform.localPosition = Vector3.zero;
-
-        // Spawn switch track prefab, from this track to original track
     }
 
     private void CheckBounds()
     {
-        // If there is input for X
-        if (!Equals(_input.x, 0f))
+        // If player is at the left or right bounds
+        if ((transform.localPosition.x <= (_leftBottomBounds.x + _cameraBoundOffset) && _input.x < 0f) ||
+            (transform.localPosition.x >= (_rightTopBounds.x - _cameraBoundOffset) && _input.x > 0f))
         {
-            // If player is at the left or right bounds
-            if (transform.localPosition.x <= (_leftBottomBounds.x + _cameraBoundOffset) ||
-                transform.localPosition.x >= (_rightTopBounds.x - _cameraBoundOffset))
-            {
-                _input.x = 0f;
-            }
+            _input.x = 0f;
         }
 
-        // If there is input for Y
-        if (!Equals(_input.y, 0f))
+        // If player at the top or bottom bounds
+        if ((transform.localPosition.y <= (_leftBottomBounds.y + _cameraBoundOffset) && _input.y < 0f) ||
+            (transform.localPosition.y >= (_rightTopBounds.y - _cameraBoundOffset) && _input.y > 0f))
         {
-            // If player at the top or bottom bounds
-            if (transform.localPosition.y <= (_leftBottomBounds.y + _cameraBoundOffset) || 
-                transform.localPosition.y >= (_rightTopBounds.y - _cameraBoundOffset))
-            {
-                _input.y = 0f;
-            }
+            _input.y = 0f;
         }
     }
 
@@ -166,10 +165,17 @@ public class SpeederSpace : PlayerController
         CheckBounds();
 
         // Calculate direction to move 
-        Vector3 direction = transform.right * _input.x;
-        direction += transform.up * _input.y;
+        Vector3 direction = _dollyCart.transform.right * _input.x;
+        direction += _dollyCart.transform.up * _input.y;
 
         _moveComponent.Move(_characterController, direction, _moveSpeed);
+
+        // Allow player to only move/rotate within local bounds and never on the z axis
+        _characterController.enabled = false;
+        var pos = transform.localPosition;
+        transform.localPosition = new Vector3(pos.x, pos.y, 0f);
+        transform.localRotation = Quaternion.identity;
+        _characterController.enabled = true;
     }
 
     private void OnEnable()

@@ -23,10 +23,24 @@ public class CreatePath : MonoBehaviour
         wayPoints.Add(wayPoint);
 
         // Create gameobject
-        GameObject knockbackObject = new GameObject("KnockbackPath");
+        GameObject knockbackObject = new GameObject("NewPath");
         var knockbackPath = knockbackObject.AddComponent<CinemachineSmoothPath>();
         knockbackPath.m_Waypoints = wayPoints.ToArray();
 
         return knockbackPath;
+    }
+
+    public static CinemachineSmoothPath.Waypoint[] CreateNewWaypoints(List<Vector3> positions)
+    {
+        List<CinemachineSmoothPath.Waypoint> wayPoints = new List<CinemachineSmoothPath.Waypoint> { };
+        CinemachineSmoothPath.Waypoint wayPoint = new CinemachineSmoothPath.Waypoint();
+
+        foreach (var positoin in positions)
+        {
+            wayPoint.position = positoin;
+            wayPoints.Add(wayPoint);
+        }
+
+        return wayPoints.ToArray();
     }
 }
