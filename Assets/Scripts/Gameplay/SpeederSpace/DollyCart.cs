@@ -46,9 +46,10 @@ public class DollyCart : MonoBehaviour
 
         if (_lastDistance == -1)
         {
-            float currentDistance = _dollyCart.m_Path.ToNativePathUnits(_dollyCart.m_Position, CinemachinePathBase.PositionUnits.Distance);
-            _lastDistance = currentDistance + .1f;
+            float currentDistance = _dollyCart.m_Path.ToNativePathUnits(_dollyCart.m_Position + 2f, CinemachinePathBase.PositionUnits.Distance);
+            _lastDistance = currentDistance;
             _originalPath = _dollyCart.m_Path;
+            Debug.Log("Switch");
         }
 
         Vector3 lastPoint = _originalPath.EvaluatePosition(_lastDistance);
@@ -58,24 +59,21 @@ public class DollyCart : MonoBehaviour
         _knockbackCamera.gameObject.SetActive(true);
         _knockbackCamera.MoveToTopOfPrioritySubqueue();
         _knockbackCamera.Follow = _playerSpeeder.transform;
-        _knockbackCamera.LookAt = _dollyCart.gameObject.transform;
+        _knockbackCamera.LookAt = _playerSpeeder.transform;
 
         _collider.gameObject.transform.position = _knockbackPath.m_Waypoints[_knockbackPath.m_Waypoints.Length - 1].position;
 
         _switchPath.SetPathDestination(_originalPath);
+
+        _dollyCart.m_Position = 0f;
+        _dollyCart.m_Path = _knockbackPath;
     }
 
     private void OnKnockbackEnded(Vector3 position)
     {
         _knockbackPath.m_Waypoints[0].position = _playerSpeeder.transform.position;
-
-        _knockbackCamera.gameObject.SetActive(true);
-        _knockbackCamera.MoveToTopOfPrioritySubqueue();
-        _knockbackCamera.Follow = _dollyCart.gameObject.transform;
-        _knockbackCamera.LookAt = _dollyCart.gameObject.transform;
-
-        _dollyCart.m_Position = 0f;
-        _dollyCart.m_Path = _knockbackPath;
+        _knockbackCamera.Follow = _dollyCart.transform;
+        _knockbackCamera.LookAt = _dollyCart.transform;
     }
 
     private void LateUpdate()

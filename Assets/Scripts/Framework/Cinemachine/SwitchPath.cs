@@ -62,7 +62,7 @@ public class SwitchPath : MonoBehaviour
 
     private void Update()
     {
-        if (!_hitTrigger || !_toSmoothPath)
+        if (!_hitTrigger || !_toSmoothPath || !_playerDollyCart)
         {
             return;
         }

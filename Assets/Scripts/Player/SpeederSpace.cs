@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -32,10 +33,6 @@ public class SpeederSpace : PlayerController
     // Movement
     private Vector2 _input;
     private float _baseSpeed;
-
-    // Knockback
-    private CinemachineSmoothPath _knockbackPath;
-    private CinemachineVirtualCamera _knockbackCamera;
 
     // Utility
     private bool _isApplicationQuitting = false;
@@ -123,69 +120,20 @@ public class SpeederSpace : PlayerController
         transform.parent = null;
 
         // Calculate knockback velocity
-        var velocity = -transform.forward;
-        velocity += transform.right * _input.x;
-        velocity += transform.up * _input.y;
+        var velocity = -_dollyCart.transform.forward;
+        //velocity += transform.right * _input.x;
+        //velocity += transform.up * _input.y;
         velocity.Normalize();
 
         // Add impact to player
         _impactRecieverComponent.AddImpact(velocity, _knockbackForce, true);
 
         OnCollision?.Invoke(transform.position + _impactRecieverComponent.Destination);
-        //SetupKnockbackPath();
-    }
-
-    private void SetupKnockbackPath(/*Transform follow, Transform lookAt, Vector3 startPos, Vector3 endPos*/)
-    {
-        // Instantiate knockback path
-        GameObject knockbackObject = Instantiate(_knockbackPathPrefab);
-        _knockbackPath = knockbackObject.GetComponentInChildren<CinemachineSmoothPath>();
-        Assert.IsNotNull(knockbackObject, "[SpeederSpace] - Knockback object is null");
-
-        // TODO: DOES NOT WORK: dolly path could be previous knockback path!! but on the right track, save in a previous location?
-        // Convert position from Path Units to Distance
-        float trackDistance = _dollyCart.m_Path.ToNativePathUnits(_dollyCart.m_Position, CinemachinePathBase.PositionUnits.Distance);
-        // Get point close to current distance but in front
-        Vector3 lastPoint = _dollyCart.m_Path.EvaluatePosition(trackDistance + 0.1f);
-        // Save these points in a vector to create a smooth path
-        var waypointList = new List<Vector3> { transform.position + _impactRecieverComponent.Destination, transform.position, lastPoint };
-        _knockbackPath.m_Waypoints = CreatePath.CreateNewWaypoints(waypointList);
-
-        // Get camera from track
-        _knockbackCamera = knockbackObject.GetComponentInChildren<CinemachineVirtualCamera>(true);
-        Assert.IsNotNull(_knockbackCamera, "[SpeederSpace] - VirtualCamera is null");
-
-        _knockbackCamera.gameObject.SetActive(true);
-        _knockbackCamera.MoveToTopOfPrioritySubqueue();
-        _knockbackCamera.Follow = transform;
-        _knockbackCamera.LookAt = _dollyCart.gameObject.transform;
-
-        // Get swith track trigger
-        var collider = knockbackObject.GetComponentInChildren<Collider>();
-        Assert.IsNotNull(collider, "[SpeederSpace] - Collider is null");
-        
-        collider.gameObject.transform.position = _knockbackPath.m_Waypoints[_knockbackPath.m_Waypoints.Length - 1].position;
-
-        // Get switch path logic
-        var switchPath = knockbackObject.GetComponentInChildren<SwitchPath>();
-        Assert.IsNotNull(switchPath, "[SpeederSpace] - SwitchPath is null");
-        
-        switchPath.SetPathDestination(_dollyCart.m_Path);
     }
 
     private void OnKnockbackFinished()
     {
         OnKnockbackEnded?.Invoke(transform.position);
-
-        //_knockbackPath.m_Waypoints[0].position = transform.position;
-
-        //_knockbackCamera.gameObject.SetActive(true);
-        //_knockbackCamera.MoveToTopOfPrioritySubqueue();
-        //_knockbackCamera.Follow = _dollyCart.gameObject.transform;
-        //_knockbackCamera.LookAt = _dollyCart.gameObject.transform;
-
-        //_dollyCart.m_Position = 0f;
-        //_dollyCart.m_Path = _knockbackPath;
 
         _dollyCart.m_Speed = _baseSpeed;
 
@@ -216,10 +164,16 @@ public class SpeederSpace : PlayerController
         CheckBounds();
 
         // Calculate direction to move 
-        Vector3 direction = transform.right * _input.x;
-        direction += transform.up * _input.y;
+        Vector3 direction = _dollyCart.transform.right * _input.x;
+        direction += _dollyCart.transform.up * _input.y;
 
         _moveComponent.Move(_characterController, direction, _moveSpeed);
+
+        _characterController.enabled = false;
+        var pos = transform.localPosition;
+        transform.localPosition = new Vector3(pos.x, pos.y, 0f);
+        transform.localRotation = Quaternion.identity;
+        _characterController.enabled = true;
     }
 
     private void OnEnable()
