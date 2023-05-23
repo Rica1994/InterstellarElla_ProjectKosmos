@@ -23,7 +23,10 @@ public class DollyCart : MonoBehaviour
         _playerSpeeder.OnKnockbackEnded += OnKnockbackEnded;
 
         _dollyCart = GetComponentInChildren<CinemachineDollyCart>();
+    }
 
+    private void OnCollision(Vector3 position)
+    {
         // Instantiate knockback path
         GameObject knockbackObject = Instantiate(_knockbackPathPrefab);
         _knockbackPath = knockbackObject.GetComponentInChildren<CinemachineSmoothPath>();
@@ -40,18 +43,13 @@ public class DollyCart : MonoBehaviour
         // Get switch path logic
         _switchPath = knockbackObject.GetComponentInChildren<SwitchPath>();
         Assert.IsNotNull(_switchPath, "[SpeederSpace] - SwitchPath is null");
-    }
 
-    private void OnCollision(Vector3 position)
-    {
         if (_lastDistance == -1)
         {
             float currentDistance = _dollyCart.m_Path.ToNativePathUnits(_dollyCart.m_Position, CinemachinePathBase.PositionUnits.Distance);
             _lastDistance = currentDistance + .1f;
             _originalPath = _dollyCart.m_Path;
         }
-
-        //_knockbackPath.transform.position = position;
 
         Vector3 lastPoint = _originalPath.EvaluatePosition(_lastDistance);
         var waypointList = new List<Vector3> { position, transform.position, lastPoint };
