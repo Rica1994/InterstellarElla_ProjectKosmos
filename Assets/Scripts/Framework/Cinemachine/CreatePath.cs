@@ -35,9 +35,9 @@ public class CreatePath : MonoBehaviour
         List<CinemachineSmoothPath.Waypoint> wayPoints = new List<CinemachineSmoothPath.Waypoint> { };
         CinemachineSmoothPath.Waypoint wayPoint = new CinemachineSmoothPath.Waypoint();
 
-        foreach (var positoin in positions)
+        foreach (var position in positions)
         {
-            wayPoint.position = positoin;
+            wayPoint.position = position;
             wayPoints.Add(wayPoint);
         }
 

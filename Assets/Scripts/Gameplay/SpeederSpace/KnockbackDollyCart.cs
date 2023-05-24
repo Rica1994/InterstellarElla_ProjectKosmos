@@ -19,7 +19,10 @@ public class KnockbackDollyCart : MonoBehaviour
     private Collider _collider;
     private SwitchPath _switchPath;
 
+    private GameObject _knockbackParent;
+
     private float _lastDistance = -1;
+    private bool _isGettingKnockedback = false;
 
     private void Start()
     {
@@ -30,6 +33,8 @@ public class KnockbackDollyCart : MonoBehaviour
 
         _dollyCart = GetComponentInChildren<CinemachineDollyCart>();
         Assert.IsNotNull(_dollyCart, $"[{GetType()}] - DollyCart is null");
+
+        _knockbackParent = new GameObject("KnockbackParent");
     }
 
     private void OnCollision(Vector3 position)
@@ -40,7 +45,7 @@ public class KnockbackDollyCart : MonoBehaviour
         if (_lastDistance == -1)
         {
             // Take a new position a few units in front of current position on track
-            _lastDistance = _dollyCart.m_Path.ToNativePathUnits(_dollyCart.m_Position + 2f, CinemachinePathBase.PositionUnits.Distance);
+            _lastDistance = _dollyCart.m_Path.ToNativePathUnits(_dollyCart.m_Position + 5f, CinemachinePathBase.PositionUnits.Distance);
             _originalPath = _dollyCart.m_Path;
         }
 
@@ -52,8 +57,11 @@ public class KnockbackDollyCart : MonoBehaviour
         // Set knockback camera
         _knockbackCamera.gameObject.SetActive(true);
         _knockbackCamera.MoveToTopOfPrioritySubqueue();
-        _knockbackCamera.Follow = _playerSpeeder.transform;
-        _knockbackCamera.LookAt = _playerSpeeder.transform;
+        _knockbackCamera.Follow = _dollyCart.transform;
+        _knockbackCamera.LookAt = _dollyCart.transform;
+
+        // Set dolly cart path
+        _dollyCart.m_Path = _knockbackPath;
 
         // Position exit collider correctly
         _collider.gameObject.transform.position = _knockbackPath.m_Waypoints[_knockbackPath.m_Waypoints.Length - 1].position;
@@ -61,15 +69,13 @@ public class KnockbackDollyCart : MonoBehaviour
         // Set switch path destination
         _switchPath.SetPathDestination(_originalPath);
 
-        // Position dolly cart correctly for future forwards movement
-        _dollyCart.m_Position = 0f;
-        _dollyCart.m_Path = _knockbackPath;
+        _isGettingKnockedback = true;
     }
 
     private void InitializePath()
     {
         // Instantiate knockback path
-        GameObject knockbackObject = Instantiate(_knockbackPathPrefab);
+        GameObject knockbackObject = Instantiate(_knockbackPathPrefab, _knockbackParent.transform);
         _knockbackPath = knockbackObject.GetComponentInChildren<CinemachineSmoothPath>();
         Assert.IsNotNull(knockbackObject, $"[{GetType()}] - Knockback object is null");
         _spawnedKnockbackPaths.Add(knockbackObject);
@@ -89,16 +95,18 @@ public class KnockbackDollyCart : MonoBehaviour
 
     private void OnKnockbackEnded(Vector3 position)
     {
-        // Adjust first waypoint to where player actually ended
-        _knockbackPath.m_Waypoints[0].position = _playerSpeeder.transform.position;
-
-        // Adjust knockback camera follow and lookat
-        _knockbackCamera.Follow = _dollyCart.transform;
-        _knockbackCamera.LookAt = _dollyCart.transform;
+        _isGettingKnockedback = false;
     }
 
     private void LateUpdate()
     {
+        // Follow player allong knockback track
+        if (_isGettingKnockedback && _knockbackPath)
+        {
+            var pos = _knockbackPath.FindClosestPoint(_playerSpeeder.transform.position, 0, -1, 100);
+            _dollyCart.m_Position = _knockbackPath.FromPathNativeUnits(pos, CinemachinePathBase.PositionUnits.Distance);
+        }
+
         // Check if cart is back on original track 
         if (_lastDistance == -1 || _dollyCart.m_Path != _originalPath)
         {
