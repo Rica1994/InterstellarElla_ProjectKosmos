@@ -83,7 +83,9 @@ public class SectionCreationTool : EditorWindow
         {
             // 0) reset lists in case of scene change
             _sectionCreatorsToCheckOverlap.Clear();
-            _sectionCreatorsStructured.Clear();          
+            _sectionCreatorsStructured.Clear();
+            // 0.1) adjust scene string so level section don't have "Work" in their names
+            AdjustSceneString();
 
             // 1) Find the blockout Parent
             BlockoutParent blockoutParent = FindObjectOfType<BlockoutParent>();
@@ -147,16 +149,10 @@ public class SectionCreationTool : EditorWindow
             BlockoutParent blockoutCopy = Instantiate(blockoutParent);
             // 3.2) disable the original blockout
             blockoutParent.gameObject.SetActive(false);
+
             // 3.3) add all children of the copy to a temp list
             List<GameObject> tempList = new List<GameObject>();
-            for (int i = 0; i < blockoutCopy.transform.childCount; i++)
-            {
-                GameObject objToAdd = blockoutCopy.transform.GetChild(i).gameObject;
-                tempList.Add(objToAdd);
-            }
-
-            // 3.4) adjust scene string so level section don't have "Work" in their names
-            AdjustSceneString();
+            ParentAllTheThings(tempList, blockoutCopy.transform);
 
             // 4) iterate over each sectionCreator... 
             for (int i = 0; i < _sectionCreatorsStructured.Count; i++)
@@ -164,21 +160,15 @@ public class SectionCreationTool : EditorWindow
                 // 4.1) iterate over each collider...
                 foreach (BoxCollider coll in _sectionCreatorsStructured[i].CollidersDefiningMySection)
                 {
-                    // 4.2) parent any objects that fall within the bounds
+                    // 4.2) parent any objects that fall within the bounds (only check first children if the blockout)
                     List<GameObject> objectsAdded = new List<GameObject>();
                     foreach (GameObject obj in tempList)
                     {
                         if (coll.bounds.Contains(obj.transform.position))
                         {
-                            var parent = obj.transform.parent;
-                            // Check if the parent of this object is within the bounds of the section
-                            // If it is, then we don't want to parent it to the section
-                            if (parent != null && coll.bounds.Contains(parent.position))
-                            {
-                                continue;
-                            }
-
                             objectsAdded.Add(obj);
+
+                            // differentiate between pickups and environment
                             if (obj.TryGetComponent(out PickUp pickUp))
                             {
                                 obj.transform.SetParent(_sectionCreatorsStructured[i].Section.PickupsParent.gameObject.transform);
@@ -260,6 +250,24 @@ public class SectionCreationTool : EditorWindow
 
             // OLDER LOGIC //
             //OlderSingularSectionLogic(tempList);
+        }
+    }
+
+    private void ParentAllTheThings(List<GameObject> listToAddTo, Transform objTransformToCheckChildren)
+    {
+        for (int i = 0; i < objTransformToCheckChildren.transform.childCount; i++)
+        {
+            GameObject objToAdd = objTransformToCheckChildren.transform.GetChild(i).gameObject;
+
+            // if the object we are checking is a parent-structure, then re-do this methods logic on that child (in case paren-structures are nested in each other)
+            if (objToAdd.TryGetComponent(out ParentStructure parentPurelyForStructure))
+            {      
+                ParentAllTheThings(listToAddTo, parentPurelyForStructure.transform);
+                continue;
+            }
+
+            // else, we simply add the object to the list
+            listToAddTo.Add(objToAdd);
         }
     }
 
