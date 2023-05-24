@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class LevelSectionCreator : MonoBehaviour
 {
+    [Header("check if I am the first Section")]
+    [SerializeField]
+    private bool _isStartingSection;
+    public bool IsStartingSection => _isStartingSection;
+
     [Header("Assign children with box colliders")]
     [SerializeField]
     private List<BoxCollider> _collidersDefiningMySection = new List<BoxCollider>();

@@ -20,12 +20,12 @@ public class SectionCreationTool : EditorWindow
     private string[] _toolbarStrings = { "Creation", "Analyze" };
     int _toolbarSelected = 0;
 
-    string mySceneString;
-    int[] myNumbers;
+    private string _adjustedSceneString = string.Empty;
 
-    // get this from the correct folder
-    public GameObject somePrefab;
-
+    private const string _localPathPrefix = "Assets/Levels/Prefabs_Level_0";
+    //private const string _localPathSuffix = "/Prefabs_Sections/Resources/";
+    private const string _localPathMidfix = "/Prefabs_Sections/Scene_";
+    private const string _localPathSuffix = "/Resources/";
 
 
     [MenuItem("Window/Section Tool")]
@@ -81,6 +81,10 @@ public class SectionCreationTool : EditorWindow
     {
         if (GUILayout.Button("Create Section Prefabs"))
         {
+            // 0) reset lists in case of scene change
+            _sectionCreatorsToCheckOverlap.Clear();
+            _sectionCreatorsStructured.Clear();          
+
             // 1) Find the blockout Parent
             BlockoutParent blockoutParent = FindObjectOfType<BlockoutParent>();
             if (blockoutParent == null)
@@ -100,14 +104,37 @@ public class SectionCreationTool : EditorWindow
                         InteractionMode.UserAction);
                 }
             }
+            // 2.1) assign starting section
+            LevelSectionCreator sectionZero = null;
+            int amountOfStartingSectionsFound = 0;
+            for (int i = 0; i < _sectionCreatorsInScene.Count; i++)
+            {
+                if (_sectionCreatorsInScene[i].IsStartingSection)
+                {
+                    sectionZero = _sectionCreatorsInScene[i];
+                    amountOfStartingSectionsFound += 1;
+                }
+            }
+            if (amountOfStartingSectionsFound == 0)
+            {
+                Debug.LogWarning("No Starting Section found! make sure atleast 1 has the bool IsStart 'checked'");
+                // 8) undo-ing the unpacking of the section creators
+                Undo.PerformUndo();
+                return;
+            }
+            else if (amountOfStartingSectionsFound > 1)
+            {
+                Debug.LogWarning("Found more than 1 Starting Section! make sure only 1 has the bool IsStart 'checked'");
+                // 8) undo-ing the unpacking of the section creators
+                Undo.PerformUndo();
+                return;
+            }
 
-            // 2.1) use list of sections we need to check for collision
+            // 2.2) use list of sections we need to check for collision
             for (int i = 0; i < _sectionCreatorsInScene.Count; i++)
             {
                 _sectionCreatorsToCheckOverlap.Add(_sectionCreatorsInScene[i]);
             }
-            // 2.2) Structure the sectionCreators properly into a new list according to overlapping Head/Tails
-            LevelSectionCreator sectionZero = FindStartingSectionCreator();
             // 2.3) Remove starting section from sectionCreatorsToCheck
             _sectionCreatorsToCheckOverlap.Remove(sectionZero);
             // 2.4) Add SectionZero to structured list
@@ -115,10 +142,7 @@ public class SectionCreationTool : EditorWindow
             // 2.5) use the starting section to progressively find following sections by checking the heads
             FindFollowingSectionCreator(sectionZero);
 
-
-
             // 3) get all objects, duplicate them, add to temp list, check tempList objects for inside of bounds, parent objects //
-
             // 3.1) duplicate the blockout_parent
             BlockoutParent blockoutCopy = Instantiate(blockoutParent);
             // 3.2) disable the original blockout
@@ -130,6 +154,9 @@ public class SectionCreationTool : EditorWindow
                 GameObject objToAdd = blockoutCopy.transform.GetChild(i).gameObject;
                 tempList.Add(objToAdd);
             }
+
+            // 3.4) adjust scene string so level section don't have "Work" in their names
+            AdjustSceneString();
 
             // 4) iterate over each sectionCreator... 
             for (int i = 0; i < _sectionCreatorsStructured.Count; i++)
@@ -176,26 +203,25 @@ public class SectionCreationTool : EditorWindow
                 }
 
                 // 4.4) name our section something fitting
-                _sectionCreatorsStructured[i].Section.name = "PV_LevelSection_" + SceneManager.GetActiveScene().name + "_" + i;
+                _sectionCreatorsStructured[i].Section.name = "PV_LevelSection_" + _adjustedSceneString + i;
                 _sectionCreatorsStructured[i].Section.ParentEnvironment.name = "Environment_" + i;
                 _sectionCreatorsStructured[i].Section.PickupsParent.gameObject.name = "Pickups_" + i;
             }
             // FINISHED PARENTING BLOCKOUT HERE //
             Debug.Log("finished parenting blockout");
 
-
-
             // 5) get correct directory dependant on our scene
-            string levelIndexString = DecodeSceneString().ToString();
-            string localPath = "Assets/Levels/Prefabs_Level_0" + levelIndexString + "/Prefabs_Sections/Resources/";
+            string levelIndexString = DecodeSceneString()[0].ToString();
+            // useful for if we want to divide prefab sections into even more folders
+            string levelSceneIndexString = DecodeSceneString()[1].ToString();
+
+            string localPath = _localPathPrefix + levelIndexString + _localPathMidfix + levelSceneIndexString + _localPathSuffix;
             // 5.1) delete folder and its contents, then Re-create it
             if (Directory.Exists(localPath))
             {
                 Directory.Delete(localPath, true);
             }
             Directory.CreateDirectory(localPath);
-
-
 
             // 6) create prefab of each section
             for (int i = 0; i < _sectionCreatorsStructured.Count; i++)
@@ -231,7 +257,6 @@ public class SectionCreationTool : EditorWindow
 
             // 8) undo-ing the unpacking of the section creators
             Undo.PerformUndo();
-
 
             // OLDER LOGIC //
             //OlderSingularSectionLogic(tempList);
@@ -278,6 +303,8 @@ public class SectionCreationTool : EditorWindow
             Debug.Log("Finished structuring Sections");
         }
     }
+
+    // logic in case I want to use Tails to figure out starting sections
     private LevelSectionCreator FindStartingSectionCreator()
     {
         // 2.11) Find the 1 Section whose Tail is not colliding with another segment
@@ -304,6 +331,7 @@ public class SectionCreationTool : EditorWindow
                     if (tailHasCollided == false)
                     {
                         // we have found the starting section !
+                        Debug.Log("starting section is " + _sectionCreatorsInScene[i].gameObject.name);
                         return _sectionCreatorsInScene[i];
                     }
                 }
@@ -312,21 +340,35 @@ public class SectionCreationTool : EditorWindow
         return null;
     }
 
-    private int DecodeSceneString()
+    private List<int> DecodeSceneString()
     {
         // Split myString wherever there's a _ and make a String array out of it.
         string[] stringArray = SceneManager.GetActiveScene().name.Split("_"[0]);
-        myNumbers = new int[stringArray.Length];
 
+        List<int> numbersInSceneName = new List<int>();
         for (int num = 0; num < stringArray.Length; num++)
         {
             if (int.TryParse(stringArray[num], out int foundInt) == true)
             {
-                return foundInt;
+                numbersInSceneName.Add(foundInt);
             }        
         }
 
-        return 404;
+        return numbersInSceneName;
+    }
+    private void AdjustSceneString()
+    {
+        // Split myString wherever there's a _ and make a String array out of it.
+        string[] stringArray = SceneManager.GetActiveScene().name.Split("_"[0]);
+
+        // remove the work from the string name 
+        if (_adjustedSceneString == string.Empty)
+        {
+            for (int i = 0; i < stringArray.Length - 1; i++) // (Length - 1)=> will exclude the word "Work"
+            {
+                _adjustedSceneString += (stringArray[i] + "_");
+            }
+        }
     }
 
     private void AnalyzeDataInSection()

@@ -1,3 +1,6 @@
+
+#if UNITY_EDITOR
+
 using UnityEngine;
 using UnityEditor;
 
@@ -44,3 +47,5 @@ public class BezierCurveDrawer : MonoBehaviour
         return time;
     }
 }
+
+#endif
