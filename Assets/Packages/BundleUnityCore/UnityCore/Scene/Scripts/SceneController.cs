@@ -128,7 +128,7 @@ namespace UnityCore
 
                 Load(sceneToLoad, null, false, PageType.Loading);
             }
-            private async void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+            private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
             {
                 if (m_TargetScene == SceneType.None)
                 {
