@@ -54,8 +54,6 @@ namespace UnityCore
             public void TurnPageOff(PageType typeToTurnOff, PageType typeToTurnOn = PageType.None,
                 bool waitForExit = false)
             {
-                Debug.Log("a) entering turn page off");
-
                 //if (typeToTurnOff == PageType.None) return;
                 if (PageExists(typeToTurnOff) == false)
                 {
@@ -66,13 +64,11 @@ namespace UnityCore
                 Page offPage = GetPage(typeToTurnOff);
                 if (offPage.gameObject.activeSelf == true)
                 {
-                    Debug.Log("b) animating page off");
                     offPage.Animate(false);
                 }
 
                 if (typeToTurnOn != PageType.None)
                 {
-                    Debug.Log("c) turning on adittional page");
                     Page onPage = GetPage(typeToTurnOn);
                     if (waitForExit == true)
                     {
