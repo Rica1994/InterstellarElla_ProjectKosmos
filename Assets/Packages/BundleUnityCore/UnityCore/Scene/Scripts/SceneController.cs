@@ -22,6 +22,8 @@ namespace UnityCore
             private AudioController _audioController;
             private PageController _pageController;
 
+            public SceneType TargetSceneAfterLoading;
+
             private string CurrentSceneName
             {
                 get { return SceneManager.GetActiveScene().name; }
@@ -64,8 +66,32 @@ namespace UnityCore
                     return;
                 }
 
+                Debug.Log("1) Scene can be loaded ");
+
                 m_SceneIsLoading = true;
                 m_TargetScene = scene;
+                m_SceneLoadDelegate = sceneLoadDelegate;
+                m_LoadingPage = loadingPage;
+
+                StartCoroutine(LoadScene());
+            }
+            public void LoadTargetAfterLoadingScene(SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
+                PageType loadingPage = PageType.None)
+            {
+                if (loadingPage != PageType.None && _pageController == null)
+                {
+                    return;
+                }
+
+                if (SceneCanBeLoaded(TargetSceneAfterLoading, reload) == false)
+                {
+                    return;
+                }
+
+                Debug.Log("1) Scene can be loaded ");
+
+                m_SceneIsLoading = true;
+                m_TargetScene = TargetSceneAfterLoading;
                 m_SceneLoadDelegate = sceneLoadDelegate;
                 m_LoadingPage = loadingPage;
 
@@ -77,6 +103,16 @@ namespace UnityCore
             {
                 StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading));
             }
+            public void LoadLoadingscene()
+            {
+                //Load(SceneType.S_Loading, null, false, PageType.Loading);
+
+                // below logic works just fine 
+                //m_TargetScene = SceneType.S_Loading;
+                m_TargetScene = SceneType.S_Level_2_Build;
+                string targetSceneName = SceneTypeToString(m_TargetScene);
+                SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
+            }
 
 
 
@@ -86,13 +122,19 @@ namespace UnityCore
             #region Private Functions
 
             private IEnumerator LoadScene()
-            {
+            {        
                 if (m_LoadingPage != PageType.None)
                 {
+                    Debug.Log("2) Starting coroutine fade to white");
+
                     _pageController.TurnPageOn(m_LoadingPage);
+
                     yield return new WaitUntil(() => _pageController.PageIsOn(m_LoadingPage));
+
+                    Debug.Log("3) finished fade to white");
                 }
 
+                Debug.Log(" 4) LOADING AFTER FADE");
                 string targetSceneName = SceneTypeToString(m_TargetScene);
                 SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
             }
@@ -101,24 +143,29 @@ namespace UnityCore
                                                       PageType loadingPage = PageType.None)
             {
                 yield return new WaitForSeconds(timeDelay);
+
                 Load(SceneType.S_Loading, null, false, PageType.Loading);
 
                 yield return new WaitForSeconds(3);
+
                 Load(sceneToLoad, null, false, PageType.Loading);
             }
             private async void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
             {
+                Debug.Log("A) OnSceneLoaded happens");
                 if (m_TargetScene == SceneType.None)
                 {
                     return;
                 }
 
+                Debug.Log("B) OnSceneLoaded continues");
                 SceneType sceneType = StringToSceneType(scene.name);
                 if (m_TargetScene != sceneType)
                 {
                     return;
                 }
 
+                Debug.Log("C) OnSceneLoaded continues more");
                 if (m_SceneLoadDelegate != null)
                 {
                     try
@@ -131,6 +178,8 @@ namespace UnityCore
                     }
                 }
 
+                Debug.Log("D) OnSceneLoaded continues FURTHER");
+
                 // remove audio tracks where source is null
                 _audioController.VerifyAudioTracks();
 
@@ -139,7 +188,11 @@ namespace UnityCore
 
                 if (m_LoadingPage != PageType.None)
                 {
-                    await Task.Delay(1000);
+                    Debug.Log("E) turning off page loading");
+
+                    //await Task.Delay(1000); THIS does not work in WebGL :'^{
+
+                    Debug.Log("EE) waited for delay");
                     _pageController.TurnPageOff(m_LoadingPage);
                 }
 
@@ -157,7 +210,7 @@ namespace UnityCore
                     ServiceLocator.Instance.GetService<GameManager>().SetPlayerController(playerController);
                 }
 
-
+                Debug.Log("F) resetting sceneLoading bool");
                 m_SceneIsLoading = false;
             }
             private bool SceneCanBeLoaded(SceneType scene, bool reload)

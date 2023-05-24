@@ -104,7 +104,12 @@ public class MainMenuManager : Service
         }
 
         // load the loading scene first, then the actual scene for gameplay
-        _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);       
+        _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);
+
+        //_sceneController.TargetSceneAfterLoading = sceneToLoad;
+        //_sceneController.Load(SceneType.S_Loading, null, false, PageType.Loading);
+
+        //_sceneController.LoadLoadingscene();
     }
 
 
