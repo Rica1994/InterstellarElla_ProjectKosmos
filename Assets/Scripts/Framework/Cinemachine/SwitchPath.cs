@@ -46,7 +46,7 @@ public class SwitchPath : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         _playerDollyCart = other.gameObject.GetComponentInParent<CinemachineDollyCart>();
-        if (!_playerDollyCart)
+        if (!_playerDollyCart || _playerDollyCart.m_Path != _fromSmoothPath)
         {
             return;
         }

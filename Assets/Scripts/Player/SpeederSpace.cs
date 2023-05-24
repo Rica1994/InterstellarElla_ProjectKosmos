@@ -122,8 +122,8 @@ public class SpeederSpace : PlayerController
 
         // Calculate knockback velocity
         var velocity = -_dollyCart.transform.forward;
-        velocity += transform.right * -_input.x / 5f;
-        velocity += transform.up * -_input.y / 5f;
+        //velocity += transform.right * -_input.x / 5f;
+        //velocity += transform.up * -_input.y / 5f;
         velocity.Normalize();
 
         // Add impact to player
