@@ -6,11 +6,22 @@ using UnityEngine;
 public class GameManager : Service
 {
     private PlayerController _playerController;
-    //private void Awake()
-    //{
-    //    _playerController = FindObjectOfType<PlayerController>();
-    //    if (_playerController == null) throw new Exception("No PlayerController found in scene");
-    //}
+
+    private enum GameMode
+    {
+        SpeederSpace,
+        SpeederGround,
+        BoostBoots,
+        RemoteCar,
+    }
+
+    private bool _isMobile = false;
+    public bool IsMobileWebGl => _isMobile;
+
+#if !UNITY_EDITOR && UNITY_WEBGL
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern bool IsMobile();
+#endif
 
     protected override void OnEnable()
     {
@@ -21,6 +32,10 @@ public class GameManager : Service
         {
             Debug.LogWarning("No player controller found in this scene");
         }
+
+#if !UNITY_EDITOR && UNITY_WEBGL
+        _isMobile = IsMobile();
+#endif
     }
 
     public void EndGame()
