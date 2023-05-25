@@ -23,9 +23,13 @@ public class SectionCreationTool : EditorWindow
     private string _adjustedSceneString = string.Empty;
 
     private const string _localPathPrefix = "Assets/Levels/Prefabs_Level_0";
-    //private const string _localPathSuffix = "/Prefabs_Sections/Resources/";
     private const string _localPathMidfix = "/Prefabs_Sections/Scene_";
     private const string _localPathSuffix = "/Resources/";
+
+    private int _totalGameobjects;
+    private int _totalTriangles;
+    private int _totalVertices;
+    private int _totalPickups;
 
 
     [MenuItem("Window/Section Tool")]
@@ -166,6 +170,23 @@ public class SectionCreationTool : EditorWindow
                     {
                         if (coll.bounds.Contains(obj.transform.position))
                         {
+                            // check if the object has pickups its children
+                            // if so -> add the children instead of the obj itself
+                            List<PickUp> pickupsFound = obj.GetComponentsInChildren<PickUp>(true).ToList();
+                            if (pickupsFound.Count > 0)
+                            {
+                                GameObject pickupChild = null;
+                                for (int k = 0; k < pickupsFound.Count; k++)
+                                {
+                                    pickupChild = pickupsFound[k].gameObject;
+
+                                    pickupChild.transform.SetParent(_sectionCreatorsStructured[i].Section.PickupsParent.gameObject.transform);
+                                    objectsAdded.Add(pickupChild);
+                                }
+                                continue;
+                            }
+
+                            // any other gameobject that does not have pickups in its children
                             objectsAdded.Add(obj);
 
                             // differentiate between pickups and environment
@@ -196,7 +217,11 @@ public class SectionCreationTool : EditorWindow
                 _sectionCreatorsStructured[i].Section.name = "PV_LevelSection_" + _adjustedSceneString + i;
                 _sectionCreatorsStructured[i].Section.ParentEnvironment.name = "Environment_" + i;
                 _sectionCreatorsStructured[i].Section.PickupsParent.gameObject.name = "Pickups_" + i;
+
+                // 4.5) log data regarding the section into the console
+                LogCurrentSectionData(_sectionCreatorsStructured[i].Section);
             }
+            LogAllData();
             // FINISHED PARENTING BLOCKOUT HERE //
             Debug.Log("finished parenting blockout");
 
@@ -251,6 +276,56 @@ public class SectionCreationTool : EditorWindow
             // OLDER LOGIC //
             //OlderSingularSectionLogic(tempList);
         }
+    }
+
+    private void LogCurrentSectionData(Section sectionToLog)
+    {
+        if (sectionToLog != null)
+        {
+            int countObjects = 0;
+            int countTriangles = 0;
+            int countVertices = 0;
+            int countPickups = 0;
+
+            // add up the objects, tris, and pickups
+
+            // objects
+            countObjects += GetChildren(sectionToLog.ParentEnvironment);
+            countObjects += GetChildren(sectionToLog.PickupsParent.gameObject);
+
+            // tris
+            countTriangles += GetTriangleCount(sectionToLog.ParentEnvironment);
+            countTriangles += GetTriangleCount(sectionToLog.PickupsParent.gameObject);
+
+            // vertices
+            countVertices += GetVertexCount(sectionToLog.ParentEnvironment);
+            countVertices += GetVertexCount(sectionToLog.PickupsParent.gameObject);
+
+            // pickUps
+            countPickups += GetPickupCount(sectionToLog.PickupsParent.gameObject);
+
+            _totalGameobjects += countObjects;
+            _totalTriangles += countTriangles;
+            _totalVertices += countVertices;
+            _totalPickups += countPickups;
+
+            Debug.Log(sectionToLog.name + " has " + countObjects + " gameobjects !");
+            Debug.Log(sectionToLog.name + " has " + countTriangles + " Triangles !");
+            Debug.Log(sectionToLog.name + " has " + countVertices + " Vertices !");
+            Debug.Log(sectionToLog.name + " has " + countPickups + " Pickups !");
+        }
+    }
+    private void LogAllData()
+    {
+        Debug.Log("The current scene has " + _totalGameobjects + " gameobjects !");
+        Debug.Log("The current scene has " + _totalTriangles + " Triangles !");
+        Debug.Log("The current scene has " + _totalVertices + " Vertices !");
+        Debug.Log("The current scene has " + _totalPickups + " Pickups !");
+
+        _totalGameobjects = 0;
+        _totalTriangles = 0;
+        _totalVertices = 0;
+        _totalPickups = 0;
     }
 
     private void ParentAllTheThings(List<GameObject> listToAddTo, Transform objTransformToCheckChildren)
@@ -381,11 +456,12 @@ public class SectionCreationTool : EditorWindow
 
     private void AnalyzeDataInSection()
     {
-        // log ALL sections ALL data
-        if (GUILayout.Button("log data of EVERYTHING in this level"))
+        // log ALL sections ALL data (will happen when creation sections from now on)
+        /*if (GUILayout.Button("log data of EVERYTHING in this level"))
         {
             // access the levelManager...
             LevelManager levelManager = FindObjectOfType<LevelManager>();
+
             // iterate below logic for each section it has
             if (levelManager != null)
             {
@@ -430,7 +506,7 @@ public class SectionCreationTool : EditorWindow
             {
                 Debug.LogWarning("Could not find a LevelManager in the scene -> Doing nothing");
             }
-        }
+        }*/
 
         // log section GameObjects
         if (GUILayout.Button("log Selected Section GamObjects"))
@@ -498,6 +574,8 @@ public class SectionCreationTool : EditorWindow
     }
 
 
+
+
     private int GetChildren(GameObject obj)
     {
         int count = 0;
@@ -510,7 +588,6 @@ public class SectionCreationTool : EditorWindow
 
         return count;
     }
-
     private void Counter(GameObject currentObj, ref int count)
     {
         for (int i = 0; i < currentObj.transform.childCount; i++)
@@ -519,7 +596,6 @@ public class SectionCreationTool : EditorWindow
             Counter(currentObj.transform.GetChild(i).gameObject, ref count);
         }
     }
-
     private int GetVertexCount(GameObject obj)
     {
         int count = 0;
@@ -534,7 +610,6 @@ public class SectionCreationTool : EditorWindow
 
         return count;
     }
-
     private int GetTriangleCount(GameObject obj)
     {
         int count = 0;
@@ -550,7 +625,6 @@ public class SectionCreationTool : EditorWindow
 
         return count;
     }
-
     private int GetPickupCount(GameObject obj)
     {
         int count = 0;

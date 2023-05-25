@@ -16,6 +16,7 @@ public class LevelManager : Service
     
     [SerializeField]
     private List<Section> _sectionPrefabs = new List<Section>();
+    public List<Section> Sections => _sectionPrefabs;
 
     public List<Section> SectionsInstantiated = new List<Section>(); 
 
@@ -29,8 +30,7 @@ public class LevelManager : Service
     private int _currentSectionIndex;
 
     private GameObject _currentCheckpoint;
-    public List<Section> Sections => _sectionPrefabs;
-
+    
     private string[] _sceneStringArrray;
 
     private string _levelIndexString;
@@ -43,6 +43,8 @@ public class LevelManager : Service
 
     private const string _sectionNamePrefix = "PV_LevelSection_S_Level"; // is follow by "_0_1_2"
     // where 0 == level index, 1 == scene index, 2 == section index
+
+    private bool _hasEndedLevel;
 
     [Header("testing things")]
     public AudioElement ClipToPlayOnStart;
@@ -151,8 +153,9 @@ public class LevelManager : Service
 
     private void OnEndGameTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
     {
-        if (hasEntered)
+        if (hasEntered && _hasEndedLevel == false)
         {
+            _hasEndedLevel = true;
             ServiceLocator.Instance.GetService<GameManager>().EndGame();
         }
     }

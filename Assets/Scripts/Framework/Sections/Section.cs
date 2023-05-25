@@ -31,14 +31,6 @@ public class Section : MonoBehaviour
 
     public List<PickUp> PickUps => _pickUps;
 
-    #region Public Functions
-
-    public void RespawnPlayer()
-    {
-
-    }
-
-    #endregion
 
 
     #region Private Functions
@@ -50,6 +42,7 @@ public class Section : MonoBehaviour
         //Debug.Log("Enabled a Section");
         Loaded?.Invoke(this);
         _pickUps = GetComponentsInChildren<PickUp>().ToList();
+
         // delaying the logic allow the pickupManager to properly subscribe to Loaded
         //StartCoroutine(DelayEnable());      
     }

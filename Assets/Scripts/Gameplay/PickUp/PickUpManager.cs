@@ -18,9 +18,19 @@ public class PickUpManager : Service
     private void Start()
     {
         var serviceLocator = ServiceLocator.Instance;
-        var levelManager = ServiceLocator.Instance.GetService<LevelManager>();
-        if (levelManager == null) throw new System.Exception("No LevelManager found in scene");
-        levelManager.OnSectionLoaded += OnSectionLoaded;
+
+        // below statement never happens, as it would just register a new levelmanager if the locator couldn't find one.
+        //if (levelManager == null)
+        //{
+        //    throw new System.Exception("No LevelManager found in scene");
+        //}
+
+        if (ServiceLocator.Instance.ServiceExists(typeof(LevelManager)) == true)
+        {
+            var levelManager = ServiceLocator.Instance.GetService<LevelManager>();
+
+            levelManager.OnSectionLoaded += OnSectionLoaded;
+        }
 
         /// Disabling the event subscriptions as they don't really function ///
         // this will only subscribe the prefabs in the SCENE (works as long as script execution order is taken into account)

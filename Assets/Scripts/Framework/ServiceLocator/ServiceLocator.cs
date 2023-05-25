@@ -26,6 +26,17 @@ public class ServiceLocator : MonoBehaviourSingleton<ServiceLocator>
         }
     }
 
+    public bool ServiceExists(Type type)
+    {
+        foreach (var service in _services)
+        {
+            if (service.Value.GetType() == type)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     public void DebugServices()
     {
         foreach (var service in _services)
