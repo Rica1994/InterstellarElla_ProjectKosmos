@@ -114,7 +114,7 @@ public class SpeederSpace : PlayerController
         _dollyCart.m_Speed = _baseSpeed;
     }
 
-    public override void Collide()
+    public override void Collide(Vector3 impulse)
     {
         // Dolly cart speed and unparent
         _dollyCart.m_Speed = 0f;
@@ -124,6 +124,7 @@ public class SpeederSpace : PlayerController
         var velocity = -_dollyCart.transform.forward;
         //velocity += transform.right * -_input.x / 5f;
         //velocity += transform.up * -_input.y / 5f;
+        //velocity = impulse;
         velocity.Normalize();
 
         // Add impact to player

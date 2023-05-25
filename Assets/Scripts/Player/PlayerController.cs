@@ -8,7 +8,7 @@ public abstract class PlayerController : MonoBehaviour
     {
     }
 
-    public virtual void Collide()
+    public virtual void Collide(Vector3 impulse)
     {
         
     }

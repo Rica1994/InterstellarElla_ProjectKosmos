@@ -8,7 +8,8 @@ public class ObstacleCollision : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent(out PlayerController player))
         {
-            player.Collide();
+            player.Collide(collision.impulse);
+            Debug.Log(collision.impulse);
         }
     }
 }

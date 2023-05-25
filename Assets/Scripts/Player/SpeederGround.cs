@@ -93,11 +93,12 @@ public class SpeederGround : PlayerController
         _isJumping = true;
     }
 
-    public override void Collide()
+    public override void Collide(Vector3 impulse)
     {
         // Knockback backwards and whatever velocity on x
         var velocity = _velocity.normalized;
         Vector3 knockbackDirection = new Vector3(-velocity.x, 0f, -1f);
+        knockbackDirection = impulse;
         _impactRecieverComponent.AddImpact(knockbackDirection.normalized, _knockbackForce);
     }
 
