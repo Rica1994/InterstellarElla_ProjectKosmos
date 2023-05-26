@@ -46,9 +46,6 @@ public class LevelManager : Service
 
     private bool _hasEndedLevel;
 
-    [Header("testing things")]
-    public AudioElement ClipToPlayOnStart;
-    public ParticleType ParticleToPlayOnLoad;
 
 
     #region Unity Functions
@@ -81,11 +78,9 @@ public class LevelManager : Service
         _sectionNameBase = _sectionNamePrefix + "_" + _levelIndexString + "_" + _levelSceneIndexString;
         _sectionNameToLoad = _sectionNameBase + "_" + _sectionIndexString;
 
-        Debug.Log(_sectionNameToLoad + " first section im trying to load");
+        //Debug.Log(_sectionNameToLoad + " first section im trying to load");
 
         LoadSection();
-
-        ServiceLocator.Instance.GetService<AudioController>().PlayAudio(ClipToPlayOnStart);
     }
 
     #endregion
@@ -124,9 +119,18 @@ public class LevelManager : Service
             }
         }
 
-        // set checkpoint // NEEDS MORE
-        _currentCheckpoint = newSection.Checkpoints[0];   
+        // subscribe checkpoints 
+        List<CheckpointTrigger> checkpointTriggers = newSection.GetComponentsInChildren<CheckpointTrigger>().ToList();
+        CheckpointTrigger currentCheckpointTrigger = null;
+        for (int i = 0; i < checkpointTriggers.Count; i++)
+        {
+            currentCheckpointTrigger = checkpointTriggers[i];
+            currentCheckpointTrigger.OnTriggered += OnCheckpointTriggered;
+        }
 
+        // assign a checkpoint (whenever loading a new section, we currently always assign its first checkpoint)
+        _currentCheckpoint = currentCheckpointTrigger.CheckpointPoint;
+        
         _sectionIndex += 1;
         _sectionIndexString = _sectionIndex.ToString();
 
@@ -167,6 +171,17 @@ public class LevelManager : Service
             ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint);
         }
     }
+    private void OnCheckpointTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
+    {
+        if (hasEntered)
+        {
+            // set current checkpoint to this checkpoint
+            if (trigger.TryGetComponent(out CheckpointTrigger checkpointTrigger))
+            {
+                _currentCheckpoint = checkpointTrigger.CheckpointPoint;
+            }          
+        }
+    }
     private void OnLoadingTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
     {
         if (other.gameObject.GetComponent<PlayerController>() == null)
@@ -184,8 +199,6 @@ public class LevelManager : Service
 
             // disable the trigger
             _lastLoadingTrigger.GetComponent<Collider>().enabled = false;
-
-            ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleLocalSpace(ParticleToPlayOnLoad, other.transform);
         }
     }
     private void OnDestroyingTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
@@ -208,4 +221,5 @@ public class LevelManager : Service
             }
         }
     }
+    
 }
