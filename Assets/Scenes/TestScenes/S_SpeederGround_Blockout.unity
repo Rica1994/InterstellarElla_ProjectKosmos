@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2546,6 +2546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fcd741387cea484d8d54716dcef743b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _destroyOnHit: 0
 --- !u!65 &113599852
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13286,6 +13287,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3687131222379983861, guid: 25c69909454e9f142ad3da48c2224ad5, type: 3}
+      propertyPath: _knockbackDuration
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3687131222379983861, guid: 25c69909454e9f142ad3da48c2224ad5, type: 3}
+      propertyPath: _knockbackMultiplier
+      value: 0.7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25c69909454e9f142ad3da48c2224ad5, type: 3}
 --- !u!1 &753819603
@@ -16751,10 +16760,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35795de1ebd0b6e48908d43aa9992ce8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPoint: {fileID: 929855201}
-  speed: 10
-  gravity: 8.5
-  startSlope: 1.39
 --- !u!1 &931727834
 GameObject:
   m_ObjectHideFlags: 0
@@ -28435,6 +28440,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fcd741387cea484d8d54716dcef743b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _destroyOnHit: 0
 --- !u!65 &1652666695
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29842,6 +29848,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -60.18
       objectReference: {fileID: 0}
+    - target: {fileID: 6053457071380356502, guid: 6b5b2e3bce5a1de418ee6d1f606140a6, type: 3}
+      propertyPath: _destroyOnHit
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6053457071380356505, guid: 6b5b2e3bce5a1de418ee6d1f606140a6, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -30597,6 +30607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fcd741387cea484d8d54716dcef743b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _destroyOnHit: 0
 --- !u!65 &1799760010
 BoxCollider:
   m_ObjectHideFlags: 0
