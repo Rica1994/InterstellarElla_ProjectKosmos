@@ -66,8 +66,6 @@ namespace UnityCore
                     return;
                 }
 
-                Debug.Log("1) Scene can be loaded ");
-
                 m_SceneIsLoading = true;
                 m_TargetScene = scene;
                 m_SceneLoadDelegate = sceneLoadDelegate;
@@ -88,8 +86,6 @@ namespace UnityCore
                     return;
                 }
 
-                Debug.Log("1) Scene can be loaded ");
-
                 m_SceneIsLoading = true;
                 m_TargetScene = TargetSceneAfterLoading;
                 m_SceneLoadDelegate = sceneLoadDelegate;
@@ -103,19 +99,6 @@ namespace UnityCore
             {
                 StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading));
             }
-            public void LoadLoadingscene()
-            {
-                //Load(SceneType.S_Loading, null, false, PageType.Loading);
-
-                // below logic works just fine 
-                //m_TargetScene = SceneType.S_Loading;
-                m_TargetScene = SceneType.S_Level_2_Build;
-                string targetSceneName = SceneTypeToString(m_TargetScene);
-                SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
-            }
-
-
-
             #endregion
 
 
@@ -125,16 +108,11 @@ namespace UnityCore
             {        
                 if (m_LoadingPage != PageType.None)
                 {
-                    Debug.Log("2) Starting coroutine fade to white");
-
                     _pageController.TurnPageOn(m_LoadingPage);
 
                     yield return new WaitUntil(() => _pageController.PageIsOn(m_LoadingPage));
-
-                    Debug.Log("3) finished fade to white");
                 }
 
-                Debug.Log(" 4) LOADING AFTER FADE");
                 string targetSceneName = SceneTypeToString(m_TargetScene);
                 SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
             }
@@ -152,20 +130,17 @@ namespace UnityCore
             }
             private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
             {
-                Debug.Log("A) OnSceneLoaded happens");
                 if (m_TargetScene == SceneType.None)
                 {
                     return;
                 }
 
-                Debug.Log("B) OnSceneLoaded continues");
                 SceneType sceneType = StringToSceneType(scene.name);
                 if (m_TargetScene != sceneType)
                 {
                     return;
                 }
 
-                Debug.Log("C) OnSceneLoaded continues more");
                 if (m_SceneLoadDelegate != null)
                 {
                     try
@@ -178,8 +153,6 @@ namespace UnityCore
                     }
                 }
 
-                Debug.Log("D) OnSceneLoaded continues FURTHER");
-
                 // remove audio tracks where source is null
                 _audioController.VerifyAudioTracks();
 
@@ -188,11 +161,8 @@ namespace UnityCore
 
                 if (m_LoadingPage != PageType.None)
                 {
-                    Debug.Log("E) turning off page loading");
-
                     //await Task.Delay(1000); THIS does not work in WebGL :'^{
 
-                    Debug.Log("EE) waited for delay");
                     _pageController.TurnPageOff(m_LoadingPage);
                 }
 
@@ -210,7 +180,6 @@ namespace UnityCore
                     ServiceLocator.Instance.GetService<GameManager>().SetPlayerController(playerController);
                 }
 
-                Debug.Log("F) resetting sceneLoading bool");
                 m_SceneIsLoading = false;
             }
             private bool SceneCanBeLoaded(SceneType scene, bool reload)
@@ -245,16 +214,21 @@ namespace UnityCore
                 {
                     case SceneType.S_MainMenu: return "S_MainMenu";
                     case SceneType.S_Loading: return "S_Loading";
-                    case SceneType.S_Level_1_Work: return "S_Level_1_Work";
-                    case SceneType.S_Level_1_Build: return "S_Level_1_Build";
-                    case SceneType.S_Level_2_Work: return "S_Level_2_Work";
-                    case SceneType.S_Level_2_Build: return "S_Level_2_Build";
-                    case SceneType.S_Level_3_Work: return "S_Level_3_Work";
-                    case SceneType.S_Level_3_Build: return "S_Level_3_Build";
-                    case SceneType.S_Level_4_Work: return "S_Level_4_Work";
-                    case SceneType.S_Level_4_Build: return "S_Level_4_Build";
-                    case SceneType.S_Level_5_Work: return "S_Level_5_Work";
-                    case SceneType.S_Level_5_Build: return "S_Level_5_Build";
+
+                    case SceneType.S_Level_1_0_Work: return "S_Level_1_0_Work";
+                    case SceneType.S_Level_1_0_Build: return "S_Level_1_0_Build";
+
+                    case SceneType.S_Level_2_0_Work: return "S_Level_2_0_Work";
+                    case SceneType.S_Level_2_0_Build: return "S_Level_2_0_Build";
+
+                    case SceneType.S_Level_3_0_Work: return "S_Level_3_0_Work";
+                    case SceneType.S_Level_3_0_Build: return "S_Level_3_0_Build";
+
+                    case SceneType.S_Level_4_0_Work: return "S_Level_4_0_Work";
+                    case SceneType.S_Level_4_0_Build: return "S_Level_4_0_Build";
+
+                    case SceneType.S_Level_5_0_Work: return "S_Level_5_0_Work";
+                    case SceneType.S_Level_5_0_Build: return "S_Level_5_0_Build";
                     default:
                         Debug.Log("Scene [" + scene + "] does not contain a string for a valid scene. ");
                         return string.Empty;
@@ -266,16 +240,21 @@ namespace UnityCore
                 {
                     case "S_MainMenu": return SceneType.S_MainMenu;
                     case "S_Loading": return SceneType.S_Loading;
-                    case "S_Level_1_Work": return SceneType.S_Level_1_Work;
-                    case "S_Level_1_Build": return SceneType.S_Level_1_Build;
-                    case "S_Level_2_Work": return SceneType.S_Level_2_Work;
-                    case "S_Level_2_Build": return SceneType.S_Level_2_Build;
-                    case "S_Level_3_Work": return SceneType.S_Level_3_Work;
-                    case "S_Level_3_Build": return SceneType.S_Level_3_Build;
-                    case "S_Level_4_Work": return SceneType.S_Level_4_Work;
-                    case "S_Level_4_Build": return SceneType.S_Level_4_Build;
-                    case "S_Level_5_Work": return SceneType.S_Level_5_Work;
-                    case "S_Level_5_Build": return SceneType.S_Level_5_Build;
+
+                    case "S_Level_1_0_Work": return SceneType.S_Level_1_0_Work;
+                    case "S_Level_1_0_Build": return SceneType.S_Level_1_0_Build;
+
+                    case "S_Level_2_0_Work": return SceneType.S_Level_2_0_Work;
+                    case "S_Level_2_0_Build": return SceneType.S_Level_2_0_Build;
+
+                    case "S_Level_3_0_Work": return SceneType.S_Level_3_0_Work;
+                    case "S_Level_3_0_Build": return SceneType.S_Level_3_0_Build;
+
+                    case "S_Level_4_0_Work": return SceneType.S_Level_4_0_Work;
+                    case "S_Level_4_0_Build": return SceneType.S_Level_4_0_Build;
+
+                    case "S_Level_5_0_Work": return SceneType.S_Level_5_0_Work;
+                    case "S_Level_5_0_Build": return SceneType.S_Level_5_0_Build;
 
                     default:
                         Debug.Log("Scene [" + scene + "] does not contain a type for a valid scene. ");

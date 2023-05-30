@@ -20,12 +20,16 @@ public class SectionCreationTool : EditorWindow
     private string[] _toolbarStrings = { "Creation", "Analyze" };
     int _toolbarSelected = 0;
 
-    string mySceneString;
-    int[] myNumbers;
+    private string _adjustedSceneString = string.Empty;
 
-    // get this from the correct folder
-    public GameObject somePrefab;
+    private const string _localPathPrefix = "Assets/Levels/Prefabs_Level_0";
+    private const string _localPathMidfix = "/Prefabs_Sections/Scene_";
+    private const string _localPathSuffix = "/Resources/";
 
+    private int _totalGameobjects;
+    private int _totalTriangles;
+    private int _totalVertices;
+    private int _totalPickups;
 
 
     [MenuItem("Window/Section Tool")]
@@ -81,6 +85,12 @@ public class SectionCreationTool : EditorWindow
     {
         if (GUILayout.Button("Create Section Prefabs"))
         {
+            // 0) reset lists in case of scene change
+            _sectionCreatorsToCheckOverlap.Clear();
+            _sectionCreatorsStructured.Clear();
+            // 0.1) adjust scene string so level section don't have "Work" in their names
+            AdjustSceneString();
+
             // 1) Find the blockout Parent
             BlockoutParent blockoutParent = FindObjectOfType<BlockoutParent>();
             if (blockoutParent == null)
@@ -100,14 +110,37 @@ public class SectionCreationTool : EditorWindow
                         InteractionMode.UserAction);
                 }
             }
+            // 2.1) assign starting section
+            LevelSectionCreator sectionZero = null;
+            int amountOfStartingSectionsFound = 0;
+            for (int i = 0; i < _sectionCreatorsInScene.Count; i++)
+            {
+                if (_sectionCreatorsInScene[i].IsStartingSection)
+                {
+                    sectionZero = _sectionCreatorsInScene[i];
+                    amountOfStartingSectionsFound += 1;
+                }
+            }
+            if (amountOfStartingSectionsFound == 0)
+            {
+                Debug.LogWarning("No Starting Section found! make sure atleast 1 has the bool IsStart 'checked'");
+                // 8) undo-ing the unpacking of the section creators
+                Undo.PerformUndo();
+                return;
+            }
+            else if (amountOfStartingSectionsFound > 1)
+            {
+                Debug.LogWarning("Found more than 1 Starting Section! make sure only 1 has the bool IsStart 'checked'");
+                // 8) undo-ing the unpacking of the section creators
+                Undo.PerformUndo();
+                return;
+            }
 
-            // 2.1) use list of sections we need to check for collision
+            // 2.2) use list of sections we need to check for collision
             for (int i = 0; i < _sectionCreatorsInScene.Count; i++)
             {
                 _sectionCreatorsToCheckOverlap.Add(_sectionCreatorsInScene[i]);
             }
-            // 2.2) Structure the sectionCreators properly into a new list according to overlapping Head/Tails
-            LevelSectionCreator sectionZero = FindStartingSectionCreator();
             // 2.3) Remove starting section from sectionCreatorsToCheck
             _sectionCreatorsToCheckOverlap.Remove(sectionZero);
             // 2.4) Add SectionZero to structured list
@@ -115,21 +148,15 @@ public class SectionCreationTool : EditorWindow
             // 2.5) use the starting section to progressively find following sections by checking the heads
             FindFollowingSectionCreator(sectionZero);
 
-
-
             // 3) get all objects, duplicate them, add to temp list, check tempList objects for inside of bounds, parent objects //
-
             // 3.1) duplicate the blockout_parent
             BlockoutParent blockoutCopy = Instantiate(blockoutParent);
             // 3.2) disable the original blockout
             blockoutParent.gameObject.SetActive(false);
+
             // 3.3) add all children of the copy to a temp list
             List<GameObject> tempList = new List<GameObject>();
-            for (int i = 0; i < blockoutCopy.transform.childCount; i++)
-            {
-                GameObject objToAdd = blockoutCopy.transform.GetChild(i).gameObject;
-                tempList.Add(objToAdd);
-            }
+            ParentAllTheThings(tempList, blockoutCopy.transform);
 
             // 4) iterate over each sectionCreator... 
             for (int i = 0; i < _sectionCreatorsStructured.Count; i++)
@@ -137,21 +164,32 @@ public class SectionCreationTool : EditorWindow
                 // 4.1) iterate over each collider...
                 foreach (BoxCollider coll in _sectionCreatorsStructured[i].CollidersDefiningMySection)
                 {
-                    // 4.2) parent any objects that fall within the bounds
+                    // 4.2) parent any objects that fall within the bounds (only check first children if the blockout)
                     List<GameObject> objectsAdded = new List<GameObject>();
                     foreach (GameObject obj in tempList)
                     {
                         if (coll.bounds.Contains(obj.transform.position))
                         {
-                            var parent = obj.transform.parent;
-                            // Check if the parent of this object is within the bounds of the section
-                            // If it is, then we don't want to parent it to the section
-                            if (parent != null && coll.bounds.Contains(parent.position))
+                            // check if the object has pickups its children
+                            // if so -> add the children instead of the obj itself
+                            List<PickUp> pickupsFound = obj.GetComponentsInChildren<PickUp>(true).ToList();
+                            if (pickupsFound.Count > 0)
                             {
+                                GameObject pickupChild = null;
+                                for (int k = 0; k < pickupsFound.Count; k++)
+                                {
+                                    pickupChild = pickupsFound[k].gameObject;
+
+                                    pickupChild.transform.SetParent(_sectionCreatorsStructured[i].Section.PickupsParent.gameObject.transform);
+                                    objectsAdded.Add(pickupChild);
+                                }
                                 continue;
                             }
 
+                            // any other gameobject that does not have pickups in its children
                             objectsAdded.Add(obj);
+
+                            // differentiate between pickups and environment
                             if (obj.TryGetComponent(out PickUp pickUp))
                             {
                                 obj.transform.SetParent(_sectionCreatorsStructured[i].Section.PickupsParent.gameObject.transform);
@@ -176,26 +214,29 @@ public class SectionCreationTool : EditorWindow
                 }
 
                 // 4.4) name our section something fitting
-                _sectionCreatorsStructured[i].Section.name = "PV_LevelSection_" + SceneManager.GetActiveScene().name + "_" + i;
+                _sectionCreatorsStructured[i].Section.name = "PV_LevelSection_" + _adjustedSceneString + i;
                 _sectionCreatorsStructured[i].Section.ParentEnvironment.name = "Environment_" + i;
                 _sectionCreatorsStructured[i].Section.PickupsParent.gameObject.name = "Pickups_" + i;
+
+                // 4.5) log data regarding the section into the console
+                LogCurrentSectionData(_sectionCreatorsStructured[i].Section);
             }
+            LogAllData();
             // FINISHED PARENTING BLOCKOUT HERE //
             Debug.Log("finished parenting blockout");
 
-
-
             // 5) get correct directory dependant on our scene
-            string levelIndexString = DecodeSceneString().ToString();
-            string localPath = "Assets/Levels/Prefabs_Level_0" + levelIndexString + "/Prefabs_Sections/Resources/";
+            string levelIndexString = DecodeSceneString()[0].ToString();
+            // useful for if we want to divide prefab sections into even more folders
+            string levelSceneIndexString = DecodeSceneString()[1].ToString();
+
+            string localPath = _localPathPrefix + levelIndexString + _localPathMidfix + levelSceneIndexString + _localPathSuffix;
             // 5.1) delete folder and its contents, then Re-create it
             if (Directory.Exists(localPath))
             {
                 Directory.Delete(localPath, true);
             }
             Directory.CreateDirectory(localPath);
-
-
 
             // 6) create prefab of each section
             for (int i = 0; i < _sectionCreatorsStructured.Count; i++)
@@ -232,9 +273,76 @@ public class SectionCreationTool : EditorWindow
             // 8) undo-ing the unpacking of the section creators
             Undo.PerformUndo();
 
-
             // OLDER LOGIC //
             //OlderSingularSectionLogic(tempList);
+        }
+    }
+
+    private void LogCurrentSectionData(Section sectionToLog)
+    {
+        if (sectionToLog != null)
+        {
+            int countObjects = 0;
+            int countTriangles = 0;
+            int countVertices = 0;
+            int countPickups = 0;
+
+            // add up the objects, tris, and pickups
+
+            // objects
+            countObjects += GetChildren(sectionToLog.ParentEnvironment);
+            countObjects += GetChildren(sectionToLog.PickupsParent.gameObject);
+
+            // tris
+            countTriangles += GetTriangleCount(sectionToLog.ParentEnvironment);
+            countTriangles += GetTriangleCount(sectionToLog.PickupsParent.gameObject);
+
+            // vertices
+            countVertices += GetVertexCount(sectionToLog.ParentEnvironment);
+            countVertices += GetVertexCount(sectionToLog.PickupsParent.gameObject);
+
+            // pickUps
+            countPickups += GetPickupCount(sectionToLog.PickupsParent.gameObject);
+
+            _totalGameobjects += countObjects;
+            _totalTriangles += countTriangles;
+            _totalVertices += countVertices;
+            _totalPickups += countPickups;
+
+            Debug.Log(sectionToLog.name + " has " + countObjects + " gameobjects !");
+            Debug.Log(sectionToLog.name + " has " + countTriangles + " Triangles !");
+            Debug.Log(sectionToLog.name + " has " + countVertices + " Vertices !");
+            Debug.Log(sectionToLog.name + " has " + countPickups + " Pickups !");
+        }
+    }
+    private void LogAllData()
+    {
+        Debug.Log("The current scene has " + _totalGameobjects + " gameobjects !");
+        Debug.Log("The current scene has " + _totalTriangles + " Triangles !");
+        Debug.Log("The current scene has " + _totalVertices + " Vertices !");
+        Debug.Log("The current scene has " + _totalPickups + " Pickups !");
+
+        _totalGameobjects = 0;
+        _totalTriangles = 0;
+        _totalVertices = 0;
+        _totalPickups = 0;
+    }
+
+    private void ParentAllTheThings(List<GameObject> listToAddTo, Transform objTransformToCheckChildren)
+    {
+        for (int i = 0; i < objTransformToCheckChildren.transform.childCount; i++)
+        {
+            GameObject objToAdd = objTransformToCheckChildren.transform.GetChild(i).gameObject;
+
+            // if the object we are checking is a parent-structure, then re-do this methods logic on that child (in case paren-structures are nested in each other)
+            if (objToAdd.TryGetComponent(out ParentStructure parentPurelyForStructure))
+            {      
+                ParentAllTheThings(listToAddTo, parentPurelyForStructure.transform);
+                continue;
+            }
+
+            // else, we simply add the object to the list
+            listToAddTo.Add(objToAdd);
         }
     }
 
@@ -278,6 +386,8 @@ public class SectionCreationTool : EditorWindow
             Debug.Log("Finished structuring Sections");
         }
     }
+
+    // logic in case I want to use Tails to figure out starting sections
     private LevelSectionCreator FindStartingSectionCreator()
     {
         // 2.11) Find the 1 Section whose Tail is not colliding with another segment
@@ -304,6 +414,7 @@ public class SectionCreationTool : EditorWindow
                     if (tailHasCollided == false)
                     {
                         // we have found the starting section !
+                        Debug.Log("starting section is " + _sectionCreatorsInScene[i].gameObject.name);
                         return _sectionCreatorsInScene[i];
                     }
                 }
@@ -312,30 +423,45 @@ public class SectionCreationTool : EditorWindow
         return null;
     }
 
-    private int DecodeSceneString()
+    private List<int> DecodeSceneString()
     {
         // Split myString wherever there's a _ and make a String array out of it.
         string[] stringArray = SceneManager.GetActiveScene().name.Split("_"[0]);
-        myNumbers = new int[stringArray.Length];
 
+        List<int> numbersInSceneName = new List<int>();
         for (int num = 0; num < stringArray.Length; num++)
         {
             if (int.TryParse(stringArray[num], out int foundInt) == true)
             {
-                return foundInt;
+                numbersInSceneName.Add(foundInt);
             }        
         }
 
-        return 404;
+        return numbersInSceneName;
+    }
+    private void AdjustSceneString()
+    {
+        // Split myString wherever there's a _ and make a String array out of it.
+        string[] stringArray = SceneManager.GetActiveScene().name.Split("_"[0]);
+
+        // remove the work from the string name 
+        if (_adjustedSceneString == string.Empty)
+        {
+            for (int i = 0; i < stringArray.Length - 1; i++) // (Length - 1)=> will exclude the word "Work"
+            {
+                _adjustedSceneString += (stringArray[i] + "_");
+            }
+        }
     }
 
     private void AnalyzeDataInSection()
     {
-        // log ALL sections ALL data
-        if (GUILayout.Button("log data of EVERYTHING in this level"))
+        // log ALL sections ALL data (will happen when creation sections from now on)
+        /*if (GUILayout.Button("log data of EVERYTHING in this level"))
         {
             // access the levelManager...
             LevelManager levelManager = FindObjectOfType<LevelManager>();
+
             // iterate below logic for each section it has
             if (levelManager != null)
             {
@@ -380,7 +506,7 @@ public class SectionCreationTool : EditorWindow
             {
                 Debug.LogWarning("Could not find a LevelManager in the scene -> Doing nothing");
             }
-        }
+        }*/
 
         // log section GameObjects
         if (GUILayout.Button("log Selected Section GamObjects"))
@@ -448,6 +574,8 @@ public class SectionCreationTool : EditorWindow
     }
 
 
+
+
     private int GetChildren(GameObject obj)
     {
         int count = 0;
@@ -460,7 +588,6 @@ public class SectionCreationTool : EditorWindow
 
         return count;
     }
-
     private void Counter(GameObject currentObj, ref int count)
     {
         for (int i = 0; i < currentObj.transform.childCount; i++)
@@ -469,7 +596,6 @@ public class SectionCreationTool : EditorWindow
             Counter(currentObj.transform.GetChild(i).gameObject, ref count);
         }
     }
-
     private int GetVertexCount(GameObject obj)
     {
         int count = 0;
@@ -484,7 +610,6 @@ public class SectionCreationTool : EditorWindow
 
         return count;
     }
-
     private int GetTriangleCount(GameObject obj)
     {
         int count = 0;
@@ -500,7 +625,6 @@ public class SectionCreationTool : EditorWindow
 
         return count;
     }
-
     private int GetPickupCount(GameObject obj)
     {
         int count = 0;

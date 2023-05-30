@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,6 +16,7 @@ public class LevelManager : Service
     
     [SerializeField]
     private List<Section> _sectionPrefabs = new List<Section>();
+    public List<Section> Sections => _sectionPrefabs;
 
     public List<Section> SectionsInstantiated = new List<Section>(); 
 
@@ -28,19 +30,22 @@ public class LevelManager : Service
     private int _currentSectionIndex;
 
     private GameObject _currentCheckpoint;
-    public List<Section> Sections => _sectionPrefabs;
+    
+    private string[] _sceneStringArrray;
 
     private string _levelIndexString;
-    private int _sectionIndex;
+    private string _levelSceneIndexString;
     private string _sectionIndexString;
-    private string _sectionNameBase;
-    private string _sectionNameToLoad;
-    private int[] _myNumbers;
+    private int _sectionIndex;
 
-    // to delete
-    [Header("Testing particles")]
-    public ParticleType ParticleWorld;
-    public ParticleType ParticleLocal;
+    private string _sectionNameBase; // this stays the same for the current scene
+    private string _sectionNameToLoad; 
+
+    private const string _sectionNamePrefix = "PV_LevelSection_S_Level"; // is follow by "_0_1_2"
+    // where 0 == level index, 1 == scene index, 2 == section index
+
+    private bool _hasEndedLevel;
+
 
 
     #region Unity Functions
@@ -63,15 +68,19 @@ public class LevelManager : Service
 
     private void Start()
     {
-        _levelIndexString = DecodeSceneString().ToString();
-        _sectionIndex = 0;
-     
-        _sectionNameBase = "PV_LevelSection_S_Level_" + _levelIndexString + "_Work_";
+        _sceneStringArrray = SceneManager.GetActiveScene().name.Split("_"[0]);
+        _levelIndexString = DecodeSceneString()[0].ToString();
+        _levelSceneIndexString = DecodeSceneString()[1].ToString();
 
+        _sectionIndex = 0;
         _sectionIndexString = _sectionIndex.ToString();
-        _sectionNameToLoad = _sectionNameBase + _sectionIndexString;
-        
-        LoadSection();     
+
+        _sectionNameBase = _sectionNamePrefix + "_" + _levelIndexString + "_" + _levelSceneIndexString;
+        _sectionNameToLoad = _sectionNameBase + "_" + _sectionIndexString;
+
+        //Debug.Log(_sectionNameToLoad + " first section im trying to load");
+
+        LoadSection();
     }
 
     #endregion
@@ -110,40 +119,50 @@ public class LevelManager : Service
             }
         }
 
-        // set checkpoint // NEEDS MORE
-        _currentCheckpoint = newSection.Checkpoints[0];   
+        // subscribe checkpoints 
+        List<CheckpointTrigger> checkpointTriggers = newSection.GetComponentsInChildren<CheckpointTrigger>().ToList();
+        CheckpointTrigger currentCheckpointTrigger = null;
+        for (int i = 0; i < checkpointTriggers.Count; i++)
+        {
+            currentCheckpointTrigger = checkpointTriggers[i];
+            currentCheckpointTrigger.OnTriggered += OnCheckpointTriggered;
+        }
 
+        // assign a checkpoint (whenever loading a new section, we currently always assign its first checkpoint)
+        _currentCheckpoint = currentCheckpointTrigger.CheckpointPoint;
+        
         _sectionIndex += 1;
         _sectionIndexString = _sectionIndex.ToString();
-        _sectionNameToLoad = _sectionNameBase + _sectionIndexString;
+
+        _sectionNameToLoad = _sectionNameBase + "_" + _sectionIndexString;        
     }
 
 
 
-    private int DecodeSceneString()
+    private List<int> DecodeSceneString()
     {
-        // Split myString wherever there's a _ and make a String array out of it.
-        string[] stringArray = SceneManager.GetActiveScene().name.Split("_"[0]);
-        _myNumbers = new int[stringArray.Length];
+        List<int> numbersInSceneName = new List<int>();
 
-        for (int num = 0; num < stringArray.Length; num++)
+        for (int num = 0; num < _sceneStringArrray.Length; num++)
         {
-            if (int.TryParse(stringArray[num], out int foundInt) == true)
+            if (int.TryParse(_sceneStringArrray[num], out int foundInt) == true)
             {
-                return foundInt;
+                numbersInSceneName.Add(foundInt);
             }
         }
 
-        return 404;
+        return numbersInSceneName;
     }
+
+
     private void OnEndGameTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
     {
-        if (hasEntered)
+        if (hasEntered && _hasEndedLevel == false)
         {
+            _hasEndedLevel = true;
             ServiceLocator.Instance.GetService<GameManager>().EndGame();
         }
     }
-
     private void OnDeathTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
     {
         if (hasEntered)
@@ -152,7 +171,17 @@ public class LevelManager : Service
             ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint);
         }
     }
-
+    private void OnCheckpointTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
+    {
+        if (hasEntered)
+        {
+            // set current checkpoint to this checkpoint
+            if (trigger.TryGetComponent(out CheckpointTrigger checkpointTrigger))
+            {
+                _currentCheckpoint = checkpointTrigger.CheckpointPoint;
+            }          
+        }
+    }
     private void OnLoadingTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
     {
         if (other.gameObject.GetComponent<PlayerController>() == null)
@@ -169,7 +198,7 @@ public class LevelManager : Service
             _lastLoadingTrigger = trigger;
 
             // disable the trigger
-            _lastLoadingTrigger.GetComponent<Collider>().enabled = false;                
+            _lastLoadingTrigger.GetComponent<Collider>().enabled = false;
         }
     }
     private void OnDestroyingTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
@@ -192,4 +221,5 @@ public class LevelManager : Service
             }
         }
     }
+    
 }

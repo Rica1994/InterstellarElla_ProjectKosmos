@@ -6,7 +6,15 @@ using UnityEngine;
 public class EllaPickUp : PickUp
 {
     [SerializeField]
-    private TMP_Text _letter;
+    private EllaPickupType _type;
 
-    public char Letter => _letter.text[0];
+    public EllaPickupType Type => _type;
+}
+
+public enum EllaPickupType
+{
+    IN = 0,
+    TER = 1,
+    STEL = 2,
+    LAR = 3
 }

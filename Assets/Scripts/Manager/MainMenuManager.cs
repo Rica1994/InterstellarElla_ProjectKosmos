@@ -105,11 +105,6 @@ public class MainMenuManager : Service
 
         // load the loading scene first, then the actual scene for gameplay
         _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);
-
-        //_sceneController.TargetSceneAfterLoading = sceneToLoad;
-        //_sceneController.Load(SceneType.S_Loading, null, false, PageType.Loading);
-
-        //_sceneController.LoadLoadingscene();
     }
 
 
@@ -218,15 +213,15 @@ public class MainMenuManager : Service
         switch (_levelIndex)
         {
             case 0:
-                return SceneType.S_Level_1_Work;
+                return SceneType.S_Level_1_0_Work;
             case 1:
-                return SceneType.S_Level_2_Work;
+                return SceneType.S_Level_2_0_Work;
             case 2:
-                return SceneType.S_Level_3_Work;
+                return SceneType.S_Level_3_0_Work;
             case 3:
-                return SceneType.S_Level_4_Work;
+                return SceneType.S_Level_4_0_Work;
             case 4:
-                return SceneType.S_Level_5_Work;
+                return SceneType.S_Level_5_0_Work;
             default:
                 return SceneType.None;
         }
@@ -236,15 +231,15 @@ public class MainMenuManager : Service
         switch (_levelIndex)
         {
             case 0:
-                return SceneType.S_Level_1_Build;
+                return SceneType.S_Level_1_0_Build;
             case 1:
-                return SceneType.S_Level_2_Build;
+                return SceneType.S_Level_2_0_Build;
             case 2:
-                return SceneType.S_Level_3_Build;
+                return SceneType.S_Level_3_0_Build;
             case 3:
-                return SceneType.S_Level_4_Build;
+                return SceneType.S_Level_4_0_Build;
             case 4:
-                return SceneType.S_Level_5_Build;
+                return SceneType.S_Level_5_0_Build;
             default:
                 return SceneType.None;
         }

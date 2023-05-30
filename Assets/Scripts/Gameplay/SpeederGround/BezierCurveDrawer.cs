@@ -1,46 +1,51 @@
-//using UnityEngine;
-//using UnityEditor;
 
-//[ExecuteInEditMode]
-//public class BezierCurveDrawer : MonoBehaviour
-//{
-//    public Transform startPoint;
-//    public float speed = 5f;
-//    public float gravity = 9.8f;
-//    public float startSlope = 0f;
+#if UNITY_EDITOR
 
-//    private void OnDrawGizmos()
-//    {
-//        if (startPoint == null)
-//            return;
+using UnityEngine;
+using UnityEditor;
 
-//        Handles.color = Color.white;
-//        Handles.DrawBezier(startPoint.position, GetCurveEndPoint(), startPoint.position + Vector3.forward, GetCurveEndPoint() + Vector3.forward, Color.white, null, 2f);
-//    }
+[ExecuteInEditMode]
+public class BezierCurveDrawer : MonoBehaviour
+{
+    public Transform startPoint;
+    public float speed = 5f;
+    public float gravity = 9.8f;
+    public float startSlope = 0f;
 
-//    public Vector3 GetCurveEndPoint()
-//    {
-//        float time = CalculateCurveTime();
-//        Vector3 endPoint = startPoint.position + (Vector3.right * speed * time) + (Vector3.down * gravity * time * time / 2f) + (Vector3.up * startSlope * time);
-//        return endPoint;
-//    }
+    private void OnDrawGizmos()
+    {
+        if (startPoint == null)
+            return;
 
-//    private float CalculateCurveTime()
-//    {
-//        float maxTime = 10f; // Set a maximum time value to avoid an infinite loop
-//        float timeStep = 0.1f;
-//        float time = 0f;
+        Handles.color = Color.white;
+        Handles.DrawBezier(startPoint.position, GetCurveEndPoint(), startPoint.position + Vector3.forward, GetCurveEndPoint() + Vector3.forward, Color.white, null, 2f);
+    }
 
-//        while (time <= maxTime)
-//        {
-//            Vector3 currentPosition = startPoint.position + (Vector3.right * speed * time) + (Vector3.down * gravity * time * time / 2f) + (Vector3.up * startSlope * time);
+    public Vector3 GetCurveEndPoint()
+    {
+        float time = CalculateCurveTime();
+        Vector3 endPoint = startPoint.position + (Vector3.right * speed * time) + (Vector3.down * gravity * time * time / 2f) + (Vector3.up * startSlope * time);
+        return endPoint;
+    }
 
-//            if (currentPosition.y <= 0f)
-//                break;
+    private float CalculateCurveTime()
+    {
+        float maxTime = 10f; // Set a maximum time value to avoid an infinite loop
+        float timeStep = 0.1f;
+        float time = 0f;
 
-//            time += timeStep;
-//        }
+        while (time <= maxTime)
+        {
+            Vector3 currentPosition = startPoint.position + (Vector3.right * speed * time) + (Vector3.down * gravity * time * time / 2f) + (Vector3.up * startSlope * time);
 
-//        return time;
-//    }
-//}
+            if (currentPosition.y <= 0f)
+                break;
+
+            time += timeStep;
+        }
+
+        return time;
+    }
+}
+
+#endif

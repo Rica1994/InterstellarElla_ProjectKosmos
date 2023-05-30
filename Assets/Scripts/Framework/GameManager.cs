@@ -43,9 +43,19 @@ public class GameManager : Service
         Debug.Log("Game Over");
         var pickUpManager = ServiceLocator.Instance.GetService<PickUpManager>();
         var pickUpsCollected = pickUpManager.PickUpsPickedUp;
-        var ellaPickUpsCollected = pickUpManager.FoundEllaPickUps;
         Debug.Log($"You collected {pickUpsCollected} / {pickUpManager.PickUps.Count}");
-        Debug.Log($"You collected Ella's letters: {ellaPickUpsCollected}");
+
+        var ellaPickUpsCollected = pickUpManager.FoundEllaPickUps;
+
+        foreach (var pickupElla in ellaPickUpsCollected)
+        {
+            Debug.Log($"You collected Ella's letters: {pickupElla.ToString()}");
+
+            // get corresponding slot in endscreen -> pop-in the found letter(s)
+
+            // yield return a delay -> repeat
+        }
+        
     }
 
     public void RespawnPlayer(GameObject player, GameObject checkpoint)
