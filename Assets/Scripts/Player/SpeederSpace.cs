@@ -59,6 +59,11 @@ public class SpeederSpace : PlayerController
 
     private void Start()
     {
+        StartCoroutine(SetBounds());
+    }
+
+    private IEnumerator SetBounds()
+    {
         // Get local camera bounds
         GameObject obj = new GameObject("TestCamera");
         Camera cam = obj.AddComponent<Camera>();
@@ -67,7 +72,15 @@ public class SpeederSpace : PlayerController
         {
             // Get Cinemachine information: dolly track camera offset
             CinemachineBrain cmBrain = CinemachineCore.Instance.GetActiveBrain(0);
-            var virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
+            CinemachineVirtualCamera virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
+
+            // virtual camera is null at start
+            while(!virtualCamera)
+            {
+                yield return null;
+                virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
+            }
+            
             var dollyCamera = virtualCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
             Vector3 offset = dollyCamera.m_PathOffset;
 
