@@ -13,8 +13,8 @@ public class SpeederGround : PlayerController
     //public static float SpeedForward;
     
     [Header ("Boost")]
-    [SerializeField] private float _boostSpeedMultiplier = 2f;
-    [SerializeField] private float _boostJumpMultiplier = 2f;
+    [SerializeField, Range(1.0f, 3.0f)] private float _boostSpeedMultiplier = 2f;
+    [SerializeField, Range(1.0f, 3.0f)] private float _boostJumpMultiplier = 2f;
     [SerializeField] private float _boostDuration = 2f;
 
     [Header ("Jump & Gravity")]
@@ -23,12 +23,9 @@ public class SpeederGround : PlayerController
 
     [Header("Knockback")]
     [SerializeField] private float _knockbackDuration = 3f;
-    [SerializeField] private float _knockbackMultiplier = .3f;
+    [SerializeField, Range(0.0f, 1.0f)] private float _knockbackMultiplier = .3f;
 
     private CharacterController _characterController;
-    private Vector3 _previousPosition;
-    private Vector3 _velocity;
-    private Vector3 _speed;
     private Vector2 _input;
     private float _yVelocity = 0f;
     private bool _isJumping = false;
@@ -57,20 +54,15 @@ public class SpeederGround : PlayerController
         _moveComponent = new MoveComponent();
         _jumpComponent = new JumpComponent();
         _gravityComponent = new GravityComponent();
-        _speedBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostSpeedMultiplier);
-        _jumpBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostJumpMultiplier);
-        _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier);
-
-        // Save previous position for velocity calculations
-        _previousPosition = gameObject.transform.position;
+        
+        _speedBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostSpeedMultiplier, true, 2f, true);
+        _jumpBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostJumpMultiplier, true, 2f, true);
+        _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier, true);
     }
 
     public override void UpdateController()
     {
         base.UpdateController();
-
-        // Remember previous location
-        _previousPosition = gameObject.transform.position;
 
         // !!Keep this execution order!!
         _isGrounded = _characterController.isGrounded;
@@ -79,12 +71,11 @@ public class SpeederGround : PlayerController
         _jumpBoostComponent.Update();
         _knockbackComponent.Update();
 
+        Debug.Log(_speedBoostComponent.Multiplier);
+
         Move();
         Jump();
         ApplyGravity();
-
-        // Calculate and save player velocity
-        _velocity = (transform.position - _previousPosition) / Time.deltaTime;
     }
 
     public void BoostSpeed()

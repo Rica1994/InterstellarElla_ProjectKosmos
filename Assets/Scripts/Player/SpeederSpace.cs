@@ -12,10 +12,10 @@ public class SpeederSpace : PlayerController
 
     // Parameters
     [SerializeField] private float _boostDuration = 3.0f;
-    [SerializeField] private float _boostMultiplier = 1.5f;
+    [SerializeField, Range(1.0f, 3.0f)] private float _boostMultiplier = 1.5f;
 
     [SerializeField] private float _knockbackDuration = 3f;
-    [SerializeField] private float _knockbackMultiplier = .3f;
+    [SerializeField, Range(0.0f, 1.0f)] private float _knockbackMultiplier = .3f;
 
     [SerializeField] private float _moveSpeed = 20f;
     [SerializeField] private float _cameraBoundOffset = 1f;
