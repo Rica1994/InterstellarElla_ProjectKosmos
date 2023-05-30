@@ -165,10 +165,13 @@ public class LevelManager : Service
     }
     private void OnDeathTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
     {
-        if (hasEntered)
+        if (other.tag == "Player") // fix this with correct layer matrix !!!!
         {
-            var tempPlayer = FindAnyObjectByType<PlayerController>().gameObject;
-            ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint);
+            if (hasEntered)
+            {
+                var tempPlayer = FindAnyObjectByType<PlayerController>().gameObject;
+                ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint);
+            }
         }
     }
     private void OnCheckpointTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
