@@ -21,7 +21,7 @@ public class ObstacleCollision : MonoBehaviour
         Assert.IsNotNull( _colliders, $"[{GetType()}] - colliders not found" );
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.TryGetComponent(out PlayerController player))
         {
