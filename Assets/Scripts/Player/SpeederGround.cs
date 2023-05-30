@@ -71,8 +71,6 @@ public class SpeederGround : PlayerController
         _jumpBoostComponent.Update();
         _knockbackComponent.Update();
 
-        Debug.Log(_speedBoostComponent.Multiplier);
-
         Move();
         Jump();
         ApplyGravity();
