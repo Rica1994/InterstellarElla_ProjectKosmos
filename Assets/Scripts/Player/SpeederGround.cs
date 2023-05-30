@@ -10,21 +10,25 @@ public class SpeederGround : PlayerController
     [SerializeField] private float _speedForward = 50f;
     [SerializeField] private float _speedSideways = 15f;
 
-    public static float SpeedForward;
+    //public static float SpeedForward;
     
     [Header ("Boost")]
     [SerializeField] private float _boostSpeedMultiplier = 2f;
     [SerializeField] private float _boostJumpMultiplier = 2f;
-    [SerializeField] private float _boostDuration = 3f;
+    [SerializeField] private float _boostDuration = 2f;
 
-    [Header ("Jump & Gravity & Knockback")]
+    [Header ("Jump & Gravity")]
     [SerializeField] private float _jumpHeight = 8f;
     [SerializeField] private float _gravityValue = -9.81f;
-    [SerializeField] private float _knockbackForce = 20f;
+
+    [Header("Knockback")]
+    [SerializeField] private float _knockbackDuration = 3f;
+    [SerializeField] private float _knockbackMultiplier = .3f;
 
     private CharacterController _characterController;
     private Vector3 _previousPosition;
     private Vector3 _velocity;
+    private Vector3 _speed;
     private Vector2 _input;
     private float _yVelocity = 0f;
     private bool _isJumping = false;
@@ -34,14 +38,15 @@ public class SpeederGround : PlayerController
     private MoveComponent _moveComponent;
     private JumpComponent _jumpComponent;
     private GravityComponent _gravityComponent;
-    private ImpactRecieverComponent _impactRecieverComponent;
-    private BoostComponent _speedBoostComponent;
-    private BoostComponent _jumpBoostComponent;
+    private MultiplierTimerComponent _speedBoostComponent;
+    private MultiplierTimerComponent _jumpBoostComponent;
+    private MultiplierTimerComponent _knockbackComponent;
 
-    private void OnValidate()
-    {
-        SpeedForward = _speedForward;
-    }
+    //private void OnValidate()
+    //{
+    //    SpeedForward = _speedForward;
+    //}
+
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -52,9 +57,9 @@ public class SpeederGround : PlayerController
         _moveComponent = new MoveComponent();
         _jumpComponent = new JumpComponent();
         _gravityComponent = new GravityComponent();
-        _impactRecieverComponent = new ImpactRecieverComponent(_characterController, 2f, 4f);
-        _speedBoostComponent = new BoostComponent(_boostDuration, _boostSpeedMultiplier);
-        _jumpBoostComponent = new BoostComponent(_boostDuration, _boostJumpMultiplier);
+        _speedBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostSpeedMultiplier);
+        _jumpBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostJumpMultiplier);
+        _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier);
 
         // Save previous position for velocity calculations
         _previousPosition = gameObject.transform.position;
@@ -69,10 +74,14 @@ public class SpeederGround : PlayerController
 
         // !!Keep this execution order!!
         _isGrounded = _characterController.isGrounded;
+
+        _speedBoostComponent.Update();
+        _jumpBoostComponent.Update();
+        _knockbackComponent.Update();
+
         Move();
         Jump();
         ApplyGravity();
-        _impactRecieverComponent.Update();
 
         // Calculate and save player velocity
         _velocity = (transform.position - _previousPosition) / Time.deltaTime;
@@ -80,12 +89,12 @@ public class SpeederGround : PlayerController
 
     public void BoostSpeed()
     {
-        _speedBoostComponent.Boost();
+        _speedBoostComponent.Activate();
     }
 
     public void BoostJump()
     {
-        _jumpBoostComponent.Boost();
+        _jumpBoostComponent.Activate();
     }
 
     public void ForceJump()
@@ -93,30 +102,15 @@ public class SpeederGround : PlayerController
         _isJumping = true;
     }
 
-    public override void Collide(Vector3 impulse)
+    public override void Collide()
     {
-        // Knockback backwards and whatever velocity on x
-        var velocity = _velocity.normalized;
-        Vector3 knockbackDirection = new Vector3(-velocity.x, 0f, -1f);
-        knockbackDirection = impulse;
-        _impactRecieverComponent.AddImpact(knockbackDirection.normalized, _knockbackForce);
+        _knockbackComponent.Activate();
     }
 
     private void Move()
     {
-        // Adjust forward and sideways speed while colliding
-        float speedForward = _speedForward;
-        float speedSideways = _speedSideways;
-        if (_impactRecieverComponent.IsColliding)
-        {
-            speedForward = 0f;
-            speedSideways /= 2f;
-        }
-
-        // Input only allowed for left and right (x)
         Vector3 direction = new Vector3(_input.x, 0f, 1f);
-        
-        Vector3 speed = new Vector3(speedSideways, 0f, speedForward) * _speedBoostComponent.BoostMultiplier;
+        Vector3 speed = new Vector3(_speedSideways, 0f, _speedForward * _knockbackComponent.Multiplier) * _speedBoostComponent.Multiplier;
 
         _moveComponent.Move(_characterController, direction, speed);
     }
@@ -125,8 +119,7 @@ public class SpeederGround : PlayerController
     {
         if (_isJumping)
         {
-            float boostMultiplier = _jumpBoostComponent.BoostMultiplier;
-            _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * boostMultiplier);
+            _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
         }
         _isJumping = false;
     }

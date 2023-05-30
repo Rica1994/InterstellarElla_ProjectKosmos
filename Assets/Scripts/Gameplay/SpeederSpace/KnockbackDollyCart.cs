@@ -28,8 +28,8 @@ public class KnockbackDollyCart : MonoBehaviour
     {
         _playerSpeeder = GetComponentInChildren<SpeederSpace>();
         Assert.IsNotNull(_playerSpeeder, $"[{GetType()}] - SpeederSpace is null");
-        _playerSpeeder.OnCollision += OnCollision;
-        _playerSpeeder.OnKnockbackEnded += OnKnockbackEnded;
+        //_playerSpeeder.OnCollision += OnCollision;
+        //_playerSpeeder.OnKnockbackEnded += OnKnockbackEnded;
 
         _dollyCart = GetComponentInChildren<CinemachineDollyCart>();
         Assert.IsNotNull(_dollyCart, $"[{GetType()}] - DollyCart is null");

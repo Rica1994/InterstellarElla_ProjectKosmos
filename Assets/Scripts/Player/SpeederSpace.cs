@@ -6,16 +6,16 @@ using UnityEngine.Assertions;
 
 public class SpeederSpace : PlayerController
 {
-    public delegate void SpeederSpaceKnockbackContext(Vector3 position);
-    public event SpeederSpaceKnockbackContext OnCollision;
-    public event SpeederSpaceKnockbackContext OnKnockbackEnded;
+    //public delegate void SpeederSpaceKnockbackContext(Vector3 position);
+    //public event SpeederSpaceKnockbackContext OnCollision;
+    //public event SpeederSpaceKnockbackContext OnKnockbackEnded;
 
     // Parameters
     [SerializeField] private float _boostDuration = 3.0f;
     [SerializeField] private float _boostMultiplier = 1.5f;
 
-    [SerializeField] private GameObject _knockbackPathPrefab;
-    [SerializeField] private float _knockbackForce = 20f;
+    [SerializeField] private float _knockbackDuration = 3f;
+    [SerializeField] private float _knockbackMultiplier = .3f;
 
     [SerializeField] private float _moveSpeed = 20f;
     [SerializeField] private float _cameraBoundOffset = 1f;
@@ -26,8 +26,8 @@ public class SpeederSpace : PlayerController
 
     // Components
     private MoveComponent _moveComponent;
-    private BoostComponent _boostComponent;
-    private ImpactRecieverComponent _impactRecieverComponent;
+    private MultiplierTimerComponent _boostComponent;
+    private MultiplierTimerComponent _knockbackComponent;
 
     // Movement
     private Vector2 _input;
@@ -40,7 +40,7 @@ public class SpeederSpace : PlayerController
     private Vector3 _leftBottomBounds;
     private Vector3 _rightTopBounds;
 
-    public bool IsBoosting => _boostComponent.IsBoosting;
+    public bool IsBoosting => _boostComponent.IsTicking;
 
     private void Awake()
     {
@@ -52,11 +52,9 @@ public class SpeederSpace : PlayerController
         _baseSpeed = _dollyCart.m_Speed;
 
         _moveComponent = new MoveComponent();
-        _boostComponent = new BoostComponent(_boostDuration, _boostMultiplier);
-        _boostComponent.OnBoostEnded += OnBoostEnded;
 
-        _impactRecieverComponent = new ImpactRecieverComponent(_characterController, 3f);
-        _impactRecieverComponent.OnKnockbackEnded += OnKnockbackFinished;
+        _boostComponent = new MultiplierTimerComponent(_boostDuration, _boostMultiplier);
+        _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier);
     }
 
     private void Start()
@@ -88,18 +86,14 @@ public class SpeederSpace : PlayerController
         base.UpdateController();
 
         _boostComponent.Update();
-        _impactRecieverComponent.Update();
+        _knockbackComponent.Update();
 
-        if (!_impactRecieverComponent.IsColliding)
-        {
-            Move();
-        }
+        Move();
     }
 
     public void Boost()
     {
-        _boostComponent.Boost();
-        _dollyCart.m_Speed = _baseSpeed * _boostComponent.BoostMultiplier;
+        _boostComponent.Activate();
 
         //if (CinemachineCore.Instance.BrainCount > 0)
         //{
@@ -109,38 +103,9 @@ public class SpeederSpace : PlayerController
         //}
     }
 
-    private void OnBoostEnded()
+    public override void Collide()
     {
-        _dollyCart.m_Speed = _baseSpeed;
-    }
-
-    public override void Collide(Vector3 impulse)
-    {
-        // Dolly cart speed and unparent
-        _dollyCart.m_Speed = 0f;
-        transform.parent = null;
-
-        // Calculate knockback velocity
-        var velocity = -_dollyCart.transform.forward;
-        //velocity += transform.right * -_input.x / 5f;
-        //velocity += transform.up * -_input.y / 5f;
-        //velocity = impulse;
-        velocity.Normalize();
-
-        // Add impact to player
-        _impactRecieverComponent.AddImpact(velocity, _knockbackForce, true);
-
-        OnCollision?.Invoke(transform.position + _impactRecieverComponent.Destination);
-    }
-
-    private void OnKnockbackFinished()
-    {
-        OnKnockbackEnded?.Invoke(transform.position);
-
-        _dollyCart.m_Speed = _baseSpeed;
-
-        transform.SetParent(_dollyCart.gameObject.transform, true);
-        transform.localPosition = Vector3.zero;
+        _knockbackComponent.Activate();
     }
 
     private void CheckBounds()
@@ -165,6 +130,8 @@ public class SpeederSpace : PlayerController
         // Adjust input according to bounds
         CheckBounds();
 
+        _dollyCart.m_Speed = _baseSpeed * _boostComponent.Multiplier * _knockbackComponent.Multiplier;
+        
         // Calculate direction to move 
         Vector3 direction = _dollyCart.transform.right * _input.x;
         direction += _dollyCart.transform.up * _input.y;
