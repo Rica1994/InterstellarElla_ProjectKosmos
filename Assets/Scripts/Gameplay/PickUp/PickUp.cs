@@ -15,7 +15,7 @@ public class PickUp : MonoBehaviour
         collider.isTrigger = true;
 
         // load in the correct model ?!
-        Resources.Load();
+        //Resources.Load();
     }
 
     private void OnValidate()
