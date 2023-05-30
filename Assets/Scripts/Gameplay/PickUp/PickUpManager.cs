@@ -9,10 +9,11 @@ public class PickUpManager : Service
     private List<PickUp> _pickUps = new List<PickUp>();
     
     private int _pickUpsPickedUp = 0;
-    private string _foundEllaPickUps;
+    private List<EllaPickupType> _foundEllaPickups =new List<EllaPickupType>();
     
     public int PickUpsPickedUp => _pickUpsPickedUp;
-    public string FoundEllaPickUps => _foundEllaPickUps;
+    public List<EllaPickupType> FoundEllaPickUps => _foundEllaPickups;
+
     public List<PickUp> PickUps => _pickUps;
     
     private void Start()
@@ -54,7 +55,12 @@ public class PickUpManager : Service
         for (int i = pickUps.Count - 1; i >= 0; i--)
         {
             pickUps[i].OnPickUp += OnPickUpPickedUp;
-            if (pickUps[i] as EllaPickUp) pickUps.RemoveAt(i);
+
+            if (pickUps[i] as EllaPickUp)
+            {
+                pickUps.RemoveAt(i);
+            }
+            
         }
 
         // Add all pickups in the section to the list
@@ -63,7 +69,13 @@ public class PickUpManager : Service
 
     private void OnPickUpPickedUp(PickUp pickup)
     {
-        if (pickup as EllaPickUp) _foundEllaPickUps += ((EllaPickUp)pickup).Letter;
-        else _pickUpsPickedUp++;
+        if (pickup as EllaPickUp)
+        {
+            _foundEllaPickups.Add(((EllaPickUp)pickup).Type);
+        } 
+        else
+        {
+            _pickUpsPickedUp++;
+        } 
     }
 }

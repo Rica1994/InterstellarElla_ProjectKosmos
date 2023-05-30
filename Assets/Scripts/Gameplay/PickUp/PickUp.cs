@@ -13,6 +13,9 @@ public class PickUp : MonoBehaviour
     {
         var collider = GetComponent<Collider>();
         collider.isTrigger = true;
+
+        // load in the correct model ?!
+        Resources.Load();
     }
 
     private void OnValidate()
@@ -31,9 +34,12 @@ public class PickUp : MonoBehaviour
 
     private void PickedUp()
     {
-        // particle effects
-        //Debug.Log("PickedUp");
         OnPickUp?.Invoke(this);
+
+        // spawn particle
+        ServiceLocator.Instance.GetService<ParticleManager>().
+            CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
+
         Destroy(gameObject);
     }
 }
