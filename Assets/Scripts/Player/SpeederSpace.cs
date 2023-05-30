@@ -53,8 +53,8 @@ public class SpeederSpace : PlayerController
 
         _moveComponent = new MoveComponent();
 
-        _boostComponent = new MultiplierTimerComponent(_boostDuration, _boostMultiplier);
-        _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier);
+        _boostComponent = new MultiplierTimerComponent(_boostDuration, _boostMultiplier, true, 2f, true, 1f);
+        _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier, true, false);
     }
 
     private void Start()

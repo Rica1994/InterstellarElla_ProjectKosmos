@@ -55,9 +55,9 @@ public class SpeederGround : PlayerController
         _jumpComponent = new JumpComponent();
         _gravityComponent = new GravityComponent();
         
-        _speedBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostSpeedMultiplier, true, 2f, true);
-        _jumpBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostJumpMultiplier, true, 2f, true);
-        _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier, true);
+        _speedBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostSpeedMultiplier, true, 2f, true, 1f);
+        _jumpBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostJumpMultiplier, true, 2f, true, 1f);
+        _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier, true, false);
     }
 
     public override void UpdateController()

@@ -27,7 +27,17 @@ public class MultiplierTimerComponent
     private float _lerpOutSpeed = 1f;
 
 
-    public MultiplierTimerComponent(float time, float multiplier, bool shouldLerpOut = false, float lerpInSpeed = 1f, bool shouldLerpIn = false, float lerpOutSpeed = 1f)
+    public MultiplierTimerComponent(float time, float multiplier)
+        : this(time, multiplier, false, 1f, false, 1f)
+    {
+    }
+
+    public MultiplierTimerComponent(float time, float multiplier, bool shouldLerpOut, bool shouldLerpIn)
+        : this(time, multiplier, shouldLerpIn, 1f, shouldLerpOut, 1f)    
+    {
+    }
+
+    public MultiplierTimerComponent(float time, float multiplier, bool shouldLerpOut, float lerpInSpeed, bool shouldLerpIn, float lerpOutSpeed)
     {
         _time = time;
         _currentTime = 0f;
