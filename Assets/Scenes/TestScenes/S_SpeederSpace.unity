@@ -1755,6 +1755,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _followTarget: {fileID: 266439673}
   _lookAtTarget: {fileID: 266439673}
+  _defaultFov: 70
+  _zoomOutFov: 80
+  _zoomSpeed: 3
 --- !u!4 &1063498684
 Transform:
   m_ObjectHideFlags: 0
@@ -2498,7 +2501,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1736398873
 Transform:
   m_ObjectHideFlags: 0
@@ -3058,11 +3061,11 @@ PrefabInstance:
     - target: {fileID: 4432115297898934338, guid: c625aeedb86145d4d914652c6af9f612, type: 3}
       propertyPath: m_Follow
       value: 
-      objectReference: {fileID: 266439673}
+      objectReference: {fileID: 0}
     - target: {fileID: 4432115297898934338, guid: c625aeedb86145d4d914652c6af9f612, type: 3}
       propertyPath: m_LookAt
       value: 
-      objectReference: {fileID: 266439673}
+      objectReference: {fileID: 0}
     - target: {fileID: 4432115297898934339, guid: c625aeedb86145d4d914652c6af9f612, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.6277546

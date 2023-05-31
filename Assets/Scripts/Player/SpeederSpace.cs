@@ -117,6 +117,7 @@ public class SpeederSpace : PlayerController
     public override void Collide()
     {
         _knockbackComponent.Activate();
+        ServiceLocator.Instance.GetService<VirtualCameraManager>().ResetZoom();
     }
 
     private void CheckBounds()
