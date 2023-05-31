@@ -51,7 +51,7 @@ public class SwitchPath : MonoBehaviour
             return;
         }
 
-        // Find closest waypoint
+        // Find closest waypoint from current location on this path
         if (_closestWaypointIndex == -1)
         {
             _closestWaypointIndex = FindClosestWaypointIndex(other.gameObject.transform.position, _fromSmoothPath);
@@ -67,11 +67,11 @@ public class SwitchPath : MonoBehaviour
             return;
         }
 
-        // How far is player away from this waypoint?
-        var distToWaypoint = _playerDollyCart.m_Path.FromPathNativeUnits(_closestWaypointIndex, CinemachinePathBase.PositionUnits.Distance);
+        // Closest waypoint in position coordinates
+        var distOfWaypoint = _playerDollyCart.m_Path.FromPathNativeUnits(_closestWaypointIndex, CinemachinePathBase.PositionUnits.Distance);
 
         // Has player reached waypoint
-        if (_playerDollyCart.m_Position >= distToWaypoint)
+        if (_playerDollyCart.m_Position >= distOfWaypoint)
         {
             // Switch track
             _playerDollyCart.m_Path = _toSmoothPath;

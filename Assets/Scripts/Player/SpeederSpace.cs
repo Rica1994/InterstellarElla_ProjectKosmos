@@ -6,10 +6,6 @@ using UnityEngine.Assertions;
 
 public class SpeederSpace : PlayerController
 {
-    //public delegate void SpeederSpaceKnockbackContext(Vector3 position);
-    //public event SpeederSpaceKnockbackContext OnCollision;
-    //public event SpeederSpaceKnockbackContext OnKnockbackEnded;
-
     // Parameters
     [SerializeField] private float _boostDuration = 3.0f;
     [SerializeField, Range(1.0f, 3.0f)] private float _boostMultiplier = 1.5f;
@@ -51,9 +47,10 @@ public class SpeederSpace : PlayerController
         Assert.IsNotNull(_dollyCart, $"[{GetType()}] - DollyCart is null");
         _baseSpeed = _dollyCart.m_Speed;
 
+        // Create components
         _moveComponent = new MoveComponent();
-
         _boostComponent = new MultiplierTimerComponent(_boostDuration, _boostMultiplier, true, 2f, true, 1f);
+        _boostComponent.OnTimerEnded += BoostEnded;
         _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier, true, false);
     }
 
@@ -64,10 +61,6 @@ public class SpeederSpace : PlayerController
 
     private IEnumerator SetBounds()
     {
-        // Get local camera bounds
-        GameObject obj = new GameObject("TestCamera");
-        Camera cam = obj.AddComponent<Camera>();
-
         if (CinemachineCore.Instance.BrainCount > 0)
         {
             // Get Cinemachine information: dolly track camera offset
@@ -80,18 +73,24 @@ public class SpeederSpace : PlayerController
                 yield return null;
                 virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
             }
-            
+
             var dollyCamera = virtualCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
+            Assert.IsNotNull(dollyCamera, $"[{GetType()}] - Virtual camera does not have a dolly track component");
             Vector3 offset = dollyCamera.m_PathOffset;
 
+            // Get local camera bounds by temporarily creating a camera at 0,0,0 without rotation
+            GameObject obj = new GameObject("TestCamera");
+            Camera cam = obj.AddComponent<Camera>();
+            
             // Set bounds of camera based off of dolly track offset
             float distance = Vector3.Distance(gameObject.transform.position, gameObject.transform.position - offset);
+
             _leftBottomBounds = cam.ViewportToWorldPoint(new Vector3(0f, 0f, distance));
             _rightTopBounds = cam.ViewportToWorldPoint(new Vector3(1f, 1f, distance));
-        }
 
-        // Destroy camera used for local bound calculation
-        Destroy(obj);
+            // Destroy camera used for local bound calculation
+            Destroy(obj);
+        }
     }
 
     public override void UpdateController()
@@ -107,13 +106,12 @@ public class SpeederSpace : PlayerController
     public void Boost()
     {
         _boostComponent.Activate();
+        ServiceLocator.Instance.GetService<VirtualCameraManager>().ZoomOut();
+    }
 
-        //if (CinemachineCore.Instance.BrainCount > 0)
-        //{
-        //    CinemachineBrain cmBrain = CinemachineCore.Instance.GetActiveBrain(0);
-        //    var virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
-        //    virtualCamera.m_Lens.FieldOfView = 70f;
-        //}
+    private void BoostEnded()
+    {
+        ServiceLocator.Instance.GetService<VirtualCameraManager>().ResetZoom();
     }
 
     public override void Collide()

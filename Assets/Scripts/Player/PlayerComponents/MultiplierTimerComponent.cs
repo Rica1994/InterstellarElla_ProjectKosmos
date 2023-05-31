@@ -101,5 +101,4 @@ public class MultiplierTimerComponent
             isLerping = false;
         }
     }
-
 }
