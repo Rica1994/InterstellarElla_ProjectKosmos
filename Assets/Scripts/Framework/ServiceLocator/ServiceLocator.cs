@@ -37,6 +37,7 @@ public class ServiceLocator : MonoBehaviourSingleton<ServiceLocator>
         }
         return false;
     }
+    
     public void DebugServices()
     {
         foreach (var service in _services)

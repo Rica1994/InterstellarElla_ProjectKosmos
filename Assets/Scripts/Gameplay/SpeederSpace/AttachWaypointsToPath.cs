@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttachPathToPath : MonoBehaviour
+public class AttachWaypointsToPath : MonoBehaviour
 {
     [SerializeField] private CinemachineSmoothPath _pathToAttachTo;
     private CinemachineSmoothPath _pathToAttachFrom;
