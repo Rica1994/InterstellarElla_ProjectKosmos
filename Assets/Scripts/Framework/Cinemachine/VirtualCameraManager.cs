@@ -8,8 +8,8 @@ public class VirtualCameraManager : Service
     [SerializeField] private Transform _followTarget;
     [SerializeField] private Transform _lookAtTarget;
 
-    [SerializeField] private float _defaultFov;
-    [SerializeField] private float _zoomOutFov;
+    [SerializeField] private float _defaultFov = 70f;
+    [SerializeField] private float _zoomOutFov = 80f;
 
     [SerializeField] private float _zoomSpeed = 1f;
 
@@ -42,6 +42,7 @@ public class VirtualCameraManager : Service
     {
         if (!_virtualCameras.Contains(camera))
         {
+            camera.m_Lens.FieldOfView = _currentFov;
             _virtualCameras.Add(camera);
         }
     }
