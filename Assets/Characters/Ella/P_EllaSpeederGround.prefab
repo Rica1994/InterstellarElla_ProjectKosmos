@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c571ad90161578743a87ace233049a97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _moveDirection: {x: 0, y: 0, z: 1}
   _speedForward: 35
   _speedSideways: 15
   _boostSpeedMultiplier: 1.5
@@ -220,7 +221,8 @@ MonoBehaviour:
   _boostDuration: 3
   _jumpHeight: 4
   _gravityValue: -9.81
-  _knockbackForce: 20
+  _knockbackDuration: 3
+  _knockbackMultiplier: 0.3
 --- !u!54 &3687131222379983818
 Rigidbody:
   m_ObjectHideFlags: 0

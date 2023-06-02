@@ -17,7 +17,7 @@ public class ObstacleCollision : MonoBehaviour
             return;
         }
 
-        _colliders = GetComponents<Collider>();
+        _colliders = GetComponentsInChildren<Collider>();
         Assert.IsNotNull( _colliders, $"[{GetType()}] - colliders not found" );
     }
 

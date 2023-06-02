@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class SpeederGround : PlayerController
 {
-    [Header ("Speed")]
+    [Header("Speed")]
+    [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f); 
     [SerializeField] private float _speedForward = 50f;
     [SerializeField] private float _speedSideways = 15f;
 
@@ -26,6 +27,7 @@ public class SpeederGround : PlayerController
     [SerializeField, Range(0.0f, 1.0f)] private float _knockbackMultiplier = .3f;
 
     private CharacterController _characterController;
+    private Vector3 _rightVector;
     private Vector2 _input;
     private float _yVelocity = 0f;
     private bool _isJumping = false;
@@ -58,6 +60,10 @@ public class SpeederGround : PlayerController
         _speedBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostSpeedMultiplier, true, 2f, true, 1f);
         _jumpBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostJumpMultiplier, true, 2f, true, 1f);
         _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier, true, false);
+
+        _moveDirection.Normalize();
+        transform.forward = _moveDirection;
+        _rightVector = Vector3.Cross(_moveDirection, Vector3.up);
     }
 
     public override void UpdateController()
@@ -98,7 +104,8 @@ public class SpeederGround : PlayerController
 
     private void Move()
     {
-        Vector3 direction = new Vector3(_input.x, 0f, 1f);
+        var direction = _moveDirection * 1f + _rightVector * -_input.x;
+        //Vector3 direction = new Vector3(_input.x, 0f, 1f);
         Vector3 speed = new Vector3(_speedSideways, 0f, _speedForward * _knockbackComponent.Multiplier) * _speedBoostComponent.Multiplier;
 
         _moveComponent.Move(_characterController, direction, speed);
