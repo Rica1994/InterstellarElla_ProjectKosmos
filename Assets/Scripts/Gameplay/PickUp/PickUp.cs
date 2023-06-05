@@ -3,19 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[DefaultExecutionOrder(-50)]
 [RequireComponent(typeof(SphereCollider))]
 public class PickUp : MonoBehaviour
 {
     public delegate void PickUpCallback(PickUp pickUp);
     public event PickUpCallback OnPickUp;
-    
-    private void Awake()
+
+    private void Start()
     {
         var collider = GetComponent<Collider>();
         collider.isTrigger = true;
 
-        // load in the correct model ?!
-        //Resources.Load();
+        // load in correct prefab visual
+        LoadVisuals();
     }
 
     private void OnValidate()
@@ -36,10 +37,30 @@ public class PickUp : MonoBehaviour
     {
         OnPickUp?.Invoke(this);
 
+        PlayerFeedback();      
+    }
+    protected virtual void PlayerFeedback()
+    {
         // spawn particle
         ServiceLocator.Instance.GetService<ParticleManager>().
             CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
 
         Destroy(gameObject);
+    }
+    protected virtual void LoadVisuals()
+    {
+        // load in the correct prefab in the pickup manager (dependant on scene) (I only want to do this once for 1 pickup)
+        if (PickUpManager.PickupNormalVisual != null)
+        {
+            // destroy my alrdy existing child
+            Destroy(this.transform.GetChild(0).gameObject);
+
+            // instantiate whatever was loaded here under my object
+            Instantiate(PickUpManager.PickupNormalVisual, this.transform);
+        }
+        else
+        {
+            Debug.Log("No Pickups Found, leaving on default visual");
+        }    
     }
 }

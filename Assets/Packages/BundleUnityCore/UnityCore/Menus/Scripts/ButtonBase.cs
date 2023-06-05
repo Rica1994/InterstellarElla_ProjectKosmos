@@ -54,6 +54,8 @@ public class ButtonBase : MonoBehaviour, IClickable
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
         _pageController = ServiceLocator.Instance.GetService<PageController>();
 
+        Debug.Log("assigned + " + _pageController + " to -> " + this.gameObject.name);
+
         //DisableButton(true); // gives a problem for if we return to main menu (we try to run acoroutine on buttons that get destroyed)
     }
     #endregion

@@ -5,6 +5,7 @@ using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[DefaultExecutionOrder(-200)]
 public class LevelManager : Service
 {
     #region Events
@@ -139,7 +140,7 @@ public class LevelManager : Service
 
 
 
-    private List<int> DecodeSceneString()
+    public List<int> DecodeSceneString()
     {
         List<int> numbersInSceneName = new List<int>();
 
