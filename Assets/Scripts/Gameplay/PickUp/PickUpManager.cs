@@ -42,6 +42,7 @@ public class PickUpManager : Service
 
             levelManager.OnSectionLoaded += OnSectionLoaded;
 
+
             // assigning proper pickups for level
             var levelIndexString = levelManager.DecodeSceneString()[0].ToString();
             _pickupToLoad = _pickupNameBase + levelIndexString;

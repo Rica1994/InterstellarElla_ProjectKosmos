@@ -45,7 +45,7 @@ public class ButtonBase : MonoBehaviour, IClickable
     public Button MyButton => _myButton;
 
     protected AudioController _audioController;
-    protected PageController _pageController;
+    protected PageController _pageController; // storing this in a variable somehow did not work !? (big mystery)-> keep assigning its value
 
 
     #region UNITY FUNCTIONS
@@ -54,10 +54,9 @@ public class ButtonBase : MonoBehaviour, IClickable
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
         _pageController = ServiceLocator.Instance.GetService<PageController>();
 
-        Debug.Log("assigned + " + _pageController + " to -> " + this.gameObject.name);
-
         //DisableButton(true); // gives a problem for if we return to main menu (we try to run acoroutine on buttons that get destroyed)
     }
+
     #endregion
 
 
@@ -68,6 +67,8 @@ public class ButtonBase : MonoBehaviour, IClickable
     }
     public virtual void ClickedButton()
     {
+        _pageController = ServiceLocator.Instance.GetService<PageController>();
+
         // only do all of this if there currently is not an assigned IEnumerator for buttons
         if (_pageController.ButtonRunner == null)
         {
@@ -83,7 +84,6 @@ public class ButtonBase : MonoBehaviour, IClickable
             // (1) (if I'm dependant on Unity Button, then I need to access all of the available ones and disable them == likely to check 4-8 buttons whenever called)
             // (2) (if I'm dependant on IClick, then I could just toggle on a bool in a possible "system" that detects clicks == one more update loop to check raycasts)
 
-
             // actual logic
             _pageController.ButtonRunner = ExecuteLogicRoutine();
             _pageController.StartCoroutine(_pageController.ButtonRunner);
@@ -91,6 +91,8 @@ public class ButtonBase : MonoBehaviour, IClickable
     }
     public virtual void DisableButton(bool isInstant = false)
     {
+        _pageController = ServiceLocator.Instance.GetService<PageController>();
+
         if (isInstant == false)
         {
             // instantly disable collider and button components
@@ -117,6 +119,8 @@ public class ButtonBase : MonoBehaviour, IClickable
     }
     public virtual void EnableButton()
     {
+        _pageController = ServiceLocator.Instance.GetService<PageController>();
+
         // instantly disable collider and button components
         _myTrigger.enabled = false;
         _myButton.enabled = false;
@@ -131,6 +135,7 @@ public class ButtonBase : MonoBehaviour, IClickable
 
         // enable components after appear animation
         float appearTime = _animationComponent.GetClip(_animationNameAppear).length;
+
         _pageController.StartCoroutine(EnableComponents(appearTime));
     }
     #endregion
