@@ -180,6 +180,8 @@ namespace UnityCore
                     ServiceLocator.Instance.GetService<GameManager>().SetPlayerController(playerController);
                 }
 
+                Debug.Log("turned off sceneLoading bool");
+
                 m_SceneIsLoading = false;
             }
             private bool SceneCanBeLoaded(SceneType scene, bool reload)

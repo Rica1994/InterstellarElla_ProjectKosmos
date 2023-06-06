@@ -15,7 +15,17 @@ public class PickUpManager : Service
     public List<EllaPickupType> FoundEllaPickUps => _foundEllaPickups;
 
     public List<PickUp> PickUps => _pickUps;
-    
+
+
+    // assign this the pickups visual of our level 
+    public static GameObject PickupNormalVisual;
+    // assign this in inspector (no real point loading from resources)
+    public List<GameObject> PickupsSpecialVisuals = new List<GameObject>();
+
+    private const string _pickupNameBase = "PV_Pickup_";
+    private string _pickupToLoad;
+
+
     private void Start()
     {
         var serviceLocator = ServiceLocator.Instance;
@@ -31,6 +41,12 @@ public class PickUpManager : Service
             var levelManager = ServiceLocator.Instance.GetService<LevelManager>();
 
             levelManager.OnSectionLoaded += OnSectionLoaded;
+
+
+            // assigning proper pickups for level
+            var levelIndexString = levelManager.DecodeSceneString()[0].ToString();
+            _pickupToLoad = _pickupNameBase + levelIndexString;
+            PickupNormalVisual = Resources.Load(_pickupToLoad, typeof(GameObject)) as GameObject;
         }
 
         /// Disabling the event subscriptions as they don't really function ///
@@ -38,6 +54,9 @@ public class PickUpManager : Service
 
         // this will only subscribe the prefabs in the ASSETS (is an issue !)
         //serviceLocator.GetService<LevelManager>().Sections.ForEach(x => x.Loaded += OnSectionLoaded);
+
+
+
     }
 
     /// <summary>
