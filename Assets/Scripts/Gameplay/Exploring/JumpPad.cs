@@ -8,11 +8,12 @@ public class JumpPad : MonoBehaviour
     [SerializeField]
     private Transform _target;
 
-    [HideInInspector]
     public float LaunchSpeed = 5f; // is automatically adjusted 
 
     [SerializeField]
-    private Transform _transformDirectionToBoost;
+    private Transform _transformDirectionXZ;
+    [SerializeField]
+    private Transform _transformDirectionY;
 
     [Header("Visualizations")]
     [SerializeField]
@@ -26,44 +27,56 @@ public class JumpPad : MonoBehaviour
     //private Color _initialColor;
 
     private float _currentAngle;
+
+    [SerializeField]
     private float _currentTimeOfFlight;
 
     private bool _runningCoroutine;
 
 
+    private void Start()
+    {
+        //SetTargetWithSpeed(-5);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         // perhaps use layer matrix to optimize this
         if (other.TryGetComponent(out EllaExploring exploringScript))
         {
-            Debug.Log("Player entered");
-
             if (_runningCoroutine == false)
             {
+                //Debug.Log("Jump PADDED");
+
                 // disable the character component
-                StartCoroutine(TogglePlayerInput(exploringScript.CharacterControl));
+                StartCoroutine(TogglePlayerInput(exploringScript));
 
                 // set the rigidbody velocity
                 // logic from og
-                var turretAngle = (_currentAngle * Mathf.Rad2Deg);
-                _transformDirectionToBoost.localRotation = Quaternion.Euler(90, 90, 0) * Quaternion.AngleAxis(turretAngle, Vector3.forward);
+                //_transformDirectionXZ.rotation = Quaternion.LookRotation(planarDirection) * Quaternion.Euler(-90, -90, 0);
+                //var turretAngle = (_currentAngle * Mathf.Rad2Deg);
+                //_transformDirectionY.localRotation = Quaternion.Euler(90, 90, 0) * Quaternion.AngleAxis(turretAngle, Vector3.forward);
 
-                exploringScript.Rigid.velocity = _transformDirectionToBoost.up * LaunchSpeed;
+                exploringScript.Rigid.velocity = _transformDirectionY.up * LaunchSpeed;
+
+                Debug.Log(_transformDirectionY.up + " the up axis of transform-direction-to-boost");
+                Debug.Log(_transformDirectionY.up * LaunchSpeed + " the velocity given to rigidbody of player");
             }
             
         }
     }
 
-    private IEnumerator TogglePlayerInput(CharacterController characterController)
+    private IEnumerator TogglePlayerInput(EllaExploring exploringScript)
     {
         _runningCoroutine = true;
 
-        characterController.enabled = false;
+        exploringScript.CharacterControl.enabled = false;
+
+        Debug.Log("time in coroutine -> " + _currentTimeOfFlight);
 
         yield return new WaitForSeconds(_currentTimeOfFlight);
 
-        characterController.enabled = true;
+        exploringScript.CharacterControl.enabled = true;
 
         _runningCoroutine = false;
     }
@@ -123,12 +136,17 @@ public class JumpPad : MonoBehaviour
             Debug.Log("target not in range for -> " + this.gameObject.name);
             return;
         }
-            
+
+        // set angle for propulsion
+        _transformDirectionXZ.rotation = Quaternion.LookRotation(-direction) * Quaternion.Euler(-90, -90, 0);
+        var propulsionAngle = (_currentAngle * Mathf.Rad2Deg);
+        _transformDirectionY.localRotation = Quaternion.Euler(90, 90, 0) * Quaternion.AngleAxis(propulsionAngle, Vector3.forward);
+
         // visualizes the arc (needs to use the gravity set on the player)
         UpdateArc(LaunchSpeed, distance, gravityPlayer, _currentAngle, direction, targetInRange);
 
         // calculates time it would take for the launched object to reach the target
-        _currentTimeOfFlight = ArcMath.TimeOfFlight(LaunchSpeed, _currentAngle, -yOffset, gravityPlayer);
+        _currentTimeOfFlight = ArcMath.TimeOfFlight(LaunchSpeed, _currentAngle, -yOffset, gravityPlayer);        
     }
 
 

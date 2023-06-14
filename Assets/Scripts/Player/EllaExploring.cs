@@ -61,7 +61,6 @@ public class EllaExploring : PlayerController
     private AnimatorComponent _animatorComponent;
 
 
-
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -137,7 +136,7 @@ public class EllaExploring : PlayerController
         {
             // add personal gravity to rigidbody
             //_rigidbody.AddForce(new Vector3(0, -1.0f, 0) * _rigidbody.mass * gMoon);
-            _rigidbody.AddForce(new Vector3(0, -1.0f, 0) * 1 * _gravityValue);
+            _rigidbody.AddForce(new Vector3(0, -1.0f, 0) * 1 * _gravityValue*(-1));
         }
     }
 

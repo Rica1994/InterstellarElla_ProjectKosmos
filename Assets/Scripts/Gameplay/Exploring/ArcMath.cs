@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+// SOURCE -> https://github.com/IronWarrior/ProjectileShooting/tree/master
+
 /// <summary>
-/// SOURCE -> https://github.com/IronWarrior/ProjectileShooting/tree/master
+/// Class with public functions to primarily do math
 /// </summary>
 /// 
 

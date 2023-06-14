@@ -16,7 +16,6 @@ public class ArcVisualizingTool : EditorWindow
     private EllaExploring _ellaExploringScript;
 
 
-
     [MenuItem("Window/Arc Visualizing Tool")]
     public static void ShowWindow()
     {
@@ -48,10 +47,12 @@ public class ArcVisualizingTool : EditorWindow
             for (int i = 0; i < _jumpPads.Count; i++)
             {
                 _jumpPads[i].SetTargetWithSpeed(_ellaExploringScript.Gravity);
+
+                EditorUtility.SetDirty(_jumpPads[i]);
             }
 
             // inform the editor that the scene has changed
-            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());          
         }
     }
 }
