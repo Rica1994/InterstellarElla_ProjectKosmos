@@ -59,6 +59,24 @@ public class ParticleManager : Service
             Debug.LogWarning("Index out of bounds or index has no reference. Double check my Prefab List.");
         }
     }
+    public ParticleSystem CreateParticleLocalSpacePermanent(ParticleType particleType, Transform particleParentTransform)
+    {
+        var allParticles = _particleRefs.ParticlePrefabs;
+        var particleIndex = ((int)particleType);
+
+        if (particleIndex <= allParticles.Count && allParticles[particleIndex] != null)
+        {
+            ParticleEntity particleCreated = Instantiate(allParticles[particleIndex], particleParentTransform);
+            ParticleSystem particleSystem = particleCreated.GetComponent<ParticleSystem>();
+
+            return particleSystem;
+        }
+        else
+        {
+            Debug.LogWarning("Index out of bounds or index has no reference. Double check my Prefab List.");
+            return null;
+        }
+    }
 
 
 

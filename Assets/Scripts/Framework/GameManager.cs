@@ -70,7 +70,14 @@ public class GameManager : Service
             _playerController.UpdateController();
         }       
     }
-    
+    private void FixedUpdate()
+    {
+        if (_playerController != null)
+        {
+            _playerController.FixedUpdateController();
+        }
+    }
+
     public void SetPlayerController(PlayerController playerController = null)
     {
         _playerController = playerController;
