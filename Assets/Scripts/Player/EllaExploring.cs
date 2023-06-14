@@ -135,7 +135,6 @@ public class EllaExploring : PlayerController
         if (_characterController.enabled == false)
         {
             // add personal gravity to rigidbody
-            //_rigidbody.AddForce(new Vector3(0, -1.0f, 0) * _rigidbody.mass * gMoon);
             _rigidbody.AddForce(new Vector3(0, -1.0f, 0) * 1 * _gravityValue*(-1));
         }
     }
@@ -144,20 +143,43 @@ public class EllaExploring : PlayerController
     {
         base.UpdateController();
 
-        // !! Keep this execution order !!
-        _isGrounded = _characterController.isGrounded;
+        if (_characterController.enabled == true)
+        {
+            // !! Keep this execution order !!
+            _isGrounded = _characterController.isGrounded;
 
-        // add Y+ movement with a limit dependant on Ella's last grounded position
-        Hover();
+            // add Y+ movement with a limit dependant on Ella's last grounded position
+            Hover();
 
-        // move the player in x-y axis
-        Move();
+            // move the player in x-y axis
+            Move();
 
-        // only apply gravity when not hovering
-        ApplyGravity();
+            // only apply gravity when not hovering
+            ApplyGravity();
 
-        // animate the character
-        AnimateRig();
+            // animate the character
+            AnimateRig();
+        }
+    }
+    public void JumpPadAnimater(Transform XZtransform)
+    {
+        Vector3 forward = XZtransform.forward;
+        Vector3 right = XZtransform.right;
+        forward.y = 0;
+        right.y = 0;
+        forward = forward.normalized;
+        right = right.normalized;
+
+        Vector3 xzNormalized = forward + right;
+        Vector3 lookVector = new Vector3(xzNormalized.x, 0.0f, xzNormalized.z);
+
+        // rotate player towards XZ-direction
+        _model.transform.rotation = Quaternion.LookRotation(lookVector);
+
+        // set animator bools
+        _animatorComponent.SetAnimatorBool(_animator, _boolMoving, true);
+        _animatorComponent.SetAnimatorBool(_animator, _boolGrounded, false);
+        _animatorComponent.SetAnimatorBool(_animator, _boolBoosting, true);
     }
 
 
@@ -186,7 +208,6 @@ public class EllaExploring : PlayerController
     }
     private void Move()
     {
-        // this DOES NOT need to be checked for constantly (due to fixed camera gameplay) (could potentially only activate this during cam rotation events)
         Vector3 forward = _camera.transform.forward;
         Vector3 right = _camera.transform.right;
         forward.y = 0;
@@ -197,9 +218,7 @@ public class EllaExploring : PlayerController
         // this needs to be checked for always
         Vector3 rightRelativeHorizontalInput = _input.x * right;
         Vector3 forwardRelativeVerticalInput = _input.y * forward;
-
         Vector3 cameraRelativeMovement = forwardRelativeVerticalInput + rightRelativeHorizontalInput;
-
         var ellaMovement = new Vector3(cameraRelativeMovement.x, 0.0f, cameraRelativeMovement.z);
 
         // moves the character

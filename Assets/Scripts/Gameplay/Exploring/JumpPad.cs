@@ -36,7 +36,12 @@ public class JumpPad : MonoBehaviour
 
     private void Start()
     {
-        //SetTargetWithSpeed(-5);
+        HideArcVisuals();
+    }
+
+    private void HideArcVisuals()
+    {
+        _lineRenderer.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -46,21 +51,14 @@ public class JumpPad : MonoBehaviour
         {
             if (_runningCoroutine == false)
             {
-                //Debug.Log("Jump PADDED");
-
                 // disable the character component
                 StartCoroutine(TogglePlayerInput(exploringScript));
 
                 // set the rigidbody velocity
-                // logic from og
-                //_transformDirectionXZ.rotation = Quaternion.LookRotation(planarDirection) * Quaternion.Euler(-90, -90, 0);
-                //var turretAngle = (_currentAngle * Mathf.Rad2Deg);
-                //_transformDirectionY.localRotation = Quaternion.Euler(90, 90, 0) * Quaternion.AngleAxis(turretAngle, Vector3.forward);
-
                 exploringScript.Rigid.velocity = _transformDirectionY.up * LaunchSpeed;
 
-                Debug.Log(_transformDirectionY.up + " the up axis of transform-direction-to-boost");
-                Debug.Log(_transformDirectionY.up * LaunchSpeed + " the velocity given to rigidbody of player");
+                // set the playier in proper direction and animation
+                exploringScript.JumpPadAnimater(_transformDirectionXZ);
             }
             
         }
