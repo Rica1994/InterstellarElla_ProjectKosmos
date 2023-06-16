@@ -41,10 +41,25 @@ public class SpeederGround : PlayerController
     private MultiplierTimerComponent _jumpBoostComponent;
     private MultiplierTimerComponent _knockbackComponent;
 
+    private Vector3 _lastPosition;
+    private Vector3 _velocity;
+    [SerializeField]
+    private Vector3 _velocityNormalized;
+    private float _xRotation = 0;
+    [SerializeField]
+    private Transform _visual;
+    [SerializeField]
+    private Transform _target;
+
     //private void OnValidate()
     //{
     //    SpeedForward = _speedForward;
     //}
+
+    private void Start()
+    {
+        _lastPosition = transform.position;
+    }
 
     private void Awake()
     {
@@ -107,7 +122,7 @@ public class SpeederGround : PlayerController
         var direction = _moveDirection * 1f + _rightVector * -_input.x;
         //Vector3 direction = new Vector3(_input.x, 0f, 1f);
         Vector3 speed = new Vector3(_speedSideways, 0f, _speedForward * _knockbackComponent.Multiplier) * _speedBoostComponent.Multiplier;
-
+        print(direction);
         _moveComponent.Move(_characterController, direction, speed);
     }
 
@@ -167,5 +182,17 @@ public class SpeederGround : PlayerController
         {
             _isJumping = true;
         }
+    }
+
+    private void FixedUpdate()
+    {
+        // Calculate normalized velocity
+        _velocity = (transform.position - _lastPosition) / Time.deltaTime;
+        _velocityNormalized = _velocity.normalized;
+        _lastPosition = transform.position;
+
+        _target.transform.localPosition = new Vector3(_velocityNormalized.x * 2, 0, 5.14f);
+
+        _visual.transform.LookAt(_target.transform.position);
     }
 }
