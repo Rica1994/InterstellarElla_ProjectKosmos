@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class JumpPad : MonoBehaviour
 {
-
     [Header("if too Low, will automatically be adjusted")]
     public float LaunchSpeed = 5f; // is automatically adjusted 
 
@@ -58,6 +57,10 @@ public class JumpPad : MonoBehaviour
         {
             ActivateJumpPad();
         }
+        if (_swapCamera != null)
+        {
+            _swapCamera.gameObject.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -68,7 +71,7 @@ public class JumpPad : MonoBehaviour
             if (_runningCoroutine == false)
             {
                 // enable the SwapCamera if present
-
+                ActivateSwapCamera();
 
                 // disable the character component
                 StartCoroutine(TogglePlayerInput(exploringScript));
@@ -106,7 +109,7 @@ public class JumpPad : MonoBehaviour
     {
         _swapCamera.gameObject.SetActive(true);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(_currentTimeOfFlight);
 
         _swapCamera.gameObject.SetActive(false);
     }
