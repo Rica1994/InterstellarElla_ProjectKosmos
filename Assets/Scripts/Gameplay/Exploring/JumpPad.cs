@@ -15,6 +15,12 @@ public class JumpPad : MonoBehaviour
     [SerializeField]
     private Transform _transformDirectionY;
 
+    [Header("Zoom params")]
+    [SerializeField] private float _zoomDuration = 3f;
+    [SerializeField, Range(0.01f, 0.5f)] private float _zoomFactor = 0.02f;
+    [SerializeField, Range(1f, 4f)] private float _zoomLimit = 2.5f;
+
+
     [Header("Visualizations")]
     [SerializeField]
     private int _iterations = 20;
@@ -59,8 +65,10 @@ public class JumpPad : MonoBehaviour
 
                 // set the playier in proper direction and animation
                 exploringScript.JumpPadAnimater(_transformDirectionXZ);
-            }
-            
+
+                // add zoom
+                ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>().ZoomOutCamera(_zoomDuration, _zoomFactor, _zoomLimit);
+            }           
         }
     }
 
@@ -69,12 +77,23 @@ public class JumpPad : MonoBehaviour
         _runningCoroutine = true;
 
         exploringScript.CharacterControl.enabled = false;
+        exploringScript.Collider.enabled = true;
 
-        Debug.Log("time in coroutine -> " + _currentTimeOfFlight);
+        //Debug.Log("time in coroutine -> " + _currentTimeOfFlight);
 
         yield return new WaitForSeconds(_currentTimeOfFlight);
 
         exploringScript.CharacterControl.enabled = true;
+        exploringScript.Collider.enabled = false;
+
+        //Debug.Log(exploringScript.CharacterControl.isGrounded); 
+        
+        // this here is key to bug !!!
+        // when entering pad -> CC.isGrounded = true, we then shut off CC with it remembering it having been grounded
+        // afterwards when we re-enable the CC, it simply uses its previous check (which could be in-accurate if arrival point is midair)
+
+        // possible quickfix -> don't check for grounded animation until one update loop has happened 
+        //                  OR, restructure code to check for grounded near and of update (used this)
 
         _runningCoroutine = false;
     }

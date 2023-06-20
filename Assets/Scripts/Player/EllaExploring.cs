@@ -27,10 +27,16 @@ public class EllaExploring : PlayerController
     [SerializeField] private float _gravityValue = -9.81f;
     public float Gravity => _gravityValue;
 
-    [Header("Character refs")]
-    [SerializeField] private GameObject _model;
-    [SerializeField] private Camera _camera;
+    [Header("Character References")]
+    [SerializeField] private GameObject _model;   
     [SerializeField] private Animator _animator;
+    [SerializeField] private GameObject _cameraTargets;
+    public GameObject CameraTargets => _cameraTargets;
+    [SerializeField] private Collider _collider;
+    public Collider Collider => _collider;
+
+    [Header("Camera with brain")]
+    [SerializeField] private Camera CameraMain;
 
     private CharacterController _characterController;
     public CharacterController CharacterControl => _characterController;
@@ -145,9 +151,6 @@ public class EllaExploring : PlayerController
 
         if (_characterController.enabled == true)
         {
-            // !! Keep this execution order !!
-            _isGrounded = _characterController.isGrounded;
-
             // add Y+ movement with a limit dependant on Ella's last grounded position
             Hover();
 
@@ -159,10 +162,17 @@ public class EllaExploring : PlayerController
 
             // animate the character
             AnimateRig();
+
+            // !! Keep this execution order !!
+            _isGrounded = _characterController.isGrounded;
         }
     }
     public void JumpPadAnimater(Transform XZtransform)
     {
+        // set grounded bool
+        _isGrounded = false;
+
+        // calculate look vector for ella
         Vector3 forward = XZtransform.forward;
         Vector3 right = XZtransform.right;
         forward.y = 0;
@@ -181,6 +191,18 @@ public class EllaExploring : PlayerController
         _animatorComponent.SetAnimatorBool(_animator, _boolGrounded, false);
         _animatorComponent.SetAnimatorBool(_animator, _boolBoosting, true);
     }
+
+    //public void SwapCamera(CameraType type)
+    //{
+    //    for (int i = 0; i < _virtualCams.Count; i++)
+    //    {
+    //        if (_virtualCams[i].Type == type)
+    //        {
+    //            _virtualCams[i].gameObject.SetActive(true);
+    //            _virtualCams[i].VirtualCamera.MoveToTopOfPrioritySubqueue();              
+    //        }
+    //    }
+    //}
 
 
 
@@ -208,8 +230,8 @@ public class EllaExploring : PlayerController
     }
     private void Move()
     {
-        Vector3 forward = _camera.transform.forward;
-        Vector3 right = _camera.transform.right;
+        Vector3 forward = CameraMain.transform.forward;
+        Vector3 right = CameraMain.transform.right;
         forward.y = 0;
         right.y = 0;
         forward = forward.normalized;
@@ -222,7 +244,7 @@ public class EllaExploring : PlayerController
         var ellaMovement = new Vector3(cameraRelativeMovement.x, 0.0f, cameraRelativeMovement.z);
 
         // moves the character
-        _moveComponent.Move(_characterController, _input, _moveSpeed);
+        _moveComponent.Move(_characterController, ellaMovement, _moveSpeed);
 
         // adjust the look-at
         LookRotation(ellaMovement);
