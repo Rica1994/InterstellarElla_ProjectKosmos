@@ -4,16 +4,26 @@ using UnityEngine;
 
 public class JumpPad : MonoBehaviour
 {
-    [Header("Target")]
-    [SerializeField]
-    private Transform _target;
 
+    [Header("if too Low, will automatically be adjusted")]
     public float LaunchSpeed = 5f; // is automatically adjusted 
 
+    [Header("Status")]
+    [SerializeField] private bool _isActive = true;
+
+    [Header("Components &|| Children")]
+    [SerializeField] private Collider _trigger;
+    [SerializeField] private GameObject _visuals;
+    [SerializeField]
+    private Transform _target;
     [SerializeField]
     private Transform _transformDirectionXZ;
     [SerializeField]
     private Transform _transformDirectionY;
+
+    [Header("Swap camera if present")]
+    [SerializeField]
+    private SwapCamera _swapCamera;
 
     [Header("Zoom params")]
     [SerializeField] private float _zoomDuration = 3f;
@@ -21,7 +31,7 @@ public class JumpPad : MonoBehaviour
     [SerializeField, Range(1f, 4f)] private float _zoomLimit = 2.5f;
 
 
-    [Header("Visualizations")]
+    [Header("Visualizations Arc")]
     [SerializeField]
     private int _iterations = 20;
     [SerializeField]
@@ -43,11 +53,11 @@ public class JumpPad : MonoBehaviour
     private void Start()
     {
         HideArcVisuals();
-    }
 
-    private void HideArcVisuals()
-    {
-        _lineRenderer.gameObject.SetActive(false);
+        if (_isActive == true)
+        {
+            ActivateJumpPad();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -57,8 +67,15 @@ public class JumpPad : MonoBehaviour
         {
             if (_runningCoroutine == false)
             {
+                // enable the SwapCamera if present
+
+
                 // disable the character component
                 StartCoroutine(TogglePlayerInput(exploringScript));
+
+                // set player on centre of the jumpad
+                Vector3 centrePad = new Vector3(this.transform.position.x, exploringScript.transform.position.y, this.transform.position.z);
+                exploringScript.transform.position = centrePad;
 
                 // set the rigidbody velocity
                 exploringScript.Rigid.velocity = _transformDirectionY.up * LaunchSpeed;
@@ -72,6 +89,27 @@ public class JumpPad : MonoBehaviour
         }
     }
 
+    private void ActivateSwapCamera()
+    {
+        if (_swapCamera != null)
+        {
+            StartCoroutine(ToggleSwapCamera());            
+        }
+    }
+    private void HideArcVisuals()
+    {
+        _lineRenderer.gameObject.SetActive(false);
+    }
+
+
+    private IEnumerator ToggleSwapCamera()
+    {
+        _swapCamera.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(1f);
+
+        _swapCamera.gameObject.SetActive(false);
+    }
     private IEnumerator TogglePlayerInput(EllaExploring exploringScript)
     {
         _runningCoroutine = true;
@@ -100,7 +138,15 @@ public class JumpPad : MonoBehaviour
 
 
 
+    // called from start, or somewhere else when lever is procced
+    public void ActivateJumpPad()
+    {
+        _trigger.enabled = true;
 
+        // activate particle
+        var particleIdle = ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleLocalSpacePermanent(ParticleType.PS_JumpPadIdle, _visuals.transform);
+        particleIdle.Play();
+    }
 
     // call this from external in-editor button
     public void SetTargetWithSpeed(float gravityPlayer, bool useLowAngle = false)

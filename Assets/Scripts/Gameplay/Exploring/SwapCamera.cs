@@ -14,6 +14,7 @@ public class SwapCamera : MonoBehaviour
     [SerializeField]
     private float _blendSpeed = 3f;
 
+
     private void Start()
     {
         // disable the camera in the start
@@ -22,6 +23,7 @@ public class SwapCamera : MonoBehaviour
         // unparent the visuals (keep arrow in place)
         _target.transform.GetChild(0).transform.SetParent(this.transform);       
     }
+
 
     public void SwapToNewVirtualCamera(EllaExploring exploringScript)
     {
