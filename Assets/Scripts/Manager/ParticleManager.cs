@@ -10,7 +10,8 @@ public enum ParticleType
     PS_BoostCar = 3,
 
     PS_Collision = 4,
-    PS_PickupTrigger = 5
+    PS_PickupTrigger = 5,
+    PS_JumpPadIdle = 6        
 }
 
 

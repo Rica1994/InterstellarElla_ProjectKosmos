@@ -32,6 +32,9 @@ public class VirtualCameraManagerExploring : Service
         _currentlyActiveVirtualCameras.Add(_firstVirtualCam);
         // add the 3rd person component to a list as well
         _virtualCameraFollows.Add(thirdPersonFollow);
+
+        // parent the virtual camera under the manager
+        _firstVirtualCam.transform.SetParent(this.transform);
     }
 
 
