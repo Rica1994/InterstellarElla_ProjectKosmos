@@ -7,7 +7,7 @@ using UnityEngine;
 public class BoostRamp : MonoBehaviour
 {
     [SerializeField] private bool _shouldJump = true;
-
+    [SerializeField] private MultiplierTimerComponent _boostMultiplierComponent;
     private void OnTriggerEnter(Collider other)
     {
         // TODO: use something other than player tag

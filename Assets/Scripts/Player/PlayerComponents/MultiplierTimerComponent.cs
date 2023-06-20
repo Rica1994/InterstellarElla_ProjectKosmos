@@ -2,14 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MultiplierTimerComponent
+public class MultiplierTimerComponent : MonoBehaviour
 {
     public delegate void BoostCallback();
     public event BoostCallback OnTimerEnded;
 
+    #region Editor Fields
+
+    [SerializeField]
     private float _time;
-    private float _currentTime;
+
+    [SerializeField]
     private float _targetMultiplier;
+    
+    [SerializeField]
+    private bool _shouldLerpIn = false;
+    
+    [SerializeField]
+    private bool _shouldLerpOut = false;
+
+    [SerializeField]
+    private float _lerpInSpeed = 1f;
+    
+    [SerializeField]
+    private float _lerpOutSpeed = 1f;
+    
+    #endregion
+
+    #region Fields
+
+    private float _currentTime;
+
     private bool _isTicking = false;
 
     public bool IsTicking => _isTicking;
@@ -20,11 +43,9 @@ public class MultiplierTimerComponent
     private bool _isLerpingIn = false;
     private bool _isLerpingOut = false;
 
-    private bool _shouldLerpIn = false;
-    private bool _shouldLerpOut = false;
+    #endregion
 
-    private float _lerpInSpeed = 1f;
-    private float _lerpOutSpeed = 1f;
+
 
 
     public MultiplierTimerComponent(float time, float multiplier)
