@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2173214427757930875}
   - component: {fileID: 2173214427757930874}
+  - component: {fileID: 2054562565704247739}
   m_Layer: 0
   m_Name: VirtualCamera
   m_TagString: Untagged
@@ -25,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2173214427757930872}
   m_LocalRotation: {x: 0.16625936, y: 0.68728286, z: -0.16625935, w: 0.687283}
-  m_LocalPosition: {x: -3.5999997, y: 1.4000001, z: -0.00000047683716}
+  m_LocalPosition: {x: -3.6, y: 1.4000001, z: -0.00000047683716}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2173214427784615542}
@@ -67,6 +68,36 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 2173214427784615542}
+--- !u!114 &2054562565704247739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2173214427757930872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 16
+  m_IgnoreTag: Player
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 1
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.1
+  m_Strategy: 1
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0.5
+  m_Damping: 1
+  m_DampingWhenOccluded: 1
+  m_OptimalTargetDistance: 0
 --- !u!1 &2173214427784615543
 GameObject:
   m_ObjectHideFlags: 0
