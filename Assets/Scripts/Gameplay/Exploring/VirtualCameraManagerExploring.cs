@@ -16,6 +16,8 @@ public class VirtualCameraManagerExploring : Service
     private List<CinemachineVirtualCamera> _currentlyActiveVirtualCameras = new List<CinemachineVirtualCamera>();
     private List<Cinemachine3rdPersonFollow> _virtualCameraFollows = new List<Cinemachine3rdPersonFollow>();
 
+    private bool _runningZoomCoroutine;
+
     private float _originalCameraDistance_1, _originalCameraDistance_2;
 
     private float _currentZoomFactor;
@@ -91,6 +93,12 @@ public class VirtualCameraManagerExploring : Service
     public void ZoomOutCamera(float zoomDuration = 3f, float zoomFactor = 0.01f, float zoomLimit = 1f)
     {
         // NOTE : currently would have the issue of stacking zooms...
+        if (_runningZoomCoroutine == true)
+        {
+            Debug.LogWarning("A previous zoom has not been finished ! Current zoom not being applied");
+            return;
+        }
+
         StartCoroutine(ZoomOutRoutine(zoomDuration, zoomFactor, zoomLimit));      
     }
 
@@ -138,6 +146,7 @@ public class VirtualCameraManagerExploring : Service
     
     private IEnumerator ZoomOutRoutine(float zoomDuration = 3f, float zoomFactor = 0.05f, float zoomLimit = 1f)
     {
+        _runningZoomCoroutine = true;
         float timePassed = 0f;
 
         // start zooming out
@@ -171,6 +180,8 @@ public class VirtualCameraManagerExploring : Service
 
             yield return new WaitForEndOfFrame();
         }
+
+        _runningZoomCoroutine = false;
     }
 
     
