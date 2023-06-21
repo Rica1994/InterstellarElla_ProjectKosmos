@@ -81,6 +81,7 @@ public class MultiplierTimerComponent : MonoBehaviour
         _currentTime = _time;
         _isTicking = true;
         _isLerpingIn = true;
+        _currentMultiplier = _targetMultiplier;
     }
 
     public void Update()
@@ -108,6 +109,7 @@ public class MultiplierTimerComponent : MonoBehaviour
         _isTicking = false;
         OnTimerEnded?.Invoke();
         _isLerpingOut = true;
+        _targetMultiplier = 1.0f;
     }
 
     private void Lerp(float targetMultiplier, ref bool isLerping, float lerpSpeed)

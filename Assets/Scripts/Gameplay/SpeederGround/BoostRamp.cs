@@ -7,24 +7,38 @@ using UnityEngine;
 public class BoostRamp : MonoBehaviour
 {
     [SerializeField] private bool _shouldJump = true;
-    [SerializeField] private MultiplierTimerComponent _boostMultiplierComponent;
-    private void OnTriggerEnter(Collider other)
+    [SerializeField] private MultiplierTimerComponent _jumpBoostMultiplierComponent;
+    [SerializeField] private MultiplierTimerComponent _speedBoostMultiplierComponent;
+    [SerializeField] private TriggerHandler _trigger;
+
+    private void Awake()
     {
-        // TODO: use something other than player tag
-        if (other.TryGetComponent(out SpeederGround speeder))
+        _trigger.OnTriggered += OnTriggered;
+    }
+
+    private void OnTriggered(TriggerHandler me, Collider other, bool hasentered)
+    {
+        if (hasentered)
         {
-            speeder.BoostSpeed();
-            speeder.BoostJump();
+            if (other.TryGetComponent(out SpeederGround speeder))
+            {
+                speeder.SetJumpMultiplierComponent(_jumpBoostMultiplierComponent);
+                speeder.SetSpeedMultiplierComponent(_speedBoostMultiplierComponent);
+                speeder.BoostSpeed();
+                speeder.BoostJump();
+                if (_shouldJump) speeder.ForceJump();
+            }
         }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (_shouldJump && other.TryGetComponent(out SpeederGround speeder))
-        {
-            speeder.ForceJump();
-        }
-    }
+
+  // private void OnTriggerExit(Collider other)
+  // {
+  //      && other.TryGetComponent(out SpeederGround speeder))
+  //     {
+  //         speeder.ForceJump();
+  //     }
+  // }
 }
 
 /*public class BoostRampEditor : Editor

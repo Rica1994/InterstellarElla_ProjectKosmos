@@ -19,6 +19,9 @@ public class DynamoPickUp : MonoBehaviour
     {
         if (_spawnedPickUp) return;
 
+        // animation that makes dynamo dig up the ground. 
+        // play here
+        
         if (other.CompareTag("Dynamo"))
         {
             _pickUp.gameObject.SetActive(true);

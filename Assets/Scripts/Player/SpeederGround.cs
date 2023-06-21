@@ -195,4 +195,14 @@ public class SpeederGround : PlayerController
 
         _visual.transform.LookAt(_target.transform.position);
     }
+
+    public void SetJumpMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
+    {
+        _jumpBoostComponent = multiplierTimerComponent;
+    }
+    
+    public void SetSpeedMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
+    {
+        _speedBoostComponent = multiplierTimerComponent;
+    }
 }
