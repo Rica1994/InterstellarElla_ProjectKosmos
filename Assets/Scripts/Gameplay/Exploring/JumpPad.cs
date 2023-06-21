@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityCore.Audio;
 using UnityEngine;
 
 public class JumpPad : MonoBehaviour
@@ -29,6 +30,9 @@ public class JumpPad : MonoBehaviour
     [SerializeField, Range(0.01f, 0.5f)] private float _zoomFactor = 0.02f;
     [SerializeField, Range(1f, 4f)] private float _zoomLimit = 2.5f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioElement _audioJumpPadTriggered;
+    [SerializeField] private AudioElement _audioJumpPadActivation;
 
     [Header("Visualizations Arc")]
     [SerializeField]
@@ -88,6 +92,9 @@ public class JumpPad : MonoBehaviour
 
                 // add zoom
                 ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>().ZoomOutCamera(_zoomDuration, _zoomFactor, _zoomLimit);
+
+                // play sound effect
+                ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_audioJumpPadTriggered);
             }           
         }
     }
@@ -134,7 +141,7 @@ public class JumpPad : MonoBehaviour
         // afterwards when we re-enable the CC, it simply uses its previous check (which could be in-accurate if arrival point is midair)
 
         // possible quickfix -> don't check for grounded animation until one update loop has happened 
-        //                  OR, restructure code to check for grounded near and of update (used this)
+        //     OR, restructure code to check for grounded near and of update (used this)
 
         _runningCoroutine = false;
     }
@@ -142,13 +149,18 @@ public class JumpPad : MonoBehaviour
 
 
     // called from start, or somewhere else when lever is procced
-    public void ActivateJumpPad()
+    public void ActivateJumpPad(bool playSoundActivation = false)
     {
         _trigger.enabled = true;
 
         // activate particle
         var particleIdle = ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleLocalSpacePermanent(ParticleType.PS_JumpPadIdle, _visuals.transform);
         particleIdle.Play();
+
+        if (playSoundActivation == true)
+        {
+            ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_audioJumpPadActivation);
+        }
     }
 
     // call this from external in-editor button

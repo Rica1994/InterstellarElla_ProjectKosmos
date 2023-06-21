@@ -20,7 +20,6 @@ public class VirtualCameraManagerExploring : Service
 
     private float _currentZoomFactor;
 
-    // previous camera not returning to normal zoom after swapping !!!! (blend transition done -> removed camera stays on its zoom level)
 
     private void Start()
     {
@@ -35,11 +34,25 @@ public class VirtualCameraManagerExploring : Service
 
         // parent the virtual camera under the manager
         _firstVirtualCam.transform.SetParent(this.transform);
+
+
+        // reset priority of first cam (if all virtual cameras are not on same priority, blending seems to have issues)
+        _firstVirtualCam.Priority = 10;
     }
 
 
     /// <summary>
-    /// Starts blending from our current virtual camera to a new virtual camera
+    /// Should cut from our current 3rd person virtual camera to a new virtual camera used in a cutscene, and also reset back to the other camera at the end.
+    /// </summary>
+    /// <param name="virtualCamToActivate"></param>
+    public void SwapCutsceneCamera(CinemachineVirtualCamera virtualCamToActivate, float cutsceneLength)
+    {
+        StartCoroutine(CutsceneRoutine(virtualCamToActivate, cutsceneLength));
+    }
+
+
+    /// <summary>
+    /// Starts blending from our current 3rd person virtual camera to a new 3rd person virtual camera
     /// </summary>
     /// <param name="virtualCam"></param>
     public void SwapCamera(CinemachineVirtualCamera virtualCam, float blendSpeed)
@@ -66,18 +79,42 @@ public class VirtualCameraManagerExploring : Service
         StartCoroutine(RemoveCameraAfterBlend());
     }
 
+
+
+
+    /// <summary>
+    /// Activates a coroutine which will affect the Camera Distance on the virtual cameras that matter (typically 1 or 2)
+    /// </summary>
+    /// <param name="zoomDuration"></param>
+    /// <param name="zoomFactor"></param>
+    /// <param name="zoomLimit"></param>
     public void ZoomOutCamera(float zoomDuration = 3f, float zoomFactor = 0.01f, float zoomLimit = 1f)
     {
         // NOTE : currently would have the issue of stacking zooms...
         StartCoroutine(ZoomOutRoutine(zoomDuration, zoomFactor, zoomLimit));      
-
-        // NOTE:
-        // if im zooming out, and then get a new camera...
-        //  set this new cameras target distance to its value + the currently adjusted zoom
     }
 
 
 
+    private IEnumerator CutsceneRoutine(CinemachineVirtualCamera virtualCam, float cutsceneLength)
+    {
+        // set cinemachine brain blending to cut
+        _camBrain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
+
+        // activate/prioritize camera 
+        virtualCam.MoveToTopOfPrioritySubqueue();
+
+        yield return new WaitForSeconds(cutsceneLength);
+
+        // re-enable the 3rd person virtual cam and/or move to top of stack
+        _currentlyActiveVirtualCameras[0].MoveToTopOfPrioritySubqueue();
+        virtualCam.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(0.5f);
+
+        // reset blending mode
+        _camBrain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
+    }
 
     private IEnumerator RemoveCameraAfterBlend()
     {

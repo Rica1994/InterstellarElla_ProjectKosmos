@@ -17,8 +17,6 @@ public class SwapCameraTrigger : MonoBehaviour
     {
         if (other.TryGetComponent(out EllaExploring exploringScript) && _triggered == false)
         {
-            Debug.Log("triggered");
-
             _swapCamera.SwapToNewVirtualCamera(exploringScript);
 
             _coroutineCooldown = StartCoroutine(CooldDown());

@@ -66,6 +66,8 @@ public class EllaExploring : PlayerController
     private GravityComponent _gravityComponent;
     private AnimatorComponent _animatorComponent;
 
+    public bool BlockMove;
+
 
     private void Awake()
     {
@@ -191,18 +193,11 @@ public class EllaExploring : PlayerController
         _animatorComponent.SetAnimatorBool(_animator, _boolGrounded, false);
         _animatorComponent.SetAnimatorBool(_animator, _boolBoosting, true);
     }
+    public void ToggleMoveInput(float durationBlocked)
+    {
+        StartCoroutine(ToggleMove(durationBlocked));
+    }
 
-    //public void SwapCamera(CameraType type)
-    //{
-    //    for (int i = 0; i < _virtualCams.Count; i++)
-    //    {
-    //        if (_virtualCams[i].Type == type)
-    //        {
-    //            _virtualCams[i].gameObject.SetActive(true);
-    //            _virtualCams[i].VirtualCamera.MoveToTopOfPrioritySubqueue();              
-    //        }
-    //    }
-    //}
 
 
 
@@ -230,6 +225,11 @@ public class EllaExploring : PlayerController
     }
     private void Move()
     {
+        if (BlockMove == true)
+        {
+            return;
+        }
+
         Vector3 forward = CameraMain.transform.forward;
         Vector3 right = CameraMain.transform.right;
         forward.y = 0;
@@ -260,7 +260,7 @@ public class EllaExploring : PlayerController
     }
     private void AnimateRig()
     {
-        if (_input != Vector2.zero)
+        if (_input != Vector2.zero && BlockMove == false)
         {
             _animatorComponent.SetAnimatorBool(_animator, _boolMoving, true);
         }
@@ -338,5 +338,16 @@ public class EllaExploring : PlayerController
         {
             _gravityComponent.ApplyGravity(_characterController, ref _canHover, ref _hoverTimer, ref _yVelocity, _gravityValue, _isGrounded);
         }       
+    }
+
+
+
+    private IEnumerator ToggleMove(float durationBlocked)
+    {
+        BlockMove = true;
+
+        yield return new WaitForSeconds(durationBlocked);
+
+        BlockMove = false;
     }
 }
