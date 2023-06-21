@@ -50,7 +50,7 @@ public class JumpPad : MonoBehaviour
     [SerializeField]
     private float _currentTimeOfFlight;
 
-    private bool _runningCoroutine;
+    private bool _isOnCooldown;
 
 
     private void Start()
@@ -72,13 +72,16 @@ public class JumpPad : MonoBehaviour
         // perhaps use layer matrix to optimize this
         if (other.TryGetComponent(out EllaExploring exploringScript))
         {
-            if (_runningCoroutine == false)
+            if (_isOnCooldown == false)
             {
+                // start cooldown
+                StartCoroutine(JumpPadCooldown());
+
                 // enable the SwapCamera if present
                 ActivateSwapCamera();
 
-                // disable the character component
-                StartCoroutine(TogglePlayerInput(exploringScript));
+                // disable the character component // store this coroutine, so i could destroy it if i enter new jump pad (should be stored in player)
+                exploringScript.JumpPadCCToggle(_currentTimeOfFlight);
 
                 // set player on centre of the jumpad
                 Vector3 centrePad = new Vector3(this.transform.position.x, exploringScript.transform.position.y, this.transform.position.z);
@@ -120,9 +123,9 @@ public class JumpPad : MonoBehaviour
 
         _swapCamera.gameObject.SetActive(false);
     }
-    private IEnumerator TogglePlayerInput(EllaExploring exploringScript)
+    private IEnumerator ToggleCharacterController(EllaExploring exploringScript)
     {
-        _runningCoroutine = true;
+        _isOnCooldown = true;
 
         exploringScript.CharacterControl.enabled = false;
         exploringScript.Collider.enabled = true;
@@ -143,7 +146,15 @@ public class JumpPad : MonoBehaviour
         // possible quickfix -> don't check for grounded animation until one update loop has happened 
         //     OR, restructure code to check for grounded near and of update (used this)
 
-        _runningCoroutine = false;
+        _isOnCooldown = false;
+    }
+    private IEnumerator JumpPadCooldown()
+    {
+        _isOnCooldown = true;
+
+        yield return new WaitForSeconds(3f);
+
+        _isOnCooldown = false;
     }
 
 

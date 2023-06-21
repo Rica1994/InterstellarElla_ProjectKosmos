@@ -67,6 +67,7 @@ public class EllaExploring : PlayerController
     private AnimatorComponent _animatorComponent;
 
     public bool BlockMove;
+    public Coroutine CCToggleRoutine;
 
 
     private void Awake()
@@ -192,6 +193,17 @@ public class EllaExploring : PlayerController
         _animatorComponent.SetAnimatorBool(_animator, _boolMoving, true);
         _animatorComponent.SetAnimatorBool(_animator, _boolGrounded, false);
         _animatorComponent.SetAnimatorBool(_animator, _boolBoosting, true);
+    }
+    public void JumpPadCCToggle(float timeOfFlight)
+    {
+        // stop a  possible previous jumppad coroutine
+        if (CCToggleRoutine != null)
+        {
+            StopCoroutine(CCToggleRoutine);
+        }
+        
+        // start the new jumppad coroutine
+        CCToggleRoutine = StartCoroutine(ToggleCharacterController(timeOfFlight));        
     }
     public void ToggleMoveInput(float durationBlocked)
     {
@@ -349,5 +361,16 @@ public class EllaExploring : PlayerController
         yield return new WaitForSeconds(durationBlocked);
 
         BlockMove = false;
+    }
+    private IEnumerator ToggleCharacterController(float timeOfFlight)
+    {
+
+        CharacterControl.enabled = false;
+        Collider.enabled = true;
+
+        yield return new WaitForSeconds(timeOfFlight);
+
+        CharacterControl.enabled = true;
+        Collider.enabled = false;
     }
 }
