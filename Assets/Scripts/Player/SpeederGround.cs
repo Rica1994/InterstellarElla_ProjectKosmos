@@ -30,8 +30,12 @@ public class SpeederGround : PlayerController
     private Vector3 _rightVector;
     private Vector2 _input;
     private float _yVelocity = 0f;
+    private float _fakeGroundedTimer;
+    [SerializeField] private float _fakeGroundedTimeLimit = 0.25f;
     private bool _isJumping = false;
+    private bool _hasJumped = false;
     private bool _isGrounded = false;
+    private bool _isGroundedFake = false;
     private bool _isApplicationQuitting = false;
 
     private MoveComponent _moveComponent;
@@ -88,6 +92,8 @@ public class SpeederGround : PlayerController
         // !!Keep this execution order!!
         _isGrounded = _characterController.isGrounded;
 
+        FakeGroundedTimer();
+
         _speedBoostComponent.Update();
         _jumpBoostComponent.Update();
         _knockbackComponent.Update();
@@ -95,6 +101,45 @@ public class SpeederGround : PlayerController
         Move();
         Jump();
         ApplyGravity();
+    }
+    private void FakeGroundedTimer()
+    {
+        // default is grounded
+        _isGroundedFake = true;
+
+        // if I have just jumped -> fake grounded = false until _isGrounded happens
+        if (_hasJumped == true)
+        {
+            _isGroundedFake = false;
+
+            // the moment we touch the floor...
+            if (_isGrounded == true)
+            {
+                _isGroundedFake = true;
+                _hasJumped = false;
+            }
+
+            // don't need to go beyond this line of code if we are in here
+            return;
+        }
+
+
+        // if timer exceeds limit, we are not grounded
+        if (_isGrounded == false)
+        {
+            _fakeGroundedTimer += Time.deltaTime;
+
+            if (_fakeGroundedTimer >= _fakeGroundedTimeLimit)
+            {
+                _isGroundedFake = false;
+            }
+        }
+        else // if CC is grounded, this is grounded
+        {
+            _fakeGroundedTimer = 0;
+
+            _isGroundedFake = true;
+        }
     }
 
     public void BoostSpeed()
@@ -128,9 +173,11 @@ public class SpeederGround : PlayerController
 
     private void Jump()
     {
-        if (_isJumping)
+        if (_isJumping == true)
         {
             _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
+
+            _hasJumped = true;
         }
         _isJumping = false;
     }
@@ -178,7 +225,7 @@ public class SpeederGround : PlayerController
 
     private void OnJumpInput()
     {
-        if (_isGrounded)
+        if (_isGroundedFake == true)
         {
             _isJumping = true;
         }
