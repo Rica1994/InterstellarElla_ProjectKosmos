@@ -308,7 +308,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2006943237}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1437022889}
@@ -524,12 +524,16 @@ MonoBehaviour:
   _boostDuration: 3
   _jumpHeight: 10
   _gravityValue: -40
+  _tiltMultiplier: 1.1
   _knockbackDuration: 3
   _knockbackMultiplier: 0.3
   _fakeGroundedTimeLimit: 0.25
   _velocityNormalized: {x: 0, y: 0, z: 0}
   _visual: {fileID: 2006943238}
   _target: {fileID: 536142144}
+  _playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!54 &3687131222379983818
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -571,11 +575,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5747972aa0a6fa1409eba0d4b81b81e1, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.98768836
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5747972aa0a6fa1409eba0d4b81b81e1, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.1564345
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5747972aa0a6fa1409eba0d4b81b81e1, type: 3}
       propertyPath: m_LocalRotation.y
