@@ -13,11 +13,10 @@ public class EllaPickUp : PickUp
 
     protected override void PlayerFeedback()
     {
-        // play particle effect
+        base.PlayerFeedback();
 
-
-        Destroy(gameObject);
     }
+
 
     protected override void LoadVisuals()
     {

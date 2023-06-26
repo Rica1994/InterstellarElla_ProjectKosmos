@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityCore.Audio;
 using UnityEngine;
 
 [DefaultExecutionOrder(-50)]
@@ -9,6 +10,10 @@ public class PickUp : MonoBehaviour
 {
     public delegate void PickUpCallback(PickUp pickUp);
     public event PickUpCallback OnPickUp;
+
+    [Header("Audio")]
+    [SerializeField]
+    private AudioElement _soundEffectPickup1;
 
     private void Start()
     {
@@ -41,9 +46,14 @@ public class PickUp : MonoBehaviour
     }
     protected virtual void PlayerFeedback()
     {
-        // spawn particle
+        // this should only execute when just playing in the scene (no sectionloaders)
+
+        // spawn particle (present in pickup manager)
         ServiceLocator.Instance.GetService<ParticleManager>().
-            CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
+        CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
+
+        // play sound
+        ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEffectPickup1);
 
         Destroy(gameObject);
     }
