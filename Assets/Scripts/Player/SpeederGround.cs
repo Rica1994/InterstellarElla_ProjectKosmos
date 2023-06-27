@@ -106,8 +106,18 @@ public class SpeederGround : PlayerController
         base.UpdateController();
 
         // !!Keep this execution order!!
+
+        bool wasGrounded = _isGrounded;
         _isGrounded = _characterController.isGrounded;
 
+        Debug.Log("Is Grounded: " + _isGrounded);
+        
+        // Apply landing
+        if (wasGrounded == false && wasGrounded != _isGrounded)
+        {
+            Land(_yVelocity);
+        }
+        
         FakeGroundedTimer();
 
         _speedBoostComponent.Update();
@@ -116,7 +126,7 @@ public class SpeederGround : PlayerController
 
         Move();
 
-        Jump();
+        Jump(_yVelocity);
 
         ApplyGravity();
     }
@@ -133,7 +143,7 @@ public class SpeederGround : PlayerController
 
             if (adjustedVelocity.y < 0)
             {
-                Debug.Log("returning slope vel");
+               // Debug.Log("returning slope vel");
                 return adjustedVelocity;
             }
         }
@@ -228,11 +238,17 @@ public class SpeederGround : PlayerController
         _moveComponent.Move(_characterController, slopeVelocity, speed);
     }
 
-    private void Jump()
+    private void Land(float yVelocity)
+    {
+        ForceJump();
+        Jump(-yVelocity/2.0f);
+    }
+    
+    private void Jump(float yVelocity)
     {
         if (_isJumping == true)
         {
-            _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
+            _jumpComponent.Jump(ref yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
 
             _hasJumped = true;
         }
@@ -312,7 +328,7 @@ public class SpeederGround : PlayerController
         if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, 2.0f, ~_playerLayerMask))
         {
             var angle = Vector3.Angle(Vector3.up, hitInfo.normal);
-            Debug.Log("Angle: " + angle + "\nOn Object: " + hitInfo.transform.name);
+            //Debug.Log("Angle: " + angle + "\nOn Object: " + hitInfo.transform.name);
           if (Mathf.Abs(angle) > 5f)
           {
               // Calculate the rotation needed from the up vector to the normal
