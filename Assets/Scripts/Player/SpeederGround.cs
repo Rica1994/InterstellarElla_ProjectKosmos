@@ -113,9 +113,33 @@ public class SpeederGround : PlayerController
         _knockbackComponent.Update();
 
         Move();
+
         Jump();
+
         ApplyGravity();
     }
+
+    private Vector3 AdjustVelocityToSlope(Vector3 velocity)
+    {
+        var ray = new Ray(transform.position, Vector3.down);
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 2f))
+        {
+            var slopeDirection = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
+            var adjustedVelocity = slopeDirection * velocity;
+
+
+            if (adjustedVelocity.y < 0)
+            {
+                Debug.Log("returning slope vel");
+                return adjustedVelocity;
+            }
+        }
+
+        return velocity;
+    }
+
+
 
     private void FakeGroundedTimer()
     {
@@ -180,15 +204,25 @@ public class SpeederGround : PlayerController
     private void Move()
     {
         var direction = _moveDirection * 1f + _rightVector * -_input.x;
-      
-      //  Debug.Log("Input " + _input.x);
-      //  Debug.Log("xVelocity: " + _xVelocity);
+        Vector3 slopeVelocity = AdjustVelocityToSlope(direction);
 
+        //  Debug.Log("Input " + _input.x);
+        //  Debug.Log("xVelocity: " + _xVelocity);
+
+        //    print(direction);
+
+        // New
         _xVelocity = Mathf.Clamp(_xVelocity + (_sidewaysAcceleration * Time.deltaTime), _startSidewaySpeed, _speedSideways) * Mathf.Abs(_input.x);
-        Vector3 speed = new Vector3(_xVelocity, 0f, _speedForward * /*Mathf.Clamp((_input.y * _tiltMultiplier), 0.5f, _tiltMultiplier)*  */ _knockbackComponent.Multiplier) * _speedBoostComponent.Multiplier;
-        
-    //    print(direction);
-        _moveComponent.Move(_characterController, direction, speed);
+        Vector3 speed = new Vector3(_xVelocity, _speedForward, _speedForward * _knockbackComponent.Multiplier) * _speedBoostComponent.Multiplier;
+
+        // OG
+        //Vector3 speed = new Vector3(
+        //    _xVelocity, 
+        //    0, 
+        //    _speedForward * /*Mathf.Clamp((_input.y * _tiltMultiplier), 0.5f, _tiltMultiplier)*  */ _knockbackComponent.Multiplier)
+        //    * _speedBoostComponent.Multiplier;
+
+        _moveComponent.Move(_characterController, slopeVelocity, speed);
     }
 
     private void Jump()
