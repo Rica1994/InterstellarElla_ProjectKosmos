@@ -25,8 +25,8 @@ public class SpeederGround : PlayerController
     [SerializeField] private float _jumpHeight = 8f;
 
     [SerializeField] private float _gravityValue = -9.81f;
-    [SerializeField] private float _tiltMultiplier = 2.0f;
-
+    [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
+    
     [Header("Knockback")]
     [SerializeField] private float _knockbackDuration = 3f;
 
@@ -37,6 +37,8 @@ public class SpeederGround : PlayerController
     private Vector2 _input;
     private float _yVelocity = 0f;
     private float _xVelocity = 0f;
+    private float _zVelocity = 0f;
+    
     private float _fakeGroundedTimer;
     [SerializeField] private float _fakeGroundedTimeLimit = 0.25f;
     private bool _isJumping = false;
@@ -185,7 +187,8 @@ public class SpeederGround : PlayerController
       //  Debug.Log("xVelocity: " + _xVelocity);
 
         _xVelocity = Mathf.Clamp(_xVelocity + (_sidewaysAcceleration * Time.deltaTime), _startSidewaySpeed, _speedSideways) * Mathf.Abs(_input.x);
-        Vector3 speed = new Vector3(_xVelocity, 0f, _speedForward * /*Mathf.Clamp((_input.y * _tiltMultiplier), 0.5f, _tiltMultiplier)*  */ _knockbackComponent.Multiplier) * _speedBoostComponent.Multiplier;
+        _zVelocity = _speedForward * (1 + Mathf.Clamp(_input.y, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier));
+        Vector3 speed = new Vector3(_xVelocity, 0f, _zVelocity * _knockbackComponent.Multiplier) * _speedBoostComponent.Multiplier;
         
     //    print(direction);
         _moveComponent.Move(_characterController, direction, speed);
