@@ -10,8 +10,9 @@ public class SpeederGround : PlayerController
     [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f);
 
     [SerializeField] private float _speedForward = 50f;
+    [SerializeField] private float _startSidewaySpeed = 20.0f;
     [SerializeField] private float _speedSideways = 15f;
-
+    [SerializeField] private float _sidewaysAcceleration = 5.0f;
     //public static float SpeedForward;
 
     [Header("Boost")]
@@ -35,6 +36,7 @@ public class SpeederGround : PlayerController
     private Vector3 _rightVector;
     private Vector2 _input;
     private float _yVelocity = 0f;
+    private float _xVelocity = 0f;
     private float _fakeGroundedTimer;
     [SerializeField] private float _fakeGroundedTimeLimit = 0.25f;
     private bool _isJumping = false;
@@ -178,13 +180,14 @@ public class SpeederGround : PlayerController
     private void Move()
     {
         var direction = _moveDirection * 1f + _rightVector * -_input.x;
+      
+      //  Debug.Log("Input " + _input.x);
+      //  Debug.Log("xVelocity: " + _xVelocity);
 
-        //Vector3 direction = new Vector3(_input.x, 0f, 1f);
-        Vector3 speed = new Vector3(_speedSideways, 0f, _speedForward * _knockbackComponent.Multiplier) *
-                        _speedBoostComponent.Multiplier;
-        print(direction);
-
-
+        _xVelocity = Mathf.Clamp(_xVelocity + (_sidewaysAcceleration * Time.deltaTime), _startSidewaySpeed, _speedSideways) * Mathf.Abs(_input.x);
+        Vector3 speed = new Vector3(_xVelocity, 0f, _speedForward * /*Mathf.Clamp((_input.y * _tiltMultiplier), 0.5f, _tiltMultiplier)*  */ _knockbackComponent.Multiplier) * _speedBoostComponent.Multiplier;
+        
+    //    print(direction);
         _moveComponent.Move(_characterController, direction, speed);
     }
 
@@ -203,7 +206,7 @@ public class SpeederGround : PlayerController
     private void ApplyGravity()
     {
         _gravityComponent.ApplyGravity(_characterController, ref _yVelocity,
-            _gravityValue * (1 + (Mathf.Clamp01(_input.y) * _tiltMultiplier)), _isGrounded);
+            _gravityValue /** (1 + (Mathf.Clamp01(_input.y) * _tiltMultiplier))*/, _isGrounded);
     }
 
     private void OnEnable()
@@ -240,6 +243,7 @@ public class SpeederGround : PlayerController
     private void OnMoveInput(Vector2 input)
     {
         _input = input;
+        Debug.LogWarning("Input X: " + _input.x + "\nInput Y: " + _input.y);
     }
 
     private void OnJumpInput()
@@ -271,11 +275,11 @@ public class SpeederGround : PlayerController
         if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, 2.0f, ~_playerLayerMask))
         {
             var angle = Vector3.Angle(Vector3.up, hitInfo.normal);
-            Debug.Log(angle);
+          //  Debug.Log(angle);
 
             // Calculate the rotation needed from the up vector to the normal
             rot = Quaternion.FromToRotation(_visual.transform.up, hitInfo.normal) * _visual.transform.rotation;
-            _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.1f);
+            _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.5f);
         }
 
         // Rotates along the the forward axis according to the left of right velocity
