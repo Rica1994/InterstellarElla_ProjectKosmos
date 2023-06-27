@@ -54,6 +54,7 @@ public class EllaExploring : PlayerController
 
     private float _maxHoverHeight;
     private float _hoverTimer;
+    private float _groundedAnimationTimer;
     private bool _isHovering = false;
     private bool _isTryingHover = false;
     private bool _canHover = false;
@@ -105,8 +106,8 @@ public class EllaExploring : PlayerController
         // Subscribe to events
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
 
-        playerInput.Move.performed += x => OnMoveInput(x.ReadValue<Vector2>());
-        playerInput.Move.canceled += x => OnMoveInput(x.ReadValue<Vector2>());
+        playerInput.MoveNormalized.performed += x => OnMoveInput(x.ReadValue<Vector2>());
+        playerInput.MoveNormalized.canceled += x => OnMoveInput(x.ReadValue<Vector2>());
  
         playerInput.Action.performed += x => OnHoverInput();
         playerInput.Action.canceled += x => OnHoverCanceled();
@@ -123,8 +124,8 @@ public class EllaExploring : PlayerController
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
 
         // Unsubscribe to events
-        playerInput.Move.performed -= x => OnMoveInput(x.ReadValue<Vector2>());
-        playerInput.Move.canceled -= x => OnMoveInput(x.ReadValue<Vector2>());
+        playerInput.MoveNormalized.performed -= x => OnMoveInput(x.ReadValue<Vector2>());
+        playerInput.MoveNormalized.canceled -= x => OnMoveInput(x.ReadValue<Vector2>());
 
         playerInput.Action.performed -= x => OnHoverInput();
         playerInput.Action.canceled -= x => OnHoverCanceled();
@@ -170,6 +171,8 @@ public class EllaExploring : PlayerController
             _isGrounded = _characterController.isGrounded;
         }
     }
+
+
     public void JumpPadAnimater(Transform XZtransform)
     {
         // set grounded bool
@@ -255,11 +258,32 @@ public class EllaExploring : PlayerController
         Vector3 cameraRelativeMovement = forwardRelativeVerticalInput + rightRelativeHorizontalInput;
         var ellaMovement = new Vector3(cameraRelativeMovement.x, 0.0f, cameraRelativeMovement.z);
 
+        // check for slopes
+        Vector3 slopeMovement = AdjustVelocityToSlope(ellaMovement);
+
         // moves the character
-        _moveComponent.Move(_characterController, ellaMovement, _moveSpeed);
+        _moveComponent.Move(_characterController, slopeMovement, _moveSpeed);
 
         // adjust the look-at
         LookRotation(ellaMovement);
+    }
+    private Vector3 AdjustVelocityToSlope(Vector3 velocity)
+    {
+        var ray = new Ray(transform.position, Vector3.down);
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 1.1f))
+        {
+            var slopeDirection = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
+            var adjustedVelocity = slopeDirection * velocity;
+
+            if (adjustedVelocity.y < 0)
+            {
+                Debug.Log("returning slope vel");
+                return adjustedVelocity;
+            }
+        }
+
+        return velocity;
     }
     private void LookRotation(Vector3 movementVector)
     {
@@ -280,7 +304,28 @@ public class EllaExploring : PlayerController
         {
             _animatorComponent.SetAnimatorBool(_animator, _boolMoving, false);
         }
-        _animatorComponent.SetAnimatorBool(_animator, _boolGrounded, _isGrounded);
+
+        // if grounded==false, only set the grounded bool if this has been false for 0.2 seconds 
+        if (_isGrounded == false)
+        {
+            _groundedAnimationTimer += Time.deltaTime;
+
+            // if my timer exceeds the limit -> start falling
+            if (_groundedAnimationTimer >= 0.2f)
+            {
+                _animatorComponent.SetAnimatorBool(_animator, _boolGrounded, _isGrounded);
+            }
+            else
+            {
+                _animatorComponent.SetAnimatorBool(_animator, _boolGrounded, true);
+            }        
+        }
+        else
+        {
+            _groundedAnimationTimer = 0;
+            _animatorComponent.SetAnimatorBool(_animator, _boolGrounded, _isGrounded);
+        }
+        
         _animatorComponent.SetAnimatorBool(_animator, _boolBoosting, _isHovering);     
     }
     private void Hover()
@@ -288,13 +333,23 @@ public class EllaExploring : PlayerController
         // hover timer
         if (_isHovering == true)
         {
-            _hoverTimer += Time.deltaTime;
+            // set CC step offset
+            _characterController.stepOffset = 0f;
 
+            _hoverTimer += Time.deltaTime;
             if (_hoverTimer >= _hoverDurationLimit)
             {
                 _canHover = false;
                 //_hoverOnCooldown = true;
+
+                // set CC step offset
+                _characterController.stepOffset = 0.1f;
             }
+        }
+        else
+        {
+            // set CC step offset
+            _characterController.stepOffset = 0.1f;
         }
 
         //// hover cooldown timer
