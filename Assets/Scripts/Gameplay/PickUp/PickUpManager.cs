@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityCore.Audio;
 using UnityEngine;
 
 [DefaultExecutionOrder(-100)]
@@ -16,14 +17,21 @@ public class PickUpManager : Service
 
     public List<PickUp> PickUps => _pickUps;
 
+    private const string _pickupNameBase = "PV_Pickup_";
+    private string _pickupToLoad;
 
+
+    [Header("Pickups")]
     // assign this the pickups visual of our level 
     public static GameObject PickupNormalVisual;
     // assign this in inspector (no real point loading from resources)
     public List<GameObject> PickupsSpecialVisuals = new List<GameObject>();
 
-    private const string _pickupNameBase = "PV_Pickup_";
-    private string _pickupToLoad;
+    [Header("Audio")]
+    [SerializeField]
+    private AudioElement _soundEffectPickup1;
+    [SerializeField]
+    private AudioElement _soundEffectPickup2;
 
 
     private void Start()
@@ -91,10 +99,22 @@ public class PickUpManager : Service
         if (pickup as EllaPickUp)
         {
             _foundEllaPickups.Add(((EllaPickUp)pickup).Type);
+
+            // play sound
+            //ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEffectPickup2);
         } 
         else
         {
             _pickUpsPickedUp++;
-        } 
+
+            // play sound
+            //ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEffectPickup1);
+        }
+
+        //// spawn particle
+        //ServiceLocator.Instance.GetService<ParticleManager>().
+          //CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
+
+
     }
 }

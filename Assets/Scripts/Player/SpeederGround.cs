@@ -7,29 +7,36 @@ using UnityEngine;
 public class SpeederGround : PlayerController
 {
     [Header("Speed")]
-    [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f); 
-    [SerializeField] private float _speedForward = 50f;
-    [SerializeField] private float _speedSideways = 15f;
+    [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f);
 
+    [SerializeField] private float _speedForward = 50f;
+    [SerializeField] private float _startSidewaySpeed = 20.0f;
+    [SerializeField] private float _speedSideways = 15f;
+    [SerializeField] private float _sidewaysAcceleration = 5.0f;
     //public static float SpeedForward;
-    
-    [Header ("Boost")]
+
+    [Header("Boost")]
     [SerializeField, Range(1.0f, 3.0f)] private float _boostSpeedMultiplier = 2f;
+
     [SerializeField, Range(1.0f, 3.0f)] private float _boostJumpMultiplier = 2f;
     [SerializeField] private float _boostDuration = 2f;
 
-    [Header ("Jump & Gravity")]
+    [Header("Jump & Gravity")]
     [SerializeField] private float _jumpHeight = 8f;
+
     [SerializeField] private float _gravityValue = -9.81f;
+    [SerializeField] private float _tiltMultiplier = 2.0f;
 
     [Header("Knockback")]
     [SerializeField] private float _knockbackDuration = 3f;
+
     [SerializeField, Range(0.0f, 1.0f)] private float _knockbackMultiplier = .3f;
 
     private CharacterController _characterController;
     private Vector3 _rightVector;
     private Vector2 _input;
     private float _yVelocity = 0f;
+    private float _xVelocity = 0f;
     private float _fakeGroundedTimer;
     [SerializeField] private float _fakeGroundedTimeLimit = 0.25f;
     private bool _isJumping = false;
@@ -47,13 +54,20 @@ public class SpeederGround : PlayerController
 
     private Vector3 _lastPosition;
     private Vector3 _velocity;
+
     [SerializeField]
     private Vector3 _velocityNormalized;
+
     private float _xRotation = 0;
+
     [SerializeField]
     private Transform _visual;
+
     [SerializeField]
     private Transform _target;
+
+    [SerializeField]
+    private LayerMask _playerLayerMask;
 
     //private void OnValidate()
     //{
@@ -75,7 +89,7 @@ public class SpeederGround : PlayerController
         _moveComponent = new MoveComponent();
         _jumpComponent = new JumpComponent();
         _gravityComponent = new GravityComponent();
-        
+
         _speedBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostSpeedMultiplier, true, 2f, true, 1f);
         _jumpBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostJumpMultiplier, true, 2f, true, 1f);
         _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier, true, false);
@@ -102,6 +116,7 @@ public class SpeederGround : PlayerController
         Jump();
         ApplyGravity();
     }
+
     private void FakeGroundedTimer()
     {
         // default is grounded
@@ -165,9 +180,14 @@ public class SpeederGround : PlayerController
     private void Move()
     {
         var direction = _moveDirection * 1f + _rightVector * -_input.x;
-        //Vector3 direction = new Vector3(_input.x, 0f, 1f);
-        Vector3 speed = new Vector3(_speedSideways, 0f, _speedForward * _knockbackComponent.Multiplier) * _speedBoostComponent.Multiplier;
-        print(direction);
+      
+      //  Debug.Log("Input " + _input.x);
+      //  Debug.Log("xVelocity: " + _xVelocity);
+
+        _xVelocity = Mathf.Clamp(_xVelocity + (_sidewaysAcceleration * Time.deltaTime), _startSidewaySpeed, _speedSideways) * Mathf.Abs(_input.x);
+        Vector3 speed = new Vector3(_xVelocity, 0f, _speedForward * /*Mathf.Clamp((_input.y * _tiltMultiplier), 0.5f, _tiltMultiplier)*  */ _knockbackComponent.Multiplier) * _speedBoostComponent.Multiplier;
+        
+    //    print(direction);
         _moveComponent.Move(_characterController, direction, speed);
     }
 
@@ -179,12 +199,14 @@ public class SpeederGround : PlayerController
 
             _hasJumped = true;
         }
+
         _isJumping = false;
     }
 
     private void ApplyGravity()
     {
-        _gravityComponent.ApplyGravity(_characterController, ref _yVelocity, _gravityValue, _isGrounded);
+        _gravityComponent.ApplyGravity(_characterController, ref _yVelocity,
+            _gravityValue /** (1 + (Mathf.Clamp01(_input.y) * _tiltMultiplier))*/, _isGrounded);
     }
 
     private void OnEnable()
@@ -221,6 +243,7 @@ public class SpeederGround : PlayerController
     private void OnMoveInput(Vector2 input)
     {
         _input = input;
+        Debug.LogWarning("Input X: " + _input.x + "\nInput Y: " + _input.y);
     }
 
     private void OnJumpInput()
@@ -240,14 +263,41 @@ public class SpeederGround : PlayerController
 
         _target.transform.localPosition = new Vector3(_velocityNormalized.x * 2, 0, 5.14f);
 
-        _visual.transform.LookAt(_target.transform.position);
+        // Rotate towards Target
+        var rot = Quaternion.FromToRotation(_visual.transform.forward,
+            _target.transform.position - _visual.transform.position) * _visual.transform.rotation;
+        _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.2f);
+
+        // Rotate towards Normal
+        Ray ray = new Ray(transform.position, transform.position + Vector3.down);
+        RaycastHit hitInfo = new RaycastHit();
+        
+        if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, 2.0f, ~_playerLayerMask))
+        {
+            var angle = Vector3.Angle(Vector3.up, hitInfo.normal);
+          //  Debug.Log(angle);
+
+            // Calculate the rotation needed from the up vector to the normal
+            rot = Quaternion.FromToRotation(_visual.transform.up, hitInfo.normal) * _visual.transform.rotation;
+            _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.5f);
+        }
+
+        // Rotates along the the forward axis according to the left of right velocity
+        var rotationalFactor = Mathf.Clamp(_velocityNormalized.x, -1.0f, 1.0f);
+        rot = Quaternion.Euler(0.0f, 0.0f, -rotationalFactor * 90.0f);
+        _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.1f);
+
+        // Rotate along x axis according to the vertical input
+        rotationalFactor = Mathf.Clamp(_input.y, -1.0f, 1.0f);
+        rot = Quaternion.Euler(rotationalFactor * 90.0f, 0.0f, 0.0f);
+        _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.1f);
     }
 
     public void SetJumpMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
     {
         _jumpBoostComponent = multiplierTimerComponent;
     }
-    
+
     public void SetSpeedMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
     {
         _speedBoostComponent = multiplierTimerComponent;
