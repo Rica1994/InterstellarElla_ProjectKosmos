@@ -269,19 +269,21 @@ public class SpeederGround : PlayerController
         _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.2f);
 
         // Rotate towards Normal
-        Ray ray = new Ray(transform.position, transform.position + Vector3.down);
         RaycastHit hitInfo = new RaycastHit();
         
+        // floor
         if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, 2.0f, ~_playerLayerMask))
         {
             var angle = Vector3.Angle(Vector3.up, hitInfo.normal);
-          //  Debug.Log(angle);
-
-            // Calculate the rotation needed from the up vector to the normal
-            rot = Quaternion.FromToRotation(_visual.transform.up, hitInfo.normal) * _visual.transform.rotation;
-            _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.5f);
+            Debug.Log("Angle: " + angle + "\nOn Object: " + hitInfo.transform.name);
+          if (Mathf.Abs(angle) > 5f)
+          {
+              // Calculate the rotation needed from the up vector to the normal
+              rot = Quaternion.FromToRotation(_visual.transform.up, hitInfo.normal) * _visual.transform.rotation;
+              _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.5f);
+          }
         }
-
+        
         // Rotates along the the forward axis according to the left of right velocity
         var rotationalFactor = Mathf.Clamp(_velocityNormalized.x, -1.0f, 1.0f);
         rot = Quaternion.Euler(0.0f, 0.0f, -rotationalFactor * 90.0f);
