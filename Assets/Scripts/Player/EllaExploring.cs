@@ -25,6 +25,7 @@ public class EllaExploring : PlayerController
 
     [Header("Gravity")]
     [SerializeField] private float _gravityValue = -9.81f;
+    [SerializeField] private float _yMaxVelocity = -35f;
     public float Gravity => _gravityValue;
 
     [Header("Character References")]
@@ -69,6 +70,7 @@ public class EllaExploring : PlayerController
 
     public bool BlockMove;
     public Coroutine CCToggleRoutine;
+    private Vector3 _slopeMovement;
 
 
     private void Awake()
@@ -147,6 +149,9 @@ public class EllaExploring : PlayerController
             // add personal gravity to rigidbody
             _rigidbody.AddForce(new Vector3(0, -1.0f, 0) * 1 * _gravityValue*(-1));
         }
+
+        // moves the character
+        //_moveComponent.Move(_characterController, _slopeMovement, _moveSpeed);
     }
 
     public override void UpdateController()
@@ -263,6 +268,7 @@ public class EllaExploring : PlayerController
 
         // check for slopes
         Vector3 slopeMovement = AdjustVelocityToSlope(ellaMovement);
+        //_slopeMovement = AdjustVelocityToSlope(ellaMovement);
 
         // moves the character
         _moveComponent.Move(_characterController, slopeMovement, _moveSpeed);
@@ -406,7 +412,7 @@ public class EllaExploring : PlayerController
     {
         if (_isHovering == false)
         {
-            _gravityComponent.ApplyGravity(_characterController, ref _canHover, ref _hoverTimer, ref _yVelocity, _gravityValue, _isGrounded);
+            _gravityComponent.ApplyGravity(_characterController, ref _canHover, ref _hoverTimer, ref _yVelocity, _gravityValue, _yMaxVelocity, _isGrounded);
         }       
     }
 

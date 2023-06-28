@@ -19,7 +19,7 @@ public class GravityComponent
     }
 
 
-    public void ApplyGravity(CharacterController characterController, ref bool canHover, ref float hoverTimer, ref float yVelocity, float gravity, bool isGrounded)
+    public void ApplyGravity(CharacterController characterController, ref bool canHover, ref float hoverTimer, ref float yVelocity, float gravity, float maxYvel, bool isGrounded)
     {
         if (isGrounded == true)
         {
@@ -31,7 +31,13 @@ public class GravityComponent
             canHover = true;
             hoverTimer = 0;
         }
+
         yVelocity += gravity * Time.deltaTime;
+        // create a limit on how fast we can fall
+        if (yVelocity <= maxYvel)
+        {
+            yVelocity = maxYvel;
+        }
 
         characterController.Move(new Vector3(0f, yVelocity * Time.deltaTime, 0f));
     }
