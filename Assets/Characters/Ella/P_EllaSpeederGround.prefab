@@ -116,7 +116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BindingMode: 1
   m_FollowOffset: {x: 0, y: 2.46, z: -4.73}
-  m_XDamping: 0.2
+  m_XDamping: 0.5
   m_YDamping: 0.3
   m_ZDamping: 0.1
   m_AngularDampingMode: 0
@@ -517,16 +517,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveDirection: {x: 0, y: 0, z: 1}
-  _speedForward: 40
+  _speedForward: 26.666
+  _tiltSpeedUpMultiplier: 0.5
   _startSidewaySpeed: 20
   _speedSideways: 40
+  _startSideWaySpeedAcceleration: 5
   _sidewaysAcceleration: 5
   _boostSpeedMultiplier: 1.5
   _boostJumpMultiplier: 1.5
   _boostDuration: 3
   _jumpHeight: 10
   _gravityValue: -40
-  _tiltMultiplier: 1.1
+  _bounceFactor: 0.16
+  _minimumSpeedToBounce: 30
   _knockbackDuration: 3
   _knockbackMultiplier: 0.3
   _fakeGroundedTimeLimit: 0.25
