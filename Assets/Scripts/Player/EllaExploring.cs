@@ -236,7 +236,10 @@ public class EllaExploring : PlayerController
 
         _playingBoostParticle = false;
 
-        _yVelocity = 0;
+        if (_yVelocity > 0)
+        {
+            _yVelocity = 0;
+        }      
     }
     private void Move()
     {
