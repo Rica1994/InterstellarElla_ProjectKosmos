@@ -10,10 +10,11 @@ public class SpeederGround : PlayerController
     [Header("Speed")]
     [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f);
 
-    [SerializeField] private float _speedForward = 50f;
+    [SerializeField] private float _speedForward = 50f;    
+    [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
     [SerializeField] private float _startSidewaySpeed = 20.0f;
     [SerializeField] private float _speedSideways = 15f;
-
+    [SerializeField] private float _startSideWaySpeedAcceleration = 5.0f;
     [SerializeField] private float _sidewaysAcceleration = 5.0f;
     //public static float SpeedForward;
 
@@ -27,13 +28,13 @@ public class SpeederGround : PlayerController
     [SerializeField] private float _jumpHeight = 8f;
 
     [SerializeField] private float _gravityValue = -9.81f;
-    [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
+
 
     [FormerlySerializedAs("_landingBounceValueFactor")] [SerializeField]
     private float _bounceFactor = 0.5f;
 
     [SerializeField] private float _minimumSpeedToBounce = 30.0f;
-    
+
     [Header("Knockback")]
     [SerializeField] private float _knockbackDuration = 3f;
 
@@ -231,9 +232,21 @@ public class SpeederGround : PlayerController
         //    print(direction);
 
         // New
-        _xVelocity =
-            Mathf.Clamp(_xVelocity + (_sidewaysAcceleration * Time.deltaTime), _startSidewaySpeed, _speedSideways) *
-            Mathf.Abs(_input.x);
+
+        if (_xVelocity <= _startSidewaySpeed - 0.1f)
+        {
+            _xVelocity = Mathf.Clamp(_xVelocity + (_startSidewaySpeed * _startSideWaySpeedAcceleration * Time.deltaTime), 0.0f, _startSidewaySpeed) *
+                         Mathf.Abs(_input.x);
+        }
+        else
+        {
+            _xVelocity =
+                Mathf.Clamp(_xVelocity + (_sidewaysAcceleration * Time.deltaTime), _startSidewaySpeed, _speedSideways) *
+                Mathf.Abs(_input.x);
+        }
+        
+        Debug.Log("XVelocity " + _xVelocity);
+        
         _zVelocity = _speedForward * (1 + Mathf.Clamp(_input.y, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier));
         Vector3 speed = new Vector3(_xVelocity, _speedForward, _zVelocity * _knockbackComponent.Multiplier) *
                         _speedBoostComponent.Multiplier;
@@ -272,7 +285,7 @@ public class SpeederGround : PlayerController
 
         _isJumping = false;
     }
-    
+
     private void ApplyGravity()
     {
         _gravityComponent.ApplyGravity(_characterController, ref _yVelocity,
