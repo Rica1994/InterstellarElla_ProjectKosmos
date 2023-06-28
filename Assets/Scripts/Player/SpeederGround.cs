@@ -12,6 +12,7 @@ public class SpeederGround : PlayerController
     [SerializeField] private float _speedForward = 50f;
     [SerializeField] private float _startSidewaySpeed = 20.0f;
     [SerializeField] private float _speedSideways = 15f;
+
     [SerializeField] private float _sidewaysAcceleration = 5.0f;
     //public static float SpeedForward;
 
@@ -26,7 +27,7 @@ public class SpeederGround : PlayerController
 
     [SerializeField] private float _gravityValue = -9.81f;
     [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
-    
+
     [Header("Knockback")]
     [SerializeField] private float _knockbackDuration = 3f;
 
@@ -38,7 +39,7 @@ public class SpeederGround : PlayerController
     private float _yVelocity = 0f;
     private float _xVelocity = 0f;
     private float _zVelocity = 0f;
-    
+
     private float _fakeGroundedTimer;
     [SerializeField] private float _fakeGroundedTimeLimit = 0.25f;
     private bool _isJumping = false;
@@ -111,13 +112,13 @@ public class SpeederGround : PlayerController
         _isGrounded = _characterController.isGrounded;
 
         Debug.Log("Is Grounded: " + _isGrounded);
-        
+
         // Apply landing
-        if (wasGrounded == false && wasGrounded != _isGrounded)
-        {
-            Land(_yVelocity);
-        }
-        
+     //   if (wasGrounded == false && wasGrounded != _isGrounded)
+     //   {
+     //       Land(_yVelocity);
+     //   }
+
         FakeGroundedTimer();
 
         _speedBoostComponent.Update();
@@ -143,14 +144,13 @@ public class SpeederGround : PlayerController
 
             if (adjustedVelocity.y < 0)
             {
-               // Debug.Log("returning slope vel");
+                // Debug.Log("returning slope vel");
                 return adjustedVelocity;
             }
         }
 
         return velocity;
     }
-
 
 
     private void FakeGroundedTimer()
@@ -224,9 +224,12 @@ public class SpeederGround : PlayerController
         //    print(direction);
 
         // New
-        _xVelocity = Mathf.Clamp(_xVelocity + (_sidewaysAcceleration * Time.deltaTime), _startSidewaySpeed, _speedSideways) * Mathf.Abs(_input.x);
+        _xVelocity =
+            Mathf.Clamp(_xVelocity + (_sidewaysAcceleration * Time.deltaTime), _startSidewaySpeed, _speedSideways) *
+            Mathf.Abs(_input.x);
         _zVelocity = _speedForward * (1 + Mathf.Clamp(_input.y, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier));
-        Vector3 speed = new Vector3(_xVelocity, _speedForward, _zVelocity * _knockbackComponent.Multiplier) * _speedBoostComponent.Multiplier;
+        Vector3 speed = new Vector3(_xVelocity, _speedForward, _zVelocity * _knockbackComponent.Multiplier) *
+                        _speedBoostComponent.Multiplier;
 
         // OG
         //Vector3 speed = new Vector3(
@@ -241,9 +244,9 @@ public class SpeederGround : PlayerController
     private void Land(float yVelocity)
     {
         ForceJump();
-        Jump(-yVelocity/2.0f);
+        Jump(-yVelocity / 2.0f);
     }
-    
+
     private void Jump(float yVelocity)
     {
         if (_isJumping == true)
@@ -321,22 +324,22 @@ public class SpeederGround : PlayerController
             _target.transform.position - _visual.transform.position) * _visual.transform.rotation;
         _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.2f);
 
-        // Rotate towards Normal
+        //Rotate towards Normal
         RaycastHit hitInfo = new RaycastHit();
-        
+
         // floor
         if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, 2.0f, ~_playerLayerMask))
         {
             var angle = Vector3.Angle(Vector3.up, hitInfo.normal);
             //Debug.Log("Angle: " + angle + "\nOn Object: " + hitInfo.transform.name);
-          if (Mathf.Abs(angle) > 5f)
-          {
-              // Calculate the rotation needed from the up vector to the normal
-              rot = Quaternion.FromToRotation(_visual.transform.up, hitInfo.normal) * _visual.transform.rotation;
-              _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.5f);
-          }
+            if (Mathf.Abs(angle) > 5f)
+            {
+                // Calculate the rotation needed from the up vector to the normal
+                rot = Quaternion.FromToRotation(_visual.transform.up, hitInfo.normal) * _visual.transform.rotation;
+                _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.5f);
+            }
         }
-        
+
         // Rotates along the the forward axis according to the left of right velocity
         var rotationalFactor = Mathf.Clamp(_velocityNormalized.x, -1.0f, 1.0f);
         rot = Quaternion.Euler(0.0f, 0.0f, -rotationalFactor * 90.0f);
