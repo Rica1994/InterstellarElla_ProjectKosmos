@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SpeederGround : PlayerController
 {
@@ -18,16 +19,17 @@ public class SpeederGround : PlayerController
 
     [Header("Boost")]
     [SerializeField, Range(1.0f, 3.0f)] private float _boostSpeedMultiplier = 2f;
-
     [SerializeField, Range(1.0f, 3.0f)] private float _boostJumpMultiplier = 2f;
     [SerializeField] private float _boostDuration = 2f;
-
+    
     [Header("Jump & Gravity")]
     [SerializeField] private float _jumpHeight = 8f;
 
     [SerializeField] private float _gravityValue = -9.81f;
     [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
 
+    [FormerlySerializedAs("_landingBounceValueFactor")] [SerializeField] private float _bounceFactor = 0.5f;
+    
     [Header("Knockback")]
     [SerializeField] private float _knockbackDuration = 3f;
 
@@ -39,7 +41,7 @@ public class SpeederGround : PlayerController
     private float _yVelocity = 0f;
     private float _xVelocity = 0f;
     private float _zVelocity = 0f;
-
+    
     private float _fakeGroundedTimer;
     [SerializeField] private float _fakeGroundedTimeLimit = 0.25f;
     private bool _isJumping = false;
@@ -109,15 +111,16 @@ public class SpeederGround : PlayerController
         // !!Keep this execution order!!
 
         bool wasGrounded = _isGrounded;
+        var lastYVelocity = _yVelocity;
         _isGrounded = _characterController.isGrounded;
 
         Debug.Log("Is Grounded: " + _isGrounded);
 
         // Apply landing
-     //   if (wasGrounded == false && wasGrounded != _isGrounded)
-     //   {
-     //       Land(_yVelocity);
-     //   }
+        if (wasGrounded == false && wasGrounded != _isGrounded)
+        {
+            Land(lastYVelocity);
+        }
 
         FakeGroundedTimer();
 
@@ -127,7 +130,7 @@ public class SpeederGround : PlayerController
 
         Move();
 
-        Jump(_yVelocity);
+        Jump();
 
         ApplyGravity();
     }
@@ -241,17 +244,20 @@ public class SpeederGround : PlayerController
         _moveComponent.Move(_characterController, slopeVelocity, speed);
     }
 
-    private void Land(float yVelocity)
+    private void Land(float landingVelocity)
     {
-        ForceJump();
-        Jump(-yVelocity / 2.0f);
+        landingVelocity = Mathf.Abs(landingVelocity);
+        if (landingVelocity > 1)
+        {
+            _yVelocity = landingVelocity * _bounceFactor;
+        }
     }
 
-    private void Jump(float yVelocity)
+    private void Jump()
     {
         if (_isJumping == true)
         {
-            _jumpComponent.Jump(ref yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
+            _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
 
             _hasJumped = true;
         }
@@ -259,6 +265,14 @@ public class SpeederGround : PlayerController
         _isJumping = false;
     }
 
+    /*private void Bounce()
+    {
+        if (_isBouncing)
+        {
+            _jumpComponent.Bounce(ref _yVelocity, _gravityValue);
+        }
+    }*/
+    
     private void ApplyGravity()
     {
         _gravityComponent.ApplyGravity(_characterController, ref _yVelocity,
