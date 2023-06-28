@@ -9,10 +9,4 @@ public class JumpComponent
         if (yVelocity < 0) yVelocity = 0f;
         yVelocity += Mathf.Sqrt(-2.0f * jumpHeight * gravity);
     }
-    
-    public void Bounce(ref float yVelocity, float gravity)
-    {
-        if (yVelocity < 0) yVelocity = 0f;
-        yVelocity += Mathf.Sqrt(gravity * -2);
-    }
 }

@@ -19,16 +19,20 @@ public class SpeederGround : PlayerController
 
     [Header("Boost")]
     [SerializeField, Range(1.0f, 3.0f)] private float _boostSpeedMultiplier = 2f;
+
     [SerializeField, Range(1.0f, 3.0f)] private float _boostJumpMultiplier = 2f;
     [SerializeField] private float _boostDuration = 2f;
-    
+
     [Header("Jump & Gravity")]
     [SerializeField] private float _jumpHeight = 8f;
 
     [SerializeField] private float _gravityValue = -9.81f;
     [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
 
-    [FormerlySerializedAs("_landingBounceValueFactor")] [SerializeField] private float _bounceFactor = 0.5f;
+    [FormerlySerializedAs("_landingBounceValueFactor")] [SerializeField]
+    private float _bounceFactor = 0.5f;
+
+    [SerializeField] private float _minimumSpeedToBounce = 30.0f;
     
     [Header("Knockback")]
     [SerializeField] private float _knockbackDuration = 3f;
@@ -41,7 +45,7 @@ public class SpeederGround : PlayerController
     private float _yVelocity = 0f;
     private float _xVelocity = 0f;
     private float _zVelocity = 0f;
-    
+
     private float _fakeGroundedTimer;
     [SerializeField] private float _fakeGroundedTimeLimit = 0.25f;
     private bool _isJumping = false;
@@ -247,7 +251,7 @@ public class SpeederGround : PlayerController
     private void Land(float landingVelocity)
     {
         landingVelocity = Mathf.Abs(landingVelocity);
-        if (landingVelocity > 1)
+        if (landingVelocity > _minimumSpeedToBounce)
         {
             _yVelocity = landingVelocity * _bounceFactor;
         }
@@ -257,21 +261,17 @@ public class SpeederGround : PlayerController
     {
         if (_isJumping == true)
         {
-            _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
+            if (_hasJumped == false)
+            {
+                _yVelocity = 0.0f;
+                _hasJumped = true;
+            }
 
-            _hasJumped = true;
+            _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
         }
 
         _isJumping = false;
     }
-
-    /*private void Bounce()
-    {
-        if (_isBouncing)
-        {
-            _jumpComponent.Bounce(ref _yVelocity, _gravityValue);
-        }
-    }*/
     
     private void ApplyGravity()
     {
