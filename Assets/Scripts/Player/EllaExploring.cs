@@ -287,7 +287,7 @@ public class EllaExploring : PlayerController
 
             if (adjustedVelocity.y < 0)
             {
-                Debug.Log("returning slope vel");
+                //Debug.Log("returning slope vel");
                 return adjustedVelocity;
             }
         }

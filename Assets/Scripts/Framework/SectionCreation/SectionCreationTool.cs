@@ -22,8 +22,8 @@ public class SectionCreationTool : EditorWindow
 
     private string _adjustedSceneString = string.Empty;
 
-    private const string _localPathPrefix = "Assets/Levels/Prefabs_Level_0";
-    private const string _localPathMidfix = "/Prefabs_Sections/Scene_";
+    private const string _localPathPrefix = "Assets/Prefabs/Prefabs_Sections/Prefabs_Sections_0";
+    private const string _localPathMidfix = "/Scene_";
     private const string _localPathSuffix = "/Resources/";
 
     private int _totalGameobjects;
