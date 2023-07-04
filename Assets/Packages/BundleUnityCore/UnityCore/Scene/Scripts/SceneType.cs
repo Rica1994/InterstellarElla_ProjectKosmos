@@ -30,7 +30,9 @@ namespace UnityCore
             S_Level_4_0_Build = 13,
 
             S_Level_5_0_Work = 15,
-            S_Level_5_0_Build = 16
+            S_Level_5_0_Build = 16,
+
+            S_Mars_1_0_IntroCutscene = 19
         }
     }
 }

@@ -79,15 +79,6 @@ MonoBehaviour:
   _sectionPrefabs: []
   SectionsInstantiated: []
   _endGameTrigger: {fileID: 6428997967470383552}
-  ClipToPlayOnStart:
-    Clip: {fileID: 8300000, guid: f7524e1e5c790c242922d0791f29a200, type: 3}
-    Type: 1
-    Volume: 1
-    Pitch: 1
-    RandomizePitchSlightly: 0
-    PitchLowerLimitAddition: 0.2
-    PitchUpperLimitAddition: 0.2
-  ParticleToPlayOnLoad: 5
 --- !u!1 &4667951698084220451
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,6 +388,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68ed661ec47658348bdf3e38e39c06fe, type: 3}
+--- !u!1 &585193250669001746 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8084792560381640788, guid: 68ed661ec47658348bdf3e38e39c06fe, type: 3}
+  m_PrefabInstance: {fileID: 8659847960446647366}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &585193250669001747 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8084792560381640789, guid: 68ed661ec47658348bdf3e38e39c06fe, type: 3}
@@ -407,9 +403,22 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2383976780518649222, guid: 68ed661ec47658348bdf3e38e39c06fe, type: 3}
   m_PrefabInstance: {fileID: 8659847960446647366}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 585193250669001746}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 94d422f9387c08440b8b6d1a819ffe35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6388813505897024614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585193250669001746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1a4fa9ab88290b48a53c3e6b323b433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sceneToLoad: 0
