@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class GameManager : Service
 {
+    [SerializeField]
+    private bool _simulateMobile = false;
+    
     private PlayerController _playerController;
 
     private enum GameMode
@@ -33,7 +36,7 @@ public class GameManager : Service
             Debug.LogWarning("No player controller found in this scene");
         }
 
-        _isMobile = true;
+        _isMobile = _simulateMobile;
 #if !UNITY_EDITOR && UNITY_WEBGL
         _isMobile = IsMobile();
 #endif

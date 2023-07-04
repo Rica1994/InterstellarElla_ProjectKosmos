@@ -243,15 +243,12 @@ public class SpeederGround : PlayerController
 
     private void Move()
     {
-        float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
-   //     Debug.Log("Angle: " + angle);
-
-       // if (angle < 0.0f) angle += 360.0f;
+       // float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
         
-        float inputX = _input.x;
-        float inputY = _input.y;
+        float inputX = Mathf.Sign(_input.y);
+        float inputY = Mathf.Sign(_input.x);
 
-        if (angle >= 90 - _forwardAngleRange && angle <= 90 + _forwardAngleRange)
+        /*if (angle >= 90 - _forwardAngleRange && angle <= 90 + _forwardAngleRange)
         {
             inputY = Mathf.Sign(_input.y);
         }
@@ -259,11 +256,8 @@ public class SpeederGround : PlayerController
         if ((angle <= _horizontalAngleRange && angle >= -_horizontalAngleRange) || (angle > 180.0f - _horizontalAngleRange && angle <= 180) || (angle >= -180 && angle < -180 + _horizontalAngleRange))
         {
             inputX = Mathf.Sign(_input.x);
-        }
+        }*/
         
-        Debug.Log("X " + inputX);
-        Debug.Log("Y " + inputY);
-
         var direction = _moveDirection * 1f + _rightVector * -_input.x;
         Vector3 slopeVelocity = AdjustVelocityToSlope(direction);
 
@@ -279,6 +273,8 @@ public class SpeederGround : PlayerController
                 Mathf.Abs(inputX);
         }
         
+        Debug.Log("2  X " + inputX + "\n XVelocity " + _xVelocity);
+
         
         _zVelocity = _speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier));
         Vector3 speed = new Vector3(_xVelocity, _speedForward, _zVelocity * _knockbackComponent.Multiplier) *
