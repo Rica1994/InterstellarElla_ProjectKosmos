@@ -17,7 +17,12 @@ public class SpeederGround : PlayerController
     [SerializeField] private float _startSideWaySpeedAcceleration = 5.0f;
     [SerializeField] private float _sidewaysAcceleration = 5.0f;
     //public static float SpeedForward;
+    
+    [Header("Maximum Input ranges joystick")]
+    [SerializeField,] private float _forwardAngleRange = 120f;
+    [SerializeField] private float _horizontalAngleRange = 60f;
 
+    
     [Header("Boost")]
     [SerializeField, Range(1.0f, 3.0f)] private float _boostSpeedMultiplier = 2f;
 
@@ -91,12 +96,6 @@ public class SpeederGround : PlayerController
     [SerializeField]
     private LayerMask _playerLayerMask;
     
-    [SerializeField]
-    private float forwardAngleRange = 60f;
-
-    [SerializeField]
-    private float horizontalAngleRange = 30f;
-
     //private void OnValidate()
     //{
     //    SpeedForward = _speedForward;
@@ -245,21 +244,26 @@ public class SpeederGround : PlayerController
     private void Move()
     {
         float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
-        Debug.Log("Angle: " + angle);
+   //     Debug.Log("Angle: " + angle);
+
+       // if (angle < 0.0f) angle += 360.0f;
         
         float inputX = _input.x;
         float inputY = _input.y;
 
-        if (angle >= 90 - forwardAngleRange && angle <= 90 + forwardAngleRange)
+        if (angle >= 90 - _forwardAngleRange && angle <= 90 + _forwardAngleRange)
         {
             inputY = Mathf.Sign(_input.y);
         }
-
-        if ((angle <= horizontalAngleRange && angle >= -horizontalAngleRange) || (angle > 180.0f - horizontalAngleRange && angle <= 180) || (angle >= -180 && angle < -180 + horizontalAngleRange))
+//
+        if ((angle <= _horizontalAngleRange && angle >= -_horizontalAngleRange) || (angle > 180.0f - _horizontalAngleRange && angle <= 180) || (angle >= -180 && angle < -180 + _horizontalAngleRange))
         {
             inputX = Mathf.Sign(_input.x);
         }
         
+        Debug.Log("X " + inputX);
+        Debug.Log("Y " + inputY);
+
         var direction = _moveDirection * 1f + _rightVector * -_input.x;
         Vector3 slopeVelocity = AdjustVelocityToSlope(direction);
 
