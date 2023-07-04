@@ -33,11 +33,13 @@ public class Chain
         currentChainAction.UpdateAction(elapsedTime);
         if (currentChainAction.IsCompleted())
         {
+            currentChainAction.OnExit();
             Debug.Log($"ChainAction {currentChainAction.name} completed");
             _chainActions.Dequeue();
             if (_chainActions.Count > 0)
             {
                 ChainAction nextChainAction = _chainActions.Peek();
+                nextChainAction.OnEnter();
                 nextChainAction.Execute();
             }
         }

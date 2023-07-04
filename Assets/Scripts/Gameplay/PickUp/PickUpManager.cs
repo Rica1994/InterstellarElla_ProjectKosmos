@@ -7,6 +7,14 @@ using UnityEngine;
 [DefaultExecutionOrder(-100)]
 public class PickUpManager : Service
 {
+    #region Events
+
+    public delegate void PickUpDelegate(int pickUpsPickedUp);
+
+    public event PickUpDelegate PickUpPickedUpEvent;
+    
+    #endregion
+    
     private List<PickUp> _pickUps = new List<PickUp>();
     
     private int _pickUpsPickedUp = 0;
@@ -43,13 +51,22 @@ public class PickUpManager : Service
         //{
         //    throw new System.Exception("No LevelManager found in scene");
         //}
-
+        
+        #if UNITY_EDITOR
+        var pickUps = FindObjectsOfType<PickUp>();
+        foreach (PickUp pickUp in pickUps)
+        {
+            pickUp.OnPickUp += OnPickUpPickedUp;
+            
+        }
+        _pickUps.AddRange(pickUps);
+        #endif
+        
         if (ServiceLocator.Instance.ServiceExists(typeof(LevelManager)) == true)
         {
             var levelManager = ServiceLocator.Instance.GetService<LevelManager>();
 
             levelManager.OnSectionLoaded += OnSectionLoaded;
-
 
             // assigning proper pickups for level
             var levelIndexString = levelManager.DecodeSceneString()[0].ToString();
@@ -62,9 +79,6 @@ public class PickUpManager : Service
 
         // this will only subscribe the prefabs in the ASSETS (is an issue !)
         //serviceLocator.GetService<LevelManager>().Sections.ForEach(x => x.Loaded += OnSectionLoaded);
-
-
-
     }
 
     /// <summary>
@@ -115,6 +129,6 @@ public class PickUpManager : Service
         //ServiceLocator.Instance.GetService<ParticleManager>().
           //CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
 
-
+          PickUpPickedUpEvent?.Invoke(_pickUpsPickedUp);
     }
 }
