@@ -244,9 +244,10 @@ public class SpeederGround : PlayerController
     private void Move()
     {
        // float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
+       // if (angle < 0.0f) angle += 360.0f;
         
-        float inputX = Mathf.Sign(_input.y);
-        float inputY = Mathf.Sign(_input.x);
+        float inputX = Mathf.Sign(_input.x);
+        float inputY = Mathf.Sign(_input.y);
 
         /*if (angle >= 90 - _forwardAngleRange && angle <= 90 + _forwardAngleRange)
         {
@@ -273,7 +274,7 @@ public class SpeederGround : PlayerController
                 Mathf.Abs(inputX);
         }
         
-        Debug.Log("2  X " + inputX + "\n XVelocity " + _xVelocity);
+ //       Debug.Log("2  X " + inputX + "\n XVelocity " + _xVelocity);
 
         
         _zVelocity = _speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier));

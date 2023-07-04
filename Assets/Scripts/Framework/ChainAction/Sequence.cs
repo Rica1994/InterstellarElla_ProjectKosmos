@@ -8,23 +8,13 @@ public class Sequence : MonoBehaviour
     [SerializeField]
     private List<ChainAction> _chainActions = new List<ChainAction>();
 
+    [SerializeField]
+    private bool _startOnAwake = false;
+    
     public List<ChainAction> ChainActions => _chainActions;
-    
-    private float elapsedTime = 0.0f;
-    
+
     private void Start()
     {
-      //  ChainManager.Instance.StartChain(this);
-    }
-
-    private void Update()
-    {
-        elapsedTime += Time.deltaTime;
-        if (elapsedTime > 10)
-        {
-            ChainManager.Instance.StartChain(this);
-            elapsedTime = -Mathf.Infinity;
-        }
-
+      if (_startOnAwake) ChainManager.Instance.StartChain(this);
     }
 }

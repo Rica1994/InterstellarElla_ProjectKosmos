@@ -33,6 +33,7 @@ public class Chain
         currentChainAction.UpdateAction(elapsedTime);
         if (currentChainAction.IsCompleted())
         {
+            Debug.Log($"ChainAction {currentChainAction.name} completed");
             _chainActions.Dequeue();
             if (_chainActions.Count > 0)
             {
