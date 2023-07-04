@@ -33,6 +33,8 @@ public class SwapCamera : MonoBehaviour
     {
         if (_virtualCamera.gameObject.activeSelf == false)
         {
+            Debug.Log("Triggered the sawpping to a new cam");
+
             // parent the target to the player 
             _target.transform.SetParent(exploringScript.CameraTargets.transform);
             _target.transform.localPosition = new Vector3(0, 0, 0);

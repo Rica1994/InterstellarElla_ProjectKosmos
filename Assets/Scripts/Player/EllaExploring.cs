@@ -59,6 +59,7 @@ public class EllaExploring : PlayerController
     private bool _isHovering = false;
     private bool _isTryingHover = false;
     private bool _canHover = false;
+    private bool _startedHoverFromGround = false;
 
     private bool _isGrounded = false;
     private bool _isApplicationQuitting = false;
@@ -234,6 +235,8 @@ public class EllaExploring : PlayerController
     {
         // make sure I'm not in a jump pad bounce when trying to do this
         _isTryingHover = false;
+        _startedHoverFromGround = false;
+        _hoverComponent.HoverValueReset();
 
         // stop particle
         _particleBootLeft.Stop();
@@ -379,10 +382,19 @@ public class EllaExploring : PlayerController
             if (_isGrounded == true)
             {
                 _maxHoverHeight = transform.position.y + _hoverDistance;
+
+                _startedHoverFromGround = true;
             }
 
-            // hover up player
-            _hoverComponent.Hover(_characterController, ref _yVelocity, _hoverSpeed, _maxHoverHeight, transform.position.y);
+            // have distinct hover between starting from ground and air
+            //if (_startedHoverFromGround == true)
+            //{
+            //    _hoverComponent.HoverFromGround(_characterController, ref _yVelocity, _hoverSpeed, _maxHoverHeight, transform.position.y);
+            //}
+            //else
+            //{
+                _hoverComponent.Hover(_characterController, ref _yVelocity, _hoverSpeed, _maxHoverHeight, transform.position.y);
+            //}
 
             // play particle
             if (_playingBoostParticle == false)
@@ -398,6 +410,7 @@ public class EllaExploring : PlayerController
         else
         {
             _isHovering = false;
+            _startedHoverFromGround = false;
 
             // stop particle
             _particleBootLeft.Stop();
