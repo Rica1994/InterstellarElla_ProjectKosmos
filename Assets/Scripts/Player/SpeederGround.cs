@@ -17,7 +17,12 @@ public class SpeederGround : PlayerController
     [SerializeField] private float _startSideWaySpeedAcceleration = 5.0f;
     [SerializeField] private float _sidewaysAcceleration = 5.0f;
     //public static float SpeedForward;
+    
+    [Header("Maximum Input ranges joystick")]
+    [SerializeField,] private float _forwardAngleRange = 120f;
+    [SerializeField] private float _horizontalAngleRange = 60f;
 
+    
     [Header("Boost")]
     [SerializeField, Range(1.0f, 3.0f)] private float _boostSpeedMultiplier = 2f;
 
@@ -34,6 +39,13 @@ public class SpeederGround : PlayerController
     private float _bounceFactor = 0.5f;
 
     [SerializeField] private float _minimumSpeedToBounce = 30.0f;
+    
+    [Header("Hover")]
+    [SerializeField]
+    private float _hoverDisplacement = 0.5f;
+
+    [SerializeField]
+    private float _upDownSpeed = 1.0f;
 
     [Header("Knockback")]
     [SerializeField] private float _knockbackDuration = 3f;
@@ -58,12 +70,16 @@ public class SpeederGround : PlayerController
     private MoveComponent _moveComponent;
     private JumpComponent _jumpComponent;
     private GravityComponent _gravityComponent;
+    private SpeederGroundHoveringComponent _hoveringComponent;
+    
     private MultiplierTimerComponent _speedBoostComponent;
     private MultiplierTimerComponent _jumpBoostComponent;
     private MultiplierTimerComponent _knockbackComponent;
 
     private Vector3 _lastPosition;
     private Vector3 _velocity;
+    
+    private float _hoverMovement = 1.0f;
 
     [SerializeField]
     private Vector3 _velocityNormalized;
@@ -73,12 +89,13 @@ public class SpeederGround : PlayerController
     [SerializeField]
     private Transform _visual;
 
+    
     [SerializeField]
     private Transform _target;
 
     [SerializeField]
     private LayerMask _playerLayerMask;
-
+    
     //private void OnValidate()
     //{
     //    SpeedForward = _speedForward;
@@ -99,7 +116,8 @@ public class SpeederGround : PlayerController
         _moveComponent = new MoveComponent();
         _jumpComponent = new JumpComponent();
         _gravityComponent = new GravityComponent();
-
+        _hoveringComponent = new SpeederGroundHoveringComponent(_visual, _characterController);
+        
         _speedBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostSpeedMultiplier, true, 2f, true, 1f);
         _jumpBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostJumpMultiplier, true, 2f, true, 1f);
         _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier, true, false);
@@ -132,12 +150,14 @@ public class SpeederGround : PlayerController
         _speedBoostComponent.Update();
         _jumpBoostComponent.Update();
         _knockbackComponent.Update();
-
+        
         Move();
-
+        
         Jump();
 
         ApplyGravity();
+        
+        _hoveringComponent.UpdateHovering(_upDownSpeed, _hoverDisplacement);
     }
 
     private Vector3 AdjustVelocityToSlope(Vector3 velocity)
@@ -223,31 +243,44 @@ public class SpeederGround : PlayerController
 
     private void Move()
     {
+        float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
+   //     Debug.Log("Angle: " + angle);
+
+       // if (angle < 0.0f) angle += 360.0f;
+        
+        float inputX = _input.x;
+        float inputY = _input.y;
+
+        if (angle >= 90 - _forwardAngleRange && angle <= 90 + _forwardAngleRange)
+        {
+            inputY = Mathf.Sign(_input.y);
+        }
+//
+        if ((angle <= _horizontalAngleRange && angle >= -_horizontalAngleRange) || (angle > 180.0f - _horizontalAngleRange && angle <= 180) || (angle >= -180 && angle < -180 + _horizontalAngleRange))
+        {
+            inputX = Mathf.Sign(_input.x);
+        }
+        
+        Debug.Log("X " + inputX);
+        Debug.Log("Y " + inputY);
+
         var direction = _moveDirection * 1f + _rightVector * -_input.x;
         Vector3 slopeVelocity = AdjustVelocityToSlope(direction);
-
-        //  Debug.Log("Input " + _input.x);
-        //  Debug.Log("xVelocity: " + _xVelocity);
-
-        //    print(direction);
-
-        // New
 
         if (_xVelocity <= _startSidewaySpeed - 0.1f)
         {
             _xVelocity = Mathf.Clamp(_xVelocity + (_startSidewaySpeed * _startSideWaySpeedAcceleration * Time.deltaTime), 0.0f, _startSidewaySpeed) *
-                         Mathf.Abs(_input.x);
+                         Mathf.Abs(inputX);
         }
         else
         {
             _xVelocity =
                 Mathf.Clamp(_xVelocity + (_sidewaysAcceleration * Time.deltaTime), _startSidewaySpeed, _speedSideways) *
-                Mathf.Abs(_input.x);
+                Mathf.Abs(inputX);
         }
         
-        Debug.Log("XVelocity " + _xVelocity);
         
-        _zVelocity = _speedForward * (1 + Mathf.Clamp(_input.y, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier));
+        _zVelocity = _speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier));
         Vector3 speed = new Vector3(_xVelocity, _speedForward, _zVelocity * _knockbackComponent.Multiplier) *
                         _speedBoostComponent.Multiplier;
 
@@ -286,6 +319,11 @@ public class SpeederGround : PlayerController
         _isJumping = false;
     }
 
+    private void Hover()
+    {
+        
+    }
+    
     private void ApplyGravity()
     {
         _gravityComponent.ApplyGravity(_characterController, ref _yVelocity,
@@ -359,17 +397,17 @@ public class SpeederGround : PlayerController
         {
             var angle = Vector3.Angle(Vector3.up, hitInfo.normal);
             //Debug.Log("Angle: " + angle + "\nOn Object: " + hitInfo.transform.name);
-            if (Mathf.Abs(angle) > 5f)
+            if (Mathf.Abs(angle) > 10f)
             {
                 // Calculate the rotation needed from the up vector to the normal
                 rot = Quaternion.FromToRotation(_visual.transform.up, hitInfo.normal) * _visual.transform.rotation;
-                _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.5f);
+                _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.1f);
             }
         }
 
         // Rotates along the the forward axis according to the left of right velocity
         var rotationalFactor = Mathf.Clamp(_velocityNormalized.x, -1.0f, 1.0f);
-        rot = Quaternion.Euler(0.0f, 0.0f, -rotationalFactor * 90.0f);
+        rot = Quaternion.Euler(0.0f, 0.0f, -rotationalFactor * 80.0f);
         _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.1f);
 
         // Rotate along x axis according to the vertical input

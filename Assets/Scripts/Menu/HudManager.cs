@@ -6,11 +6,12 @@ public class HudManager : MonoBehaviour
 {
     [SerializeField] private GameObject _joystick;
     [SerializeField] private GameObject _action;
+    [SerializeField] private bool _simulateMobile = false; 
 
     private void Start()
     {
         var gameManager = ServiceLocator.Instance.GetService<GameManager>();
-        if (!gameManager.IsMobileWebGl)
+        if (!gameManager.IsMobileWebGl && _simulateMobile == false)
         {
             _joystick.SetActive(false);
             _action.SetActive(false);

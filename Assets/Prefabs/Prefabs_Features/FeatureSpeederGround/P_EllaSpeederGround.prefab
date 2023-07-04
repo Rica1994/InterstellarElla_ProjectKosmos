@@ -148,8 +148,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1068474750}
-  m_LocalRotation: {x: 0.23750147, y: -0.000000016714058, z: 0.000000004086541, w: 0.9713872}
-  m_LocalPosition: {x: 0, y: 2.46, z: -4.73}
+  m_LocalRotation: {x: 0.23750147, y: 0.000000016704771, z: -0.0000000040842707, w: 0.9713872}
+  m_LocalPosition: {x: 0, y: 2.460001, z: -4.7299805}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 883979801}
@@ -343,7 +343,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3687131221669572322}
   m_LocalRotation: {x: 0.23750147, y: -0.000000016714058, z: 0.000000004086541, w: 0.9713872}
-  m_LocalPosition: {x: 0, y: 2.46, z: -4.73}
+  m_LocalPosition: {x: 0, y: 2.460001, z: -4.7299805}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3687131222379983860}
@@ -523,6 +523,8 @@ MonoBehaviour:
   _speedSideways: 40
   _startSideWaySpeedAcceleration: 5
   _sidewaysAcceleration: 5
+  _forwardAngleRange: 120
+  _horizontalAngleRange: 60
   _boostSpeedMultiplier: 1.5
   _boostJumpMultiplier: 1.5
   _boostDuration: 3
@@ -530,6 +532,8 @@ MonoBehaviour:
   _gravityValue: -40
   _bounceFactor: 0.16
   _minimumSpeedToBounce: 30
+  _hoverDisplacement: 0.28
+  _upDownSpeed: 2.64
   _knockbackDuration: 3
   _knockbackMultiplier: 0.3
   _fakeGroundedTimeLimit: 0.25

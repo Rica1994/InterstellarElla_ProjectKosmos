@@ -33,6 +33,7 @@ public class GameManager : Service
             Debug.LogWarning("No player controller found in this scene");
         }
 
+        _isMobile = true;
 #if !UNITY_EDITOR && UNITY_WEBGL
         _isMobile = IsMobile();
 #endif
