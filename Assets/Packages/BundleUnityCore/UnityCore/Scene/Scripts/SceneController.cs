@@ -221,8 +221,8 @@ namespace UnityCore
                     case SceneType.S_Level_1_0_Work: return "S_Level_1_0_Work";
                     case SceneType.S_Level_1_0_Build: return "S_Level_1_0_Build";
 
-                    case SceneType.S_Mars_1_0_Work: return "S_Mars_1_0_Work";
-                    case SceneType.S_Mars_1_0_Build: return "S_Mars_1_0_Build";
+                    case SceneType.S_Mars_1_1_Work: return "S_Mars_1_1_Work";
+                    case SceneType.S_Mars_1_1_Build: return "S_Mars_1_1_Build";
 
                     case SceneType.S_Level_2_0_Work: return "S_Level_2_0_Work";
                     case SceneType.S_Level_2_0_Build: return "S_Level_2_0_Build";
@@ -252,8 +252,8 @@ namespace UnityCore
                     case "S_Level_1_0_Work": return SceneType.S_Level_1_0_Work;
                     case "S_Level_1_0_Build": return SceneType.S_Level_1_0_Build;
 
-                    case "S_Mars_1_0_Work": return SceneType.S_Mars_1_0_Work;
-                    case "S_Mars_1_0_Build": return SceneType.S_Mars_1_0_Build;
+                    case "S_Mars_1_1_Work": return SceneType.S_Mars_1_1_Work;
+                    case "S_Mars_1_1_Build": return SceneType.S_Mars_1_1_Build;
 
                     case "S_Level_2_0_Work": return SceneType.S_Level_2_0_Work;
                     case "S_Level_2_0_Build": return SceneType.S_Level_2_0_Build;

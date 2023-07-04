@@ -25,6 +25,7 @@ public class ChainManager : MonoBehaviourSingleton<ChainManager>
         
         _chain = new Chain(sequence.ChainActions);
         _chain.OnChainCompleted += OnChainCompleted;
+        _chain.Play();
     }
 
     private void OnChainCompleted(Chain chain)

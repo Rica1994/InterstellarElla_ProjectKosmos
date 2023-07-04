@@ -42,4 +42,16 @@ public class Chain
             }
         }
     }
+
+    public void Play()
+    {
+        Debug.Log("Chain Started");
+        if (_chainActions.Count > 0)
+        {
+            ChainAction nextChainAction = _chainActions.Peek();
+            nextChainAction.Execute();
+        }
+    }
 }
+
+
