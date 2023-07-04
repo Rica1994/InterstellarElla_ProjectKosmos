@@ -246,8 +246,8 @@ public class SpeederGround : PlayerController
        // float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
        // if (angle < 0.0f) angle += 360.0f;
         
-        float inputX = Mathf.Sign(_input.x);
-        float inputY = Mathf.Sign(_input.y);
+        float inputX = _input.x;
+        float inputY = _input.y;
 
         /*if (angle >= 90 - _forwardAngleRange && angle <= 90 + _forwardAngleRange)
         {
