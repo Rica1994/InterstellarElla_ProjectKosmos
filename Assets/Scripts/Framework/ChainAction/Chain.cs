@@ -42,6 +42,10 @@ public class Chain
                 nextChainAction.OnEnter();
                 nextChainAction.Execute();
             }
+            else
+            {
+                OnChainCompleted?.Invoke(this);
+            }
         }
     }
 

@@ -30,6 +30,6 @@ public class ChainManager : MonoBehaviourSingleton<ChainManager>
 
     private void OnChainCompleted(Chain chain)
     {
-        throw new NotImplementedException();
+        _chain = null;
     }
 }

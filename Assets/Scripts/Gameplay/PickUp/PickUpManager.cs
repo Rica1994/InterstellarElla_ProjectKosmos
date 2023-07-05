@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityCore.Audio;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [DefaultExecutionOrder(-100)]
 public class PickUpManager : Service
@@ -53,13 +54,8 @@ public class PickUpManager : Service
         //}
         
         #if UNITY_EDITOR
-        var pickUps = FindObjectsOfType<PickUp>();
-        foreach (PickUp pickUp in pickUps)
-        {
-            pickUp.OnPickUp += OnPickUpPickedUp;
-            
-        }
-        _pickUps.AddRange(pickUps);
+        FindPickUps();
+        SceneManager.sceneLoaded += OnSceneLoaded;
         #endif
         
         if (ServiceLocator.Instance.ServiceExists(typeof(LevelManager)) == true)
@@ -79,6 +75,22 @@ public class PickUpManager : Service
 
         // this will only subscribe the prefabs in the ASSETS (is an issue !)
         //serviceLocator.GetService<LevelManager>().Sections.ForEach(x => x.Loaded += OnSectionLoaded);
+    }
+
+    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        FindPickUps();
+    }
+
+    private void FindPickUps()
+    {
+        var pickUps = FindObjectsOfType<PickUp>();
+        foreach (PickUp pickUp in pickUps)
+        {
+            pickUp.OnPickUp += OnPickUpPickedUp;
+            
+        }
+        _pickUps.AddRange(pickUps);
     }
 
     /// <summary>
