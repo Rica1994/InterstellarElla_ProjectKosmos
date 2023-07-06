@@ -11,7 +11,10 @@ public class Chain
 
     #endregion
     private Queue<ChainAction> _chainActions = new Queue<ChainAction>();
-    
+
+    private ChainAction _currentChainAction;
+
+
     public Chain(List<ChainAction> chainActions)
     {
         foreach (ChainAction chainAction in chainActions)
@@ -29,23 +32,11 @@ public class Chain
     {
         if (_chainActions.Count == 0) return;
         
-        ChainAction currentChainAction = _chainActions.Peek();
-        currentChainAction.UpdateAction(elapsedTime);
-        if (currentChainAction.IsCompleted())
+        _currentChainAction = _chainActions.Peek();
+        _currentChainAction.UpdateAction(elapsedTime);
+        if (_currentChainAction.IsCompleted())
         {
-            currentChainAction.OnExit();
-            Debug.Log($"ChainAction {currentChainAction.name} completed");
-            _chainActions.Dequeue();
-            if (_chainActions.Count > 0)
-            {
-                ChainAction nextChainAction = _chainActions.Peek();
-                nextChainAction.OnEnter();
-                nextChainAction.Execute();
-            }
-            else
-            {
-                OnChainCompleted?.Invoke(this);
-            }
+            EndCurrentChainAction();
         }
     }
 
@@ -56,6 +47,23 @@ public class Chain
         {
             ChainAction nextChainAction = _chainActions.Peek();
             nextChainAction.Execute();
+        }
+    }
+
+    public void EndCurrentChainAction()
+    {
+        _currentChainAction.OnExit();
+        Debug.Log($"ChainAction {_currentChainAction.name} completed");
+        _chainActions.Dequeue();
+        if (_chainActions.Count > 0)
+        {
+            ChainAction nextChainAction = _chainActions.Peek();
+            nextChainAction.OnEnter();
+            nextChainAction.Execute();
+        }
+        else
+        {
+            OnChainCompleted?.Invoke(this);
         }
     }
 }

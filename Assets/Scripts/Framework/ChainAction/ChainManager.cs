@@ -32,4 +32,10 @@ public class ChainManager : MonoBehaviourSingleton<ChainManager>
     {
         _chain = null;
     }
+
+    public Chain GetChain()
+    {
+        Chain CurrentChain = _chain;
+        return CurrentChain;
+    }
 }
