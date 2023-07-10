@@ -17,8 +17,8 @@ namespace UnityCore
             S_Level_1_0_Work = 3,
             S_Level_1_0_Build = 4,
 
-            S_Mars_1_1_Work = 17,
-            S_Mars_1_1_Build = 18,
+            S_Level_1_1_Work = 17,
+            S_Level_1_1_Build = 18,
 
             S_Level_2_0_Work = 6,
             S_Level_2_0_Build = 7,

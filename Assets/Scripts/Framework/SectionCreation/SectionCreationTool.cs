@@ -22,7 +22,7 @@ public class SectionCreationTool : EditorWindow
 
     private string _adjustedSceneString = string.Empty;
 
-    private const string _localPathPrefix = "Assets/Prefabs/Prefabs_Sections/Prefabs_Sections_0";
+    private const string _localPathPrefix = "Assets/Prefabs/Prefabs_Sections/Prefabs_Sections_Level_0";
     private const string _localPathMidfix = "/Scene_";
     private const string _localPathSuffix = "/Resources/";
 
@@ -444,6 +444,11 @@ public class SectionCreationTool : EditorWindow
         // Split myString wherever there's a _ and make a String array out of it.
         string[] stringArray = SceneManager.GetActiveScene().name.Split("_"[0]);
 
+        foreach (var stringVar in stringArray)
+        {
+            Debug.Log(stringVar + " a piece of my scene name");
+        }
+
         // remove the work from the string name 
         if (_adjustedSceneString == string.Empty)
         {
@@ -452,6 +457,7 @@ public class SectionCreationTool : EditorWindow
                 _adjustedSceneString += (stringArray[i] + "_");
             }
         }
+        Debug.Log(_adjustedSceneString + " this is the adjusted scene string");
     }
 
     private void AnalyzeDataInSection()
