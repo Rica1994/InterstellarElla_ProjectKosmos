@@ -1,0 +1,1137 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: NewShaderVariants
+  m_Shaders:
+  - first: {fileID: 64, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: SHADOWS_SPLIT_SPHERES
+        passType: 0
+      - keywords: SHADOWS_SINGLE_CASCADE SHADOWS_SPLIT_SPHERES
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS SHADOWS_DEPTH SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 SHADOWS_DEPTH SHADOWS_SPLIT_SPHERES
+          UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 62, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 _EMISSION
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS UNITY_HDR_ON
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 75, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+      - keywords: 
+        passType: 12
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 12
+  - first: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS UNITY_HDR_ON
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: UNITY_HDR_ON
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS UNITY_HDR_ON
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 66, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _EMISSION
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _EMISSION
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH SHADOWS_SCREEN _EMISSION
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH VERTEXLIGHT_ON
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH SHADOWS_SCREEN VERTEXLIGHT_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH UNITY_HDR_ON
+        passType: 4
+      - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH SHADOWS_SCREEN
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH _EMISSION
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _EMISSION
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN
+          SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH SHADOWS_SCREEN
+          SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH UNITY_HDR_ON
+          _EMISSION
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN
+          SHADOWS_SPLIT_SPHERES UNITY_HDR_ON _EMISSION
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH UNITY_HDR_ON
+          _EMISSION
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH SHADOWS_SCREEN
+          SHADOWS_SPLIT_SPHERES UNITY_HDR_ON _EMISSION
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHATEST_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN _ALPHATEST_ON
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _ALPHATEST_ON
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH SHADOWS_SCREEN _ALPHATEST_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH _ALPHATEST_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH UNITY_HDR_ON
+          _ALPHATEST_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 LIGHTPROBE_SH SPOT UNITY_HDR_ON
+          _ALPHATEST_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH UNITY_HDR_ON
+          _ALPHATEST_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHABLEND_ON
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _ALPHABLEND_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHATEST_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _SPECULARHIGHLIGHTS_OFF
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _SPECULARHIGHLIGHTS_OFF
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _GLOSSYREFLECTIONS_OFF
+          _SPECULARHIGHLIGHTS_OFF
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _GLOSSYREFLECTIONS_OFF
+          _SPECULARHIGHLIGHTS_OFF
+        passType: 4
+      - keywords: SPOT
+        passType: 5
+      - keywords: DIRECTIONAL
+        passType: 5
+      - keywords: SHADOWS_DEPTH SPOT
+        passType: 5
+      - keywords: FOG_EXP2 SPOT
+        passType: 5
+      - keywords: FOG_EXP2 POINT
+        passType: 5
+      - keywords: FOG_EXP2 SHADOWS_DEPTH SPOT
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS SPOT UNITY_HDR_ON
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 SHADOWS_DEPTH SPOT UNITY_HDR_ON
+        passType: 5
+      - keywords: DIRECTIONAL _ALPHATEST_ON
+        passType: 5
+      - keywords: FOG_EXP2 SPOT _ALPHATEST_ON
+        passType: 5
+      - keywords: FOG_EXP2 POINT _ALPHATEST_ON
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 SPOT UNITY_HDR_ON _ALPHATEST_ON
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 SHADOWS_DEPTH SPOT UNITY_HDR_ON
+          _ALPHATEST_ON
+        passType: 5
+      - keywords: DIRECTIONAL _ALPHABLEND_ON
+        passType: 5
+      - keywords: FOG_EXP2 SPOT _ALPHABLEND_ON
+        passType: 5
+      - keywords: DIRECTIONAL _ALPHAPREMULTIPLY_ON
+        passType: 5
+      - keywords: FOG_EXP2 SPOT _ALPHAPREMULTIPLY_ON
+        passType: 5
+      - keywords: DIRECTIONAL _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 5
+      - keywords: DIRECTIONAL _ALPHATEST_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 5
+      - keywords: DIRECTIONAL _ALPHAPREMULTIPLY_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 5
+      - keywords: DIRECTIONAL _ALPHAPREMULTIPLY_ON _SPECULARHIGHLIGHTS_OFF
+        passType: 5
+      - keywords: 
+        passType: 8
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+      - keywords: SHADOWS_DEPTH SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 8
+      - keywords: INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS SHADOWS_DEPTH SHADOWS_SPLIT_SPHERES
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS SHADOWS_DEPTH SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 8
+      - keywords: _ALPHATEST_ON
+        passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHATEST_ON
+        passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHABLEND_ON
+        passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON
+        passType: 8
+      - keywords: SHADOWS_DEPTH _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHATEST_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+        passType: 8
+  - first: {fileID: 47, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _EMISSION
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
+      - keywords: 
+        passType: 8
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+  - first: {fileID: 106, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: BILLBOARD_FACE_CAMERA_POS UNITY_HDR_ON
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+      - keywords: _SUNDISK_NONE
+        passType: 0
+      - keywords: _SUNDISK_SIMPLE
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS _SUNDISK_SIMPLE
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS UNITY_HDR_ON _SUNDISK_SIMPLE
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 _SUNDISK_HIGH_QUALITY
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS UNITY_HDR_ON _SUNDISK_HIGH_QUALITY
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON _SUNDISK_HIGH_QUALITY
+        passType: 0
+  - first: {fileID: 207, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 210, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHABLEND_ON
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _ALPHABLEND_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH VERTEXLIGHT_ON _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHABLEND_ON _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _ALPHABLEND_ON _FADING_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH UNITY_HDR_ON
+          _ALPHABLEND_ON _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP FOG_EXP2 LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP FOG_EXP2 LIGHTPROBE_SH VERTEXLIGHT_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP LIGHTPROBE_SH _ALPHABLEND_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP FOG_EXP2 LIGHTPROBE_SH _ALPHABLEND_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP FOG_EXP2 LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP LIGHTPROBE_SH _ALPHAMODULATE_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP FOG_EXP2 LIGHTPROBE_SH _ALPHAMODULATE_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP LIGHTPROBE_SH _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP FOG_EXP2 LIGHTPROBE_SH _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP FOG_EXP2 LIGHTPROBE_SH VERTEXLIGHT_ON _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP LIGHTPROBE_SH _ALPHABLEND_ON _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP FOG_EXP2 LIGHTPROBE_SH _ALPHABLEND_ON _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP FOG_EXP2 LIGHTPROBE_SH _ALPHAPREMULTIPLY_ON
+          _FADING_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP LIGHTPROBE_SH _FADING_ON _REQUIRE_UV2
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP FOG_EXP2 LIGHTPROBE_SH VERTEXLIGHT_ON _FADING_ON
+          _REQUIRE_UV2
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP LIGHTPROBE_SH _ALPHABLEND_ON _FADING_ON
+          _REQUIRE_UV2
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP FOG_EXP2 LIGHTPROBE_SH _ALPHABLEND_ON _FADING_ON
+          _REQUIRE_UV2
+        passType: 4
+      - keywords: PROCEDURAL_INSTANCING_ON SHADOWS_DEPTH _ALPHABLEND_ON
+        passType: 8
+      - keywords: PROCEDURAL_INSTANCING_ON SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON
+        passType: 8
+      - keywords: PROCEDURAL_INSTANCING_ON SHADOWS_DEPTH _ALPHAMODULATE_ON
+        passType: 8
+      - keywords: PROCEDURAL_INSTANCING_ON SHADOWS_DEPTH _ALPHABLEND_ON _REQUIRE_UV2
+        passType: 8
+      - keywords: 
+        passType: 13
+      - keywords: _REQUIRE_UV2
+        passType: 13
+  - first: {fileID: 211, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: FOG_EXP2
+        passType: 4
+      - keywords: INSTANCING_ON
+        passType: 4
+      - keywords: FOG_EXP2 INSTANCING_ON
+        passType: 4
+      - keywords: FOG_EXP2 _ALPHABLEND_ON
+        passType: 4
+      - keywords: INSTANCING_ON _ALPHABLEND_ON
+        passType: 4
+      - keywords: FOG_EXP2 INSTANCING_ON _ALPHABLEND_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH UNITY_HDR_ON
+          _ALPHABLEND_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH UNITY_HDR_ON
+          VERTEXLIGHT_ON _ALPHABLEND_ON
+        passType: 4
+      - keywords: PROCEDURAL_INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: PROCEDURAL_INSTANCING_ON _ALPHABLEND_ON
+        passType: 8
+      - keywords: 
+        passType: 13
+      - keywords: INSTANCING_ON
+        passType: 13
+  - first: {fileID: 10500, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 8
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+  - first: {fileID: 10501, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 8
+  - first: {fileID: 10502, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 8
+  - first: {fileID: 10504, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: DIRECTIONAL DIRLIGHTMAP_COMBINED INSTANCING_ON LIGHTMAP_ON
+        passType: 4
+      - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL DIRLIGHTMAP_COMBINED FOG_EXP2 INSTANCING_ON LIGHTMAP_ON
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+          UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH
+          UNITY_HDR_ON
+        passType: 4
+      - keywords: FOG_EXP2 INSTANCING_ON SPOT
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SPOT UNITY_HDR_ON
+        passType: 5
+      - keywords: 
+        passType: 8
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+      - keywords: INSTANCING_ON
+        passType: 8
+      - keywords: INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SHADOWS_DEPTH
+          SHADOWS_SPLIT_SPHERES
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SHADOWS_DEPTH
+          SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 8
+      - keywords: 
+        passType: 11
+      - keywords: INSTANCING_ON
+        passType: 13
+      - keywords: BILLBOARD_FACE_CAMERA_POS INSTANCING_ON
+        passType: 13
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON
+        passType: 13
+  - first: {fileID: 10506, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 10505, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: DIRECTIONAL DIRLIGHTMAP_COMBINED INSTANCING_ON LIGHTMAP_ON
+        passType: 4
+      - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL DIRLIGHTMAP_COMBINED FOG_EXP2 INSTANCING_ON LIGHTMAP_ON
+        passType: 4
+      - keywords: DIRECTIONAL DIRLIGHTMAP_COMBINED FOG_EXP2 INSTANCING_ON LIGHTMAP_ON
+          SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH SHADOWS_SCREEN
+          VERTEXLIGHT_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+          UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+          SHADOWS_SCREEN SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH
+          UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH
+          SHADOWS_SCREEN SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
+      - keywords: INSTANCING_ON SPOT
+        passType: 5
+      - keywords: FOG_EXP2 INSTANCING_ON SPOT
+        passType: 5
+      - keywords: FOG_EXP2 INSTANCING_ON POINT
+        passType: 5
+      - keywords: FOG_EXP2 INSTANCING_ON SHADOWS_DEPTH SPOT
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL UNITY_HDR_ON
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SPOT UNITY_HDR_ON
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SHADOWS_DEPTH
+          SPOT UNITY_HDR_ON
+        passType: 5
+      - keywords: 
+        passType: 8
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+      - keywords: INSTANCING_ON
+        passType: 8
+      - keywords: INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SHADOWS_DEPTH
+          SHADOWS_SPLIT_SPHERES
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SHADOWS_DEPTH
+          SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS INSTANCING_ON
+        passType: 13
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON
+        passType: 13
+  - first: {fileID: 9000, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9001, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9002, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9003, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9004, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9007, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9101, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9103, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: FOG_EXP2
+        passType: 0
+      - keywords: UNITY_HDR_ON
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS UNITY_HDR_ON
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 10622, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+  - first: {fileID: 10620, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
+      - keywords: INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+  - first: {fileID: 10625, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: DIRECTIONAL DIRLIGHTMAP_COMBINED INSTANCING_ON LIGHTMAP_ON
+        passType: 4
+      - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL DIRLIGHTMAP_COMBINED FOG_EXP2 INSTANCING_ON LIGHTMAP_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+          UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH
+          UNITY_HDR_ON
+        passType: 4
+      - keywords: FOG_EXP2 INSTANCING_ON SPOT
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SPOT UNITY_HDR_ON
+        passType: 5
+      - keywords: 
+        passType: 8
+      - keywords: INSTANCING_ON
+        passType: 8
+      - keywords: INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SHADOWS_DEPTH
+          SHADOWS_SPLIT_SPHERES
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS INSTANCING_ON SHADOWS_DEPTH SHADOWS_SPLIT_SPHERES
+          UNITY_HDR_ON
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SHADOWS_DEPTH
+          SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 8
+      - keywords: 
+        passType: 11
+      - keywords: INSTANCING_ON
+        passType: 13
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON
+        passType: 13
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON UNITY_HDR_ON
+        passType: 13
+  - first: {fileID: 10626, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 10623, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH SHADOWS_SCREEN
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+          UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL INSTANCING_ON LIGHTPROBE_SH
+          SHADOWS_SCREEN SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH
+          UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL FOG_EXP2 INSTANCING_ON LIGHTPROBE_SH
+          SHADOWS_SCREEN SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
+      - keywords: INSTANCING_ON SPOT
+        passType: 5
+      - keywords: INSTANCING_ON SHADOWS_DEPTH SPOT
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SPOT UNITY_HDR_ON
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SHADOWS_DEPTH
+          SPOT UNITY_HDR_ON
+        passType: 5
+      - keywords: 
+        passType: 8
+      - keywords: INSTANCING_ON
+        passType: 8
+      - keywords: INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: FOG_EXP2 INSTANCING_ON SHADOWS_DEPTH SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SHADOWS_DEPTH
+          SHADOWS_SPLIT_SPHERES
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON SHADOWS_DEPTH
+          SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 8
+      - keywords: INSTANCING_ON
+        passType: 13
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON
+        passType: 13
+      - keywords: BILLBOARD_FACE_CAMERA_POS INSTANCING_ON UNITY_HDR_ON
+        passType: 13
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 INSTANCING_ON UNITY_HDR_ON
+        passType: 13
+  - first: {fileID: 10708, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 1
+  - first: {fileID: 10750, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: FOG_EXP2
+        passType: 0
+  - first: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: FOG_EXP2
+        passType: 0
+  - first: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: FOG_EXP2
+        passType: 0
+  - first: {fileID: 10757, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 10760, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 18001, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 18002, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 18003, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 18004, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: a02a7d8c237544f1962732b55a9aebf1, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 14eb328de4b8eb245bb7cea29e4ac00b, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 85187c2149c549c5b33f0cdb02836b17, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL
+        passType: 4
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+  - first: {fileID: 4800000, guid: f7ada0af4f174f0694ca6a487b8f543d, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL
+        passType: 4
+      - keywords: POINT
+        passType: 5
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+  - first: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: c8d12adcee749c344b8117cf7c7eb912, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: bc1ede39bf3643ee8e493720e4259791, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: dd89cf5b9246416f84610a006f916af7, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: fe393ace9b354375a9cb14cdbbc28be4, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 8a8e9d2fb0d402542a3d0a7542de5fcf, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
+      - keywords: 
+        passType: 8
+  - first: {fileID: 4800000, guid: 23a71d254a4ba1943948ef4b55fe3886, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: b6554c3eb6f000645aa82b2c6789898c, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: eac7df44977a8f84eb32bb66ab9aacb2, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: eea7aae27197ba74f9c30447124cd30b, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: c1e1d3119c6fd4646aea0b4b74cacc1a, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 67f9497810829eb4791ec19e95781e51, type: 3}
+    second:
+      variants:
+      - keywords: APPLY_FORWARD_FOG BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: d7640629310e79646af0f46eb55ae466, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: APPLY_FORWARD_FOG FOG_EXP2
+        passType: 0
+      - keywords: APPLY_FORWARD_FOG BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 382151503e2a43a4ebb7366d1632731d, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+      - keywords: FINALPASS
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FINALPASS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+      - keywords: BLOOM FINALPASS
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS BLOOM FINALPASS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+      - keywords: BLOOM_LOW FINALPASS
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS BLOOM_LOW FINALPASS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+      - keywords: BLOOM_LOW COLOR_GRADING_LDR_2D FINALPASS
+        passType: 0
+      - keywords: BLOOM DISTORT FINALPASS
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS BLOOM DISTORT FINALPASS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+      - keywords: BLOOM COLOR_GRADING_LDR_2D DISTORT FINALPASS
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS BLOOM COLOR_GRADING_LDR_2D DISTORT FINALPASS
+          FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+      - keywords: BLOOM CHROMATIC_ABERRATION_LOW COLOR_GRADING_LDR_2D DISTORT FINALPASS
+        passType: 0
+  - first: {fileID: 4800000, guid: 7ad194cbe7d006f4bace915156972026, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 4bf4cff0d0bac3d43894e2e8839feb40, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 5bb6ef6f3e1b20348b4fdb01e4c404e2, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 2c459b89a7c8b1a4fbefe0d81341651c, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: cdbdb71de5f9c454b980f6d0e87f0afb, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 0ef78d24e85a44f4da9d5b5eaa00e50b, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: de7f3ac52268a194383c7d62c2a343c1, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 00e56516c5ee19442bc12a25d21ca18d, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 209f4c3496c1b46a3a2f9f0f27be788f, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: a07688e921e974338945464731e069ce, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 911130a939bf84843bcc4211c327f579, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL
+        passType: 4
+      - keywords: POINT
+        passType: 5
+      - keywords: 
+        passType: 6
+      - keywords: 
+        passType: 7
+      - keywords: 
+        passType: 10
+      - keywords: 
+        passType: 11
+  - first: {fileID: 4800000, guid: f1f8c9218a014514ab6f04436ad4c25a, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 4293210a3280c4283b9872316017f1f9, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: c26db15b9a2ed4b2ebefefd26ce85ae1, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 33cb4e8ff0c1d43ac8ec40692656c7ed, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL
+        passType: 4
+      - keywords: POINT
+        passType: 5
+      - keywords: 
+        passType: 6
+      - keywords: 
+        passType: 7
+      - keywords: 
+        passType: 10
+      - keywords: 
+        passType: 11
+  - first: {fileID: 4800000, guid: 4300ae919783d4fa38001d745fbdecc1, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 04b5dda5f278e4f56a9dbda64d90bb95, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL
+        passType: 4
+  - first: {fileID: 4800000, guid: 24f9f312f97bd48dba1a728d58c89842, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 25b8a80cb03994c769145599929a5e97, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 35e778fba8b2b49a198d8d7cfced67eb, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 86212504c7e9f468db2300dc5932dc17, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: d632b247f24ee384c9fbd156e34ea930, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: d6e5744ac426949ff8c0f02936689d4c, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: c84d57d423a2042eb92da86f9fa670a3, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: e8c3a1662a88140ae84d69a3a4cfdbaa, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 1ccecd9b89b8a4f14bfb64f29ddfcc81, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 1
+      - keywords: 
+        passType: 2
+      - keywords: DIRECTIONAL
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH
+        passType: 4
+      - keywords: DIRECTIONAL FOG_EXP2 LIGHTPROBE_SH SHADOWS_SCREEN
+        passType: 4
+      - keywords: POINT
+        passType: 5
+      - keywords: 
+        passType: 8
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+      - keywords: 
+        passType: 10
+      - keywords: 
+        passType: 11
+  - first: {fileID: 4800000, guid: 8ca8b34aa013842f3b399b6961e7dc3b, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 6f37d9e45fbae41b386f76d3bfefec4a, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: cfa7edf01005f4e338d973cea2f6eab3, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0

@@ -10,7 +10,7 @@ public class SpeederGround : PlayerController
     [Header("Speed")]
     [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f);
 
-    [SerializeField] private float _speedForward = 50f;    
+    [SerializeField] public float _speedForward = 50f;    
     [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
     [SerializeField] private float _startSidewaySpeed = 20.0f;
     [SerializeField] private float _speedSideways = 15f;

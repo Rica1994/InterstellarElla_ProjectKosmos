@@ -13,11 +13,6 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
     private float _totalDeltaTime = 0f;
     private float _averageFPS = 0f;
 
-    private void Start()
-    {
-        Graphics.activeTier = GraphicsTier.Tier1;
-    }
-
     private void Update()
     {
 
@@ -33,11 +28,14 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
             Debug.Log("Average FPS: " + _averageFPS);
 
             // Check if the average FPS falls below a threshold for a lower-end device
-            if (_averageFPS > _lowerEndFPSThreshold)
+            if (_averageFPS > _lowerEndFPSThreshold && Graphics.activeTier != GraphicsTier.Tier2)
             {
                 // Adjust graphics settings for high-end devices
                 QualitySettings.SetQualityLevel(1); // Set the highest quality level or adjust as needed
-                Graphics.activeTier = GraphicsTier.Tier2;
+            }
+            else
+            {
+
             }
 
             // Disable the benchmark script after measuring the performance
