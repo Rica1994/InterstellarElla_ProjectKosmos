@@ -15,6 +15,9 @@ public class SwapCamera : MonoBehaviour
     [SerializeField]
     private float _blendSpeed = 3f;
 
+    [SerializeField]
+    private bool _isStatic = false;
+
 
     private void Start()
     {
@@ -35,9 +38,17 @@ public class SwapCamera : MonoBehaviour
         {
             Debug.Log("Triggered the sawpping to a new cam");
 
-            // parent the target to the player 
-            _target.transform.SetParent(exploringScript.CameraTargets.transform);
-            _target.transform.localPosition = new Vector3(0, 0, 0);
+            if (_isStatic == true)
+            {
+                // do nothing in particular with th target
+            }
+            else
+            {
+                // parent the target to the player 
+                _target.transform.SetParent(exploringScript.CameraTargets.transform);
+                _target.transform.localPosition = new Vector3(0, 0, 0);
+            }
+
 
             // access manager for swapCamera logic
             ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>().SwapCamera(_virtualCamera, _blendSpeed);
