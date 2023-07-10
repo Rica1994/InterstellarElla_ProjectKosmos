@@ -49,7 +49,7 @@ public class Chain
             nextChainAction.Execute();
         }
     }
-
+    
     public void EndCurrentChainAction()
     {
         _currentChainAction.OnExit();
@@ -65,6 +65,11 @@ public class Chain
         {
             OnChainCompleted?.Invoke(this);
         }
+    }
+
+    public void StopChain()
+    {
+        _chainActions.Clear();
     }
 }
 
