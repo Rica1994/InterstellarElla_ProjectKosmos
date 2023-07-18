@@ -22,34 +22,16 @@ public class MaggieChainAction : ChainAction
         base.Execute();
         _maggie.gameObject.SetActive(true);
       //  StartCoroutine(PlayAudioAfter(_maggie.PopUpLength));
-      StartCoroutine(DoAfter(_maggie.PopUpLength, () =>
+      StartCoroutine(Helpers.DoAfter(_maggie.PopUpLength, () =>
       {
           ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieVoiceClip);
-          StartCoroutine(DoAfter(_maggieVoiceClip.Clip.length, () => _maggie.PopDown()));
+          StartCoroutine(Helpers.DoAfter(_maggieVoiceClip.Clip.length, () => _maggie.PopDown()));
       }));
-    }
-
-    public override void UpdateAction(float elapsedTime)
-    {
-        base.UpdateAction(elapsedTime);
     }
 
     public override void OnExit()
     {
         base.OnExit();
         _maggie.gameObject.SetActive(false);
-    }
-
-   // private IEnumerator PlayAudioAfter(float time)
-   // {
-   //     yield return new WaitForSeconds(time);
-   //     ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieVoiceClip);
-   //     StartCoroutine()
-   // }
-
-    private IEnumerator DoAfter(float time, Action action)
-    {
-        yield return new WaitForSeconds(time);
-        action.Invoke();
     }
 }
