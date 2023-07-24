@@ -15,6 +15,9 @@ public class Maggie : MonoBehaviour
     private AnimationClip _popDownClip;
     
     private const string popDownTrigger = "PopDown";
+    private const string _happyTrigger = "Happy";
+    private const string _sadTrigger = "Sad";
+    
     private float _popUpLength = 2.0f;
     private float _popDownLength = 2.0f;
 
@@ -33,5 +36,15 @@ public class Maggie : MonoBehaviour
     {
      //   _animator.GetCurrentAnimatorClipInfo()
         _animator.SetTrigger(popDownTrigger);
+    }
+
+    public void MakeHappy()
+    {
+        _animator.SetTrigger(_happyTrigger);
+    }
+
+    public void MakeSad()
+    {
+        _animator.SetTrigger(_sadTrigger);
     }
 }
