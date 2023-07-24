@@ -15,6 +15,7 @@ public class VirtualCameraManagerExploring : Service
 
     private List<CinemachineVirtualCamera> _currentlyActiveVirtualCameras = new List<CinemachineVirtualCamera>();
     private List<Cinemachine3rdPersonFollow> _virtualCameraFollows = new List<Cinemachine3rdPersonFollow>();
+    private List<CinemachineFramingTransposer> _virtualCameraFramingTransposers = new List<CinemachineFramingTransposer>();
 
     private bool _runningZoomCoroutine;
 
@@ -25,18 +26,31 @@ public class VirtualCameraManagerExploring : Service
 
     private void Start()
     {
-        var thirdPersonFollow = _firstVirtualCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
-
-        // set original cam distance
-        _originalCameraDistance_1 = thirdPersonFollow.CameraDistance;
         // add current virtual camera to active virtual camera (list for zooming)
         _currentlyActiveVirtualCameras.Add(_firstVirtualCam);
-        // add the 3rd person component to a list as well
-        _virtualCameraFollows.Add(thirdPersonFollow);
+
+        var thirdPersonFollow = _firstVirtualCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+        var framingTransposer = _firstVirtualCam.GetCinemachineComponent<CinemachineFramingTransposer>();
+
+        if (thirdPersonFollow != null)
+        {
+            // set original cam distance
+            _originalCameraDistance_1 = thirdPersonFollow.CameraDistance;
+
+            // add the 3rd person component to a list as well
+            _virtualCameraFollows.Add(thirdPersonFollow);
+        }
+        else if (framingTransposer != null)
+        {
+            // set original cam distance
+            _originalCameraDistance_1 = framingTransposer.m_CameraDistance;
+
+            // add the framing transposer component to a list as well
+            _virtualCameraFramingTransposers.Add(framingTransposer);
+        }
 
         // parent the virtual camera under the manager
         _firstVirtualCam.transform.SetParent(this.transform);
-
 
         // reset priority of first cam (if all virtual cameras are not on same priority, blending seems to have issues)
         _firstVirtualCam.Priority = 10;
@@ -59,11 +73,34 @@ public class VirtualCameraManagerExploring : Service
     /// <param name="virtualCam"></param>
     public void SwapCamera(CinemachineVirtualCamera virtualCam, float blendSpeed)
     {
+        // add current virtual camera to active virtual camera (list for zooming)
+        _currentlyActiveVirtualCameras.Add(virtualCam);
+
+        // check for framing transposer or thirdperson camera
         var thirdPersonFollow = virtualCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
-        // set original cam distance
-        _originalCameraDistance_2 = thirdPersonFollow.CameraDistance;
-        //  set this new cameras 'CameraDistance' to its value + the currently adjusted zoom (in case we get a camera swap mid-zoom)
-        thirdPersonFollow.CameraDistance += _currentZoomFactor;
+        var framingTransposer = virtualCam.GetCinemachineComponent<CinemachineFramingTransposer>();
+
+        if (thirdPersonFollow != null)
+        {
+            // set original cam distance
+            _originalCameraDistance_2 = thirdPersonFollow.CameraDistance;
+            //  set this new cameras 'CameraDistance' to its value + the currently adjusted zoom (in case we get a camera swap mid-zoom)
+            thirdPersonFollow.CameraDistance += _currentZoomFactor;
+
+            // add the 3rd person component to a list as well
+            _virtualCameraFollows.Add(virtualCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>());
+        }
+        else if(framingTransposer != null)
+        {
+            // set original cam distance
+            _originalCameraDistance_2 = framingTransposer.m_CameraDistance;
+            //  set this new cameras 'CameraDistance' to its value + the currently adjusted zoom (in case we get a camera swap mid-zoom)
+            framingTransposer.m_CameraDistance += _currentZoomFactor;
+
+            // add the framing transposer component to a list as well
+            _virtualCameraFramingTransposers.Add(framingTransposer);
+        }
+        
 
         // set the blend speed
         _camBrain.m_DefaultBlend.m_Time = blendSpeed;
@@ -71,11 +108,6 @@ public class VirtualCameraManagerExploring : Service
         // enable the new camera
         virtualCam.gameObject.SetActive(true);
         virtualCam.MoveToTopOfPrioritySubqueue();
-
-        // add current virtual camera to active virtual camera (list for zooming)
-        _currentlyActiveVirtualCameras.Add(virtualCam);
-        // add the 3rd person component to a list as well
-        _virtualCameraFollows.Add(virtualCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>());
 
         // this will remove the previous camera once the blending time on Brain has passed
         StartCoroutine(RemoveCameraAfterBlend());
@@ -118,7 +150,7 @@ public class VirtualCameraManagerExploring : Service
         _currentlyActiveVirtualCameras[0].MoveToTopOfPrioritySubqueue();
         virtualCam.gameObject.SetActive(false);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
 
         // reset blending mode
         _camBrain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
@@ -133,13 +165,25 @@ public class VirtualCameraManagerExploring : Service
             GameObject previousCamera = _currentlyActiveVirtualCameras[0].gameObject;           
             previousCamera.SetActive(false);
 
-            // set camera distance to original of camera getting removed
-            _virtualCameraFollows[0].CameraDistance = _originalCameraDistance_1;
+            if (_virtualCameraFollows.Count > 0)
+            {
+                // set camera distance to original of camera getting removed
+                _virtualCameraFollows[0].CameraDistance = _originalCameraDistance_1;
+
+                _virtualCameraFollows.RemoveAt(0);
+            }
+            else if (_virtualCameraFramingTransposers.Count > 0)
+            {
+                // set camera distance to original of camera getting removed
+                _virtualCameraFramingTransposers[0].m_CameraDistance = _originalCameraDistance_1;
+
+                _virtualCameraFramingTransposers.RemoveAt(0);
+            }
+
             // re-place the camera distance value of the 1st float
             _originalCameraDistance_1 = _originalCameraDistance_2;
 
-            _currentlyActiveVirtualCameras.RemoveAt(0);
-            _virtualCameraFollows.RemoveAt(0);
+            _currentlyActiveVirtualCameras.RemoveAt(0);      
         }
     }
 
@@ -155,11 +199,19 @@ public class VirtualCameraManagerExploring : Service
             _currentZoomFactor += zoomFactor;
             timePassed += Time.deltaTime;
 
-            for (int i = 0; i < _currentlyActiveVirtualCameras.Count; i++)
+            //for (int i = 0; i < _currentlyActiveVirtualCameras.Count; i++)
+            //{
+            //    _virtualCameraFollows[i].CameraDistance += zoomFactor;
+            //}
+            for (int i = 0; i < _virtualCameraFollows.Count; i++)
             {
                 _virtualCameraFollows[i].CameraDistance += zoomFactor;
             }
-       
+            for (int i = 0; i < _virtualCameraFramingTransposers.Count; i++)
+            {
+                _virtualCameraFramingTransposers[i].m_CameraDistance += zoomFactor;
+            }
+
             yield return new WaitForEndOfFrame();
         }
 
@@ -173,9 +225,17 @@ public class VirtualCameraManagerExploring : Service
         while (_currentZoomFactor > 0)
         {
             _currentZoomFactor -= zoomFactor;
-            for (int i = 0; i < _currentlyActiveVirtualCameras.Count; i++)
+            //for (int i = 0; i < _currentlyActiveVirtualCameras.Count; i++)
+            //{
+            //    _virtualCameraFollows[i].CameraDistance -= zoomFactor;
+            //}
+            for (int i = 0; i < _virtualCameraFollows.Count; i++)
             {
                 _virtualCameraFollows[i].CameraDistance -= zoomFactor;
+            }
+            for (int i = 0; i < _virtualCameraFramingTransposers.Count; i++)
+            {
+                _virtualCameraFramingTransposers[i].m_CameraDistance -= zoomFactor;
             }
 
             yield return new WaitForEndOfFrame();

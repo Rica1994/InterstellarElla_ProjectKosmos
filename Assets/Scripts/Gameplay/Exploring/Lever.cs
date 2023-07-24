@@ -18,14 +18,17 @@ public class Lever : MonoBehaviour
     [Header("Swap Cameras I influence")]
     [SerializeField] private SwapCamera _swapCameraActiveBeforeLeverHit;
     [SerializeField] private SwapCamera _swapCameraActiveAfterLeverHit;
+    [SerializeField] private SwapCamera _swapCameraActiveAfterLeverHitOnLever;
 
+
+    private float _cutsceneBufferTime = 1.5f;
 
     private bool _isActive = false;
 
 
     private void Start()
     {
-        SwapCurrentActiveCamera(false);
+        SwapCurrentActiveCamera(false, true);
     }
 
 
@@ -49,14 +52,14 @@ public class Lever : MonoBehaviour
         StartCoroutine(EnableJumpPad());
 
         // disable/enable a specific camera if present
-        SwapCurrentActiveCamera();
+        SwapCurrentActiveCamera(true, false);
 
         _isActive = true;
     }
 
 
 
-    private void SwapCurrentActiveCamera(bool hitLever = false)
+    private void SwapCurrentActiveCamera(bool hitLever = false, bool activateOnLeverCamera = false)
     {
         if (_swapCameraActiveBeforeLeverHit != null)
         {
@@ -66,17 +69,34 @@ public class Lever : MonoBehaviour
         if (_swapCameraActiveAfterLeverHit != null)
         {
             _swapCameraActiveAfterLeverHit.gameObject.SetActive(hitLever);
-        }      
+        }
+
+        // this one only gets disabled in start, enable at specifically the end of the cutscene
+        if (activateOnLeverCamera == true)
+        {
+            if (_swapCameraActiveAfterLeverHitOnLever != null)
+            {
+                _swapCameraActiveAfterLeverHitOnLever.gameObject.SetActive(hitLever);
+            }
+        }
     }
 
 
     private IEnumerator EnableJumpPad()
     {
         // wait for the amount of time in the animation - 2f (still see jumpPad activate within cutscene)
-        yield return new WaitForSeconds(_animationCamera.clip.length - 1.5f);
+        yield return new WaitForSeconds(_animationCamera.clip.length - _cutsceneBufferTime);
 
         // activates JumpPad
         _jumpPad.ActivateJumpPad();
+
+        yield return new WaitForSeconds(_cutsceneBufferTime + 0.1f);
+
+        // activate the camera on top of the lever if present
+        if (_swapCameraActiveAfterLeverHitOnLever != null)
+        {
+            _swapCameraActiveAfterLeverHitOnLever.gameObject.SetActive(true);
+        }
     }
     private IEnumerator TogglePlayerInput(EllaExploring exploringScript)
     {
