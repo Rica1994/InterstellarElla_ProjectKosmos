@@ -15,7 +15,18 @@ public class Lever : MonoBehaviour
     [Header("Components &|| Children")]
     [SerializeField] private Animation _animationLever;
 
+    [Header("Swap Cameras I influence")]
+    [SerializeField] private SwapCamera _swapCameraActiveBeforeLeverHit;
+    [SerializeField] private SwapCamera _swapCameraActiveAfterLeverHit;
+
+
     private bool _isActive = false;
+
+
+    private void Start()
+    {
+        SwapCurrentActiveCamera(false);
+    }
 
 
     public void ActivateCameraCutscene(EllaExploring exploringScript)
@@ -37,7 +48,25 @@ public class Lever : MonoBehaviour
         // start routine for JumpPad
         StartCoroutine(EnableJumpPad());
 
+        // disable/enable a specific camera if present
+        SwapCurrentActiveCamera();
+
         _isActive = true;
+    }
+
+
+
+    private void SwapCurrentActiveCamera(bool hitLever = false)
+    {
+        if (_swapCameraActiveBeforeLeverHit != null)
+        {
+            _swapCameraActiveBeforeLeverHit.gameObject.SetActive(!hitLever);
+        }
+        
+        if (_swapCameraActiveAfterLeverHit != null)
+        {
+            _swapCameraActiveAfterLeverHit.gameObject.SetActive(hitLever);
+        }      
     }
 
 
@@ -57,5 +86,4 @@ public class Lever : MonoBehaviour
 
         exploringScript.BlockMove = false;
     }
-
 }
