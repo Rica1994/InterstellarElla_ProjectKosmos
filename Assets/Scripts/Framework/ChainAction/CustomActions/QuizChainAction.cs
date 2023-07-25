@@ -63,6 +63,8 @@ public class QuizChainAction : ChainAction
         // Show the answers
         foreach (var quizAnswer in _quiz.Answers)
         {
+            quizAnswer.UnHighlight();
+            quizAnswer.Deselect();
             Helpers.Show(quizAnswer.transform, 1.0f);
             audioController.PlayAudio(quizAnswer.AudioRecording);
             yield return new WaitForSeconds(quizAnswer.AudioRecording.Clip.length);

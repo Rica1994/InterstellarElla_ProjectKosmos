@@ -5,6 +5,7 @@ using DG.Tweening;
 using TMPro;
 using UnityCore.Audio;
 using UnityEngine;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 public class Quiz : MonoBehaviour
@@ -103,6 +104,7 @@ public class Quiz : MonoBehaviour
         // Check whether it is correct.
         bool answeredCorrectly = _correctAnswer == selectedAnswer;
         selectedAnswer.Highlight(answeredCorrectly);
+        selectedAnswer.Button.interactable = false;
 
         // Act accordingly
         // draft for now to have maggie react here. maybe with want to keep the quiz a generic script? 
@@ -122,7 +124,19 @@ public class Quiz : MonoBehaviour
             if (_questionFailedSound != null)
                 ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_questionFailedSound);
             maggie.MakeSad();
-            Helpers.DoAfter(2.5f, ResetQuestion, this);
+            Helpers.DoAfter(2.5f, () =>
+            {
+                // reset other answers
+                foreach (var answer in _answers)
+                {
+                    if (answer == selectedAnswer) continue;
+                    answer.Button.interactable = true;
+                    answer.Deselect();
+                    answer.UnHighlight();
+                }
+                _submitButton.interactable = true;
+                //ResetQuestion();
+            }, this);
         }
     }
 
