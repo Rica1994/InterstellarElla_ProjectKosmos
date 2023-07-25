@@ -573,6 +573,20 @@ MonoBehaviour:
     - Ben
     - Ben
     CorrectIndex: 1
+  - QuestionString: Wie is de coolste fabriquer
+    AudioElement:
+      Clip: {fileID: 8300000, guid: 713a39b6b4824b54caf22012ccc84f1f, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - Ben
+    - Ben
+    - Ben
+    CorrectIndex: 1
 --- !u!1 &1796135122
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,25 +643,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4235481272690249404, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
+    - target: {fileID: 30130465024572802, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
+      propertyPath: _audioRecording.Clip
+      value: 
+      objectReference: {fileID: 8300000, guid: ac7701e17f96717438895befad85b933, type: 3}
+    - target: {fileID: 30130465024572802, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
+      propertyPath: _audioRecording.Type
+      value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 4235481272690249404, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4235481272690249404, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4235481272690249404, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4235481272690249404, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
+    - target: {fileID: 30130466341577462, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
+      propertyPath: _audioRecording.Clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 7b8d2b4163960fa4daff8c05688665db, type: 3}
+    - target: {fileID: 30130466341577462, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
+      propertyPath: _audioRecording.Type
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4235481272775225329, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
       propertyPath: m_Name
@@ -741,45 +751,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9163145340440428744, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9163145340440428744, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9163145340440428744, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9163145340440428744, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9163145340440428744, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9163145341707116476, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9163145341707116476, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9163145341707116476, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9163145341707116476, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9163145341707116476, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
+    - target: {fileID: 5009815445353213058, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
+      propertyPath: _audioRecording.Clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 4265e2353842ce646a39f9a0ca5337f6, type: 3}
+    - target: {fileID: 5009815445353213058, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
+      propertyPath: _audioRecording.Type
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
