@@ -63,6 +63,7 @@ public class QuizChainAction : ChainAction
         // Show the answers
         foreach (var quizAnswer in _quiz.Answers)
         {
+            quizAnswer.IsDisabled = false;
             quizAnswer.UnHighlight();
             quizAnswer.Deselect();
             Helpers.Show(quizAnswer.transform, 1.0f);

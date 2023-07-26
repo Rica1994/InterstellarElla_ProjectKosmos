@@ -121,15 +121,19 @@ public class Quiz : MonoBehaviour
         else
         {
             Debug.Log("Answered Incorrectly");
+            
             if (_questionFailedSound != null)
                 ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_questionFailedSound);
             maggie.MakeSad();
+
+            selectedAnswer.IsDisabled = true;
+            
             Helpers.DoAfter(2.5f, () =>
             {
-                // reset other answers
+                // reset other answers besides the disabled
                 foreach (var answer in _answers)
                 {
-                    if (answer == selectedAnswer) continue;
+                    if (answer == selectedAnswer || answer.IsDisabled) continue;
                     answer.Button.interactable = true;
                     answer.Deselect();
                     answer.UnHighlight();
@@ -144,6 +148,7 @@ public class Quiz : MonoBehaviour
     {
         foreach (var a in _answers)
         {
+            a.IsDisabled = false;
             a.Deselect();
             a.UnHighlight();
         }

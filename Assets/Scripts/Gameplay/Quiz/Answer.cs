@@ -33,6 +33,11 @@ public class Answer : MonoBehaviour
     public Button Button => _button;
     public AudioElement AudioRecording => _audioRecording;
     public bool IsSelected => _isSelected;
+    public bool IsDisabled
+    {
+        get => !this.enabled;
+        set => this.enabled = !value;
+    }
 
     
     private void Awake()
