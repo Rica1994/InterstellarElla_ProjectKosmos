@@ -8,12 +8,15 @@ using UnityEngine.SceneManagement;
 using System.IO;
 using System.Linq;
 using System;
+using Cinemachine;
 
 public class ArcVisualizingTool : EditorWindow
 {
     private List<JumpPad> _jumpPads = new List<JumpPad>();
 
     private EllaExploring _ellaExploringScript;
+
+    //private CinemachineSmoothPath
 
 
     [MenuItem("Window/Arc Visualizing Tool")]
@@ -52,7 +55,11 @@ public class ArcVisualizingTool : EditorWindow
             }
 
             // inform the editor that the scene has changed
-            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());          
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+
+
+            // find the player to access its gravity
+            //_ellaExploringScript = FindObjectOfType<EllaExploring>();
         }
     }
 }
