@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -20,14 +21,24 @@ public class Answer : MonoBehaviour
     
     [SerializeField]
     private TMP_Text _answerText;
-    
+
+    [SerializeField]
+    private AudioElement _audioRecording;
+
+
     private Color _originalBorderImageColor;
+    private BaseEventData data;
+    private bool _isSelected;
 
     public Button Button => _button;
-
-    private bool _isSelected;
+    public AudioElement AudioRecording => _audioRecording;
     public bool IsSelected => _isSelected;
-    private BaseEventData data;
+    public bool IsDisabled
+    {
+        get => !this.enabled;
+        set => this.enabled = !value;
+    }
+
     
     private void Awake()
     {

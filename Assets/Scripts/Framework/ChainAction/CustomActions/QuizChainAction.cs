@@ -31,18 +31,19 @@ public class QuizChainAction : ChainAction
         {
             Helpers.Hide(quizAnswer.transform, 1.0f, this);
         }
-
-        StartCoroutine(Helpers.DoAfter(1.1f, StartNextQuestion));
+        
+        StartCoroutine(Helpers.DoAfter(1.1f,  () => StartCoroutine(StartNextQuestion())));
     }
 
-    private void StartNextQuestion()
+    private IEnumerator StartNextQuestion()
     {
+        var audioController = ServiceLocator.Instance.GetService<AudioController>();
         ++_currentQuestionIndex;
         if (_currentQuestionIndex > _questions.Count - 1)
         {
             Debug.Log("All questions done");
             EndQuiz();
-            return;
+            yield break;
         }
 
         var question = _questions[_currentQuestionIndex];
@@ -54,13 +55,20 @@ public class QuizChainAction : ChainAction
         // Ask the question
         if (question.AudioElement.Clip != null)
         {
-            ServiceLocator.Instance.GetService<AudioController>().PlayAudio(question.AudioElement);
+            audioController.PlayAudio(question.AudioElement);
         }
+
+        yield return new WaitForSeconds(question.AudioElement.Clip.length);
         
         // Show the answers
         foreach (var quizAnswer in _quiz.Answers)
         {
-            StartCoroutine(Helpers.DoAfter(question.AudioElement.Clip.length, () => Helpers.Show(quizAnswer.transform, 1.0f)));
+            quizAnswer.IsDisabled = false;
+            quizAnswer.UnHighlight();
+            quizAnswer.Deselect();
+            Helpers.Show(quizAnswer.transform, 1.0f);
+            audioController.PlayAudio(quizAnswer.AudioRecording);
+            yield return new WaitForSeconds(quizAnswer.AudioRecording.Clip.length);
         }
         
         // Reset the question so it's interactable
@@ -72,7 +80,7 @@ public class QuizChainAction : ChainAction
         base.Execute();
         // Start the question
         Helpers.Show(_quiz.transform, 1.0f);
-        Helpers.DoAfter(1.0f, StartNextQuestion, this);
+        Helpers.DoAfter(1.0f, () => StartCoroutine(StartNextQuestion()), this);
     }
 
     private void EndQuiz()
