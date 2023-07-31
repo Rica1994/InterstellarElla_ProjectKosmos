@@ -8,9 +8,9 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MAT_Asteroid
-  m_Shader: {fileID: 4800000, guid: 32713943f23518346972978e57dcabc1, type: 3}
-  m_ShaderKeywords: _OBJECTSPACE_ON
-  m_LightmapFlags: 4
+  m_Shader: {fileID: 4800000, guid: 1cf722243c497e747a726eaa22226cdf, type: 3}
+  m_ShaderKeywords: _HASVERTEXMASKS_ON _OBJECTSPACE_ON
+  m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -44,13 +44,18 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AOIntensity: 1.05
+    - _AOIntensity: 2.03
     - _GrungeScale: 3.3
+    - _HasVertexMasks: 1
     - _HeightMask: 0
     - _HeightMaskDistance: 36.6
     - _HeightMaskOn: 0
+    - _HeightMaskOn1: 0
+    - _HighlightIntensity: 0.363
     - _NoiseScale: 8.06
     - _ObjectSpace: 1
+    - _Smoothness: 0
+    - _SunColorInfluence: 0.798
     - __dirty: 0
     m_Colors:
     - _Color0: {r: 0.8773585, g: 0.61658806, b: 0.2869348, a: 1}
