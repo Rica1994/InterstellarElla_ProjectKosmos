@@ -17,6 +17,9 @@ public class SmoothPathAligningTool : EditorWindow
 
     private List<SmoothPathToBeAlligned> _objectsToBeAlligned = new List<SmoothPathToBeAlligned>();
 
+    private List<PathPickups> _pathsPickups = new List<PathPickups>();
+
+
     [MenuItem("Window/Smooth Path Aligning Tool")]
     public static void ShowWindow()
     {
@@ -142,11 +145,30 @@ public class SmoothPathAligningTool : EditorWindow
 
 
         if (GUILayout.Button("Create pickups on the pickup-paths"))
-        {          
+        {
             // find objects with a specific script 'PathPickup' (has a list of pickups 'A', has a list of waypoints 'B')
-            // access the list 'A', destroy each object in the list -> clear the list.
-            // clear the list 'B', add each waypoint to it.
-            // for each obj in 'B' -> add+instantiate a pickup to 'A'
+            _pathsPickups = FindObjectsOfType<PathPickups>().ToList();
+
+            // for each path... 
+            for (int i = 0; i < _pathsPickups.Count; i++)
+            {
+                // access the list 'A', destroy each object in the list -> clear the list.
+                var pathOfInterest = _pathsPickups[i];
+
+                for (int j = 0; j < pathOfInterest.PickupsOnPath.Count; j++)
+                {
+                    var pickupOfInterest = pathOfInterest.PickupsOnPath[j];
+
+                    DestroyImmediate(pickupOfInterest.gameObject);
+                }
+                pathOfInterest.PickupsOnPath.Clear();
+
+                // clear the list 'B', add each waypoint to it.
+                pathOfInterest.GetWaypoints();
+
+                // for each obj in 'B' -> add+instantiate a pickup to 'A'
+                pathOfInterest.CreatePickups();
+            }
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }

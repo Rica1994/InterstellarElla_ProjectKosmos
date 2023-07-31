@@ -7,8 +7,13 @@ public class PathPickups : MonoBehaviour
 {
     public CinemachineSmoothPath SmoothPath;
 
-    public List<PickUp> PickupsOnPath = new List<PickUp>();
+    public List<GameObject> PickupsOnPath = new List<GameObject>();
     public List<CinemachineSmoothPath.Waypoint> WaypointsOnPath = new List<CinemachineSmoothPath.Waypoint>();
+
+    [SerializeField]
+    private GameObject _pickupPrefab;
+
+
 
     public void GetWaypoints()
     {
@@ -24,11 +29,17 @@ public class PathPickups : MonoBehaviour
     }
 
 
-    public void CreatePickupsOnPath()
+    /// <summary>
+    /// for each waypoint -> add + instantiate a pickup
+    /// </summary>
+    public void CreatePickups()
     {
-        for (int i = 0; i < WaypointsOnPath.Count; i++)
+        for (int j = 0; j < WaypointsOnPath.Count; j++)
         {
+            CinemachineSmoothPath.Waypoint waypointOfInterest = WaypointsOnPath[j];
+            GameObject instantiatedPickup = Instantiate(_pickupPrefab, this.transform.position + waypointOfInterest.position, Quaternion.identity);
 
+            PickupsOnPath.Add(instantiatedPickup);
         }
     }
 }
