@@ -155,19 +155,38 @@ public class SmoothPathAligningTool : EditorWindow
                 // access the list 'A', destroy each object in the list -> clear the list.
                 var pathOfInterest = _pathsPickups[i];
 
-                for (int j = 0; j < pathOfInterest.PickupsOnPath.Count; j++)
-                {
-                    var pickupOfInterest = pathOfInterest.PickupsOnPath[j];
+                // destroy all previous pickups 
+                pathOfInterest.DestroyMyChildrenPickups();
 
-                    DestroyImmediate(pickupOfInterest.gameObject);
-                }
-                pathOfInterest.PickupsOnPath.Clear();
+                // store the current rotation of the path + parent obj, set path.rot + obj.rot to 0,0,0
+                pathOfInterest.StoreRotations();
+                pathOfInterest.ResetRotations();
 
                 // clear the list 'B', add each waypoint to it.
                 pathOfInterest.GetWaypoints();
 
                 // for each obj in 'B' -> add+instantiate a pickup to 'A'
                 pathOfInterest.CreatePickups();
+
+                // reset the rotation to the stored value
+                pathOfInterest.RevertRotations();
+            }
+
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+
+        if (GUILayout.Button("Delete pickups on the pickup-paths"))
+        {
+            // find objects with a specific script 'PathPickup' (has a list of pickups 'A', has a list of waypoints 'B')
+            _pathsPickups = FindObjectsOfType<PathPickups>().ToList();
+
+            // for each path... 
+            for (int i = 0; i < _pathsPickups.Count; i++)
+            {
+                // clear the list, destroy all children of smoothpath.
+                var pathOfInterest = _pathsPickups[i];
+
+                pathOfInterest.DestroyMyChildrenPickups();
             }
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());

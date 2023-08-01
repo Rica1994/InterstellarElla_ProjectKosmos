@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class SimpleCarController : PlayerController
 {
@@ -47,9 +48,10 @@ public class SimpleCarController : PlayerController
     [SerializeField]
     private float _boostStrength = 4f, _boostCooldownDuration;
 
-    private float _maxSpeedConstant = 8f;
     private float _maxSpeedBoosted;
-    private float _maxSpeed; // top 2 max speeds get assigned to this value when needed
+    private float _speed;
+    [SerializeField]
+    private  float _maxSpeed = 8; // top 2 max speeds get assigned to this value when needed
 
     private bool _hasBoostedRecently, _boostIsDeclining;
     public bool BoostCoolingDown;
@@ -90,8 +92,8 @@ public class SimpleCarController : PlayerController
         _resetRotation = transform.rotation;
 
         _rigidbody = GetComponent<Rigidbody>();
-        _maxSpeed = _maxSpeedConstant;
-        _maxSpeedBoosted = _maxSpeedConstant + _boostStrength + 1.5f;
+        _speed = _maxSpeed;
+        _maxSpeedBoosted = _maxSpeed + _boostStrength + 1.5f;
 
 
         //    _rockWallScripts = FindObjectsOfType<RockWall>();
@@ -351,22 +353,22 @@ public class SimpleCarController : PlayerController
         // checks for wether boost was used recently, and whether the car should slow down again (dont want it to go too fast)
         if (_hasBoostedRecently == true)
         {
-            _maxSpeed = _maxSpeedBoosted;
+            _speed = _maxSpeedBoosted;
         }
         else if (_boostIsDeclining == true)
         {
-            _maxSpeed -= 0.1f;
-            if (_maxSpeed <= _maxSpeedConstant)
+            _speed -= 0.1f;
+            if (_speed <= _maxSpeedBoosted)
             {
-                _maxSpeed = _maxSpeedConstant;
+                _speed = _maxSpeedBoosted;
                 _boostIsDeclining = false;
             }
         }
 
         // limiting car velocity
-        if (_rigidbody.velocity.magnitude > _maxSpeed)
+        if (_rigidbody.velocity.magnitude > _speed)
         {
-            _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
+            _rigidbody.velocity = _rigidbody.velocity.normalized * _speed;
         }
     }
     
