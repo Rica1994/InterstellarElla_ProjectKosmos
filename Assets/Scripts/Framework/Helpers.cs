@@ -51,4 +51,31 @@ public class Helpers
       t.DOScale(Vector3.zero, time);
       mono.StartCoroutine(DoAfter(time, () => t.gameObject.SetActive(false)));
    }
+
+   /// <summary>
+   /// Flickers a certain mesh on and off
+   /// </summary>
+   /// <param name="go">object that should flicker</param>
+   /// <param name="flickerTimes">amount of time it should flicker</param>
+   /// <param name="flickerSpeed">amount of times it should flicker per second</param>
+   public static IEnumerator Flicker(GameObject go, float flickerTime, int flickerSpeed = 10)
+   {
+      var meshRenderers = go.GetComponentsInChildren<MeshRenderer>();
+      if (meshRenderers.Length <= 0) yield break;
+
+      float timeFlickering = 0.0f;
+      float timeBetweenEachFlicker = 1.0f / flickerSpeed;
+      
+      while (timeFlickering < flickerTime)
+      {
+         foreach (var meshRenderer in meshRenderers) meshRenderer.enabled = !meshRenderer.enabled;
+
+         yield return new WaitForSeconds(timeBetweenEachFlicker);
+      
+         timeFlickering += timeBetweenEachFlicker;
+      }
+   }
+   
+   
+   
 }
