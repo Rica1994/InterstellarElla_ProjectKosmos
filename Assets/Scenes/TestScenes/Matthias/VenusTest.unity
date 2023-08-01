@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 204504545}
-  m_IndirectSpecularColor: {r: 0.8826267, g: 0.8148919, b: 0.6715958, a: 1}
+  m_IndirectSpecularColor: {r: 0.88275766, g: 0.8147375, b: 0.6709676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -748,8 +748,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 480321603}
-  - component: {fileID: 480321605}
   - component: {fileID: 480321604}
+  - component: {fileID: 480321605}
   m_Layer: 0
   m_Name: Terrain_0_0_2250e4e3-99d7-4d41-afcd-3c312889d226
   m_TagString: Untagged
@@ -771,18 +771,7 @@ Transform:
   m_Father: {fileID: 906465777}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!154 &480321604
-TerrainCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 480321602}
-  m_Material: {fileID: 0}
-  m_Enabled: 1
-  m_TerrainData: {fileID: 15600000, guid: fe02847e83f86a64d8ff62660bdb166b, type: 2}
-  m_EnableTreeColliders: 1
---- !u!218 &480321605
+--- !u!218 &480321604
 Terrain:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -803,18 +792,29 @@ Terrain:
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 2
   m_DrawHeightmap: 1
-  m_DrawInstanced: 1
-  m_DrawTreesAndFoliage: 0
+  m_DrawInstanced: 0
+  m_DrawTreesAndFoliage: 1
   m_ReflectionProbeUsage: 1
-  m_MaterialTemplate: {fileID: 2100000, guid: 828b1f01ccc87944ca25dcc298d9dcd6, type: 2}
-  m_BakeLightProbesForTrees: 0
+  m_MaterialTemplate: {fileID: 2100000, guid: babd0fd8839c57948820b8ec56bbe53d, type: 2}
+  m_BakeLightProbesForTrees: 1
   m_PreserveTreePrototypeLayers: 0
   m_DeringLightProbesForTrees: 1
-  m_ScaleInLightmap: 0.8
+  m_ScaleInLightmap: 1
   m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
   m_GroupingID: 0
   m_RenderingLayerMask: 1
-  m_AllowAutoConnect: 1
+  m_AllowAutoConnect: 0
+--- !u!154 &480321605
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480321602}
+  m_Material: {fileID: 0}
+  m_Enabled: 1
+  m_TerrainData: {fileID: 15600000, guid: fe02847e83f86a64d8ff62660bdb166b, type: 2}
+  m_EnableTreeColliders: 1
 --- !u!1001 &494723100
 PrefabInstance:
   m_ObjectHideFlags: 0

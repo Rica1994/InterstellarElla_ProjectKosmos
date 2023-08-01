@@ -4,9 +4,7 @@ Shader "SH_VenusTerrainFirstPass"
 {
 	Properties
 	{
-		[HideInInspector] _EmissionColor("Emission Color", Color) = (1,1,1,1)
-		[HideInInspector] _AlphaCutoff("Alpha Cutoff ", Range(0, 1)) = 0.5
-		[ASEBegin]_NoiseScale("NoiseScale", Float) = 0
+		_NoiseScale("NoiseScale", Float) = 0
 		[HideInInspector]_Control("Control", 2D) = "white" {}
 		[HideInInspector]_Splat3("Splat3", 2D) = "white" {}
 		[HideInInspector]_Splat2("Splat2", 2D) = "white" {}
@@ -34,9 +32,8 @@ Shader "SH_VenusTerrainFirstPass"
 		_NormalStrenght("NormalStrenght", Float) = 0
 		_SandTextureInfluence("SandTextureInfluence", Float) = 0
 		_Roughness("Roughness", Range( 0 , 1)) = 0
-		[ASEEnd]_MaskIntensity("MaskIntensity", Range( 0 , 100)) = 0
+		_MaskIntensity("MaskIntensity", Range( 0 , 100)) = 0
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
-
 
 		//_TransmissionShadow( "Transmission Shadow", Range( 0, 1 ) ) = 0.5
 		//_TransStrength( "Trans Strength", Range( 0, 50 ) ) = 1
@@ -51,38 +48,28 @@ Shader "SH_VenusTerrainFirstPass"
 		//_TessMax( "Tess Max Distance", Float ) = 25
 		//_TessEdgeLength ( "Tess Edge length", Range( 2, 50 ) ) = 16
 		//_TessMaxDisp( "Tess Max Displacement", Float ) = 25
-
-		[HideInInspector][ToggleOff] _SpecularHighlights("Specular Highlights", Float) = 1.0
-		[HideInInspector][ToggleOff] _EnvironmentReflections("Environment Reflections", Float) = 1.0
-		[HideInInspector][ToggleOff] _ReceiveShadows("Receive Shadows", Float) = 1.0
+		//[ToggleOff] _SpecularHighlights("Specular Highlights", Float) = 1.0
+		//[ToggleOff] _GlossyReflections("Reflections", Float) = 1.0
 	}
 
 	SubShader
 	{
-		LOD 0
-
 		
-
-		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Opaque" "Queue"="Geometry" "UniversalMaterialType"="Lit" "SplatCount"="2" }
+		Tags { "RenderType"="Opaque" "Queue"="Geometry" "DisableBatching"="False" }
+	LOD 0
 
 		Cull Back
+		AlphaToMask Off
 		ZWrite On
 		ZTest LEqual
-		Offset 0,0
-		AlphaToMask Off
-
+		ColorMask RGBA
+		
+		Blend Off
 		
 
-		HLSLINCLUDE
-		#pragma target 3.5
-		#pragma prefer_hlslcc gles
-		// ensure rendering platforms toggle list is visible
+		CGINCLUDE
+		#pragma target 3.0
 
-		#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-		#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Filtering.hlsl"
-
-		#ifndef ASE_TESS_FUNCS
-		#define ASE_TESS_FUNCS
 		float4 FixedTess( float tessValue )
 		{
 			return tessValue;
@@ -124,17 +111,17 @@ Shader "SH_VenusTerrainFirstPass"
 		{
 			float4 planeTest;
 			planeTest.x = (( DistanceFromPlane(wpos0, planes[0]) > -cullEps) ? 1.0f : 0.0f ) +
-							(( DistanceFromPlane(wpos1, planes[0]) > -cullEps) ? 1.0f : 0.0f ) +
-							(( DistanceFromPlane(wpos2, planes[0]) > -cullEps) ? 1.0f : 0.0f );
+						  (( DistanceFromPlane(wpos1, planes[0]) > -cullEps) ? 1.0f : 0.0f ) +
+						  (( DistanceFromPlane(wpos2, planes[0]) > -cullEps) ? 1.0f : 0.0f );
 			planeTest.y = (( DistanceFromPlane(wpos0, planes[1]) > -cullEps) ? 1.0f : 0.0f ) +
-							(( DistanceFromPlane(wpos1, planes[1]) > -cullEps) ? 1.0f : 0.0f ) +
-							(( DistanceFromPlane(wpos2, planes[1]) > -cullEps) ? 1.0f : 0.0f );
+						  (( DistanceFromPlane(wpos1, planes[1]) > -cullEps) ? 1.0f : 0.0f ) +
+						  (( DistanceFromPlane(wpos2, planes[1]) > -cullEps) ? 1.0f : 0.0f );
 			planeTest.z = (( DistanceFromPlane(wpos0, planes[2]) > -cullEps) ? 1.0f : 0.0f ) +
-							(( DistanceFromPlane(wpos1, planes[2]) > -cullEps) ? 1.0f : 0.0f ) +
-							(( DistanceFromPlane(wpos2, planes[2]) > -cullEps) ? 1.0f : 0.0f );
+						  (( DistanceFromPlane(wpos1, planes[2]) > -cullEps) ? 1.0f : 0.0f ) +
+						  (( DistanceFromPlane(wpos2, planes[2]) > -cullEps) ? 1.0f : 0.0f );
 			planeTest.w = (( DistanceFromPlane(wpos0, planes[3]) > -cullEps) ? 1.0f : 0.0f ) +
-							(( DistanceFromPlane(wpos1, planes[3]) > -cullEps) ? 1.0f : 0.0f ) +
-							(( DistanceFromPlane(wpos2, planes[3]) > -cullEps) ? 1.0f : 0.0f );
+						  (( DistanceFromPlane(wpos1, planes[3]) > -cullEps) ? 1.0f : 0.0f ) +
+						  (( DistanceFromPlane(wpos2, planes[3]) > -cullEps) ? 1.0f : 0.0f );
 			return !all (planeTest);
 		}
 
@@ -181,143 +168,98 @@ Shader "SH_VenusTerrainFirstPass"
 			}
 			return tess;
 		}
-		#endif //ASE_TESS_FUNCS
-		ENDHLSL
+		ENDCG
 
-		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
-	UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
-
+		
 		Pass
 		{
 			
-			Name "Forward"
-			Tags { "LightMode"="UniversalForward" }
+			Name "ForwardBase"
+			Tags { "LightMode"="ForwardBase" }
 
-			Blend Off
-			ZWrite On
-			ZTest LEqual
-			Offset 0,0
-			ColorMask RGBA
+			Blend One Zero
 
-			
-
-			HLSLPROGRAM
-
-			#define _NORMAL_DROPOFF_TS 1
+			CGPROGRAM
+			#define ASE_NEEDS_FRAG_SHADOWCOORDS
+			#pragma multi_compile_instancing
+			#pragma multi_compile __ LOD_FADE_CROSSFADE
 			#pragma multi_compile_fog
 			#define ASE_FOG 1
-			#define _NORMALMAP 1
-			#define ASE_SRP_VERSION 101001
-
-
-			#pragma shader_feature_local _RECEIVE_SHADOWS_OFF
-			#pragma shader_feature_local_fragment _SPECULARHIGHLIGHTS_OFF
-			#pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
-
-			
-			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS
-			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
-		
-
-			
-
-			#pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-			#pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
-			#pragma multi_compile_fragment _ _SHADOWS_SOFT
-			#pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
-			#pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
-			#pragma multi_compile _ SHADOWS_SHADOWMASK
-
-			#pragma multi_compile _ DIRLIGHTMAP_COMBINED
-			#pragma multi_compile _ LIGHTMAP_ON
 
 			#pragma vertex vert
 			#pragma fragment frag
-
-			#define SHADERPASS SHADERPASS_FORWARD
-
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/ShaderPass.hlsl"
-
-			#if defined(UNITY_INSTANCING_ENABLED) && defined(_TERRAIN_INSTANCED_PERPIXEL_NORMAL)
-				#define ENABLE_TERRAIN_PERPIXEL_NORMAL
+			#pragma multi_compile_fwdbase
+			#ifndef UNITY_PASS_FORWARDBASE
+				#define UNITY_PASS_FORWARDBASE
 			#endif
+			#include "HLSLSupport.cginc"
+			#ifndef UNITY_INSTANCED_LOD_FADE
+				#define UNITY_INSTANCED_LOD_FADE
+			#endif
+			#ifndef UNITY_INSTANCED_SH
+				#define UNITY_INSTANCED_SH
+			#endif
+			#ifndef UNITY_INSTANCED_LIGHTMAPSTS
+				#define UNITY_INSTANCED_LIGHTMAPSTS
+			#endif
+			#include "UnityShaderVariables.cginc"
+			#include "UnityCG.cginc"
+			#include "Lighting.cginc"
+			#include "UnityPBSLighting.cginc"
+			#include "AutoLight.cginc"
 
 			#define ASE_NEEDS_FRAG_WORLD_POSITION
 			#define ASE_NEEDS_FRAG_WORLD_NORMAL
 			#define ASE_NEEDS_FRAG_WORLD_TANGENT
 			#define ASE_NEEDS_FRAG_WORLD_BITANGENT
-			#define ASE_NEEDS_VERT_NORMAL
-			#define ASE_NEEDS_VERT_POSITION
-			#pragma multi_compile_instancing
-			#pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
 			#pragma multi_compile_local __ _ALPHATEST_ON
 			#pragma shader_feature_local _MASKMAP
 
-
-			#if defined(ASE_EARLY_Z_DEPTH_OPTIMIZE) && (SHADER_TARGET >= 45)
-				#define ASE_SV_DEPTH SV_DepthLessEqual
-				#define ASE_SV_POSITION_QUALIFIERS linear noperspective centroid
-			#else
-				#define ASE_SV_DEPTH SV_Depth
-				#define ASE_SV_POSITION_QUALIFIERS
-			#endif
-
-			struct VertexInput
-			{
+			struct appdata {
 				float4 vertex : POSITION;
-				float3 ase_normal : NORMAL;
-				float4 ase_tangent : TANGENT;
-				float4 texcoord : TEXCOORD0;
+				float4 tangent : TANGENT;
+				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
-				
+				float4 texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
-			struct VertexOutput
-			{
-				ASE_SV_POSITION_QUALIFIERS float4 clipPos : SV_POSITION;
-				float4 clipPosV : TEXCOORD0;
-				float4 lightmapUVOrVertexSH : TEXCOORD1;
-				half4 fogFactorAndVertexLight : TEXCOORD2;
-				float4 tSpace0 : TEXCOORD3;
-				float4 tSpace1 : TEXCOORD4;
-				float4 tSpace2 : TEXCOORD5;
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-					float4 shadowCoord : TEXCOORD6;
+			struct v2f {
+				#if UNITY_VERSION >= 201810
+					UNITY_POSITION(pos);
+				#else
+					float4 pos : SV_POSITION;
 				#endif
-				float4 ase_texcoord7 : TEXCOORD7;
+				#if defined(LIGHTMAP_ON) || (!defined(LIGHTMAP_ON) && SHADER_TARGET >= 30)
+					float4 lmap : TEXCOORD0;
+				#endif
+				#if !defined(LIGHTMAP_ON) && UNITY_SHOULD_SAMPLE_SH
+					half3 sh : TEXCOORD1;
+				#endif
+				#if defined(UNITY_HALF_PRECISION_FRAGMENT_SHADER_REGISTERS) && UNITY_VERSION >= 201810 && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+					UNITY_LIGHTING_COORDS(2,3)
+				#elif defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+					#if UNITY_VERSION >= 201710
+						UNITY_SHADOW_COORDS(2)
+					#else
+						SHADOW_COORDS(2)
+					#endif
+				#endif
+				#ifdef ASE_FOG
+					UNITY_FOG_COORDS(4)
+				#endif
+				float4 tSpace0 : TEXCOORD5;
+				float4 tSpace1 : TEXCOORD6;
+				float4 tSpace2 : TEXCOORD7;
+				#if defined(ASE_NEEDS_FRAG_SCREEN_POSITION)
+				float4 screenPos : TEXCOORD8;
+				#endif
+				float4 ase_texcoord9 : TEXCOORD9;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
-			CBUFFER_START(UnityPerMaterial)
-			float4 _Gravel;
-			float4 _Sand;
-			float4 _Splat0_ST;
-			float4 _Control_ST;
-			float4 _Splat1_ST;
-			float4 _Splat2_ST;
-			float4 _Splat3_ST;
-			float4 _Rock;
-			float _MaxClamp;
-			float _MaskIntensity;
-			float _HeightMask;
-			float _NoiseScale;
-			float _DisplaceIntensity;
-			float _SandTextureInfluence;
-			float _RemapMin;
-			float _RemapMax;
-			float _NormalStrenght;
-			float _Smoothness3;
-			float _Smoothness2;
-			float _Smoothness1;
-			float _Smoothness0;
-			float _DetailScale;
-			float _Roughness;
 			#ifdef ASE_TRANSMISSION
 				float _TransmissionShadow;
 			#endif
@@ -337,68 +279,49 @@ Shader "SH_VenusTerrainFirstPass"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			CBUFFER_END
+			uniform sampler2D _Mask2;
+			uniform sampler2D _Mask0;
+			uniform sampler2D _Mask1;
+			uniform sampler2D _Mask3;
+			uniform float4 _MaskMapRemapScale0;
+			uniform float4 _MaskMapRemapOffset2;
+			uniform float4 _MaskMapRemapScale2;
+			uniform float4 _MaskMapRemapScale1;
+			uniform float4 _MaskMapRemapOffset1;
+			uniform float4 _MaskMapRemapScale3;
+			uniform float4 _MaskMapRemapOffset3;
+			uniform float4 _MaskMapRemapOffset0;
+			uniform float4 _Gravel;
+			uniform float4 _Sand;
+			uniform sampler2D _Control;
+			uniform float4 _Control_ST;
+			uniform float _Smoothness0;
+			uniform sampler2D _Splat0;
+			uniform float4 _Splat0_ST;
+			uniform float _Smoothness1;
+			uniform sampler2D _Splat1;
+			uniform float4 _Splat1_ST;
+			uniform float _Smoothness2;
+			uniform sampler2D _Splat2;
+			uniform float4 _Splat2_ST;
+			uniform float _Smoothness3;
+			uniform sampler2D _Splat3;
+			uniform float4 _Splat3_ST;
+			uniform float _RemapMin;
+			uniform float _RemapMax;
+			uniform sampler2D _Detail;
+			uniform float _DetailScale;
+			uniform float _SandTextureInfluence;
+			uniform float4 _Rock;
+			uniform sampler2D _RockErosion;
+			uniform float _DisplaceIntensity;
+			uniform float _NoiseScale;
+			uniform float _HeightMask;
+			uniform float _MaskIntensity;
+			uniform float _MaxClamp;
+			uniform float _NormalStrenght;
+			uniform float _Roughness;
 
-			// Property used by ScenePickingPass
-			#ifdef SCENEPICKINGPASS
-				float4 _SelectionID;
-			#endif
-
-			// Properties used by SceneSelectionPass
-			#ifdef SCENESELECTIONPASS
-				int _ObjectId;
-				int _PassValue;
-			#endif
-
-			sampler2D _Mask2;
-			sampler2D _Mask0;
-			sampler2D _Mask1;
-			sampler2D _Mask3;
-			half4 _MaskMapRemapScale0;
-			half4 _MaskMapRemapOffset2;
-			half4 _MaskMapRemapScale2;
-			half4 _MaskMapRemapScale1;
-			half4 _MaskMapRemapOffset1;
-			half4 _MaskMapRemapScale3;
-			half4 _MaskMapRemapOffset3;
-			half4 _MaskMapRemapOffset0;
-			sampler2D _Splat0;
-			sampler2D _Control;
-			float4 _DiffuseRemapScale0;
-			sampler2D _Splat1;
-			float4 _DiffuseRemapScale1;
-			sampler2D _Splat2;
-			float4 _DiffuseRemapScale2;
-			sampler2D _Splat3;
-			float4 _DiffuseRemapScale3;
-			sampler2D _Detail;
-			sampler2D _RockErosion;
-			float _LayerHasMask0;
-			float _LayerHasMask1;
-			float _LayerHasMask2;
-			float _LayerHasMask3;
-			#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-				TEXTURE2D(_TerrainHeightmapTexture);//ASE Terrain Instancing
-				TEXTURE2D( _TerrainNormalmapTexture);//ASE Terrain Instancing
-				SAMPLER(sampler_TerrainNormalmapTexture);//ASE Terrain Instancing
-			#endif//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_START( Terrain )//ASE Terrain Instancing
-				UNITY_DEFINE_INSTANCED_PROP( float4, _TerrainPatchInstanceData )//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_END( Terrain)//ASE Terrain Instancing
-			CBUFFER_START( UnityTerrain)//ASE Terrain Instancing
-				#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-					float4 _TerrainHeightmapRecipSize;//ASE Terrain Instancing
-					float4 _TerrainHeightmapScale;//ASE Terrain Instancing
-				#endif//ASE Terrain Instancing
-			CBUFFER_END//ASE Terrain Instancing
-
-
-			//#include "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/Varyings.hlsl"
-			//#include "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/PBRForwardPass.hlsl"
-
-			//#ifdef HAVE_VFX_MODIFICATION
-			//#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/VisualEffectVertex.hlsl"
-			//#endif
 
 			float3 PerturbNormal107_g1( float3 surf_pos, float3 surf_norm, float height, float scale )
 			{
@@ -415,741 +338,79 @@ Shader "SH_VenusTerrainFirstPass"
 				return normalize ( abs( fDet ) * vN - vSurfGrad );
 			}
 			
-			VertexInput ApplyMeshModification( VertexInput v )
-			{
-			#ifdef UNITY_INSTANCING_ENABLED
-				float2 patchVertex = v.vertex.xy;
-				float4 instanceData = UNITY_ACCESS_INSTANCED_PROP( Terrain, _TerrainPatchInstanceData );
-				float2 sampleCoords = ( patchVertex.xy + instanceData.xy ) * instanceData.z;
-				float height = UnpackHeightmap( _TerrainHeightmapTexture.Load( int3( sampleCoords, 0 ) ) );
-				v.vertex.xz = sampleCoords* _TerrainHeightmapScale.xz;
-				v.vertex.y = height* _TerrainHeightmapScale.y;
-				#ifdef ENABLE_TERRAIN_PERPIXEL_NORMAL
-					v.ase_normal = float3(0, 1, 0);
-				#else
-					v.ase_normal = _TerrainNormalmapTexture.Load(int3(sampleCoords, 0)).rgb* 2 - 1;
-				#endif
-				v.texcoord.xy = sampleCoords* _TerrainHeightmapRecipSize.zw;
-			#endif
-				return v;
-			}
-			
 
-			VertexOutput VertexFunction( VertexInput v  )
-			{
-				VertexOutput o = (VertexOutput)0;
+			v2f VertexFunction (appdata v  ) {
 				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				v2f o;
+				UNITY_INITIALIZE_OUTPUT(v2f,o);
+				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				v = ApplyMeshModification(v);
-				o.ase_texcoord7.xy = v.texcoord.xy;
+				o.ase_texcoord9.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord7.zw = 0;
-
+				o.ase_texcoord9.zw = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-
 				float3 vertexValue = defaultVertexValue;
-
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
 					v.vertex.xyz += vertexValue;
 				#endif
-				v.ase_normal = v.ase_normal;
+				v.vertex.w = 1;
+				v.normal = v.normal;
+				v.tangent = v.tangent;
 
-				float3 positionWS = TransformObjectToWorld( v.vertex.xyz );
-				float3 positionVS = TransformWorldToView( positionWS );
-				float4 positionCS = TransformWorldToHClip( positionWS );
+				o.pos = UnityObjectToClipPos(v.vertex);
+				float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+				fixed3 worldNormal = UnityObjectToWorldNormal(v.normal);
+				fixed3 worldTangent = UnityObjectToWorldDir(v.tangent.xyz);
+				fixed tangentSign = v.tangent.w * unity_WorldTransformParams.w;
+				fixed3 worldBinormal = cross(worldNormal, worldTangent) * tangentSign;
+				o.tSpace0 = float4(worldTangent.x, worldBinormal.x, worldNormal.x, worldPos.x);
+				o.tSpace1 = float4(worldTangent.y, worldBinormal.y, worldNormal.y, worldPos.y);
+				o.tSpace2 = float4(worldTangent.z, worldBinormal.z, worldNormal.z, worldPos.z);
 
-				VertexNormalInputs normalInput = GetVertexNormalInputs( v.ase_normal, v.ase_tangent );
-
-				o.tSpace0 = float4( normalInput.normalWS, positionWS.x);
-				o.tSpace1 = float4( normalInput.tangentWS, positionWS.y);
-				o.tSpace2 = float4( normalInput.bitangentWS, positionWS.z);
-
-				#if defined(LIGHTMAP_ON)
-					OUTPUT_LIGHTMAP_UV( v.texcoord1, unity_LightmapST, o.lightmapUVOrVertexSH.xy );
+				#ifdef DYNAMICLIGHTMAP_ON
+				o.lmap.zw = v.texcoord2.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
+				#endif
+				#ifdef LIGHTMAP_ON
+				o.lmap.xy = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
 				#endif
 
-				#if !defined(LIGHTMAP_ON)
-					OUTPUT_SH( normalInput.normalWS.xyz, o.lightmapUVOrVertexSH.xyz );
-				#endif
-
-				#if defined(ENABLE_TERRAIN_PERPIXEL_NORMAL)
-					o.lightmapUVOrVertexSH.zw = v.texcoord;
-					o.lightmapUVOrVertexSH.xy = v.texcoord * unity_LightmapST.xy + unity_LightmapST.zw;
-				#endif
-
-				half3 vertexLight = VertexLighting( positionWS, normalInput.normalWS );
-
-				#ifdef ASE_FOG
-					half fogFactor = ComputeFogFactor( positionCS.z );
-				#else
-					half fogFactor = 0;
-				#endif
-
-				o.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
-
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-					VertexPositionInputs vertexInput = (VertexPositionInputs)0;
-					vertexInput.positionWS = positionWS;
-					vertexInput.positionCS = positionCS;
-					o.shadowCoord = GetShadowCoord( vertexInput );
-				#endif
-
-				o.clipPos = positionCS;
-				o.clipPosV = positionCS;
-				return o;
-			}
-
-			#if defined(ASE_TESSELLATION)
-			struct VertexControl
-			{
-				float4 vertex : INTERNALTESSPOS;
-				float3 ase_normal : NORMAL;
-				float4 ase_tangent : TANGENT;
-				float4 texcoord : TEXCOORD0;
-				float4 texcoord1 : TEXCOORD1;
-				
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct TessellationFactors
-			{
-				float edge[3] : SV_TessFactor;
-				float inside : SV_InsideTessFactor;
-			};
-
-			VertexControl vert ( VertexInput v )
-			{
-				VertexControl o;
-				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
-				o.vertex = v.vertex;
-				o.ase_normal = v.ase_normal;
-				o.ase_tangent = v.ase_tangent;
-				o.texcoord = v.texcoord;
-				o.texcoord1 = v.texcoord1;
-				
-				return o;
-			}
-
-			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
-			{
-				TessellationFactors o;
-				float4 tf = 1;
-				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
-				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
-				#if defined(ASE_FIXED_TESSELLATION)
-				tf = FixedTess( tessValue );
-				#elif defined(ASE_DISTANCE_TESSELLATION)
-				tf = DistanceBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), _WorldSpaceCameraPos );
-				#elif defined(ASE_LENGTH_TESSELLATION)
-				tf = EdgeLengthBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams );
-				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
-				tf = EdgeLengthBasedTessCull(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams, unity_CameraWorldClipPlanes );
-				#endif
-				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
-				return o;
-			}
-
-			[domain("tri")]
-			[partitioning("fractional_odd")]
-			[outputtopology("triangle_cw")]
-			[patchconstantfunc("TessellationFunction")]
-			[outputcontrolpoints(3)]
-			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
-			{
-				return patch[id];
-			}
-
-			[domain("tri")]
-			VertexOutput DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
-			{
-				VertexInput o = (VertexInput) 0;
-				o.vertex = patch[0].vertex * bary.x + patch[1].vertex * bary.y + patch[2].vertex * bary.z;
-				o.ase_normal = patch[0].ase_normal * bary.x + patch[1].ase_normal * bary.y + patch[2].ase_normal * bary.z;
-				o.ase_tangent = patch[0].ase_tangent * bary.x + patch[1].ase_tangent * bary.y + patch[2].ase_tangent * bary.z;
-				o.texcoord = patch[0].texcoord * bary.x + patch[1].texcoord * bary.y + patch[2].texcoord * bary.z;
-				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
-				
-				#if defined(ASE_PHONG_TESSELLATION)
-				float3 pp[3];
-				for (int i = 0; i < 3; ++i)
-					pp[i] = o.vertex.xyz - patch[i].ase_normal * (dot(o.vertex.xyz, patch[i].ase_normal) - dot(patch[i].vertex.xyz, patch[i].ase_normal));
-				float phongStrength = _TessPhongStrength;
-				o.vertex.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.vertex.xyz;
-				#endif
-				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
-				return VertexFunction(o);
-			}
-			#else
-			VertexOutput vert ( VertexInput v )
-			{
-				return VertexFunction( v );
-			}
-			#endif
-
-			half4 frag ( VertexOutput IN
-						#ifdef ASE_DEPTH_WRITE_ON
-						,out float outputDepth : ASE_SV_DEPTH
+				#ifndef LIGHTMAP_ON
+					#if UNITY_SHOULD_SAMPLE_SH && !UNITY_SAMPLE_FULL_SH_PER_PIXEL
+						o.sh = 0;
+						#ifdef VERTEXLIGHT_ON
+						o.sh += Shade4PointLights (
+							unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0,
+							unity_LightColor[0].rgb, unity_LightColor[1].rgb, unity_LightColor[2].rgb, unity_LightColor[3].rgb,
+							unity_4LightAtten0, worldPos, worldNormal);
 						#endif
-						 ) : SV_Target
-			{
-				UNITY_SETUP_INSTANCE_ID(IN);
-				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN);
-
-				#ifdef LOD_FADE_CROSSFADE
-					LODDitheringTransition( IN.clipPos.xyz, unity_LODFade.x );
+						o.sh = ShadeSHPerVertex (worldNormal, o.sh);
+					#endif
 				#endif
 
-				#if defined(ENABLE_TERRAIN_PERPIXEL_NORMAL)
-					float2 sampleCoords = (IN.lightmapUVOrVertexSH.zw / _TerrainHeightmapRecipSize.zw + 0.5f) * _TerrainHeightmapRecipSize.xy;
-					float3 WorldNormal = TransformObjectToWorldNormal(normalize(SAMPLE_TEXTURE2D(_TerrainNormalmapTexture, sampler_TerrainNormalmapTexture, sampleCoords).rgb * 2 - 1));
-					float3 WorldTangent = -cross(GetObjectToWorldMatrix()._13_23_33, WorldNormal);
-					float3 WorldBiTangent = cross(WorldNormal, -WorldTangent);
-				#else
-					float3 WorldNormal = normalize( IN.tSpace0.xyz );
-					float3 WorldTangent = IN.tSpace1.xyz;
-					float3 WorldBiTangent = IN.tSpace2.xyz;
-				#endif
-
-				float3 WorldPosition = float3(IN.tSpace0.w,IN.tSpace1.w,IN.tSpace2.w);
-				float3 WorldViewDirection = _WorldSpaceCameraPos.xyz  - WorldPosition;
-				float4 ShadowCoords = float4( 0, 0, 0, 0 );
-
-				float4 ClipPos = IN.clipPosV;
-				float4 ScreenPos = ComputeScreenPos( IN.clipPosV );
-
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-					ShadowCoords = IN.shadowCoord;
-				#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-					ShadowCoords = TransformWorldToShadowCoord( WorldPosition );
-				#endif
-
-				WorldViewDirection = SafeNormalize( WorldViewDirection );
-
-				float4 appendResult33_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness0));
-				float2 uv_Splat0 = IN.ase_texcoord7.xy * _Splat0_ST.xy + _Splat0_ST.zw;
-				float4 tex2DNode4_g2 = tex2D( _Splat0, uv_Splat0 );
-				float2 uv_Control = IN.ase_texcoord7.xy * _Control_ST.xy + _Control_ST.zw;
-				float4 tex2DNode5_g2 = tex2D( _Control, uv_Control );
-				float dotResult20_g2 = dot( tex2DNode5_g2 , float4(1,1,1,1) );
-				float SplatWeight22_g2 = dotResult20_g2;
-				float localSplatClip74_g2 = ( SplatWeight22_g2 );
-				float SplatWeight74_g2 = SplatWeight22_g2;
-				{
-				#if !defined(SHADER_API_MOBILE) && defined(TERRAIN_SPLAT_ADDPASS)
-				clip(SplatWeight74_g2 == 0.0f ? -1 : 1);
-				#endif
-				}
-				float4 SplatControl26_g2 = ( tex2DNode5_g2 / ( localSplatClip74_g2 + 0.001 ) );
-				float4 appendResult258_g2 = (float4(( (SplatControl26_g2).rrr * (_DiffuseRemapScale0).rgb ) , 1.0));
-				float4 tintLayer0253_g2 = appendResult258_g2;
-				float4 appendResult36_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness1));
-				float2 uv_Splat1 = IN.ase_texcoord7.xy * _Splat1_ST.xy + _Splat1_ST.zw;
-				float4 tex2DNode3_g2 = tex2D( _Splat1, uv_Splat1 );
-				float4 appendResult261_g2 = (float4(( (SplatControl26_g2).ggg * (_DiffuseRemapScale1).rgb ) , 1.0));
-				float4 tintLayer1254_g2 = appendResult261_g2;
-				float4 appendResult39_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness2));
-				float2 uv_Splat2 = IN.ase_texcoord7.xy * _Splat2_ST.xy + _Splat2_ST.zw;
-				float4 tex2DNode6_g2 = tex2D( _Splat2, uv_Splat2 );
-				float4 appendResult263_g2 = (float4(( (SplatControl26_g2).bbb * (_DiffuseRemapScale2).rgb ) , 1.0));
-				float4 tintLayer2255_g2 = appendResult263_g2;
-				float4 appendResult42_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness3));
-				float2 uv_Splat3 = IN.ase_texcoord7.xy * _Splat3_ST.xy + _Splat3_ST.zw;
-				float4 tex2DNode7_g2 = tex2D( _Splat3, uv_Splat3 );
-				float4 appendResult265_g2 = (float4(( (SplatControl26_g2).aaa * (_DiffuseRemapScale3).rgb ) , 1.0));
-				float4 tintLayer3256_g2 = appendResult265_g2;
-				float4 weightedBlendVar9_g2 = float4(1,1,1,1);
-				float4 weightedBlend9_g2 = ( weightedBlendVar9_g2.x*( appendResult33_g2 * tex2DNode4_g2 * tintLayer0253_g2 ) + weightedBlendVar9_g2.y*( appendResult36_g2 * tex2DNode3_g2 * tintLayer1254_g2 ) + weightedBlendVar9_g2.z*( appendResult39_g2 * tex2DNode6_g2 * tintLayer2255_g2 ) + weightedBlendVar9_g2.w*( appendResult42_g2 * tex2DNode7_g2 * tintLayer3256_g2 ) );
-				float4 MixDiffuse28_g2 = weightedBlend9_g2;
-				float4 temp_output_60_0_g2 = MixDiffuse28_g2;
-				float4 temp_output_49_0 = temp_output_60_0_g2;
-				float4 temp_cast_5 = (_RemapMin).xxxx;
-				float4 temp_cast_6 = (_RemapMax).xxxx;
-				float4 temp_output_75_0 = saturate( (temp_cast_5 + (temp_output_49_0 - float4( 0,0,0,0 )) * (temp_cast_6 - temp_cast_5) / (float4( 1,1,1,1 ) - float4( 0,0,0,0 ))) );
-				float3 lerpResult57 = lerp( (_Gravel).rgb , (_Sand).rgb , temp_output_75_0.xyz);
-				float2 temp_output_8_0 = (WorldPosition).xz;
-				float4 tex2DNode24 = tex2D( _Detail, ( temp_output_8_0 / _DetailScale ) );
-				float2 temp_output_9_0 = ( (WorldNormal).xz * _DisplaceIntensity );
-				float4 tex2DNode21 = tex2D( _RockErosion, ( ( temp_output_8_0 + temp_output_9_0 ) / _NoiseScale ) );
-				float temp_output_15_0 = ( 1.0 - WorldNormal.y );
-				float temp_output_18_0 = ( WorldPosition.y / _HeightMask );
-				float temp_output_16_0 = ( ( tex2DNode24.r + tex2DNode21.r ) * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
-				float clampResult28 = clamp( temp_output_16_0 , 0.0 , _MaxClamp );
-				float3 lerpResult12 = lerp( ( lerpResult57 + ( tex2DNode24.r * _SandTextureInfluence ) ) , ( (_Rock).rgb * clampResult28 ) , saturate( temp_output_16_0 ));
-				
-				float3 surf_pos107_g1 = WorldPosition;
-				float3 surf_norm107_g1 = WorldNormal;
-				float height107_g1 = ( tex2DNode21.r * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
-				float scale107_g1 = _NormalStrenght;
-				float3 localPerturbNormal107_g1 = PerturbNormal107_g1( surf_pos107_g1 , surf_norm107_g1 , height107_g1 , scale107_g1 );
-				float3x3 ase_worldToTangent = float3x3(WorldTangent,WorldBiTangent,WorldNormal);
-				float3 worldToTangentDir42_g1 = mul( ase_worldToTangent, localPerturbNormal107_g1);
-				
-				float4 appendResult205_g2 = (float4(_Smoothness0 , _Smoothness1 , _Smoothness2 , _Smoothness3));
-				float4 appendResult206_g2 = (float4(tex2DNode4_g2.a , tex2DNode3_g2.a , tex2DNode6_g2.a , tex2DNode7_g2.a));
-				float4 defaultSmoothness210_g2 = ( appendResult205_g2 * appendResult206_g2 );
-				float localComputeMasks130_g2 = ( 0.0 );
-				float4 masks0130_g2 = float4( 0,0,0,0 );
-				float4 masks1130_g2 = float4( 0,0,0,0 );
-				float4 masks2130_g2 = float4( 0,0,0,0 );
-				float4 masks3130_g2 = float4( 0,0,0,0 );
-				float4 appendResult135_g2 = (float4(_LayerHasMask0 , _LayerHasMask1 , _LayerHasMask2 , _LayerHasMask3));
-				float4 layerHasMask136_g2 = appendResult135_g2;
-				float4 hasMask130_g2 = layerHasMask136_g2;
-				float2 uvMask0130_g2 = uv_Splat0;
-				float2 uvMask1130_g2 = uv_Splat1;
-				float2 uvMask2130_g2 = uv_Splat2;
-				float2 uvMask3130_g2 = uv_Splat3;
-				{
-				masks0130_g2 = 0.5h;
-				masks1130_g2 = 0.5h;
-				masks2130_g2 = 0.5h;
-				masks3130_g2 = 0.5h;
-				#ifdef _MASKMAP
-				masks0130_g2 = lerp(masks0130_g2, SAMPLE_TEXTURE2D(_Mask0, sampler_Mask0, uvMask0130_g2), hasMask130_g2.x);
-				masks1130_g2 = lerp(masks1130_g2, SAMPLE_TEXTURE2D(_Mask1, sampler_Mask0, uvMask1130_g2), hasMask130_g2.y);
-				masks2130_g2 = lerp(masks2130_g2, SAMPLE_TEXTURE2D(_Mask2, sampler_Mask0, uvMask2130_g2), hasMask130_g2.z);
-				masks3130_g2 = lerp(masks3130_g2, SAMPLE_TEXTURE2D(_Mask3, sampler_Mask0, uvMask3130_g2), hasMask130_g2.w);
-				#endif
-				masks0130_g2 *= _MaskMapRemapScale0.rgba;
-				masks0130_g2 += _MaskMapRemapOffset0.rgba;
-				masks1130_g2 *= _MaskMapRemapScale1.rgba;
-				masks1130_g2 += _MaskMapRemapOffset1.rgba;
-				masks2130_g2 *= _MaskMapRemapScale2.rgba;
-				masks2130_g2 += _MaskMapRemapOffset2.rgba;
-				masks3130_g2 *= _MaskMapRemapScale3.rgba;
-				masks3130_g2 += _MaskMapRemapOffset3.rgba;
-				}
-				float4 mask0138_g2 = masks0130_g2;
-				float4 mask1139_g2 = masks1130_g2;
-				float4 mask2140_g2 = masks2130_g2;
-				float4 mask3141_g2 = masks3130_g2;
-				float4 appendResult158_g2 = (float4((mask0138_g2).w , (mask1139_g2).w , (mask2140_g2).w , (mask3141_g2).w));
-				float4 maskSmoothness149_g2 = appendResult158_g2;
-				float4 lerpResult215_g2 = lerp( defaultSmoothness210_g2 , maskSmoothness149_g2 , layerHasMask136_g2);
-				float dotResult216_g2 = dot( lerpResult215_g2 , SplatControl26_g2 );
-				float4 temp_cast_9 = (_Roughness).xxxx;
-				float4 lerpResult69 = lerp( ( temp_output_49_0 * dotResult216_g2 ) , temp_cast_9 , saturate( temp_output_16_0 ));
-				
-
-				float3 BaseColor = lerpResult12;
-				float3 Normal = worldToTangentDir42_g1;
-				float3 Emission = 0;
-				float3 Specular = 0.5;
-				float Metallic = 0;
-				float Smoothness = lerpResult69.x;
-				float Occlusion = 1;
-				float Alpha = 1;
-				float AlphaClipThreshold = 0.5;
-				float AlphaClipThresholdShadow = 0.5;
-				float3 BakedGI = 0;
-				float3 RefractionColor = 1;
-				float RefractionIndex = 1;
-				float3 Transmission = 1;
-				float3 Translucency = 1;
-
-				#ifdef ASE_DEPTH_WRITE_ON
-					float DepthValue = IN.clipPos.z;
-				#endif
-
-				#ifdef _ALPHATEST_ON
-					clip(Alpha - AlphaClipThreshold);
-				#endif
-
-				InputData inputData;
-				inputData.positionWS = WorldPosition;
-				inputData.viewDirectionWS = WorldViewDirection;
-				inputData.shadowCoord = ShadowCoords;
-
-				#ifdef _NORMALMAP
-						#if _NORMAL_DROPOFF_TS
-							inputData.normalWS = TransformTangentToWorld(Normal, half3x3(WorldTangent, WorldBiTangent, WorldNormal));
-						#elif _NORMAL_DROPOFF_OS
-							inputData.normalWS = TransformObjectToWorldNormal(Normal);
-						#elif _NORMAL_DROPOFF_WS
-							inputData.normalWS = Normal;
-						#endif
-					inputData.normalWS = NormalizeNormalPerPixel(inputData.normalWS);
-				#else
-					inputData.normalWS = WorldNormal;
+				#if UNITY_VERSION >= 201810 && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+					UNITY_TRANSFER_LIGHTING(o, v.texcoord1.xy);
+				#elif defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+					#if UNITY_VERSION >= 201710
+						UNITY_TRANSFER_SHADOW(o, v.texcoord1.xy);
+					#else
+						TRANSFER_SHADOW(o);
+					#endif
 				#endif
 
 				#ifdef ASE_FOG
-					inputData.fogCoord = IN.fogFactorAndVertexLight.x;
+					UNITY_TRANSFER_FOG(o,o.pos);
 				#endif
-					inputData.vertexLighting = IN.fogFactorAndVertexLight.yzw;
-
-				#if defined(ENABLE_TERRAIN_PERPIXEL_NORMAL)
-					float3 SH = SampleSH(inputData.normalWS.xyz);
-				#else
-					float3 SH = IN.lightmapUVOrVertexSH.xyz;
+				#if defined(ASE_NEEDS_FRAG_SCREEN_POSITION)
+					o.screenPos = ComputeScreenPos(o.pos);
 				#endif
-
-				inputData.bakedGI = SAMPLE_GI( IN.lightmapUVOrVertexSH.xy, SH, inputData.normalWS );
-
-				#ifdef ASE_BAKEDGI
-					inputData.bakedGI = BakedGI;
-				#endif
-
-				inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(IN.clipPos);
-				inputData.shadowMask = SAMPLE_SHADOWMASK(IN.lightmapUVOrVertexSH.xy);
-
-				half4 color = UniversalFragmentPBR(
-					inputData,
-					BaseColor,
-					Metallic,
-					Specular,
-					Smoothness,
-					Occlusion,
-					Emission,
-					Alpha);
-
-				#ifdef ASE_TRANSMISSION
-				{
-					float shadow = _TransmissionShadow;
-
-					Light mainLight = GetMainLight( inputData.shadowCoord );
-					float3 mainAtten = mainLight.color * mainLight.distanceAttenuation;
-					mainAtten = lerp( mainAtten, mainAtten * mainLight.shadowAttenuation, shadow );
-					half3 mainTransmission = max(0 , -dot(inputData.normalWS, mainLight.direction)) * mainAtten * Transmission;
-					color.rgb += BaseColor * mainTransmission;
-
-					#ifdef _ADDITIONAL_LIGHTS
-						int transPixelLightCount = GetAdditionalLightsCount();
-						for (int i = 0; i < transPixelLightCount; ++i)
-						{
-							Light light = GetAdditionalLight(i, inputData.positionWS);
-							float3 atten = light.color * light.distanceAttenuation;
-							atten = lerp( atten, atten * light.shadowAttenuation, shadow );
-
-							half3 transmission = max(0 , -dot(inputData.normalWS, light.direction)) * atten * Transmission;
-							color.rgb += BaseColor * transmission;
-						}
-					#endif
-				}
-				#endif
-
-				#ifdef ASE_TRANSLUCENCY
-				{
-					float shadow = _TransShadow;
-					float normal = _TransNormal;
-					float scattering = _TransScattering;
-					float direct = _TransDirect;
-					float ambient = _TransAmbient;
-					float strength = _TransStrength;
-
-					Light mainLight = GetMainLight( inputData.shadowCoord );
-					float3 mainAtten = mainLight.color * mainLight.distanceAttenuation;
-					mainAtten = lerp( mainAtten, mainAtten * mainLight.shadowAttenuation, shadow );
-
-					half3 mainLightDir = mainLight.direction + inputData.normalWS * normal;
-					half mainVdotL = pow( saturate( dot( inputData.viewDirectionWS, -mainLightDir ) ), scattering );
-					half3 mainTranslucency = mainAtten * ( mainVdotL * direct + inputData.bakedGI * ambient ) * Translucency;
-					color.rgb += BaseColor * mainTranslucency * strength;
-
-					#ifdef _ADDITIONAL_LIGHTS
-						int transPixelLightCount = GetAdditionalLightsCount();
-						for (int i = 0; i < transPixelLightCount; ++i)
-						{
-							Light light = GetAdditionalLight(i, inputData.positionWS);
-							float3 atten = light.color * light.distanceAttenuation;
-							atten = lerp( atten, atten * light.shadowAttenuation, shadow );
-
-							half3 lightDir = light.direction + inputData.normalWS * normal;
-							half VdotL = pow( saturate( dot( inputData.viewDirectionWS, -lightDir ) ), scattering );
-							half3 translucency = atten * ( VdotL * direct + inputData.bakedGI * ambient ) * Translucency;
-							color.rgb += BaseColor * translucency * strength;
-						}
-					#endif
-				}
-				#endif
-
-				#ifdef ASE_REFRACTION
-					float4 projScreenPos = ScreenPos / ScreenPos.w;
-					float3 refractionOffset = ( RefractionIndex - 1.0 ) * mul( UNITY_MATRIX_V, float4( WorldNormal,0 ) ).xyz * ( 1.0 - dot( WorldNormal, WorldViewDirection ) );
-					projScreenPos.xy += refractionOffset.xy;
-					float3 refraction = SHADERGRAPH_SAMPLE_SCENE_COLOR( projScreenPos.xy ) * RefractionColor;
-					color.rgb = lerp( refraction, color.rgb, color.a );
-					color.a = 1;
-				#endif
-
-				#ifdef ASE_FINAL_COLOR_ALPHA_MULTIPLY
-					color.rgb *= color.a;
-				#endif
-
-				#ifdef ASE_FOG
-					#ifdef TERRAIN_SPLAT_ADDPASS
-						color.rgb = MixFogColor(color.rgb, half3( 0, 0, 0 ), IN.fogFactorAndVertexLight.x );
-					#else
-						color.rgb = MixFog(color.rgb, IN.fogFactorAndVertexLight.x);
-					#endif
-				#endif
-
-				#ifdef ASE_DEPTH_WRITE_ON
-					outputDepth = DepthValue;
-				#endif
-
-				return color;
-			}
-
-			ENDHLSL
-		}
-
-		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
-	UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
-
-		Pass
-		{
-			
-			Name "ShadowCaster"
-			Tags { "LightMode"="ShadowCaster" }
-
-			ZWrite On
-			ZTest LEqual
-			AlphaToMask Off
-			ColorMask 0
-
-			HLSLPROGRAM
-
-			#define _NORMAL_DROPOFF_TS 1
-			#pragma multi_compile_fog
-			#define ASE_FOG 1
-			#define _NORMALMAP 1
-			#define ASE_SRP_VERSION 101001
-
-
-			#pragma vertex vert
-			#pragma fragment frag
-
-			#define SHADERPASS SHADERPASS_SHADOWCASTER
-
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
-
-			#define ASE_NEEDS_VERT_NORMAL
-			#define ASE_NEEDS_VERT_POSITION
-			#pragma multi_compile_instancing
-			#pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
-			#pragma multi_compile_local __ _ALPHATEST_ON
-			#pragma shader_feature_local _MASKMAP
-
-
-			#if defined(ASE_EARLY_Z_DEPTH_OPTIMIZE) && (SHADER_TARGET >= 45)
-				#define ASE_SV_DEPTH SV_DepthLessEqual
-				#define ASE_SV_POSITION_QUALIFIERS linear noperspective centroid
-			#else
-				#define ASE_SV_DEPTH SV_Depth
-				#define ASE_SV_POSITION_QUALIFIERS
-			#endif
-
-			struct VertexInput
-			{
-				float4 vertex : POSITION;
-				float3 ase_normal : NORMAL;
-				float4 ase_texcoord : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct VertexOutput
-			{
-				ASE_SV_POSITION_QUALIFIERS float4 clipPos : SV_POSITION;
-				float4 clipPosV : TEXCOORD0;
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					float3 worldPos : TEXCOORD1;
-				#endif
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					float4 shadowCoord : TEXCOORD2;
-				#endif				
-				float4 ase_texcoord3 : TEXCOORD3;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-			};
-
-			CBUFFER_START(UnityPerMaterial)
-			float4 _Gravel;
-			float4 _Sand;
-			float4 _Splat0_ST;
-			float4 _Control_ST;
-			float4 _Splat1_ST;
-			float4 _Splat2_ST;
-			float4 _Splat3_ST;
-			float4 _Rock;
-			float _MaxClamp;
-			float _MaskIntensity;
-			float _HeightMask;
-			float _NoiseScale;
-			float _DisplaceIntensity;
-			float _SandTextureInfluence;
-			float _RemapMin;
-			float _RemapMax;
-			float _NormalStrenght;
-			float _Smoothness3;
-			float _Smoothness2;
-			float _Smoothness1;
-			float _Smoothness0;
-			float _DetailScale;
-			float _Roughness;
-			#ifdef ASE_TRANSMISSION
-				float _TransmissionShadow;
-			#endif
-			#ifdef ASE_TRANSLUCENCY
-				float _TransStrength;
-				float _TransNormal;
-				float _TransScattering;
-				float _TransDirect;
-				float _TransAmbient;
-				float _TransShadow;
-			#endif
-			#ifdef ASE_TESSELLATION
-				float _TessPhongStrength;
-				float _TessValue;
-				float _TessMin;
-				float _TessMax;
-				float _TessEdgeLength;
-				float _TessMaxDisp;
-			#endif
-			CBUFFER_END
-
-			// Property used by ScenePickingPass
-			#ifdef SCENEPICKINGPASS
-				float4 _SelectionID;
-			#endif
-
-			// Properties used by SceneSelectionPass
-			#ifdef SCENESELECTIONPASS
-				int _ObjectId;
-				int _PassValue;
-			#endif
-
-			sampler2D _Mask2;
-			sampler2D _Mask0;
-			sampler2D _Mask1;
-			sampler2D _Mask3;
-			float4 _MaskMapRemapScale0;
-			float4 _MaskMapRemapOffset2;
-			float4 _MaskMapRemapScale2;
-			float4 _MaskMapRemapScale1;
-			float4 _MaskMapRemapOffset1;
-			float4 _MaskMapRemapScale3;
-			float4 _MaskMapRemapOffset3;
-			float4 _MaskMapRemapOffset0;
-			#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-				TEXTURE2D(_TerrainHeightmapTexture);//ASE Terrain Instancing
-				TEXTURE2D( _TerrainNormalmapTexture);//ASE Terrain Instancing
-				SAMPLER(sampler_TerrainNormalmapTexture);//ASE Terrain Instancing
-			#endif//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_START( Terrain )//ASE Terrain Instancing
-				UNITY_DEFINE_INSTANCED_PROP( float4, _TerrainPatchInstanceData )//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_END( Terrain)//ASE Terrain Instancing
-			CBUFFER_START( UnityTerrain)//ASE Terrain Instancing
-				#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-					float4 _TerrainHeightmapRecipSize;//ASE Terrain Instancing
-					float4 _TerrainHeightmapScale;//ASE Terrain Instancing
-				#endif//ASE Terrain Instancing
-			CBUFFER_END//ASE Terrain Instancing
-
-
-			VertexInput ApplyMeshModification( VertexInput v )
-			{
-			#ifdef UNITY_INSTANCING_ENABLED
-				float2 patchVertex = v.vertex.xy;
-				float4 instanceData = UNITY_ACCESS_INSTANCED_PROP( Terrain, _TerrainPatchInstanceData );
-				float2 sampleCoords = ( patchVertex.xy + instanceData.xy ) * instanceData.z;
-				float height = UnpackHeightmap( _TerrainHeightmapTexture.Load( int3( sampleCoords, 0 ) ) );
-				v.vertex.xz = sampleCoords* _TerrainHeightmapScale.xz;
-				v.vertex.y = height* _TerrainHeightmapScale.y;
-				#ifdef ENABLE_TERRAIN_PERPIXEL_NORMAL
-					v.ase_normal = float3(0, 1, 0);
-				#else
-					v.ase_normal = _TerrainNormalmapTexture.Load(int3(sampleCoords, 0)).rgb* 2 - 1;
-				#endif
-				v.ase_texcoord.xy = sampleCoords* _TerrainHeightmapRecipSize.zw;
-			#endif
-				return v;
-			}
-			
-
-			float3 _LightDirection;
-			#if ASE_SRP_VERSION >= 110000
-				float3 _LightPosition;
-			#endif
-
-			VertexOutput VertexFunction( VertexInput v )
-			{
-				VertexOutput o;
-				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( o );
-
-				v = ApplyMeshModification(v);
-				o.ase_texcoord3 = v.ase_texcoord;
-
-				#ifdef ASE_ABSOLUTE_VERTEX_POS
-					float3 defaultVertexValue = v.vertex.xyz;
-				#else
-					float3 defaultVertexValue = float3(0, 0, 0);
-				#endif
-
-				float3 vertexValue = defaultVertexValue;
-				#ifdef ASE_ABSOLUTE_VERTEX_POS
-					v.vertex.xyz = vertexValue;
-				#else
-					v.vertex.xyz += vertexValue;
-				#endif
-
-				v.ase_normal = v.ase_normal;
-
-				float3 positionWS = TransformObjectToWorld( v.vertex.xyz );
-
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					o.worldPos = positionWS;
-				#endif
-
-				float3 normalWS = TransformObjectToWorldDir(v.ase_normal);
-
-				#if ASE_SRP_VERSION >= 110000
-					#if _CASTING_PUNCTUAL_LIGHT_SHADOW
-						float3 lightDirectionWS = normalize(_LightPosition - positionWS);
-					#else
-						float3 lightDirectionWS = _LightDirection;
-					#endif
-
-					float4 clipPos = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, lightDirectionWS));
-
-					#if UNITY_REVERSED_Z
-						clipPos.z = min(clipPos.z, UNITY_NEAR_CLIP_VALUE);
-					#else
-						clipPos.z = max(clipPos.z, UNITY_NEAR_CLIP_VALUE);
-					#endif
-				#else
-					float4 clipPos = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));
-					#if UNITY_REVERSED_Z
-						clipPos.z = min(clipPos.z, clipPos.w * UNITY_NEAR_CLIP_VALUE);
-					#else
-						clipPos.z = max(clipPos.z, clipPos.w * UNITY_NEAR_CLIP_VALUE);
-					#endif
-				#endif
-
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					VertexPositionInputs vertexInput = (VertexPositionInputs)0;
-					vertexInput.positionWS = positionWS;
-					vertexInput.positionCS = clipPos;
-					o.shadowCoord = GetShadowCoord( vertexInput );
-				#endif
-
-				o.clipPos = clipPos;
-				o.clipPosV = clipPos;
 				return o;
 			}
 
@@ -1157,723 +418,8 @@ Shader "SH_VenusTerrainFirstPass"
 			struct VertexControl
 			{
 				float4 vertex : INTERNALTESSPOS;
-				float3 ase_normal : NORMAL;
-				float4 ase_texcoord : TEXCOORD0;
-
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct TessellationFactors
-			{
-				float edge[3] : SV_TessFactor;
-				float inside : SV_InsideTessFactor;
-			};
-
-			VertexControl vert ( VertexInput v )
-			{
-				VertexControl o;
-				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
-				o.vertex = v.vertex;
-				o.ase_normal = v.ase_normal;
-				o.ase_texcoord = v.ase_texcoord;
-				return o;
-			}
-
-			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
-			{
-				TessellationFactors o;
-				float4 tf = 1;
-				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
-				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
-				#if defined(ASE_FIXED_TESSELLATION)
-				tf = FixedTess( tessValue );
-				#elif defined(ASE_DISTANCE_TESSELLATION)
-				tf = DistanceBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), _WorldSpaceCameraPos );
-				#elif defined(ASE_LENGTH_TESSELLATION)
-				tf = EdgeLengthBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams );
-				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
-				tf = EdgeLengthBasedTessCull(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams, unity_CameraWorldClipPlanes );
-				#endif
-				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
-				return o;
-			}
-
-			[domain("tri")]
-			[partitioning("fractional_odd")]
-			[outputtopology("triangle_cw")]
-			[patchconstantfunc("TessellationFunction")]
-			[outputcontrolpoints(3)]
-			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
-			{
-				return patch[id];
-			}
-
-			[domain("tri")]
-			VertexOutput DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
-			{
-				VertexInput o = (VertexInput) 0;
-				o.vertex = patch[0].vertex * bary.x + patch[1].vertex * bary.y + patch[2].vertex * bary.z;
-				o.ase_normal = patch[0].ase_normal * bary.x + patch[1].ase_normal * bary.y + patch[2].ase_normal * bary.z;
-				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
-				#if defined(ASE_PHONG_TESSELLATION)
-				float3 pp[3];
-				for (int i = 0; i < 3; ++i)
-					pp[i] = o.vertex.xyz - patch[i].ase_normal * (dot(o.vertex.xyz, patch[i].ase_normal) - dot(patch[i].vertex.xyz, patch[i].ase_normal));
-				float phongStrength = _TessPhongStrength;
-				o.vertex.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.vertex.xyz;
-				#endif
-				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
-				return VertexFunction(o);
-			}
-			#else
-			VertexOutput vert ( VertexInput v )
-			{
-				return VertexFunction( v );
-			}
-			#endif
-
-			half4 frag(	VertexOutput IN
-						#ifdef ASE_DEPTH_WRITE_ON
-						,out float outputDepth : ASE_SV_DEPTH
-						#endif
-						 ) : SV_TARGET
-			{
-				UNITY_SETUP_INSTANCE_ID( IN );
-				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( IN );
-
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					float3 WorldPosition = IN.worldPos;
-				#endif
-
-				float4 ShadowCoords = float4( 0, 0, 0, 0 );
-				float4 ClipPos = IN.clipPosV;
-				float4 ScreenPos = ComputeScreenPos( IN.clipPosV );
-
-				#if defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-						ShadowCoords = IN.shadowCoord;
-					#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-						ShadowCoords = TransformWorldToShadowCoord( WorldPosition );
-					#endif
-				#endif
-
-				
-
-				float Alpha = 1;
-				float AlphaClipThreshold = 0.5;
-				float AlphaClipThresholdShadow = 0.5;
-
-				#ifdef ASE_DEPTH_WRITE_ON
-					float DepthValue = IN.clipPos.z;
-				#endif
-
-				#ifdef _ALPHATEST_ON
-					#ifdef _ALPHATEST_SHADOW_ON
-						clip(Alpha - AlphaClipThresholdShadow);
-					#else
-						clip(Alpha - AlphaClipThreshold);
-					#endif
-				#endif
-
-				#ifdef LOD_FADE_CROSSFADE
-					LODDitheringTransition( IN.clipPos.xyz, unity_LODFade.x );
-				#endif
-
-				#ifdef ASE_DEPTH_WRITE_ON
-					outputDepth = DepthValue;
-				#endif
-
-				return 0;
-			}
-			ENDHLSL
-		}
-
-		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
-	UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
-
-		Pass
-		{
-			
-			Name "DepthOnly"
-			Tags { "LightMode"="DepthOnly" }
-
-			ZWrite On
-			ColorMask 0
-			AlphaToMask Off
-
-			HLSLPROGRAM
-
-			#define _NORMAL_DROPOFF_TS 1
-			#pragma multi_compile_fog
-			#define ASE_FOG 1
-			#define _NORMALMAP 1
-			#define ASE_SRP_VERSION 101001
-
-
-			#pragma vertex vert
-			#pragma fragment frag
-
-			#define SHADERPASS SHADERPASS_DEPTHONLY
-
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
-
-			#define ASE_NEEDS_VERT_NORMAL
-			#define ASE_NEEDS_VERT_POSITION
-			#pragma multi_compile_instancing
-			#pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
-			#pragma multi_compile_local __ _ALPHATEST_ON
-			#pragma shader_feature_local _MASKMAP
-
-
-			#if defined(ASE_EARLY_Z_DEPTH_OPTIMIZE) && (SHADER_TARGET >= 45)
-				#define ASE_SV_DEPTH SV_DepthLessEqual
-				#define ASE_SV_POSITION_QUALIFIERS linear noperspective centroid
-			#else
-				#define ASE_SV_DEPTH SV_Depth
-				#define ASE_SV_POSITION_QUALIFIERS
-			#endif
-
-			struct VertexInput
-			{
-				float4 vertex : POSITION;
-				float3 ase_normal : NORMAL;
-				float4 ase_texcoord : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct VertexOutput
-			{
-				ASE_SV_POSITION_QUALIFIERS float4 clipPos : SV_POSITION;
-				float4 clipPosV : TEXCOORD0;
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-				float3 worldPos : TEXCOORD1;
-				#endif
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-				float4 shadowCoord : TEXCOORD2;
-				#endif
-				float4 ase_texcoord3 : TEXCOORD3;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-			};
-
-			CBUFFER_START(UnityPerMaterial)
-			float4 _Gravel;
-			float4 _Sand;
-			float4 _Splat0_ST;
-			float4 _Control_ST;
-			float4 _Splat1_ST;
-			float4 _Splat2_ST;
-			float4 _Splat3_ST;
-			float4 _Rock;
-			float _MaxClamp;
-			float _MaskIntensity;
-			float _HeightMask;
-			float _NoiseScale;
-			float _DisplaceIntensity;
-			float _SandTextureInfluence;
-			float _RemapMin;
-			float _RemapMax;
-			float _NormalStrenght;
-			float _Smoothness3;
-			float _Smoothness2;
-			float _Smoothness1;
-			float _Smoothness0;
-			float _DetailScale;
-			float _Roughness;
-			#ifdef ASE_TRANSMISSION
-				float _TransmissionShadow;
-			#endif
-			#ifdef ASE_TRANSLUCENCY
-				float _TransStrength;
-				float _TransNormal;
-				float _TransScattering;
-				float _TransDirect;
-				float _TransAmbient;
-				float _TransShadow;
-			#endif
-			#ifdef ASE_TESSELLATION
-				float _TessPhongStrength;
-				float _TessValue;
-				float _TessMin;
-				float _TessMax;
-				float _TessEdgeLength;
-				float _TessMaxDisp;
-			#endif
-			CBUFFER_END
-
-			// Property used by ScenePickingPass
-			#ifdef SCENEPICKINGPASS
-				float4 _SelectionID;
-			#endif
-
-			// Properties used by SceneSelectionPass
-			#ifdef SCENESELECTIONPASS
-				int _ObjectId;
-				int _PassValue;
-			#endif
-
-			sampler2D _Mask2;
-			sampler2D _Mask0;
-			sampler2D _Mask1;
-			sampler2D _Mask3;
-			float4 _MaskMapRemapScale0;
-			float4 _MaskMapRemapOffset2;
-			float4 _MaskMapRemapScale2;
-			float4 _MaskMapRemapScale1;
-			float4 _MaskMapRemapOffset1;
-			float4 _MaskMapRemapScale3;
-			float4 _MaskMapRemapOffset3;
-			float4 _MaskMapRemapOffset0;
-			#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-				TEXTURE2D(_TerrainHeightmapTexture);//ASE Terrain Instancing
-				TEXTURE2D( _TerrainNormalmapTexture);//ASE Terrain Instancing
-				SAMPLER(sampler_TerrainNormalmapTexture);//ASE Terrain Instancing
-			#endif//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_START( Terrain )//ASE Terrain Instancing
-				UNITY_DEFINE_INSTANCED_PROP( float4, _TerrainPatchInstanceData )//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_END( Terrain)//ASE Terrain Instancing
-			CBUFFER_START( UnityTerrain)//ASE Terrain Instancing
-				#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-					float4 _TerrainHeightmapRecipSize;//ASE Terrain Instancing
-					float4 _TerrainHeightmapScale;//ASE Terrain Instancing
-				#endif//ASE Terrain Instancing
-			CBUFFER_END//ASE Terrain Instancing
-
-
-			VertexInput ApplyMeshModification( VertexInput v )
-			{
-			#ifdef UNITY_INSTANCING_ENABLED
-				float2 patchVertex = v.vertex.xy;
-				float4 instanceData = UNITY_ACCESS_INSTANCED_PROP( Terrain, _TerrainPatchInstanceData );
-				float2 sampleCoords = ( patchVertex.xy + instanceData.xy ) * instanceData.z;
-				float height = UnpackHeightmap( _TerrainHeightmapTexture.Load( int3( sampleCoords, 0 ) ) );
-				v.vertex.xz = sampleCoords* _TerrainHeightmapScale.xz;
-				v.vertex.y = height* _TerrainHeightmapScale.y;
-				#ifdef ENABLE_TERRAIN_PERPIXEL_NORMAL
-					v.ase_normal = float3(0, 1, 0);
-				#else
-					v.ase_normal = _TerrainNormalmapTexture.Load(int3(sampleCoords, 0)).rgb* 2 - 1;
-				#endif
-				v.ase_texcoord.xy = sampleCoords* _TerrainHeightmapRecipSize.zw;
-			#endif
-				return v;
-			}
-			
-
-			VertexOutput VertexFunction( VertexInput v  )
-			{
-				VertexOutput o = (VertexOutput)0;
-				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-
-				v = ApplyMeshModification(v);
-				o.ase_texcoord3 = v.ase_texcoord;
-
-				#ifdef ASE_ABSOLUTE_VERTEX_POS
-					float3 defaultVertexValue = v.vertex.xyz;
-				#else
-					float3 defaultVertexValue = float3(0, 0, 0);
-				#endif
-
-				float3 vertexValue = defaultVertexValue;
-
-				#ifdef ASE_ABSOLUTE_VERTEX_POS
-					v.vertex.xyz = vertexValue;
-				#else
-					v.vertex.xyz += vertexValue;
-				#endif
-
-				v.ase_normal = v.ase_normal;
-				float3 positionWS = TransformObjectToWorld( v.vertex.xyz );
-				float4 positionCS = TransformWorldToHClip( positionWS );
-
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					o.worldPos = positionWS;
-				#endif
-
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					VertexPositionInputs vertexInput = (VertexPositionInputs)0;
-					vertexInput.positionWS = positionWS;
-					vertexInput.positionCS = positionCS;
-					o.shadowCoord = GetShadowCoord( vertexInput );
-				#endif
-
-				o.clipPos = positionCS;
-				o.clipPosV = positionCS;
-				return o;
-			}
-
-			#if defined(ASE_TESSELLATION)
-			struct VertexControl
-			{
-				float4 vertex : INTERNALTESSPOS;
-				float3 ase_normal : NORMAL;
-				float4 ase_texcoord : TEXCOORD0;
-
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct TessellationFactors
-			{
-				float edge[3] : SV_TessFactor;
-				float inside : SV_InsideTessFactor;
-			};
-
-			VertexControl vert ( VertexInput v )
-			{
-				VertexControl o;
-				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
-				o.vertex = v.vertex;
-				o.ase_normal = v.ase_normal;
-				o.ase_texcoord = v.ase_texcoord;
-				return o;
-			}
-
-			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
-			{
-				TessellationFactors o;
-				float4 tf = 1;
-				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
-				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
-				#if defined(ASE_FIXED_TESSELLATION)
-				tf = FixedTess( tessValue );
-				#elif defined(ASE_DISTANCE_TESSELLATION)
-				tf = DistanceBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), _WorldSpaceCameraPos );
-				#elif defined(ASE_LENGTH_TESSELLATION)
-				tf = EdgeLengthBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams );
-				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
-				tf = EdgeLengthBasedTessCull(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams, unity_CameraWorldClipPlanes );
-				#endif
-				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
-				return o;
-			}
-
-			[domain("tri")]
-			[partitioning("fractional_odd")]
-			[outputtopology("triangle_cw")]
-			[patchconstantfunc("TessellationFunction")]
-			[outputcontrolpoints(3)]
-			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
-			{
-				return patch[id];
-			}
-
-			[domain("tri")]
-			VertexOutput DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
-			{
-				VertexInput o = (VertexInput) 0;
-				o.vertex = patch[0].vertex * bary.x + patch[1].vertex * bary.y + patch[2].vertex * bary.z;
-				o.ase_normal = patch[0].ase_normal * bary.x + patch[1].ase_normal * bary.y + patch[2].ase_normal * bary.z;
-				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
-				#if defined(ASE_PHONG_TESSELLATION)
-				float3 pp[3];
-				for (int i = 0; i < 3; ++i)
-					pp[i] = o.vertex.xyz - patch[i].ase_normal * (dot(o.vertex.xyz, patch[i].ase_normal) - dot(patch[i].vertex.xyz, patch[i].ase_normal));
-				float phongStrength = _TessPhongStrength;
-				o.vertex.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.vertex.xyz;
-				#endif
-				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
-				return VertexFunction(o);
-			}
-			#else
-			VertexOutput vert ( VertexInput v )
-			{
-				return VertexFunction( v );
-			}
-			#endif
-
-			half4 frag(	VertexOutput IN
-						#ifdef ASE_DEPTH_WRITE_ON
-						,out float outputDepth : ASE_SV_DEPTH
-						#endif
-						 ) : SV_TARGET
-			{
-				UNITY_SETUP_INSTANCE_ID(IN);
-				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( IN );
-
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-				float3 WorldPosition = IN.worldPos;
-				#endif
-
-				float4 ShadowCoords = float4( 0, 0, 0, 0 );
-				float4 ClipPos = IN.clipPosV;
-				float4 ScreenPos = ComputeScreenPos( IN.clipPosV );
-
-				#if defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-						ShadowCoords = IN.shadowCoord;
-					#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-						ShadowCoords = TransformWorldToShadowCoord( WorldPosition );
-					#endif
-				#endif
-
-				
-
-				float Alpha = 1;
-				float AlphaClipThreshold = 0.5;
-				#ifdef ASE_DEPTH_WRITE_ON
-					float DepthValue = IN.clipPos.z;
-				#endif
-
-				#ifdef _ALPHATEST_ON
-					clip(Alpha - AlphaClipThreshold);
-				#endif
-
-				#ifdef LOD_FADE_CROSSFADE
-					LODDitheringTransition( IN.clipPos.xyz, unity_LODFade.x );
-				#endif
-
-				#ifdef ASE_DEPTH_WRITE_ON
-					outputDepth = DepthValue;
-				#endif
-
-				return 0;
-			}
-			ENDHLSL
-		}
-
-		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
-	UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
-
-		Pass
-		{
-			
-			Name "Meta"
-			Tags { "LightMode"="Meta" }
-
-			Cull Off
-
-			HLSLPROGRAM
-
-			#define _NORMAL_DROPOFF_TS 1
-			#pragma multi_compile_fog
-			#define ASE_FOG 1
-			#define _NORMALMAP 1
-			#define ASE_SRP_VERSION 101001
-
-
-			#pragma vertex vert
-			#pragma fragment frag
-
-			#define SHADERPASS SHADERPASS_META
-
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/MetaInput.hlsl"
-
-			#define ASE_NEEDS_FRAG_WORLD_POSITION
-			#define ASE_NEEDS_VERT_NORMAL
-			#define ASE_NEEDS_VERT_POSITION
-			#pragma multi_compile_instancing
-			#pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
-			#pragma multi_compile_local __ _ALPHATEST_ON
-			#pragma shader_feature_local _MASKMAP
-
-
-			struct VertexInput
-			{
-				float4 vertex : POSITION;
-				float3 ase_normal : NORMAL;
-				float4 texcoord1 : TEXCOORD1;
-				float4 texcoord2 : TEXCOORD2;
-				float4 ase_texcoord : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct VertexOutput
-			{
-				float4 clipPos : SV_POSITION;
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					float3 worldPos : TEXCOORD0;
-				#endif
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					float4 shadowCoord : TEXCOORD1;
-				#endif
-				float4 ase_texcoord2 : TEXCOORD2;
-				float4 ase_texcoord3 : TEXCOORD3;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-			};
-
-			CBUFFER_START(UnityPerMaterial)
-			float4 _Gravel;
-			float4 _Sand;
-			float4 _Splat0_ST;
-			float4 _Control_ST;
-			float4 _Splat1_ST;
-			float4 _Splat2_ST;
-			float4 _Splat3_ST;
-			float4 _Rock;
-			float _MaxClamp;
-			float _MaskIntensity;
-			float _HeightMask;
-			float _NoiseScale;
-			float _DisplaceIntensity;
-			float _SandTextureInfluence;
-			float _RemapMin;
-			float _RemapMax;
-			float _NormalStrenght;
-			float _Smoothness3;
-			float _Smoothness2;
-			float _Smoothness1;
-			float _Smoothness0;
-			float _DetailScale;
-			float _Roughness;
-			#ifdef ASE_TRANSMISSION
-				float _TransmissionShadow;
-			#endif
-			#ifdef ASE_TRANSLUCENCY
-				float _TransStrength;
-				float _TransNormal;
-				float _TransScattering;
-				float _TransDirect;
-				float _TransAmbient;
-				float _TransShadow;
-			#endif
-			#ifdef ASE_TESSELLATION
-				float _TessPhongStrength;
-				float _TessValue;
-				float _TessMin;
-				float _TessMax;
-				float _TessEdgeLength;
-				float _TessMaxDisp;
-			#endif
-			CBUFFER_END
-
-			// Property used by ScenePickingPass
-			#ifdef SCENEPICKINGPASS
-				float4 _SelectionID;
-			#endif
-
-			// Properties used by SceneSelectionPass
-			#ifdef SCENESELECTIONPASS
-				int _ObjectId;
-				int _PassValue;
-			#endif
-
-			sampler2D _Mask2;
-			sampler2D _Mask0;
-			sampler2D _Mask1;
-			sampler2D _Mask3;
-			float4 _MaskMapRemapScale0;
-			float4 _MaskMapRemapOffset2;
-			float4 _MaskMapRemapScale2;
-			float4 _MaskMapRemapScale1;
-			float4 _MaskMapRemapOffset1;
-			float4 _MaskMapRemapScale3;
-			float4 _MaskMapRemapOffset3;
-			float4 _MaskMapRemapOffset0;
-			sampler2D _Splat0;
-			sampler2D _Control;
-			float4 _DiffuseRemapScale0;
-			sampler2D _Splat1;
-			float4 _DiffuseRemapScale1;
-			sampler2D _Splat2;
-			float4 _DiffuseRemapScale2;
-			sampler2D _Splat3;
-			float4 _DiffuseRemapScale3;
-			sampler2D _Detail;
-			sampler2D _RockErosion;
-			#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-				TEXTURE2D(_TerrainHeightmapTexture);//ASE Terrain Instancing
-				TEXTURE2D( _TerrainNormalmapTexture);//ASE Terrain Instancing
-				SAMPLER(sampler_TerrainNormalmapTexture);//ASE Terrain Instancing
-			#endif//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_START( Terrain )//ASE Terrain Instancing
-				UNITY_DEFINE_INSTANCED_PROP( float4, _TerrainPatchInstanceData )//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_END( Terrain)//ASE Terrain Instancing
-			CBUFFER_START( UnityTerrain)//ASE Terrain Instancing
-				#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-					float4 _TerrainHeightmapRecipSize;//ASE Terrain Instancing
-					float4 _TerrainHeightmapScale;//ASE Terrain Instancing
-				#endif//ASE Terrain Instancing
-			CBUFFER_END//ASE Terrain Instancing
-
-
-			VertexInput ApplyMeshModification( VertexInput v )
-			{
-			#ifdef UNITY_INSTANCING_ENABLED
-				float2 patchVertex = v.vertex.xy;
-				float4 instanceData = UNITY_ACCESS_INSTANCED_PROP( Terrain, _TerrainPatchInstanceData );
-				float2 sampleCoords = ( patchVertex.xy + instanceData.xy ) * instanceData.z;
-				float height = UnpackHeightmap( _TerrainHeightmapTexture.Load( int3( sampleCoords, 0 ) ) );
-				v.vertex.xz = sampleCoords* _TerrainHeightmapScale.xz;
-				v.vertex.y = height* _TerrainHeightmapScale.y;
-				#ifdef ENABLE_TERRAIN_PERPIXEL_NORMAL
-					v.ase_normal = float3(0, 1, 0);
-				#else
-					v.ase_normal = _TerrainNormalmapTexture.Load(int3(sampleCoords, 0)).rgb* 2 - 1;
-				#endif
-				v.ase_texcoord.xy = sampleCoords* _TerrainHeightmapRecipSize.zw;
-			#endif
-				return v;
-			}
-			
-
-			VertexOutput VertexFunction( VertexInput v  )
-			{
-				VertexOutput o = (VertexOutput)0;
-				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-
-				v = ApplyMeshModification(v);
-				float3 ase_worldNormal = TransformObjectToWorldNormal(v.ase_normal);
-				o.ase_texcoord3.xyz = ase_worldNormal;
-				
-				o.ase_texcoord2.xy = v.ase_texcoord.xy;
-				
-				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord2.zw = 0;
-				o.ase_texcoord3.w = 0;
-
-				#ifdef ASE_ABSOLUTE_VERTEX_POS
-					float3 defaultVertexValue = v.vertex.xyz;
-				#else
-					float3 defaultVertexValue = float3(0, 0, 0);
-				#endif
-
-				float3 vertexValue = defaultVertexValue;
-
-				#ifdef ASE_ABSOLUTE_VERTEX_POS
-					v.vertex.xyz = vertexValue;
-				#else
-					v.vertex.xyz += vertexValue;
-				#endif
-
-				v.ase_normal = v.ase_normal;
-
-				float3 positionWS = TransformObjectToWorld( v.vertex.xyz );
-
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					o.worldPos = positionWS;
-				#endif
-
-				o.clipPos = MetaVertexPosition( v.vertex, v.texcoord1.xy, v.texcoord1.xy, unity_LightmapST, unity_DynamicLightmapST );
-
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					VertexPositionInputs vertexInput = (VertexPositionInputs)0;
-					vertexInput.positionWS = positionWS;
-					vertexInput.positionCS = o.clipPos;
-					o.shadowCoord = GetShadowCoord( vertexInput );
-				#endif
-
-				return o;
-			}
-
-			#if defined(ASE_TESSELLATION)
-			struct VertexControl
-			{
-				float4 vertex : INTERNALTESSPOS;
-				float3 ase_normal : NORMAL;
+				float4 tangent : TANGENT;
+				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
 				float4 ase_texcoord : TEXCOORD0;
@@ -1887,13 +433,14 @@ Shader "SH_VenusTerrainFirstPass"
 				float inside : SV_InsideTessFactor;
 			};
 
-			VertexControl vert ( VertexInput v )
+			VertexControl vert ( appdata v )
 			{
 				VertexControl o;
 				UNITY_SETUP_INSTANCE_ID(v);
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				o.vertex = v.vertex;
-				o.ase_normal = v.ase_normal;
+				o.tangent = v.tangent;
+				o.normal = v.normal;
 				o.texcoord1 = v.texcoord1;
 				o.texcoord2 = v.texcoord2;
 				o.ase_texcoord = v.ase_texcoord;
@@ -1909,11 +456,11 @@ Shader "SH_VenusTerrainFirstPass"
 				#if defined(ASE_FIXED_TESSELLATION)
 				tf = FixedTess( tessValue );
 				#elif defined(ASE_DISTANCE_TESSELLATION)
-				tf = DistanceBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), _WorldSpaceCameraPos );
+				tf = DistanceBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, tessValue, tessMin, tessMax, UNITY_MATRIX_M, _WorldSpaceCameraPos );
 				#elif defined(ASE_LENGTH_TESSELLATION)
-				tf = EdgeLengthBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams );
+				tf = EdgeLengthBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, UNITY_MATRIX_M, _WorldSpaceCameraPos, _ScreenParams );
 				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
-				tf = EdgeLengthBasedTessCull(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams, unity_CameraWorldClipPlanes );
+				tf = EdgeLengthBasedTessCull(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, tessMaxDisp, UNITY_MATRIX_M, _WorldSpaceCameraPos, _ScreenParams, unity_CameraWorldClipPlanes );
 				#endif
 				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
 				return o;
@@ -1926,22 +473,23 @@ Shader "SH_VenusTerrainFirstPass"
 			[outputcontrolpoints(3)]
 			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
 			{
-				return patch[id];
+			   return patch[id];
 			}
 
 			[domain("tri")]
-			VertexOutput DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
+			v2f DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
 			{
-				VertexInput o = (VertexInput) 0;
+				appdata o = (appdata) 0;
 				o.vertex = patch[0].vertex * bary.x + patch[1].vertex * bary.y + patch[2].vertex * bary.z;
-				o.ase_normal = patch[0].ase_normal * bary.x + patch[1].ase_normal * bary.y + patch[2].ase_normal * bary.z;
+				o.tangent = patch[0].tangent * bary.x + patch[1].tangent * bary.y + patch[2].tangent * bary.z;
+				o.normal = patch[0].normal * bary.x + patch[1].normal * bary.y + patch[2].normal * bary.z;
 				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
 				o.texcoord2 = patch[0].texcoord2 * bary.x + patch[1].texcoord2 * bary.y + patch[2].texcoord2 * bary.z;
 				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
-					pp[i] = o.vertex.xyz - patch[i].ase_normal * (dot(o.vertex.xyz, patch[i].ase_normal) - dot(patch[i].vertex.xyz, patch[i].ase_normal));
+					pp[i] = o.vertex.xyz - patch[i].normal * (dot(o.vertex.xyz, patch[i].normal) - dot(patch[i].vertex.xyz, patch[i].normal));
 				float phongStrength = _TessPhongStrength;
 				o.vertex.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.vertex.xyz;
 				#endif
@@ -1949,993 +497,348 @@ Shader "SH_VenusTerrainFirstPass"
 				return VertexFunction(o);
 			}
 			#else
-			VertexOutput vert ( VertexInput v )
+			v2f vert ( appdata v )
 			{
 				return VertexFunction( v );
 			}
 			#endif
 
-			half4 frag(VertexOutput IN  ) : SV_TARGET
+			fixed4 frag (v2f IN 
+				#ifdef _DEPTHOFFSET_ON
+				, out float outputDepth : SV_Depth
+				#endif
+				) : SV_Target
 			{
 				UNITY_SETUP_INSTANCE_ID(IN);
-				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( IN );
-
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					float3 WorldPosition = IN.worldPos;
-				#endif
-
-				float4 ShadowCoords = float4( 0, 0, 0, 0 );
-
-				#if defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-						ShadowCoords = IN.shadowCoord;
-					#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-						ShadowCoords = TransformWorldToShadowCoord( WorldPosition );
-					#endif
-				#endif
-
-				float4 appendResult33_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness0));
-				float2 uv_Splat0 = IN.ase_texcoord2.xy * _Splat0_ST.xy + _Splat0_ST.zw;
-				float4 tex2DNode4_g2 = tex2D( _Splat0, uv_Splat0 );
-				float2 uv_Control = IN.ase_texcoord2.xy * _Control_ST.xy + _Control_ST.zw;
-				float4 tex2DNode5_g2 = tex2D( _Control, uv_Control );
-				float dotResult20_g2 = dot( tex2DNode5_g2 , float4(1,1,1,1) );
-				float SplatWeight22_g2 = dotResult20_g2;
-				float localSplatClip74_g2 = ( SplatWeight22_g2 );
-				float SplatWeight74_g2 = SplatWeight22_g2;
-				{
-				#if !defined(SHADER_API_MOBILE) && defined(TERRAIN_SPLAT_ADDPASS)
-				clip(SplatWeight74_g2 == 0.0f ? -1 : 1);
-				#endif
-				}
-				float4 SplatControl26_g2 = ( tex2DNode5_g2 / ( localSplatClip74_g2 + 0.001 ) );
-				float4 appendResult258_g2 = (float4(( (SplatControl26_g2).rrr * (_DiffuseRemapScale0).rgb ) , 1.0));
-				float4 tintLayer0253_g2 = appendResult258_g2;
-				float4 appendResult36_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness1));
-				float2 uv_Splat1 = IN.ase_texcoord2.xy * _Splat1_ST.xy + _Splat1_ST.zw;
-				float4 tex2DNode3_g2 = tex2D( _Splat1, uv_Splat1 );
-				float4 appendResult261_g2 = (float4(( (SplatControl26_g2).ggg * (_DiffuseRemapScale1).rgb ) , 1.0));
-				float4 tintLayer1254_g2 = appendResult261_g2;
-				float4 appendResult39_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness2));
-				float2 uv_Splat2 = IN.ase_texcoord2.xy * _Splat2_ST.xy + _Splat2_ST.zw;
-				float4 tex2DNode6_g2 = tex2D( _Splat2, uv_Splat2 );
-				float4 appendResult263_g2 = (float4(( (SplatControl26_g2).bbb * (_DiffuseRemapScale2).rgb ) , 1.0));
-				float4 tintLayer2255_g2 = appendResult263_g2;
-				float4 appendResult42_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness3));
-				float2 uv_Splat3 = IN.ase_texcoord2.xy * _Splat3_ST.xy + _Splat3_ST.zw;
-				float4 tex2DNode7_g2 = tex2D( _Splat3, uv_Splat3 );
-				float4 appendResult265_g2 = (float4(( (SplatControl26_g2).aaa * (_DiffuseRemapScale3).rgb ) , 1.0));
-				float4 tintLayer3256_g2 = appendResult265_g2;
-				float4 weightedBlendVar9_g2 = float4(1,1,1,1);
-				float4 weightedBlend9_g2 = ( weightedBlendVar9_g2.x*( appendResult33_g2 * tex2DNode4_g2 * tintLayer0253_g2 ) + weightedBlendVar9_g2.y*( appendResult36_g2 * tex2DNode3_g2 * tintLayer1254_g2 ) + weightedBlendVar9_g2.z*( appendResult39_g2 * tex2DNode6_g2 * tintLayer2255_g2 ) + weightedBlendVar9_g2.w*( appendResult42_g2 * tex2DNode7_g2 * tintLayer3256_g2 ) );
-				float4 MixDiffuse28_g2 = weightedBlend9_g2;
-				float4 temp_output_60_0_g2 = MixDiffuse28_g2;
-				float4 temp_output_49_0 = temp_output_60_0_g2;
-				float4 temp_cast_5 = (_RemapMin).xxxx;
-				float4 temp_cast_6 = (_RemapMax).xxxx;
-				float4 temp_output_75_0 = saturate( (temp_cast_5 + (temp_output_49_0 - float4( 0,0,0,0 )) * (temp_cast_6 - temp_cast_5) / (float4( 1,1,1,1 ) - float4( 0,0,0,0 ))) );
-				float3 lerpResult57 = lerp( (_Gravel).rgb , (_Sand).rgb , temp_output_75_0.xyz);
-				float2 temp_output_8_0 = (WorldPosition).xz;
-				float4 tex2DNode24 = tex2D( _Detail, ( temp_output_8_0 / _DetailScale ) );
-				float3 ase_worldNormal = IN.ase_texcoord3.xyz;
-				float2 temp_output_9_0 = ( (ase_worldNormal).xz * _DisplaceIntensity );
-				float4 tex2DNode21 = tex2D( _RockErosion, ( ( temp_output_8_0 + temp_output_9_0 ) / _NoiseScale ) );
-				float temp_output_15_0 = ( 1.0 - ase_worldNormal.y );
-				float temp_output_18_0 = ( WorldPosition.y / _HeightMask );
-				float temp_output_16_0 = ( ( tex2DNode24.r + tex2DNode21.r ) * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
-				float clampResult28 = clamp( temp_output_16_0 , 0.0 , _MaxClamp );
-				float3 lerpResult12 = lerp( ( lerpResult57 + ( tex2DNode24.r * _SandTextureInfluence ) ) , ( (_Rock).rgb * clampResult28 ) , saturate( temp_output_16_0 ));
-				
-
-				float3 BaseColor = lerpResult12;
-				float3 Emission = 0;
-				float Alpha = 1;
-				float AlphaClipThreshold = 0.5;
-
-				#ifdef _ALPHATEST_ON
-					clip(Alpha - AlphaClipThreshold);
-				#endif
-
-				MetaInput metaInput = (MetaInput)0;
-				metaInput.Albedo = BaseColor;
-				metaInput.Emission = Emission;
-
-				return MetaFragment(metaInput);
-			}
-			ENDHLSL
-		}
-
-		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
-	UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
-
-		Pass
-		{
-			
-			Name "Universal2D"
-			Tags { "LightMode"="Universal2D" }
-
-			Blend Off
-			ZWrite On
-			ZTest LEqual
-			Offset 0,0
-			ColorMask RGBA
-
-			HLSLPROGRAM
-
-			#define _NORMAL_DROPOFF_TS 1
-			#pragma multi_compile_fog
-			#define ASE_FOG 1
-			#define _NORMALMAP 1
-			#define ASE_SRP_VERSION 101001
-
-
-			#pragma vertex vert
-			#pragma fragment frag
-
-			#define SHADERPASS SHADERPASS_2D
-
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
-
-			#define ASE_NEEDS_FRAG_WORLD_POSITION
-			#define ASE_NEEDS_VERT_NORMAL
-			#define ASE_NEEDS_VERT_POSITION
-			#pragma multi_compile_instancing
-			#pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
-			#pragma multi_compile_local __ _ALPHATEST_ON
-			#pragma shader_feature_local _MASKMAP
-
-
-			struct VertexInput
-			{
-				float4 vertex : POSITION;
-				float3 ase_normal : NORMAL;
-				float4 ase_texcoord : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct VertexOutput
-			{
-				float4 clipPos : SV_POSITION;
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					float3 worldPos : TEXCOORD0;
-				#endif
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					float4 shadowCoord : TEXCOORD1;
-				#endif
-				float4 ase_texcoord2 : TEXCOORD2;
-				float4 ase_texcoord3 : TEXCOORD3;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-			};
-
-			CBUFFER_START(UnityPerMaterial)
-			float4 _Gravel;
-			float4 _Sand;
-			float4 _Splat0_ST;
-			float4 _Control_ST;
-			float4 _Splat1_ST;
-			float4 _Splat2_ST;
-			float4 _Splat3_ST;
-			float4 _Rock;
-			float _MaxClamp;
-			float _MaskIntensity;
-			float _HeightMask;
-			float _NoiseScale;
-			float _DisplaceIntensity;
-			float _SandTextureInfluence;
-			float _RemapMin;
-			float _RemapMax;
-			float _NormalStrenght;
-			float _Smoothness3;
-			float _Smoothness2;
-			float _Smoothness1;
-			float _Smoothness0;
-			float _DetailScale;
-			float _Roughness;
-			#ifdef ASE_TRANSMISSION
-				float _TransmissionShadow;
-			#endif
-			#ifdef ASE_TRANSLUCENCY
-				float _TransStrength;
-				float _TransNormal;
-				float _TransScattering;
-				float _TransDirect;
-				float _TransAmbient;
-				float _TransShadow;
-			#endif
-			#ifdef ASE_TESSELLATION
-				float _TessPhongStrength;
-				float _TessValue;
-				float _TessMin;
-				float _TessMax;
-				float _TessEdgeLength;
-				float _TessMaxDisp;
-			#endif
-			CBUFFER_END
-
-			// Property used by ScenePickingPass
-			#ifdef SCENEPICKINGPASS
-				float4 _SelectionID;
-			#endif
-
-			// Properties used by SceneSelectionPass
-			#ifdef SCENESELECTIONPASS
-				int _ObjectId;
-				int _PassValue;
-			#endif
-
-			sampler2D _Mask2;
-			sampler2D _Mask0;
-			sampler2D _Mask1;
-			sampler2D _Mask3;
-			float4 _MaskMapRemapScale0;
-			float4 _MaskMapRemapOffset2;
-			float4 _MaskMapRemapScale2;
-			float4 _MaskMapRemapScale1;
-			float4 _MaskMapRemapOffset1;
-			float4 _MaskMapRemapScale3;
-			float4 _MaskMapRemapOffset3;
-			float4 _MaskMapRemapOffset0;
-			sampler2D _Splat0;
-			sampler2D _Control;
-			float4 _DiffuseRemapScale0;
-			sampler2D _Splat1;
-			float4 _DiffuseRemapScale1;
-			sampler2D _Splat2;
-			float4 _DiffuseRemapScale2;
-			sampler2D _Splat3;
-			float4 _DiffuseRemapScale3;
-			sampler2D _Detail;
-			sampler2D _RockErosion;
-			#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-				TEXTURE2D(_TerrainHeightmapTexture);//ASE Terrain Instancing
-				TEXTURE2D( _TerrainNormalmapTexture);//ASE Terrain Instancing
-				SAMPLER(sampler_TerrainNormalmapTexture);//ASE Terrain Instancing
-			#endif//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_START( Terrain )//ASE Terrain Instancing
-				UNITY_DEFINE_INSTANCED_PROP( float4, _TerrainPatchInstanceData )//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_END( Terrain)//ASE Terrain Instancing
-			CBUFFER_START( UnityTerrain)//ASE Terrain Instancing
-				#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-					float4 _TerrainHeightmapRecipSize;//ASE Terrain Instancing
-					float4 _TerrainHeightmapScale;//ASE Terrain Instancing
-				#endif//ASE Terrain Instancing
-			CBUFFER_END//ASE Terrain Instancing
-
-
-			VertexInput ApplyMeshModification( VertexInput v )
-			{
-			#ifdef UNITY_INSTANCING_ENABLED
-				float2 patchVertex = v.vertex.xy;
-				float4 instanceData = UNITY_ACCESS_INSTANCED_PROP( Terrain, _TerrainPatchInstanceData );
-				float2 sampleCoords = ( patchVertex.xy + instanceData.xy ) * instanceData.z;
-				float height = UnpackHeightmap( _TerrainHeightmapTexture.Load( int3( sampleCoords, 0 ) ) );
-				v.vertex.xz = sampleCoords* _TerrainHeightmapScale.xz;
-				v.vertex.y = height* _TerrainHeightmapScale.y;
-				#ifdef ENABLE_TERRAIN_PERPIXEL_NORMAL
-					v.ase_normal = float3(0, 1, 0);
-				#else
-					v.ase_normal = _TerrainNormalmapTexture.Load(int3(sampleCoords, 0)).rgb* 2 - 1;
-				#endif
-				v.ase_texcoord.xy = sampleCoords* _TerrainHeightmapRecipSize.zw;
-			#endif
-				return v;
-			}
-			
-
-			VertexOutput VertexFunction( VertexInput v  )
-			{
-				VertexOutput o = (VertexOutput)0;
-				UNITY_SETUP_INSTANCE_ID( v );
-				UNITY_TRANSFER_INSTANCE_ID( v, o );
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( o );
-
-				v = ApplyMeshModification(v);
-				float3 ase_worldNormal = TransformObjectToWorldNormal(v.ase_normal);
-				o.ase_texcoord3.xyz = ase_worldNormal;
-				
-				o.ase_texcoord2.xy = v.ase_texcoord.xy;
-				
-				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord2.zw = 0;
-				o.ase_texcoord3.w = 0;
-
-				#ifdef ASE_ABSOLUTE_VERTEX_POS
-					float3 defaultVertexValue = v.vertex.xyz;
-				#else
-					float3 defaultVertexValue = float3(0, 0, 0);
-				#endif
-
-				float3 vertexValue = defaultVertexValue;
-
-				#ifdef ASE_ABSOLUTE_VERTEX_POS
-					v.vertex.xyz = vertexValue;
-				#else
-					v.vertex.xyz += vertexValue;
-				#endif
-
-				v.ase_normal = v.ase_normal;
-
-				float3 positionWS = TransformObjectToWorld( v.vertex.xyz );
-				float4 positionCS = TransformWorldToHClip( positionWS );
-
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					o.worldPos = positionWS;
-				#endif
-
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					VertexPositionInputs vertexInput = (VertexPositionInputs)0;
-					vertexInput.positionWS = positionWS;
-					vertexInput.positionCS = positionCS;
-					o.shadowCoord = GetShadowCoord( vertexInput );
-				#endif
-
-				o.clipPos = positionCS;
-
-				return o;
-			}
-
-			#if defined(ASE_TESSELLATION)
-			struct VertexControl
-			{
-				float4 vertex : INTERNALTESSPOS;
-				float3 ase_normal : NORMAL;
-				float4 ase_texcoord : TEXCOORD0;
-
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct TessellationFactors
-			{
-				float edge[3] : SV_TessFactor;
-				float inside : SV_InsideTessFactor;
-			};
-
-			VertexControl vert ( VertexInput v )
-			{
-				VertexControl o;
-				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
-				o.vertex = v.vertex;
-				o.ase_normal = v.ase_normal;
-				o.ase_texcoord = v.ase_texcoord;
-				return o;
-			}
-
-			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
-			{
-				TessellationFactors o;
-				float4 tf = 1;
-				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
-				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
-				#if defined(ASE_FIXED_TESSELLATION)
-				tf = FixedTess( tessValue );
-				#elif defined(ASE_DISTANCE_TESSELLATION)
-				tf = DistanceBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), _WorldSpaceCameraPos );
-				#elif defined(ASE_LENGTH_TESSELLATION)
-				tf = EdgeLengthBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams );
-				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
-				tf = EdgeLengthBasedTessCull(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams, unity_CameraWorldClipPlanes );
-				#endif
-				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
-				return o;
-			}
-
-			[domain("tri")]
-			[partitioning("fractional_odd")]
-			[outputtopology("triangle_cw")]
-			[patchconstantfunc("TessellationFunction")]
-			[outputcontrolpoints(3)]
-			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
-			{
-				return patch[id];
-			}
-
-			[domain("tri")]
-			VertexOutput DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
-			{
-				VertexInput o = (VertexInput) 0;
-				o.vertex = patch[0].vertex * bary.x + patch[1].vertex * bary.y + patch[2].vertex * bary.z;
-				o.ase_normal = patch[0].ase_normal * bary.x + patch[1].ase_normal * bary.y + patch[2].ase_normal * bary.z;
-				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
-				#if defined(ASE_PHONG_TESSELLATION)
-				float3 pp[3];
-				for (int i = 0; i < 3; ++i)
-					pp[i] = o.vertex.xyz - patch[i].ase_normal * (dot(o.vertex.xyz, patch[i].ase_normal) - dot(patch[i].vertex.xyz, patch[i].ase_normal));
-				float phongStrength = _TessPhongStrength;
-				o.vertex.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.vertex.xyz;
-				#endif
-				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
-				return VertexFunction(o);
-			}
-			#else
-			VertexOutput vert ( VertexInput v )
-			{
-				return VertexFunction( v );
-			}
-			#endif
-
-			half4 frag(VertexOutput IN  ) : SV_TARGET
-			{
-				UNITY_SETUP_INSTANCE_ID( IN );
-				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( IN );
-
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					float3 WorldPosition = IN.worldPos;
-				#endif
-
-				float4 ShadowCoords = float4( 0, 0, 0, 0 );
-
-				#if defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-						ShadowCoords = IN.shadowCoord;
-					#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-						ShadowCoords = TransformWorldToShadowCoord( WorldPosition );
-					#endif
-				#endif
-
-				float4 appendResult33_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness0));
-				float2 uv_Splat0 = IN.ase_texcoord2.xy * _Splat0_ST.xy + _Splat0_ST.zw;
-				float4 tex2DNode4_g2 = tex2D( _Splat0, uv_Splat0 );
-				float2 uv_Control = IN.ase_texcoord2.xy * _Control_ST.xy + _Control_ST.zw;
-				float4 tex2DNode5_g2 = tex2D( _Control, uv_Control );
-				float dotResult20_g2 = dot( tex2DNode5_g2 , float4(1,1,1,1) );
-				float SplatWeight22_g2 = dotResult20_g2;
-				float localSplatClip74_g2 = ( SplatWeight22_g2 );
-				float SplatWeight74_g2 = SplatWeight22_g2;
-				{
-				#if !defined(SHADER_API_MOBILE) && defined(TERRAIN_SPLAT_ADDPASS)
-				clip(SplatWeight74_g2 == 0.0f ? -1 : 1);
-				#endif
-				}
-				float4 SplatControl26_g2 = ( tex2DNode5_g2 / ( localSplatClip74_g2 + 0.001 ) );
-				float4 appendResult258_g2 = (float4(( (SplatControl26_g2).rrr * (_DiffuseRemapScale0).rgb ) , 1.0));
-				float4 tintLayer0253_g2 = appendResult258_g2;
-				float4 appendResult36_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness1));
-				float2 uv_Splat1 = IN.ase_texcoord2.xy * _Splat1_ST.xy + _Splat1_ST.zw;
-				float4 tex2DNode3_g2 = tex2D( _Splat1, uv_Splat1 );
-				float4 appendResult261_g2 = (float4(( (SplatControl26_g2).ggg * (_DiffuseRemapScale1).rgb ) , 1.0));
-				float4 tintLayer1254_g2 = appendResult261_g2;
-				float4 appendResult39_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness2));
-				float2 uv_Splat2 = IN.ase_texcoord2.xy * _Splat2_ST.xy + _Splat2_ST.zw;
-				float4 tex2DNode6_g2 = tex2D( _Splat2, uv_Splat2 );
-				float4 appendResult263_g2 = (float4(( (SplatControl26_g2).bbb * (_DiffuseRemapScale2).rgb ) , 1.0));
-				float4 tintLayer2255_g2 = appendResult263_g2;
-				float4 appendResult42_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness3));
-				float2 uv_Splat3 = IN.ase_texcoord2.xy * _Splat3_ST.xy + _Splat3_ST.zw;
-				float4 tex2DNode7_g2 = tex2D( _Splat3, uv_Splat3 );
-				float4 appendResult265_g2 = (float4(( (SplatControl26_g2).aaa * (_DiffuseRemapScale3).rgb ) , 1.0));
-				float4 tintLayer3256_g2 = appendResult265_g2;
-				float4 weightedBlendVar9_g2 = float4(1,1,1,1);
-				float4 weightedBlend9_g2 = ( weightedBlendVar9_g2.x*( appendResult33_g2 * tex2DNode4_g2 * tintLayer0253_g2 ) + weightedBlendVar9_g2.y*( appendResult36_g2 * tex2DNode3_g2 * tintLayer1254_g2 ) + weightedBlendVar9_g2.z*( appendResult39_g2 * tex2DNode6_g2 * tintLayer2255_g2 ) + weightedBlendVar9_g2.w*( appendResult42_g2 * tex2DNode7_g2 * tintLayer3256_g2 ) );
-				float4 MixDiffuse28_g2 = weightedBlend9_g2;
-				float4 temp_output_60_0_g2 = MixDiffuse28_g2;
-				float4 temp_output_49_0 = temp_output_60_0_g2;
-				float4 temp_cast_5 = (_RemapMin).xxxx;
-				float4 temp_cast_6 = (_RemapMax).xxxx;
-				float4 temp_output_75_0 = saturate( (temp_cast_5 + (temp_output_49_0 - float4( 0,0,0,0 )) * (temp_cast_6 - temp_cast_5) / (float4( 1,1,1,1 ) - float4( 0,0,0,0 ))) );
-				float3 lerpResult57 = lerp( (_Gravel).rgb , (_Sand).rgb , temp_output_75_0.xyz);
-				float2 temp_output_8_0 = (WorldPosition).xz;
-				float4 tex2DNode24 = tex2D( _Detail, ( temp_output_8_0 / _DetailScale ) );
-				float3 ase_worldNormal = IN.ase_texcoord3.xyz;
-				float2 temp_output_9_0 = ( (ase_worldNormal).xz * _DisplaceIntensity );
-				float4 tex2DNode21 = tex2D( _RockErosion, ( ( temp_output_8_0 + temp_output_9_0 ) / _NoiseScale ) );
-				float temp_output_15_0 = ( 1.0 - ase_worldNormal.y );
-				float temp_output_18_0 = ( WorldPosition.y / _HeightMask );
-				float temp_output_16_0 = ( ( tex2DNode24.r + tex2DNode21.r ) * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
-				float clampResult28 = clamp( temp_output_16_0 , 0.0 , _MaxClamp );
-				float3 lerpResult12 = lerp( ( lerpResult57 + ( tex2DNode24.r * _SandTextureInfluence ) ) , ( (_Rock).rgb * clampResult28 ) , saturate( temp_output_16_0 ));
-				
-
-				float3 BaseColor = lerpResult12;
-				float Alpha = 1;
-				float AlphaClipThreshold = 0.5;
-
-				half4 color = half4(BaseColor, Alpha );
-
-				#ifdef _ALPHATEST_ON
-					clip(Alpha - AlphaClipThreshold);
-				#endif
-
-				return color;
-			}
-			ENDHLSL
-		}
-
-		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
-	UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
-
-		Pass
-		{
-			
-			Name "DepthNormals"
-			Tags { "LightMode"="DepthNormals" }
-
-			ZWrite On
-			Blend One Zero
-			ZTest LEqual
-			ZWrite On
-
-			HLSLPROGRAM
-
-			#define _NORMAL_DROPOFF_TS 1
-			#pragma multi_compile_fog
-			#define ASE_FOG 1
-			#define _NORMALMAP 1
-			#define ASE_SRP_VERSION 101001
-
-
-			#pragma vertex vert
-			#pragma fragment frag
-
-			#define SHADERPASS SHADERPASS_DEPTHNORMALSONLY
-
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
-
-			#define ASE_NEEDS_VERT_NORMAL
-			#define ASE_NEEDS_VERT_POSITION
-			#pragma multi_compile_instancing
-			#pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
-			#pragma multi_compile_local __ _ALPHATEST_ON
-			#pragma shader_feature_local _MASKMAP
-
-
-			#if defined(ASE_EARLY_Z_DEPTH_OPTIMIZE) && (SHADER_TARGET >= 45)
-				#define ASE_SV_DEPTH SV_DepthLessEqual
-				#define ASE_SV_POSITION_QUALIFIERS linear noperspective centroid
-			#else
-				#define ASE_SV_DEPTH SV_Depth
-				#define ASE_SV_POSITION_QUALIFIERS
-			#endif
-
-			struct VertexInput
-			{
-				float4 vertex : POSITION;
-				float3 ase_normal : NORMAL;
-				float4 ase_texcoord : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct VertexOutput
-			{
-				ASE_SV_POSITION_QUALIFIERS float4 clipPos : SV_POSITION;
-				float4 clipPosV : TEXCOORD0;
-				float3 worldNormal : TEXCOORD1;
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					float3 worldPos : TEXCOORD2;
-				#endif
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					float4 shadowCoord : TEXCOORD3;
-				#endif
-				float4 ase_texcoord4 : TEXCOORD4;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-			};
-
-			CBUFFER_START(UnityPerMaterial)
-			float4 _Gravel;
-			float4 _Sand;
-			float4 _Splat0_ST;
-			float4 _Control_ST;
-			float4 _Splat1_ST;
-			float4 _Splat2_ST;
-			float4 _Splat3_ST;
-			float4 _Rock;
-			float _MaxClamp;
-			float _MaskIntensity;
-			float _HeightMask;
-			float _NoiseScale;
-			float _DisplaceIntensity;
-			float _SandTextureInfluence;
-			float _RemapMin;
-			float _RemapMax;
-			float _NormalStrenght;
-			float _Smoothness3;
-			float _Smoothness2;
-			float _Smoothness1;
-			float _Smoothness0;
-			float _DetailScale;
-			float _Roughness;
-			#ifdef ASE_TRANSMISSION
-				float _TransmissionShadow;
-			#endif
-			#ifdef ASE_TRANSLUCENCY
-				float _TransStrength;
-				float _TransNormal;
-				float _TransScattering;
-				float _TransDirect;
-				float _TransAmbient;
-				float _TransShadow;
-			#endif
-			#ifdef ASE_TESSELLATION
-				float _TessPhongStrength;
-				float _TessValue;
-				float _TessMin;
-				float _TessMax;
-				float _TessEdgeLength;
-				float _TessMaxDisp;
-			#endif
-			CBUFFER_END
-
-			// Property used by ScenePickingPass
-			#ifdef SCENEPICKINGPASS
-				float4 _SelectionID;
-			#endif
-
-			// Properties used by SceneSelectionPass
-			#ifdef SCENESELECTIONPASS
-				int _ObjectId;
-				int _PassValue;
-			#endif
-
-			sampler2D _Mask2;
-			sampler2D _Mask0;
-			sampler2D _Mask1;
-			sampler2D _Mask3;
-			float4 _MaskMapRemapScale0;
-			float4 _MaskMapRemapOffset2;
-			float4 _MaskMapRemapScale2;
-			float4 _MaskMapRemapScale1;
-			float4 _MaskMapRemapOffset1;
-			float4 _MaskMapRemapScale3;
-			float4 _MaskMapRemapOffset3;
-			float4 _MaskMapRemapOffset0;
-			#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-				TEXTURE2D(_TerrainHeightmapTexture);//ASE Terrain Instancing
-				TEXTURE2D( _TerrainNormalmapTexture);//ASE Terrain Instancing
-				SAMPLER(sampler_TerrainNormalmapTexture);//ASE Terrain Instancing
-			#endif//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_START( Terrain )//ASE Terrain Instancing
-				UNITY_DEFINE_INSTANCED_PROP( float4, _TerrainPatchInstanceData )//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_END( Terrain)//ASE Terrain Instancing
-			CBUFFER_START( UnityTerrain)//ASE Terrain Instancing
-				#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-					float4 _TerrainHeightmapRecipSize;//ASE Terrain Instancing
-					float4 _TerrainHeightmapScale;//ASE Terrain Instancing
-				#endif//ASE Terrain Instancing
-			CBUFFER_END//ASE Terrain Instancing
-
-
-			VertexInput ApplyMeshModification( VertexInput v )
-			{
-			#ifdef UNITY_INSTANCING_ENABLED
-				float2 patchVertex = v.vertex.xy;
-				float4 instanceData = UNITY_ACCESS_INSTANCED_PROP( Terrain, _TerrainPatchInstanceData );
-				float2 sampleCoords = ( patchVertex.xy + instanceData.xy ) * instanceData.z;
-				float height = UnpackHeightmap( _TerrainHeightmapTexture.Load( int3( sampleCoords, 0 ) ) );
-				v.vertex.xz = sampleCoords* _TerrainHeightmapScale.xz;
-				v.vertex.y = height* _TerrainHeightmapScale.y;
-				#ifdef ENABLE_TERRAIN_PERPIXEL_NORMAL
-					v.ase_normal = float3(0, 1, 0);
-				#else
-					v.ase_normal = _TerrainNormalmapTexture.Load(int3(sampleCoords, 0)).rgb* 2 - 1;
-				#endif
-				v.ase_texcoord.xy = sampleCoords* _TerrainHeightmapRecipSize.zw;
-			#endif
-				return v;
-			}
-			
-
-			VertexOutput VertexFunction( VertexInput v  )
-			{
-				VertexOutput o = (VertexOutput)0;
-				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-
-				v = ApplyMeshModification(v);
-				o.ase_texcoord4 = v.ase_texcoord;
-				#ifdef ASE_ABSOLUTE_VERTEX_POS
-					float3 defaultVertexValue = v.vertex.xyz;
-				#else
-					float3 defaultVertexValue = float3(0, 0, 0);
-				#endif
-
-				float3 vertexValue = defaultVertexValue;
-
-				#ifdef ASE_ABSOLUTE_VERTEX_POS
-					v.vertex.xyz = vertexValue;
-				#else
-					v.vertex.xyz += vertexValue;
-				#endif
-
-				v.ase_normal = v.ase_normal;
-				float3 positionWS = TransformObjectToWorld( v.vertex.xyz );
-				float3 normalWS = TransformObjectToWorldNormal( v.ase_normal );
-				float4 positionCS = TransformWorldToHClip( positionWS );
-
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					o.worldPos = positionWS;
-				#endif
-
-				o.worldNormal = normalWS;
-
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					VertexPositionInputs vertexInput = (VertexPositionInputs)0;
-					vertexInput.positionWS = positionWS;
-					vertexInput.positionCS = positionCS;
-					o.shadowCoord = GetShadowCoord( vertexInput );
-				#endif
-
-				o.clipPos = positionCS;
-				o.clipPosV = positionCS;
-				return o;
-			}
-
-			#if defined(ASE_TESSELLATION)
-			struct VertexControl
-			{
-				float4 vertex : INTERNALTESSPOS;
-				float3 ase_normal : NORMAL;
-				float4 ase_texcoord : TEXCOORD0;
-
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct TessellationFactors
-			{
-				float edge[3] : SV_TessFactor;
-				float inside : SV_InsideTessFactor;
-			};
-
-			VertexControl vert ( VertexInput v )
-			{
-				VertexControl o;
-				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
-				o.vertex = v.vertex;
-				o.ase_normal = v.ase_normal;
-				o.ase_texcoord = v.ase_texcoord;
-				return o;
-			}
-
-			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
-			{
-				TessellationFactors o;
-				float4 tf = 1;
-				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
-				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
-				#if defined(ASE_FIXED_TESSELLATION)
-				tf = FixedTess( tessValue );
-				#elif defined(ASE_DISTANCE_TESSELLATION)
-				tf = DistanceBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), _WorldSpaceCameraPos );
-				#elif defined(ASE_LENGTH_TESSELLATION)
-				tf = EdgeLengthBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams );
-				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
-				tf = EdgeLengthBasedTessCull(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams, unity_CameraWorldClipPlanes );
-				#endif
-				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
-				return o;
-			}
-
-			[domain("tri")]
-			[partitioning("fractional_odd")]
-			[outputtopology("triangle_cw")]
-			[patchconstantfunc("TessellationFunction")]
-			[outputcontrolpoints(3)]
-			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
-			{
-				return patch[id];
-			}
-
-			[domain("tri")]
-			VertexOutput DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
-			{
-				VertexInput o = (VertexInput) 0;
-				o.vertex = patch[0].vertex * bary.x + patch[1].vertex * bary.y + patch[2].vertex * bary.z;
-				o.ase_normal = patch[0].ase_normal * bary.x + patch[1].ase_normal * bary.y + patch[2].ase_normal * bary.z;
-				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
-				#if defined(ASE_PHONG_TESSELLATION)
-				float3 pp[3];
-				for (int i = 0; i < 3; ++i)
-					pp[i] = o.vertex.xyz - patch[i].ase_normal * (dot(o.vertex.xyz, patch[i].ase_normal) - dot(patch[i].vertex.xyz, patch[i].ase_normal));
-				float phongStrength = _TessPhongStrength;
-				o.vertex.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.vertex.xyz;
-				#endif
-				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
-				return VertexFunction(o);
-			}
-			#else
-			VertexOutput vert ( VertexInput v )
-			{
-				return VertexFunction( v );
-			}
-			#endif
-
-			half4 frag(	VertexOutput IN
-						#ifdef ASE_DEPTH_WRITE_ON
-						,out float outputDepth : ASE_SV_DEPTH
-						#endif
-						 ) : SV_TARGET
-			{
-				UNITY_SETUP_INSTANCE_ID(IN);
-				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( IN );
-
-				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
-					float3 WorldPosition = IN.worldPos;
-				#endif
-
-				float4 ShadowCoords = float4( 0, 0, 0, 0 );
-
-				float4 ClipPos = IN.clipPosV;
-				float4 ScreenPos = ComputeScreenPos( IN.clipPosV );
-
-				#if defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
-					#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-						ShadowCoords = IN.shadowCoord;
-					#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-						ShadowCoords = TransformWorldToShadowCoord( WorldPosition );
-					#endif
-				#endif
-
-				
-
-				float Alpha = 1;
-				float AlphaClipThreshold = 0.5;
-				#ifdef ASE_DEPTH_WRITE_ON
-					float DepthValue = IN.clipPos.z;
-				#endif
-
-				#ifdef _ALPHATEST_ON
-					clip(Alpha - AlphaClipThreshold);
-				#endif
 
 				#ifdef LOD_FADE_CROSSFADE
-					LODDitheringTransition( IN.clipPos.xyz, unity_LODFade.x );
+					UNITY_APPLY_DITHER_CROSSFADE(IN.pos.xy);
 				#endif
 
-				#ifdef ASE_DEPTH_WRITE_ON
-					outputDepth = DepthValue;
-				#endif
-
-				#if ASE_SRP_VERSION >= 110000
-					return float4(PackNormalOctRectEncode(TransformWorldToViewDir(IN.worldNormal, true)), 0.0, 0.0);
-				#elif ASE_SRP_VERSION >= 100900
-					return float4(PackNormalOctRectEncode(normalize(IN.worldNormal)), 0.0, 0.0);
+				#if defined(_SPECULAR_SETUP)
+					SurfaceOutputStandardSpecular o = (SurfaceOutputStandardSpecular)0;
 				#else
-					return float4(PackNormalOctRectEncode(TransformWorldToViewDir(IN.worldNormal, true)), 0.0, 0.0);
+					SurfaceOutputStandard o = (SurfaceOutputStandard)0;
 				#endif
+				float3 WorldTangent = float3(IN.tSpace0.x,IN.tSpace1.x,IN.tSpace2.x);
+				float3 WorldBiTangent = float3(IN.tSpace0.y,IN.tSpace1.y,IN.tSpace2.y);
+				float3 WorldNormal = float3(IN.tSpace0.z,IN.tSpace1.z,IN.tSpace2.z);
+				float3 worldPos = float3(IN.tSpace0.w,IN.tSpace1.w,IN.tSpace2.w);
+				float3 worldViewDir = normalize(UnityWorldSpaceViewDir(worldPos));
+				#if defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+					UNITY_LIGHT_ATTENUATION(atten, IN, worldPos)
+				#else
+					half atten = 1;
+				#endif
+				#if defined(ASE_NEEDS_FRAG_SCREEN_POSITION)
+				float4 ScreenPos = IN.screenPos;
+				#endif
+
+				float2 uv_Control = IN.ase_texcoord9.xy * _Control_ST.xy + _Control_ST.zw;
+				float4 tex2DNode5_g2 = tex2D( _Control, uv_Control );
+				float dotResult20_g2 = dot( tex2DNode5_g2 , float4(1,1,1,1) );
+				float SplatWeight22_g2 = dotResult20_g2;
+				float localSplatClip74_g2 = ( SplatWeight22_g2 );
+				float SplatWeight74_g2 = SplatWeight22_g2;
+				{
+				#if !defined(SHADER_API_MOBILE) && defined(TERRAIN_SPLAT_ADDPASS)
+				clip(SplatWeight74_g2 == 0.0f ? -1 : 1);
+				#endif
+				}
+				float4 SplatControl26_g2 = ( tex2DNode5_g2 / ( localSplatClip74_g2 + 0.001 ) );
+				float4 temp_output_59_0_g2 = SplatControl26_g2;
+				float4 appendResult33_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness0));
+				float2 uv_Splat0 = IN.ase_texcoord9.xy * _Splat0_ST.xy + _Splat0_ST.zw;
+				float4 tex2DNode4_g2 = tex2D( _Splat0, uv_Splat0 );
+				float3 _Vector1 = float3(1,1,1);
+				float4 appendResult258_g2 = (float4(_Vector1 , 1.0));
+				float4 tintLayer0253_g2 = appendResult258_g2;
+				float4 appendResult36_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness1));
+				float2 uv_Splat1 = IN.ase_texcoord9.xy * _Splat1_ST.xy + _Splat1_ST.zw;
+				float4 tex2DNode3_g2 = tex2D( _Splat1, uv_Splat1 );
+				float3 _Vector2 = float3(1,1,1);
+				float4 appendResult261_g2 = (float4(_Vector2 , 1.0));
+				float4 tintLayer1254_g2 = appendResult261_g2;
+				float4 appendResult39_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness2));
+				float2 uv_Splat2 = IN.ase_texcoord9.xy * _Splat2_ST.xy + _Splat2_ST.zw;
+				float4 tex2DNode6_g2 = tex2D( _Splat2, uv_Splat2 );
+				float3 _Vector3 = float3(1,1,1);
+				float4 appendResult263_g2 = (float4(_Vector3 , 1.0));
+				float4 tintLayer2255_g2 = appendResult263_g2;
+				float4 appendResult42_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness3));
+				float2 uv_Splat3 = IN.ase_texcoord9.xy * _Splat3_ST.xy + _Splat3_ST.zw;
+				float4 tex2DNode7_g2 = tex2D( _Splat3, uv_Splat3 );
+				float3 _Vector4 = float3(1,1,1);
+				float4 appendResult265_g2 = (float4(_Vector4 , 1.0));
+				float4 tintLayer3256_g2 = appendResult265_g2;
+				float4 weightedBlendVar9_g2 = temp_output_59_0_g2;
+				float4 weightedBlend9_g2 = ( weightedBlendVar9_g2.x*( appendResult33_g2 * tex2DNode4_g2 * tintLayer0253_g2 ) + weightedBlendVar9_g2.y*( appendResult36_g2 * tex2DNode3_g2 * tintLayer1254_g2 ) + weightedBlendVar9_g2.z*( appendResult39_g2 * tex2DNode6_g2 * tintLayer2255_g2 ) + weightedBlendVar9_g2.w*( appendResult42_g2 * tex2DNode7_g2 * tintLayer3256_g2 ) );
+				float4 MixDiffuse28_g2 = weightedBlend9_g2;
+				float4 temp_output_60_0_g2 = MixDiffuse28_g2;
+				float4 temp_output_49_0 = temp_output_60_0_g2;
+				float4 temp_cast_6 = (_RemapMin).xxxx;
+				float4 temp_cast_7 = (_RemapMax).xxxx;
+				float4 temp_output_75_0 = saturate( (temp_cast_6 + (temp_output_49_0 - float4( 0,0,0,0 )) * (temp_cast_7 - temp_cast_6) / (float4( 1,1,1,1 ) - float4( 0,0,0,0 ))) );
+				float3 lerpResult57 = lerp( (_Gravel).rgb , (_Sand).rgb , temp_output_75_0.xyz);
+				float2 temp_output_8_0 = (worldPos).xz;
+				float4 tex2DNode24 = tex2D( _Detail, ( temp_output_8_0 / _DetailScale ) );
+				float2 temp_output_9_0 = ( (WorldNormal).xz * _DisplaceIntensity );
+				float4 tex2DNode21 = tex2D( _RockErosion, ( ( temp_output_8_0 + temp_output_9_0 ) / _NoiseScale ) );
+				float temp_output_15_0 = ( 1.0 - WorldNormal.y );
+				float temp_output_18_0 = ( worldPos.y / _HeightMask );
+				float temp_output_16_0 = ( ( tex2DNode24.r + tex2DNode21.r ) * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
+				float clampResult28 = clamp( temp_output_16_0 , 0.0 , _MaxClamp );
+				float3 lerpResult12 = lerp( ( lerpResult57 + ( tex2DNode24.r * _SandTextureInfluence ) ) , ( (_Rock).rgb * clampResult28 ) , saturate( temp_output_16_0 ));
+				
+				float3 surf_pos107_g1 = worldPos;
+				float3 surf_norm107_g1 = WorldNormal;
+				float height107_g1 = ( tex2DNode21.r * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
+				float scale107_g1 = _NormalStrenght;
+				float3 localPerturbNormal107_g1 = PerturbNormal107_g1( surf_pos107_g1 , surf_norm107_g1 , height107_g1 , scale107_g1 );
+				float3x3 ase_worldToTangent = float3x3(WorldTangent,WorldBiTangent,WorldNormal);
+				float3 worldToTangentDir42_g1 = mul( ase_worldToTangent, localPerturbNormal107_g1);
+				
+				float4 appendResult205_g2 = (float4(_Smoothness0 , _Smoothness1 , _Smoothness2 , _Smoothness3));
+				float4 appendResult206_g2 = (float4(tex2DNode4_g2.a , tex2DNode3_g2.a , tex2DNode6_g2.a , tex2DNode7_g2.a));
+				float4 defaultSmoothness210_g2 = ( appendResult205_g2 * appendResult206_g2 );
+				float dotResult216_g2 = dot( defaultSmoothness210_g2 , SplatControl26_g2 );
+				float4 temp_cast_10 = (_Roughness).xxxx;
+				float4 lerpResult69 = lerp( ( temp_output_49_0 * dotResult216_g2 ) , temp_cast_10 , saturate( temp_output_16_0 ));
+				
+				o.Albedo = lerpResult12;
+				o.Normal = worldToTangentDir42_g1;
+				o.Emission = half3( 0, 0, 0 );
+				#if defined(_SPECULAR_SETUP)
+					o.Specular = fixed3( 0, 0, 0 );
+				#else
+					o.Metallic = 0;
+				#endif
+				o.Smoothness = lerpResult69.x;
+				o.Occlusion = 1;
+				o.Alpha = 1;
+				float AlphaClipThreshold = 0.5;
+				float AlphaClipThresholdShadow = 0.5;
+				float3 BakedGI = 0;
+				float3 RefractionColor = 1;
+				float RefractionIndex = 1;
+				float3 Transmission = 1;
+				float3 Translucency = 1;
+
+				#ifdef _ALPHATEST_ON
+					clip( o.Alpha - AlphaClipThreshold );
+				#endif
+
+				#ifdef _DEPTHOFFSET_ON
+					outputDepth = IN.pos.z;
+				#endif
+
+				#ifndef USING_DIRECTIONAL_LIGHT
+					fixed3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
+				#else
+					fixed3 lightDir = _WorldSpaceLightPos0.xyz;
+				#endif
+
+				fixed4 c = 0;
+				float3 worldN;
+				worldN.x = dot(IN.tSpace0.xyz, o.Normal);
+				worldN.y = dot(IN.tSpace1.xyz, o.Normal);
+				worldN.z = dot(IN.tSpace2.xyz, o.Normal);
+				worldN = normalize(worldN);
+				o.Normal = worldN;
+
+				UnityGI gi;
+				UNITY_INITIALIZE_OUTPUT(UnityGI, gi);
+				gi.indirect.diffuse = 0;
+				gi.indirect.specular = 0;
+				gi.light.color = _LightColor0.rgb;
+				gi.light.dir = lightDir;
+
+				UnityGIInput giInput;
+				UNITY_INITIALIZE_OUTPUT(UnityGIInput, giInput);
+				giInput.light = gi.light;
+				giInput.worldPos = worldPos;
+				giInput.worldViewDir = worldViewDir;
+				giInput.atten = atten;
+				#if defined(LIGHTMAP_ON) || defined(DYNAMICLIGHTMAP_ON)
+					giInput.lightmapUV = IN.lmap;
+				#else
+					giInput.lightmapUV = 0.0;
+				#endif
+				#if UNITY_SHOULD_SAMPLE_SH && !UNITY_SAMPLE_FULL_SH_PER_PIXEL
+					giInput.ambient = IN.sh;
+				#else
+					giInput.ambient.rgb = 0.0;
+				#endif
+				giInput.probeHDR[0] = unity_SpecCube0_HDR;
+				giInput.probeHDR[1] = unity_SpecCube1_HDR;
+				#if defined(UNITY_SPECCUBE_BLENDING) || defined(UNITY_SPECCUBE_BOX_PROJECTION)
+					giInput.boxMin[0] = unity_SpecCube0_BoxMin;
+				#endif
+				#ifdef UNITY_SPECCUBE_BOX_PROJECTION
+					giInput.boxMax[0] = unity_SpecCube0_BoxMax;
+					giInput.probePosition[0] = unity_SpecCube0_ProbePosition;
+					giInput.boxMax[1] = unity_SpecCube1_BoxMax;
+					giInput.boxMin[1] = unity_SpecCube1_BoxMin;
+					giInput.probePosition[1] = unity_SpecCube1_ProbePosition;
+				#endif
+
+				#if defined(_SPECULAR_SETUP)
+					LightingStandardSpecular_GI(o, giInput, gi);
+				#else
+					LightingStandard_GI( o, giInput, gi );
+				#endif
+
+				#ifdef ASE_BAKEDGI
+					gi.indirect.diffuse = BakedGI;
+				#endif
+
+				#if UNITY_SHOULD_SAMPLE_SH && !defined(LIGHTMAP_ON) && defined(ASE_NO_AMBIENT)
+					gi.indirect.diffuse = 0;
+				#endif
+
+				#if defined(_SPECULAR_SETUP)
+					c += LightingStandardSpecular (o, worldViewDir, gi);
+				#else
+					c += LightingStandard( o, worldViewDir, gi );
+				#endif
+
+				#ifdef ASE_TRANSMISSION
+				{
+					float shadow = _TransmissionShadow;
+					#ifdef DIRECTIONAL
+						float3 lightAtten = lerp( _LightColor0.rgb, gi.light.color, shadow );
+					#else
+						float3 lightAtten = gi.light.color;
+					#endif
+					half3 transmission = max(0 , -dot(o.Normal, gi.light.dir)) * lightAtten * Transmission;
+					c.rgb += o.Albedo * transmission;
+				}
+				#endif
+
+				#ifdef ASE_TRANSLUCENCY
+				{
+					float shadow = _TransShadow;
+					float normal = _TransNormal;
+					float scattering = _TransScattering;
+					float direct = _TransDirect;
+					float ambient = _TransAmbient;
+					float strength = _TransStrength;
+
+					#ifdef DIRECTIONAL
+						float3 lightAtten = lerp( _LightColor0.rgb, gi.light.color, shadow );
+					#else
+						float3 lightAtten = gi.light.color;
+					#endif
+					half3 lightDir = gi.light.dir + o.Normal * normal;
+					half transVdotL = pow( saturate( dot( worldViewDir, -lightDir ) ), scattering );
+					half3 translucency = lightAtten * (transVdotL * direct + gi.indirect.diffuse * ambient) * Translucency;
+					c.rgb += o.Albedo * translucency * strength;
+				}
+				#endif
+
+				//#ifdef ASE_REFRACTION
+				//	float4 projScreenPos = ScreenPos / ScreenPos.w;
+				//	float3 refractionOffset = ( RefractionIndex - 1.0 ) * mul( UNITY_MATRIX_V, WorldNormal ).xyz * ( 1.0 - dot( WorldNormal, WorldViewDirection ) );
+				//	projScreenPos.xy += refractionOffset.xy;
+				//	float3 refraction = UNITY_SAMPLE_SCREENSPACE_TEXTURE( _GrabTexture, projScreenPos ) * RefractionColor;
+				//	color.rgb = lerp( refraction, color.rgb, color.a );
+				//	color.a = 1;
+				//#endif
+
+				c.rgb += o.Emission;
+
+				#ifdef ASE_FOG
+					UNITY_APPLY_FOG(IN.fogCoord, c);
+				#endif
+				return c;
 			}
-			ENDHLSL
+			ENDCG
 		}
 
-		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
-	UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
-
+		
 		Pass
 		{
 			
-			Name "GBuffer"
-			Tags { "LightMode"="UniversalGBuffer" }
+			Name "ForwardAdd"
+			Tags { "LightMode"="ForwardAdd" }
+			ZWrite Off
+			Blend One One
 
-			Blend Off
-			ZWrite On
-			ZTest LEqual
-			Offset 0,0
-			ColorMask RGBA
-			
-
-			HLSLPROGRAM
-
-			#define _NORMAL_DROPOFF_TS 1
+			CGPROGRAM
+			#define ASE_NEEDS_FRAG_SHADOWCOORDS
+			#pragma multi_compile_instancing
+			#pragma multi_compile __ LOD_FADE_CROSSFADE
 			#pragma multi_compile_fog
 			#define ASE_FOG 1
-			#define _NORMALMAP 1
-			#define ASE_SRP_VERSION 101001
-
-
-			#pragma shader_feature_local _RECEIVE_SHADOWS_OFF
-			#pragma shader_feature_local_fragment _SPECULARHIGHLIGHTS_OFF
-			#pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
-
-			
-			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS
-			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
-			#pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
-		
-
-			
-
-			#pragma multi_compile_fragment _ _SHADOWS_SOFT
-
-			#pragma multi_compile _ DIRLIGHTMAP_COMBINED
-			#pragma multi_compile _ LIGHTMAP_ON
-			#pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
 
 			#pragma vertex vert
 			#pragma fragment frag
-
-			#define SHADERPASS SHADERPASS_GBUFFER
-
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/UnityInstancing.hlsl"
-
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
-
-			#if defined(UNITY_INSTANCING_ENABLED) && defined(_TERRAIN_INSTANCED_PERPIXEL_NORMAL)
-				#define ENABLE_TERRAIN_PERPIXEL_NORMAL
+			#pragma skip_variants INSTANCING_ON
+			#pragma multi_compile_fwdadd_fullshadows
+			#ifndef UNITY_PASS_FORWARDADD
+				#define UNITY_PASS_FORWARDADD
 			#endif
+			#include "HLSLSupport.cginc"
+			#if !defined( UNITY_INSTANCED_LOD_FADE )
+				#define UNITY_INSTANCED_LOD_FADE
+			#endif
+			#if !defined( UNITY_INSTANCED_SH )
+				#define UNITY_INSTANCED_SH
+			#endif
+			#if !defined( UNITY_INSTANCED_LIGHTMAPSTS )
+				#define UNITY_INSTANCED_LIGHTMAPSTS
+			#endif
+			#include "UnityShaderVariables.cginc"
+			#include "UnityCG.cginc"
+			#include "Lighting.cginc"
+			#include "UnityPBSLighting.cginc"
+			#include "AutoLight.cginc"
 
 			#define ASE_NEEDS_FRAG_WORLD_POSITION
 			#define ASE_NEEDS_FRAG_WORLD_NORMAL
 			#define ASE_NEEDS_FRAG_WORLD_TANGENT
 			#define ASE_NEEDS_FRAG_WORLD_BITANGENT
-			#define ASE_NEEDS_VERT_NORMAL
-			#define ASE_NEEDS_VERT_POSITION
-			#pragma multi_compile_instancing
-			#pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
 			#pragma multi_compile_local __ _ALPHATEST_ON
 			#pragma shader_feature_local _MASKMAP
 
-
-			#if defined(ASE_EARLY_Z_DEPTH_OPTIMIZE) && (SHADER_TARGET >= 45)
-				#define ASE_SV_DEPTH SV_DepthLessEqual
-				#define ASE_SV_POSITION_QUALIFIERS linear noperspective centroid
-			#else
-				#define ASE_SV_DEPTH SV_Depth
-				#define ASE_SV_POSITION_QUALIFIERS
-			#endif
-
-			struct VertexInput
-			{
+			struct appdata {
 				float4 vertex : POSITION;
-				float3 ase_normal : NORMAL;
-				float4 ase_tangent : TANGENT;
-				float4 texcoord : TEXCOORD0;
+				float4 tangent : TANGENT;
+				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
-				
+				float4 texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
-
-			struct VertexOutput
-			{
-				ASE_SV_POSITION_QUALIFIERS float4 clipPos : SV_POSITION;
-				float4 clipPosV : TEXCOORD0;
-				float4 lightmapUVOrVertexSH : TEXCOORD1;
-				half4 fogFactorAndVertexLight : TEXCOORD2;
-				float4 tSpace0 : TEXCOORD3;
-				float4 tSpace1 : TEXCOORD4;
-				float4 tSpace2 : TEXCOORD5;
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-				float4 shadowCoord : TEXCOORD6;
+			struct v2f {
+				#if UNITY_VERSION >= 201810
+					UNITY_POSITION(pos);
+				#else
+					float4 pos : SV_POSITION;
 				#endif
-				float4 ase_texcoord7 : TEXCOORD7;
+				#if UNITY_VERSION >= 201810 && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+					UNITY_LIGHTING_COORDS(1,2)
+				#elif defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+					#if UNITY_VERSION >= 201710
+						UNITY_SHADOW_COORDS(1)
+					#else
+						SHADOW_COORDS(1)
+					#endif
+				#endif
+				#ifdef ASE_FOG
+					UNITY_FOG_COORDS(3)
+				#endif
+				float4 tSpace0 : TEXCOORD5;
+				float4 tSpace1 : TEXCOORD6;
+				float4 tSpace2 : TEXCOORD7;
+				#if defined(ASE_NEEDS_FRAG_SCREEN_POSITION)
+				float4 screenPos : TEXCOORD8;
+				#endif
+				float4 ase_texcoord9 : TEXCOORD9;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
-			CBUFFER_START(UnityPerMaterial)
-			float4 _Gravel;
-			float4 _Sand;
-			float4 _Splat0_ST;
-			float4 _Control_ST;
-			float4 _Splat1_ST;
-			float4 _Splat2_ST;
-			float4 _Splat3_ST;
-			float4 _Rock;
-			float _MaxClamp;
-			float _MaskIntensity;
-			float _HeightMask;
-			float _NoiseScale;
-			float _DisplaceIntensity;
-			float _SandTextureInfluence;
-			float _RemapMin;
-			float _RemapMax;
-			float _NormalStrenght;
-			float _Smoothness3;
-			float _Smoothness2;
-			float _Smoothness1;
-			float _Smoothness0;
-			float _DetailScale;
-			float _Roughness;
 			#ifdef ASE_TRANSMISSION
 				float _TransmissionShadow;
 			#endif
@@ -2955,63 +858,49 @@ Shader "SH_VenusTerrainFirstPass"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			CBUFFER_END
+			uniform sampler2D _Mask2;
+			uniform sampler2D _Mask0;
+			uniform sampler2D _Mask1;
+			uniform sampler2D _Mask3;
+			uniform float4 _MaskMapRemapScale0;
+			uniform float4 _MaskMapRemapOffset2;
+			uniform float4 _MaskMapRemapScale2;
+			uniform float4 _MaskMapRemapScale1;
+			uniform float4 _MaskMapRemapOffset1;
+			uniform float4 _MaskMapRemapScale3;
+			uniform float4 _MaskMapRemapOffset3;
+			uniform float4 _MaskMapRemapOffset0;
+			uniform float4 _Gravel;
+			uniform float4 _Sand;
+			uniform sampler2D _Control;
+			uniform float4 _Control_ST;
+			uniform float _Smoothness0;
+			uniform sampler2D _Splat0;
+			uniform float4 _Splat0_ST;
+			uniform float _Smoothness1;
+			uniform sampler2D _Splat1;
+			uniform float4 _Splat1_ST;
+			uniform float _Smoothness2;
+			uniform sampler2D _Splat2;
+			uniform float4 _Splat2_ST;
+			uniform float _Smoothness3;
+			uniform sampler2D _Splat3;
+			uniform float4 _Splat3_ST;
+			uniform float _RemapMin;
+			uniform float _RemapMax;
+			uniform sampler2D _Detail;
+			uniform float _DetailScale;
+			uniform float _SandTextureInfluence;
+			uniform float4 _Rock;
+			uniform sampler2D _RockErosion;
+			uniform float _DisplaceIntensity;
+			uniform float _NoiseScale;
+			uniform float _HeightMask;
+			uniform float _MaskIntensity;
+			uniform float _MaxClamp;
+			uniform float _NormalStrenght;
+			uniform float _Roughness;
 
-			// Property used by ScenePickingPass
-			#ifdef SCENEPICKINGPASS
-				float4 _SelectionID;
-			#endif
-
-			// Properties used by SceneSelectionPass
-			#ifdef SCENESELECTIONPASS
-				int _ObjectId;
-				int _PassValue;
-			#endif
-
-			sampler2D _Mask2;
-			sampler2D _Mask0;
-			sampler2D _Mask1;
-			sampler2D _Mask3;
-			float4 _MaskMapRemapScale0;
-			float4 _MaskMapRemapOffset2;
-			float4 _MaskMapRemapScale2;
-			float4 _MaskMapRemapScale1;
-			float4 _MaskMapRemapOffset1;
-			float4 _MaskMapRemapScale3;
-			float4 _MaskMapRemapOffset3;
-			float4 _MaskMapRemapOffset0;
-			sampler2D _Splat0;
-			sampler2D _Control;
-			float4 _DiffuseRemapScale0;
-			sampler2D _Splat1;
-			float4 _DiffuseRemapScale1;
-			sampler2D _Splat2;
-			float4 _DiffuseRemapScale2;
-			sampler2D _Splat3;
-			float4 _DiffuseRemapScale3;
-			sampler2D _Detail;
-			sampler2D _RockErosion;
-			float _LayerHasMask0;
-			float _LayerHasMask1;
-			float _LayerHasMask2;
-			float _LayerHasMask3;
-			#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-				TEXTURE2D(_TerrainHeightmapTexture);//ASE Terrain Instancing
-				TEXTURE2D( _TerrainNormalmapTexture);//ASE Terrain Instancing
-				SAMPLER(sampler_TerrainNormalmapTexture);//ASE Terrain Instancing
-			#endif//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_START( Terrain )//ASE Terrain Instancing
-				UNITY_DEFINE_INSTANCED_PROP( float4, _TerrainPatchInstanceData )//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_END( Terrain)//ASE Terrain Instancing
-			CBUFFER_START( UnityTerrain)//ASE Terrain Instancing
-				#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-					float4 _TerrainHeightmapRecipSize;//ASE Terrain Instancing
-					float4 _TerrainHeightmapScale;//ASE Terrain Instancing
-				#endif//ASE Terrain Instancing
-			CBUFFER_END//ASE Terrain Instancing
-
-
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/UnityGBuffer.hlsl"
 
 			float3 PerturbNormal107_g1( float3 surf_pos, float3 surf_norm, float height, float scale )
 			{
@@ -3028,94 +917,59 @@ Shader "SH_VenusTerrainFirstPass"
 				return normalize ( abs( fDet ) * vN - vSurfGrad );
 			}
 			
-			VertexInput ApplyMeshModification( VertexInput v )
-			{
-			#ifdef UNITY_INSTANCING_ENABLED
-				float2 patchVertex = v.vertex.xy;
-				float4 instanceData = UNITY_ACCESS_INSTANCED_PROP( Terrain, _TerrainPatchInstanceData );
-				float2 sampleCoords = ( patchVertex.xy + instanceData.xy ) * instanceData.z;
-				float height = UnpackHeightmap( _TerrainHeightmapTexture.Load( int3( sampleCoords, 0 ) ) );
-				v.vertex.xz = sampleCoords* _TerrainHeightmapScale.xz;
-				v.vertex.y = height* _TerrainHeightmapScale.y;
-				#ifdef ENABLE_TERRAIN_PERPIXEL_NORMAL
-					v.ase_normal = float3(0, 1, 0);
-				#else
-					v.ase_normal = _TerrainNormalmapTexture.Load(int3(sampleCoords, 0)).rgb* 2 - 1;
-				#endif
-				v.texcoord.xy = sampleCoords* _TerrainHeightmapRecipSize.zw;
-			#endif
-				return v;
-			}
-			
 
-			VertexOutput VertexFunction( VertexInput v  )
-			{
-				VertexOutput o = (VertexOutput)0;
+			v2f VertexFunction (appdata v  ) {
 				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				v2f o;
+				UNITY_INITIALIZE_OUTPUT(v2f,o);
+				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				v = ApplyMeshModification(v);
-				o.ase_texcoord7.xy = v.texcoord.xy;
+				o.ase_texcoord9.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord7.zw = 0;
+				o.ase_texcoord9.zw = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-
 				float3 vertexValue = defaultVertexValue;
-
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
 					v.vertex.xyz += vertexValue;
 				#endif
+				v.vertex.w = 1;
+				v.normal = v.normal;
+				v.tangent = v.tangent;
 
-				v.ase_normal = v.ase_normal;
+				o.pos = UnityObjectToClipPos(v.vertex);
+				float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+				fixed3 worldNormal = UnityObjectToWorldNormal(v.normal);
+				fixed3 worldTangent = UnityObjectToWorldDir(v.tangent.xyz);
+				fixed tangentSign = v.tangent.w * unity_WorldTransformParams.w;
+				fixed3 worldBinormal = cross(worldNormal, worldTangent) * tangentSign;
+				o.tSpace0 = float4(worldTangent.x, worldBinormal.x, worldNormal.x, worldPos.x);
+				o.tSpace1 = float4(worldTangent.y, worldBinormal.y, worldNormal.y, worldPos.y);
+				o.tSpace2 = float4(worldTangent.z, worldBinormal.z, worldNormal.z, worldPos.z);
 
-				float3 positionWS = TransformObjectToWorld( v.vertex.xyz );
-				float3 positionVS = TransformWorldToView( positionWS );
-				float4 positionCS = TransformWorldToHClip( positionWS );
-
-				VertexNormalInputs normalInput = GetVertexNormalInputs( v.ase_normal, v.ase_tangent );
-
-				o.tSpace0 = float4( normalInput.normalWS, positionWS.x);
-				o.tSpace1 = float4( normalInput.tangentWS, positionWS.y);
-				o.tSpace2 = float4( normalInput.bitangentWS, positionWS.z);
-
-				OUTPUT_LIGHTMAP_UV( v.texcoord1, unity_LightmapST, o.lightmapUVOrVertexSH.xy );
-
-				#if !defined(LIGHTMAP_ON)
-					OUTPUT_SH(normalInput.normalWS.xyz, o.lightmapUVOrVertexSH.xyz);
+				#if UNITY_VERSION >= 201810 && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+					UNITY_TRANSFER_LIGHTING(o, v.texcoord1.xy);
+				#elif defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+					#if UNITY_VERSION >= 201710
+						UNITY_TRANSFER_SHADOW(o, v.texcoord1.xy);
+					#else
+						TRANSFER_SHADOW(o);
+					#endif
 				#endif
-
-				#if defined(ENABLE_TERRAIN_PERPIXEL_NORMAL)
-					o.lightmapUVOrVertexSH.zw = v.texcoord;
-					o.lightmapUVOrVertexSH.xy = v.texcoord * unity_LightmapST.xy + unity_LightmapST.zw;
-				#endif
-
-				half3 vertexLight = VertexLighting( positionWS, normalInput.normalWS );
 
 				#ifdef ASE_FOG
-					half fogFactor = ComputeFogFactor( positionCS.z );
-				#else
-					half fogFactor = 0;
+					UNITY_TRANSFER_FOG(o,o.pos);
 				#endif
-
-				o.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
-
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-					VertexPositionInputs vertexInput = (VertexPositionInputs)0;
-					vertexInput.positionWS = positionWS;
-					vertexInput.positionCS = positionCS;
-					o.shadowCoord = GetShadowCoord( vertexInput );
+				#if defined(ASE_NEEDS_FRAG_SCREEN_POSITION)
+					o.screenPos = ComputeScreenPos(o.pos);
 				#endif
-
-				o.clipPos = positionCS;
-				o.clipPosV = positionCS;
 				return o;
 			}
 
@@ -3123,10 +977,1281 @@ Shader "SH_VenusTerrainFirstPass"
 			struct VertexControl
 			{
 				float4 vertex : INTERNALTESSPOS;
-				float3 ase_normal : NORMAL;
-				float4 ase_tangent : TANGENT;
-				float4 texcoord : TEXCOORD0;
+				float4 tangent : TANGENT;
+				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
+				float4 texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct TessellationFactors
+			{
+				float edge[3] : SV_TessFactor;
+				float inside : SV_InsideTessFactor;
+			};
+
+			VertexControl vert ( appdata v )
+			{
+				VertexControl o;
+				UNITY_SETUP_INSTANCE_ID(v);
+				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				o.vertex = v.vertex;
+				o.tangent = v.tangent;
+				o.normal = v.normal;
+				o.texcoord1 = v.texcoord1;
+				o.texcoord2 = v.texcoord2;
+				o.ase_texcoord = v.ase_texcoord;
+				return o;
+			}
+
+			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
+			{
+				TessellationFactors o;
+				float4 tf = 1;
+				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
+				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
+				#if defined(ASE_FIXED_TESSELLATION)
+				tf = FixedTess( tessValue );
+				#elif defined(ASE_DISTANCE_TESSELLATION)
+				tf = DistanceBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, tessValue, tessMin, tessMax, UNITY_MATRIX_M, _WorldSpaceCameraPos );
+				#elif defined(ASE_LENGTH_TESSELLATION)
+				tf = EdgeLengthBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, UNITY_MATRIX_M, _WorldSpaceCameraPos, _ScreenParams );
+				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
+				tf = EdgeLengthBasedTessCull(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, tessMaxDisp, UNITY_MATRIX_M, _WorldSpaceCameraPos, _ScreenParams, unity_CameraWorldClipPlanes );
+				#endif
+				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
+				return o;
+			}
+
+			[domain("tri")]
+			[partitioning("fractional_odd")]
+			[outputtopology("triangle_cw")]
+			[patchconstantfunc("TessellationFunction")]
+			[outputcontrolpoints(3)]
+			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
+			{
+			   return patch[id];
+			}
+
+			[domain("tri")]
+			v2f DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
+			{
+				appdata o = (appdata) 0;
+				o.vertex = patch[0].vertex * bary.x + patch[1].vertex * bary.y + patch[2].vertex * bary.z;
+				o.tangent = patch[0].tangent * bary.x + patch[1].tangent * bary.y + patch[2].tangent * bary.z;
+				o.normal = patch[0].normal * bary.x + patch[1].normal * bary.y + patch[2].normal * bary.z;
+				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
+				o.texcoord2 = patch[0].texcoord2 * bary.x + patch[1].texcoord2 * bary.y + patch[2].texcoord2 * bary.z;
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				#if defined(ASE_PHONG_TESSELLATION)
+				float3 pp[3];
+				for (int i = 0; i < 3; ++i)
+					pp[i] = o.vertex.xyz - patch[i].normal * (dot(o.vertex.xyz, patch[i].normal) - dot(patch[i].vertex.xyz, patch[i].normal));
+				float phongStrength = _TessPhongStrength;
+				o.vertex.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.vertex.xyz;
+				#endif
+				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
+				return VertexFunction(o);
+			}
+			#else
+			v2f vert ( appdata v )
+			{
+				return VertexFunction( v );
+			}
+			#endif
+
+			fixed4 frag ( v2f IN 
+				#ifdef _DEPTHOFFSET_ON
+				, out float outputDepth : SV_Depth
+				#endif
+				) : SV_Target
+			{
+				UNITY_SETUP_INSTANCE_ID(IN);
+
+				#ifdef LOD_FADE_CROSSFADE
+					UNITY_APPLY_DITHER_CROSSFADE(IN.pos.xy);
+				#endif
+
+				#if defined(_SPECULAR_SETUP)
+					SurfaceOutputStandardSpecular o = (SurfaceOutputStandardSpecular)0;
+				#else
+					SurfaceOutputStandard o = (SurfaceOutputStandard)0;
+				#endif
+				float3 WorldTangent = float3(IN.tSpace0.x,IN.tSpace1.x,IN.tSpace2.x);
+				float3 WorldBiTangent = float3(IN.tSpace0.y,IN.tSpace1.y,IN.tSpace2.y);
+				float3 WorldNormal = float3(IN.tSpace0.z,IN.tSpace1.z,IN.tSpace2.z);
+				float3 worldPos = float3(IN.tSpace0.w,IN.tSpace1.w,IN.tSpace2.w);
+				float3 worldViewDir = normalize(UnityWorldSpaceViewDir(worldPos));
+				#if defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+					UNITY_LIGHT_ATTENUATION(atten, IN, worldPos)
+				#else
+					half atten = 1;
+				#endif
+				#if defined(ASE_NEEDS_FRAG_SCREEN_POSITION)
+				float4 ScreenPos = IN.screenPos;
+				#endif
+
+
+				float2 uv_Control = IN.ase_texcoord9.xy * _Control_ST.xy + _Control_ST.zw;
+				float4 tex2DNode5_g2 = tex2D( _Control, uv_Control );
+				float dotResult20_g2 = dot( tex2DNode5_g2 , float4(1,1,1,1) );
+				float SplatWeight22_g2 = dotResult20_g2;
+				float localSplatClip74_g2 = ( SplatWeight22_g2 );
+				float SplatWeight74_g2 = SplatWeight22_g2;
+				{
+				#if !defined(SHADER_API_MOBILE) && defined(TERRAIN_SPLAT_ADDPASS)
+				clip(SplatWeight74_g2 == 0.0f ? -1 : 1);
+				#endif
+				}
+				float4 SplatControl26_g2 = ( tex2DNode5_g2 / ( localSplatClip74_g2 + 0.001 ) );
+				float4 temp_output_59_0_g2 = SplatControl26_g2;
+				float4 appendResult33_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness0));
+				float2 uv_Splat0 = IN.ase_texcoord9.xy * _Splat0_ST.xy + _Splat0_ST.zw;
+				float4 tex2DNode4_g2 = tex2D( _Splat0, uv_Splat0 );
+				float3 _Vector1 = float3(1,1,1);
+				float4 appendResult258_g2 = (float4(_Vector1 , 1.0));
+				float4 tintLayer0253_g2 = appendResult258_g2;
+				float4 appendResult36_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness1));
+				float2 uv_Splat1 = IN.ase_texcoord9.xy * _Splat1_ST.xy + _Splat1_ST.zw;
+				float4 tex2DNode3_g2 = tex2D( _Splat1, uv_Splat1 );
+				float3 _Vector2 = float3(1,1,1);
+				float4 appendResult261_g2 = (float4(_Vector2 , 1.0));
+				float4 tintLayer1254_g2 = appendResult261_g2;
+				float4 appendResult39_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness2));
+				float2 uv_Splat2 = IN.ase_texcoord9.xy * _Splat2_ST.xy + _Splat2_ST.zw;
+				float4 tex2DNode6_g2 = tex2D( _Splat2, uv_Splat2 );
+				float3 _Vector3 = float3(1,1,1);
+				float4 appendResult263_g2 = (float4(_Vector3 , 1.0));
+				float4 tintLayer2255_g2 = appendResult263_g2;
+				float4 appendResult42_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness3));
+				float2 uv_Splat3 = IN.ase_texcoord9.xy * _Splat3_ST.xy + _Splat3_ST.zw;
+				float4 tex2DNode7_g2 = tex2D( _Splat3, uv_Splat3 );
+				float3 _Vector4 = float3(1,1,1);
+				float4 appendResult265_g2 = (float4(_Vector4 , 1.0));
+				float4 tintLayer3256_g2 = appendResult265_g2;
+				float4 weightedBlendVar9_g2 = temp_output_59_0_g2;
+				float4 weightedBlend9_g2 = ( weightedBlendVar9_g2.x*( appendResult33_g2 * tex2DNode4_g2 * tintLayer0253_g2 ) + weightedBlendVar9_g2.y*( appendResult36_g2 * tex2DNode3_g2 * tintLayer1254_g2 ) + weightedBlendVar9_g2.z*( appendResult39_g2 * tex2DNode6_g2 * tintLayer2255_g2 ) + weightedBlendVar9_g2.w*( appendResult42_g2 * tex2DNode7_g2 * tintLayer3256_g2 ) );
+				float4 MixDiffuse28_g2 = weightedBlend9_g2;
+				float4 temp_output_60_0_g2 = MixDiffuse28_g2;
+				float4 temp_output_49_0 = temp_output_60_0_g2;
+				float4 temp_cast_6 = (_RemapMin).xxxx;
+				float4 temp_cast_7 = (_RemapMax).xxxx;
+				float4 temp_output_75_0 = saturate( (temp_cast_6 + (temp_output_49_0 - float4( 0,0,0,0 )) * (temp_cast_7 - temp_cast_6) / (float4( 1,1,1,1 ) - float4( 0,0,0,0 ))) );
+				float3 lerpResult57 = lerp( (_Gravel).rgb , (_Sand).rgb , temp_output_75_0.xyz);
+				float2 temp_output_8_0 = (worldPos).xz;
+				float4 tex2DNode24 = tex2D( _Detail, ( temp_output_8_0 / _DetailScale ) );
+				float2 temp_output_9_0 = ( (WorldNormal).xz * _DisplaceIntensity );
+				float4 tex2DNode21 = tex2D( _RockErosion, ( ( temp_output_8_0 + temp_output_9_0 ) / _NoiseScale ) );
+				float temp_output_15_0 = ( 1.0 - WorldNormal.y );
+				float temp_output_18_0 = ( worldPos.y / _HeightMask );
+				float temp_output_16_0 = ( ( tex2DNode24.r + tex2DNode21.r ) * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
+				float clampResult28 = clamp( temp_output_16_0 , 0.0 , _MaxClamp );
+				float3 lerpResult12 = lerp( ( lerpResult57 + ( tex2DNode24.r * _SandTextureInfluence ) ) , ( (_Rock).rgb * clampResult28 ) , saturate( temp_output_16_0 ));
+				
+				float3 surf_pos107_g1 = worldPos;
+				float3 surf_norm107_g1 = WorldNormal;
+				float height107_g1 = ( tex2DNode21.r * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
+				float scale107_g1 = _NormalStrenght;
+				float3 localPerturbNormal107_g1 = PerturbNormal107_g1( surf_pos107_g1 , surf_norm107_g1 , height107_g1 , scale107_g1 );
+				float3x3 ase_worldToTangent = float3x3(WorldTangent,WorldBiTangent,WorldNormal);
+				float3 worldToTangentDir42_g1 = mul( ase_worldToTangent, localPerturbNormal107_g1);
+				
+				float4 appendResult205_g2 = (float4(_Smoothness0 , _Smoothness1 , _Smoothness2 , _Smoothness3));
+				float4 appendResult206_g2 = (float4(tex2DNode4_g2.a , tex2DNode3_g2.a , tex2DNode6_g2.a , tex2DNode7_g2.a));
+				float4 defaultSmoothness210_g2 = ( appendResult205_g2 * appendResult206_g2 );
+				float dotResult216_g2 = dot( defaultSmoothness210_g2 , SplatControl26_g2 );
+				float4 temp_cast_10 = (_Roughness).xxxx;
+				float4 lerpResult69 = lerp( ( temp_output_49_0 * dotResult216_g2 ) , temp_cast_10 , saturate( temp_output_16_0 ));
+				
+				o.Albedo = lerpResult12;
+				o.Normal = worldToTangentDir42_g1;
+				o.Emission = half3( 0, 0, 0 );
+				#if defined(_SPECULAR_SETUP)
+					o.Specular = fixed3( 0, 0, 0 );
+				#else
+					o.Metallic = 0;
+				#endif
+				o.Smoothness = lerpResult69.x;
+				o.Occlusion = 1;
+				o.Alpha = 1;
+				float AlphaClipThreshold = 0.5;
+				float3 Transmission = 1;
+				float3 Translucency = 1;
+
+				#ifdef _ALPHATEST_ON
+					clip( o.Alpha - AlphaClipThreshold );
+				#endif
+
+				#ifdef _DEPTHOFFSET_ON
+					outputDepth = IN.pos.z;
+				#endif
+
+				#ifndef USING_DIRECTIONAL_LIGHT
+					fixed3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
+				#else
+					fixed3 lightDir = _WorldSpaceLightPos0.xyz;
+				#endif
+
+				fixed4 c = 0;
+				float3 worldN;
+				worldN.x = dot(IN.tSpace0.xyz, o.Normal);
+				worldN.y = dot(IN.tSpace1.xyz, o.Normal);
+				worldN.z = dot(IN.tSpace2.xyz, o.Normal);
+				worldN = normalize(worldN);
+				o.Normal = worldN;
+
+				UnityGI gi;
+				UNITY_INITIALIZE_OUTPUT(UnityGI, gi);
+				gi.indirect.diffuse = 0;
+				gi.indirect.specular = 0;
+				gi.light.color = _LightColor0.rgb;
+				gi.light.dir = lightDir;
+				gi.light.color *= atten;
+
+				#if defined(_SPECULAR_SETUP)
+					c += LightingStandardSpecular( o, worldViewDir, gi );
+				#else
+					c += LightingStandard( o, worldViewDir, gi );
+				#endif
+
+				#ifdef ASE_TRANSMISSION
+				{
+					float shadow = _TransmissionShadow;
+					#ifdef DIRECTIONAL
+						float3 lightAtten = lerp( _LightColor0.rgb, gi.light.color, shadow );
+					#else
+						float3 lightAtten = gi.light.color;
+					#endif
+					half3 transmission = max(0 , -dot(o.Normal, gi.light.dir)) * lightAtten * Transmission;
+					c.rgb += o.Albedo * transmission;
+				}
+				#endif
+
+				#ifdef ASE_TRANSLUCENCY
+				{
+					float shadow = _TransShadow;
+					float normal = _TransNormal;
+					float scattering = _TransScattering;
+					float direct = _TransDirect;
+					float ambient = _TransAmbient;
+					float strength = _TransStrength;
+
+					#ifdef DIRECTIONAL
+						float3 lightAtten = lerp( _LightColor0.rgb, gi.light.color, shadow );
+					#else
+						float3 lightAtten = gi.light.color;
+					#endif
+					half3 lightDir = gi.light.dir + o.Normal * normal;
+					half transVdotL = pow( saturate( dot( worldViewDir, -lightDir ) ), scattering );
+					half3 translucency = lightAtten * (transVdotL * direct + gi.indirect.diffuse * ambient) * Translucency;
+					c.rgb += o.Albedo * translucency * strength;
+				}
+				#endif
+
+				//#ifdef ASE_REFRACTION
+				//	float4 projScreenPos = ScreenPos / ScreenPos.w;
+				//	float3 refractionOffset = ( RefractionIndex - 1.0 ) * mul( UNITY_MATRIX_V, WorldNormal ).xyz * ( 1.0 - dot( WorldNormal, WorldViewDirection ) );
+				//	projScreenPos.xy += refractionOffset.xy;
+				//	float3 refraction = UNITY_SAMPLE_SCREENSPACE_TEXTURE( _GrabTexture, projScreenPos ) * RefractionColor;
+				//	color.rgb = lerp( refraction, color.rgb, color.a );
+				//	color.a = 1;
+				//#endif
+
+				#ifdef ASE_FOG
+					UNITY_APPLY_FOG(IN.fogCoord, c);
+				#endif
+				return c;
+			}
+			ENDCG
+		}
+
+		
+		Pass
+		{
+			
+			Name "Deferred"
+			Tags { "LightMode"="Deferred" }
+
+			AlphaToMask Off
+
+			CGPROGRAM
+			#define ASE_NEEDS_FRAG_SHADOWCOORDS
+			#pragma multi_compile_instancing
+			#pragma multi_compile __ LOD_FADE_CROSSFADE
+			#pragma multi_compile_fog
+			#define ASE_FOG 1
+
+			#pragma vertex vert
+			#pragma fragment frag
+			#pragma target 3.0
+			#pragma skip_variants FOG_LINEAR FOG_EXP FOG_EXP2
+			#pragma multi_compile_prepassfinal
+			#ifndef UNITY_PASS_DEFERRED
+				#define UNITY_PASS_DEFERRED
+			#endif
+			#include "HLSLSupport.cginc"
+			#if !defined( UNITY_INSTANCED_LOD_FADE )
+				#define UNITY_INSTANCED_LOD_FADE
+			#endif
+			#if !defined( UNITY_INSTANCED_SH )
+				#define UNITY_INSTANCED_SH
+			#endif
+			#if !defined( UNITY_INSTANCED_LIGHTMAPSTS )
+				#define UNITY_INSTANCED_LIGHTMAPSTS
+			#endif
+			#include "UnityShaderVariables.cginc"
+			#include "UnityCG.cginc"
+			#include "Lighting.cginc"
+			#include "UnityPBSLighting.cginc"
+
+			#define ASE_NEEDS_FRAG_WORLD_POSITION
+			#define ASE_NEEDS_FRAG_WORLD_NORMAL
+			#define ASE_NEEDS_FRAG_WORLD_TANGENT
+			#define ASE_NEEDS_FRAG_WORLD_BITANGENT
+			#pragma multi_compile_local __ _ALPHATEST_ON
+			#pragma shader_feature_local _MASKMAP
+
+			struct appdata {
+				float4 vertex : POSITION;
+				float4 tangent : TANGENT;
+				float3 normal : NORMAL;
+				float4 texcoord1 : TEXCOORD1;
+				float4 texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct v2f {
+				#if UNITY_VERSION >= 201810
+					UNITY_POSITION(pos);
+				#else
+					float4 pos : SV_POSITION;
+				#endif
+				float4 lmap : TEXCOORD2;
+				#ifndef LIGHTMAP_ON
+					#if UNITY_SHOULD_SAMPLE_SH && !UNITY_SAMPLE_FULL_SH_PER_PIXEL
+						half3 sh : TEXCOORD3;
+					#endif
+				#else
+					#ifdef DIRLIGHTMAP_OFF
+						float4 lmapFadePos : TEXCOORD4;
+					#endif
+				#endif
+				float4 tSpace0 : TEXCOORD5;
+				float4 tSpace1 : TEXCOORD6;
+				float4 tSpace2 : TEXCOORD7;
+				float4 ase_texcoord8 : TEXCOORD8;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				UNITY_VERTEX_OUTPUT_STEREO
+			};
+
+			#ifdef LIGHTMAP_ON
+			float4 unity_LightmapFade;
+			#endif
+			fixed4 unity_Ambient;
+			#ifdef ASE_TESSELLATION
+				float _TessPhongStrength;
+				float _TessValue;
+				float _TessMin;
+				float _TessMax;
+				float _TessEdgeLength;
+				float _TessMaxDisp;
+			#endif
+			uniform sampler2D _Mask2;
+			uniform sampler2D _Mask0;
+			uniform sampler2D _Mask1;
+			uniform sampler2D _Mask3;
+			uniform float4 _MaskMapRemapScale0;
+			uniform float4 _MaskMapRemapOffset2;
+			uniform float4 _MaskMapRemapScale2;
+			uniform float4 _MaskMapRemapScale1;
+			uniform float4 _MaskMapRemapOffset1;
+			uniform float4 _MaskMapRemapScale3;
+			uniform float4 _MaskMapRemapOffset3;
+			uniform float4 _MaskMapRemapOffset0;
+			uniform float4 _Gravel;
+			uniform float4 _Sand;
+			uniform sampler2D _Control;
+			uniform float4 _Control_ST;
+			uniform float _Smoothness0;
+			uniform sampler2D _Splat0;
+			uniform float4 _Splat0_ST;
+			uniform float _Smoothness1;
+			uniform sampler2D _Splat1;
+			uniform float4 _Splat1_ST;
+			uniform float _Smoothness2;
+			uniform sampler2D _Splat2;
+			uniform float4 _Splat2_ST;
+			uniform float _Smoothness3;
+			uniform sampler2D _Splat3;
+			uniform float4 _Splat3_ST;
+			uniform float _RemapMin;
+			uniform float _RemapMax;
+			uniform sampler2D _Detail;
+			uniform float _DetailScale;
+			uniform float _SandTextureInfluence;
+			uniform float4 _Rock;
+			uniform sampler2D _RockErosion;
+			uniform float _DisplaceIntensity;
+			uniform float _NoiseScale;
+			uniform float _HeightMask;
+			uniform float _MaskIntensity;
+			uniform float _MaxClamp;
+			uniform float _NormalStrenght;
+			uniform float _Roughness;
+
+
+			float3 PerturbNormal107_g1( float3 surf_pos, float3 surf_norm, float height, float scale )
+			{
+				// "Bump Mapping Unparametrized Surfaces on the GPU" by Morten S. Mikkelsen
+				float3 vSigmaS = ddx( surf_pos );
+				float3 vSigmaT = ddy( surf_pos );
+				float3 vN = surf_norm;
+				float3 vR1 = cross( vSigmaT , vN );
+				float3 vR2 = cross( vN , vSigmaS );
+				float fDet = dot( vSigmaS , vR1 );
+				float dBs = ddx( height );
+				float dBt = ddy( height );
+				float3 vSurfGrad = scale * 0.05 * sign( fDet ) * ( dBs * vR1 + dBt * vR2 );
+				return normalize ( abs( fDet ) * vN - vSurfGrad );
+			}
+			
+
+			v2f VertexFunction (appdata v  ) {
+				UNITY_SETUP_INSTANCE_ID(v);
+				v2f o;
+				UNITY_INITIALIZE_OUTPUT(v2f,o);
+				UNITY_TRANSFER_INSTANCE_ID(v,o);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+
+				o.ase_texcoord8.xy = v.ase_texcoord.xy;
+				
+				//setting value to unused interpolator channels and avoid initialization warnings
+				o.ase_texcoord8.zw = 0;
+				#ifdef ASE_ABSOLUTE_VERTEX_POS
+					float3 defaultVertexValue = v.vertex.xyz;
+				#else
+					float3 defaultVertexValue = float3(0, 0, 0);
+				#endif
+				float3 vertexValue = defaultVertexValue;
+				#ifdef ASE_ABSOLUTE_VERTEX_POS
+					v.vertex.xyz = vertexValue;
+				#else
+					v.vertex.xyz += vertexValue;
+				#endif
+				v.vertex.w = 1;
+				v.normal = v.normal;
+				v.tangent = v.tangent;
+
+				o.pos = UnityObjectToClipPos(v.vertex);
+				float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+				fixed3 worldNormal = UnityObjectToWorldNormal(v.normal);
+				fixed3 worldTangent = UnityObjectToWorldDir(v.tangent.xyz);
+				fixed tangentSign = v.tangent.w * unity_WorldTransformParams.w;
+				fixed3 worldBinormal = cross(worldNormal, worldTangent) * tangentSign;
+				o.tSpace0 = float4(worldTangent.x, worldBinormal.x, worldNormal.x, worldPos.x);
+				o.tSpace1 = float4(worldTangent.y, worldBinormal.y, worldNormal.y, worldPos.y);
+				o.tSpace2 = float4(worldTangent.z, worldBinormal.z, worldNormal.z, worldPos.z);
+
+				#ifdef DYNAMICLIGHTMAP_ON
+					o.lmap.zw = v.texcoord2.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
+				#else
+					o.lmap.zw = 0;
+				#endif
+				#ifdef LIGHTMAP_ON
+					o.lmap.xy = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
+					#ifdef DIRLIGHTMAP_OFF
+						o.lmapFadePos.xyz = (mul(unity_ObjectToWorld, v.vertex).xyz - unity_ShadowFadeCenterAndType.xyz) * unity_ShadowFadeCenterAndType.w;
+						o.lmapFadePos.w = (-UnityObjectToViewPos(v.vertex).z) * (1.0 - unity_ShadowFadeCenterAndType.w);
+					#endif
+				#else
+					o.lmap.xy = 0;
+					#if UNITY_SHOULD_SAMPLE_SH && !UNITY_SAMPLE_FULL_SH_PER_PIXEL
+						o.sh = 0;
+						o.sh = ShadeSHPerVertex (worldNormal, o.sh);
+					#endif
+				#endif
+				return o;
+			}
+
+			#if defined(ASE_TESSELLATION)
+			struct VertexControl
+			{
+				float4 vertex : INTERNALTESSPOS;
+				float4 tangent : TANGENT;
+				float3 normal : NORMAL;
+				float4 texcoord1 : TEXCOORD1;
+				float4 texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct TessellationFactors
+			{
+				float edge[3] : SV_TessFactor;
+				float inside : SV_InsideTessFactor;
+			};
+
+			VertexControl vert ( appdata v )
+			{
+				VertexControl o;
+				UNITY_SETUP_INSTANCE_ID(v);
+				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				o.vertex = v.vertex;
+				o.tangent = v.tangent;
+				o.normal = v.normal;
+				o.texcoord1 = v.texcoord1;
+				o.texcoord2 = v.texcoord2;
+				o.ase_texcoord = v.ase_texcoord;
+				return o;
+			}
+
+			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
+			{
+				TessellationFactors o;
+				float4 tf = 1;
+				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
+				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
+				#if defined(ASE_FIXED_TESSELLATION)
+				tf = FixedTess( tessValue );
+				#elif defined(ASE_DISTANCE_TESSELLATION)
+				tf = DistanceBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, tessValue, tessMin, tessMax, UNITY_MATRIX_M, _WorldSpaceCameraPos );
+				#elif defined(ASE_LENGTH_TESSELLATION)
+				tf = EdgeLengthBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, UNITY_MATRIX_M, _WorldSpaceCameraPos, _ScreenParams );
+				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
+				tf = EdgeLengthBasedTessCull(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, tessMaxDisp, UNITY_MATRIX_M, _WorldSpaceCameraPos, _ScreenParams, unity_CameraWorldClipPlanes );
+				#endif
+				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
+				return o;
+			}
+
+			[domain("tri")]
+			[partitioning("fractional_odd")]
+			[outputtopology("triangle_cw")]
+			[patchconstantfunc("TessellationFunction")]
+			[outputcontrolpoints(3)]
+			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
+			{
+			   return patch[id];
+			}
+
+			[domain("tri")]
+			v2f DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
+			{
+				appdata o = (appdata) 0;
+				o.vertex = patch[0].vertex * bary.x + patch[1].vertex * bary.y + patch[2].vertex * bary.z;
+				o.tangent = patch[0].tangent * bary.x + patch[1].tangent * bary.y + patch[2].tangent * bary.z;
+				o.normal = patch[0].normal * bary.x + patch[1].normal * bary.y + patch[2].normal * bary.z;
+				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
+				o.texcoord2 = patch[0].texcoord2 * bary.x + patch[1].texcoord2 * bary.y + patch[2].texcoord2 * bary.z;
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				#if defined(ASE_PHONG_TESSELLATION)
+				float3 pp[3];
+				for (int i = 0; i < 3; ++i)
+					pp[i] = o.vertex.xyz - patch[i].normal * (dot(o.vertex.xyz, patch[i].normal) - dot(patch[i].vertex.xyz, patch[i].normal));
+				float phongStrength = _TessPhongStrength;
+				o.vertex.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.vertex.xyz;
+				#endif
+				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
+				return VertexFunction(o);
+			}
+			#else
+			v2f vert ( appdata v )
+			{
+				return VertexFunction( v );
+			}
+			#endif
+
+			void frag (v2f IN 
+				, out half4 outGBuffer0 : SV_Target0
+				, out half4 outGBuffer1 : SV_Target1
+				, out half4 outGBuffer2 : SV_Target2
+				, out half4 outEmission : SV_Target3
+				#if defined(SHADOWS_SHADOWMASK) && (UNITY_ALLOWED_MRT_COUNT > 4)
+				, out half4 outShadowMask : SV_Target4
+				#endif
+				#ifdef _DEPTHOFFSET_ON
+				, out float outputDepth : SV_Depth
+				#endif
+			)
+			{
+				UNITY_SETUP_INSTANCE_ID(IN);
+
+				#ifdef LOD_FADE_CROSSFADE
+					UNITY_APPLY_DITHER_CROSSFADE(IN.pos.xy);
+				#endif
+
+				#if defined(_SPECULAR_SETUP)
+					SurfaceOutputStandardSpecular o = (SurfaceOutputStandardSpecular)0;
+				#else
+					SurfaceOutputStandard o = (SurfaceOutputStandard)0;
+				#endif
+				float3 WorldTangent = float3(IN.tSpace0.x,IN.tSpace1.x,IN.tSpace2.x);
+				float3 WorldBiTangent = float3(IN.tSpace0.y,IN.tSpace1.y,IN.tSpace2.y);
+				float3 WorldNormal = float3(IN.tSpace0.z,IN.tSpace1.z,IN.tSpace2.z);
+				float3 worldPos = float3(IN.tSpace0.w,IN.tSpace1.w,IN.tSpace2.w);
+				float3 worldViewDir = normalize(UnityWorldSpaceViewDir(worldPos));
+				half atten = 1;
+
+				float2 uv_Control = IN.ase_texcoord8.xy * _Control_ST.xy + _Control_ST.zw;
+				float4 tex2DNode5_g2 = tex2D( _Control, uv_Control );
+				float dotResult20_g2 = dot( tex2DNode5_g2 , float4(1,1,1,1) );
+				float SplatWeight22_g2 = dotResult20_g2;
+				float localSplatClip74_g2 = ( SplatWeight22_g2 );
+				float SplatWeight74_g2 = SplatWeight22_g2;
+				{
+				#if !defined(SHADER_API_MOBILE) && defined(TERRAIN_SPLAT_ADDPASS)
+				clip(SplatWeight74_g2 == 0.0f ? -1 : 1);
+				#endif
+				}
+				float4 SplatControl26_g2 = ( tex2DNode5_g2 / ( localSplatClip74_g2 + 0.001 ) );
+				float4 temp_output_59_0_g2 = SplatControl26_g2;
+				float4 appendResult33_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness0));
+				float2 uv_Splat0 = IN.ase_texcoord8.xy * _Splat0_ST.xy + _Splat0_ST.zw;
+				float4 tex2DNode4_g2 = tex2D( _Splat0, uv_Splat0 );
+				float3 _Vector1 = float3(1,1,1);
+				float4 appendResult258_g2 = (float4(_Vector1 , 1.0));
+				float4 tintLayer0253_g2 = appendResult258_g2;
+				float4 appendResult36_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness1));
+				float2 uv_Splat1 = IN.ase_texcoord8.xy * _Splat1_ST.xy + _Splat1_ST.zw;
+				float4 tex2DNode3_g2 = tex2D( _Splat1, uv_Splat1 );
+				float3 _Vector2 = float3(1,1,1);
+				float4 appendResult261_g2 = (float4(_Vector2 , 1.0));
+				float4 tintLayer1254_g2 = appendResult261_g2;
+				float4 appendResult39_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness2));
+				float2 uv_Splat2 = IN.ase_texcoord8.xy * _Splat2_ST.xy + _Splat2_ST.zw;
+				float4 tex2DNode6_g2 = tex2D( _Splat2, uv_Splat2 );
+				float3 _Vector3 = float3(1,1,1);
+				float4 appendResult263_g2 = (float4(_Vector3 , 1.0));
+				float4 tintLayer2255_g2 = appendResult263_g2;
+				float4 appendResult42_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness3));
+				float2 uv_Splat3 = IN.ase_texcoord8.xy * _Splat3_ST.xy + _Splat3_ST.zw;
+				float4 tex2DNode7_g2 = tex2D( _Splat3, uv_Splat3 );
+				float3 _Vector4 = float3(1,1,1);
+				float4 appendResult265_g2 = (float4(_Vector4 , 1.0));
+				float4 tintLayer3256_g2 = appendResult265_g2;
+				float4 weightedBlendVar9_g2 = temp_output_59_0_g2;
+				float4 weightedBlend9_g2 = ( weightedBlendVar9_g2.x*( appendResult33_g2 * tex2DNode4_g2 * tintLayer0253_g2 ) + weightedBlendVar9_g2.y*( appendResult36_g2 * tex2DNode3_g2 * tintLayer1254_g2 ) + weightedBlendVar9_g2.z*( appendResult39_g2 * tex2DNode6_g2 * tintLayer2255_g2 ) + weightedBlendVar9_g2.w*( appendResult42_g2 * tex2DNode7_g2 * tintLayer3256_g2 ) );
+				float4 MixDiffuse28_g2 = weightedBlend9_g2;
+				float4 temp_output_60_0_g2 = MixDiffuse28_g2;
+				float4 temp_output_49_0 = temp_output_60_0_g2;
+				float4 temp_cast_6 = (_RemapMin).xxxx;
+				float4 temp_cast_7 = (_RemapMax).xxxx;
+				float4 temp_output_75_0 = saturate( (temp_cast_6 + (temp_output_49_0 - float4( 0,0,0,0 )) * (temp_cast_7 - temp_cast_6) / (float4( 1,1,1,1 ) - float4( 0,0,0,0 ))) );
+				float3 lerpResult57 = lerp( (_Gravel).rgb , (_Sand).rgb , temp_output_75_0.xyz);
+				float2 temp_output_8_0 = (worldPos).xz;
+				float4 tex2DNode24 = tex2D( _Detail, ( temp_output_8_0 / _DetailScale ) );
+				float2 temp_output_9_0 = ( (WorldNormal).xz * _DisplaceIntensity );
+				float4 tex2DNode21 = tex2D( _RockErosion, ( ( temp_output_8_0 + temp_output_9_0 ) / _NoiseScale ) );
+				float temp_output_15_0 = ( 1.0 - WorldNormal.y );
+				float temp_output_18_0 = ( worldPos.y / _HeightMask );
+				float temp_output_16_0 = ( ( tex2DNode24.r + tex2DNode21.r ) * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
+				float clampResult28 = clamp( temp_output_16_0 , 0.0 , _MaxClamp );
+				float3 lerpResult12 = lerp( ( lerpResult57 + ( tex2DNode24.r * _SandTextureInfluence ) ) , ( (_Rock).rgb * clampResult28 ) , saturate( temp_output_16_0 ));
+				
+				float3 surf_pos107_g1 = worldPos;
+				float3 surf_norm107_g1 = WorldNormal;
+				float height107_g1 = ( tex2DNode21.r * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
+				float scale107_g1 = _NormalStrenght;
+				float3 localPerturbNormal107_g1 = PerturbNormal107_g1( surf_pos107_g1 , surf_norm107_g1 , height107_g1 , scale107_g1 );
+				float3x3 ase_worldToTangent = float3x3(WorldTangent,WorldBiTangent,WorldNormal);
+				float3 worldToTangentDir42_g1 = mul( ase_worldToTangent, localPerturbNormal107_g1);
+				
+				float4 appendResult205_g2 = (float4(_Smoothness0 , _Smoothness1 , _Smoothness2 , _Smoothness3));
+				float4 appendResult206_g2 = (float4(tex2DNode4_g2.a , tex2DNode3_g2.a , tex2DNode6_g2.a , tex2DNode7_g2.a));
+				float4 defaultSmoothness210_g2 = ( appendResult205_g2 * appendResult206_g2 );
+				float dotResult216_g2 = dot( defaultSmoothness210_g2 , SplatControl26_g2 );
+				float4 temp_cast_10 = (_Roughness).xxxx;
+				float4 lerpResult69 = lerp( ( temp_output_49_0 * dotResult216_g2 ) , temp_cast_10 , saturate( temp_output_16_0 ));
+				
+				o.Albedo = lerpResult12;
+				o.Normal = worldToTangentDir42_g1;
+				o.Emission = half3( 0, 0, 0 );
+				#if defined(_SPECULAR_SETUP)
+					o.Specular = fixed3( 0, 0, 0 );
+				#else
+					o.Metallic = 0;
+				#endif
+				o.Smoothness = lerpResult69.x;
+				o.Occlusion = 1;
+				o.Alpha = 1;
+				float AlphaClipThreshold = 0.5;
+				float3 BakedGI = 0;
+
+				#ifdef _ALPHATEST_ON
+					clip( o.Alpha - AlphaClipThreshold );
+				#endif
+
+				#ifdef _DEPTHOFFSET_ON
+					outputDepth = IN.pos.z;
+				#endif
+
+				#ifndef USING_DIRECTIONAL_LIGHT
+					fixed3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
+				#else
+					fixed3 lightDir = _WorldSpaceLightPos0.xyz;
+				#endif
+
+				float3 worldN;
+				worldN.x = dot(IN.tSpace0.xyz, o.Normal);
+				worldN.y = dot(IN.tSpace1.xyz, o.Normal);
+				worldN.z = dot(IN.tSpace2.xyz, o.Normal);
+				worldN = normalize(worldN);
+				o.Normal = worldN;
+
+				UnityGI gi;
+				UNITY_INITIALIZE_OUTPUT(UnityGI, gi);
+				gi.indirect.diffuse = 0;
+				gi.indirect.specular = 0;
+				gi.light.color = 0;
+				gi.light.dir = half3(0,1,0);
+
+				UnityGIInput giInput;
+				UNITY_INITIALIZE_OUTPUT(UnityGIInput, giInput);
+				giInput.light = gi.light;
+				giInput.worldPos = worldPos;
+				giInput.worldViewDir = worldViewDir;
+				giInput.atten = atten;
+				#if defined(LIGHTMAP_ON) || defined(DYNAMICLIGHTMAP_ON)
+					giInput.lightmapUV = IN.lmap;
+				#else
+					giInput.lightmapUV = 0.0;
+				#endif
+				#if UNITY_SHOULD_SAMPLE_SH && !UNITY_SAMPLE_FULL_SH_PER_PIXEL
+					giInput.ambient = IN.sh;
+				#else
+					giInput.ambient.rgb = 0.0;
+				#endif
+				giInput.probeHDR[0] = unity_SpecCube0_HDR;
+				giInput.probeHDR[1] = unity_SpecCube1_HDR;
+				#if defined(UNITY_SPECCUBE_BLENDING) || defined(UNITY_SPECCUBE_BOX_PROJECTION)
+					giInput.boxMin[0] = unity_SpecCube0_BoxMin;
+				#endif
+				#ifdef UNITY_SPECCUBE_BOX_PROJECTION
+					giInput.boxMax[0] = unity_SpecCube0_BoxMax;
+					giInput.probePosition[0] = unity_SpecCube0_ProbePosition;
+					giInput.boxMax[1] = unity_SpecCube1_BoxMax;
+					giInput.boxMin[1] = unity_SpecCube1_BoxMin;
+					giInput.probePosition[1] = unity_SpecCube1_ProbePosition;
+				#endif
+
+				#if defined(_SPECULAR_SETUP)
+					LightingStandardSpecular_GI( o, giInput, gi );
+				#else
+					LightingStandard_GI( o, giInput, gi );
+				#endif
+
+				#ifdef ASE_BAKEDGI
+					gi.indirect.diffuse = BakedGI;
+				#endif
+
+				#if UNITY_SHOULD_SAMPLE_SH && !defined(LIGHTMAP_ON) && defined(ASE_NO_AMBIENT)
+					gi.indirect.diffuse = 0;
+				#endif
+
+				#if defined(_SPECULAR_SETUP)
+					outEmission = LightingStandardSpecular_Deferred( o, worldViewDir, gi, outGBuffer0, outGBuffer1, outGBuffer2 );
+				#else
+					outEmission = LightingStandard_Deferred( o, worldViewDir, gi, outGBuffer0, outGBuffer1, outGBuffer2 );
+				#endif
+
+				#if defined(SHADOWS_SHADOWMASK) && (UNITY_ALLOWED_MRT_COUNT > 4)
+					outShadowMask = UnityGetRawBakedOcclusions (IN.lmap.xy, float3(0, 0, 0));
+				#endif
+				#ifndef UNITY_HDR_ON
+					outEmission.rgb = exp2(-outEmission.rgb);
+				#endif
+			}
+			ENDCG
+		}
+
+		
+		Pass
+		{
+			
+			Name "Meta"
+			Tags { "LightMode"="Meta" }
+			Cull Off
+
+			CGPROGRAM
+			#define ASE_NEEDS_FRAG_SHADOWCOORDS
+			#pragma multi_compile_instancing
+			#pragma multi_compile __ LOD_FADE_CROSSFADE
+			#pragma multi_compile_fog
+			#define ASE_FOG 1
+
+			#pragma vertex vert
+			#pragma fragment frag
+			#pragma skip_variants FOG_LINEAR FOG_EXP FOG_EXP2
+			#pragma shader_feature EDITOR_VISUALIZATION
+			#ifndef UNITY_PASS_META
+				#define UNITY_PASS_META
+			#endif
+			#include "HLSLSupport.cginc"
+			#if !defined( UNITY_INSTANCED_LOD_FADE )
+				#define UNITY_INSTANCED_LOD_FADE
+			#endif
+			#if !defined( UNITY_INSTANCED_SH )
+				#define UNITY_INSTANCED_SH
+			#endif
+			#if !defined( UNITY_INSTANCED_LIGHTMAPSTS )
+				#define UNITY_INSTANCED_LIGHTMAPSTS
+			#endif
+			#include "UnityShaderVariables.cginc"
+			#include "UnityCG.cginc"
+			#include "Lighting.cginc"
+			#include "UnityPBSLighting.cginc"
+			#include "UnityMetaPass.cginc"
+
+			#define ASE_NEEDS_VERT_NORMAL
+			#pragma multi_compile_local __ _ALPHATEST_ON
+			#pragma shader_feature_local _MASKMAP
+
+			struct appdata {
+				float4 vertex : POSITION;
+				float4 tangent : TANGENT;
+				float3 normal : NORMAL;
+				float4 texcoord1 : TEXCOORD1;
+				float4 texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+			struct v2f {
+				#if UNITY_VERSION >= 201810
+					UNITY_POSITION(pos);
+				#else
+					float4 pos : SV_POSITION;
+				#endif
+				#ifdef EDITOR_VISUALIZATION
+					float2 vizUV : TEXCOORD1;
+					float4 lightCoord : TEXCOORD2;
+				#endif
+				float4 ase_texcoord3 : TEXCOORD3;
+				float4 ase_texcoord4 : TEXCOORD4;
+				float4 ase_texcoord5 : TEXCOORD5;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				UNITY_VERTEX_OUTPUT_STEREO
+			};
+
+			#ifdef ASE_TESSELLATION
+				float _TessPhongStrength;
+				float _TessValue;
+				float _TessMin;
+				float _TessMax;
+				float _TessEdgeLength;
+				float _TessMaxDisp;
+			#endif
+			uniform sampler2D _Mask2;
+			uniform sampler2D _Mask0;
+			uniform sampler2D _Mask1;
+			uniform sampler2D _Mask3;
+			uniform float4 _MaskMapRemapScale0;
+			uniform float4 _MaskMapRemapOffset2;
+			uniform float4 _MaskMapRemapScale2;
+			uniform float4 _MaskMapRemapScale1;
+			uniform float4 _MaskMapRemapOffset1;
+			uniform float4 _MaskMapRemapScale3;
+			uniform float4 _MaskMapRemapOffset3;
+			uniform float4 _MaskMapRemapOffset0;
+			uniform float4 _Gravel;
+			uniform float4 _Sand;
+			uniform sampler2D _Control;
+			uniform float4 _Control_ST;
+			uniform float _Smoothness0;
+			uniform sampler2D _Splat0;
+			uniform float4 _Splat0_ST;
+			uniform float _Smoothness1;
+			uniform sampler2D _Splat1;
+			uniform float4 _Splat1_ST;
+			uniform float _Smoothness2;
+			uniform sampler2D _Splat2;
+			uniform float4 _Splat2_ST;
+			uniform float _Smoothness3;
+			uniform sampler2D _Splat3;
+			uniform float4 _Splat3_ST;
+			uniform float _RemapMin;
+			uniform float _RemapMax;
+			uniform sampler2D _Detail;
+			uniform float _DetailScale;
+			uniform float _SandTextureInfluence;
+			uniform float4 _Rock;
+			uniform sampler2D _RockErosion;
+			uniform float _DisplaceIntensity;
+			uniform float _NoiseScale;
+			uniform float _HeightMask;
+			uniform float _MaskIntensity;
+			uniform float _MaxClamp;
+
+
+			
+			v2f VertexFunction (appdata v  ) {
+				UNITY_SETUP_INSTANCE_ID(v);
+				v2f o;
+				UNITY_INITIALIZE_OUTPUT(v2f,o);
+				UNITY_TRANSFER_INSTANCE_ID(v,o);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+
+				float3 ase_worldPos = mul(unity_ObjectToWorld, float4( (v.vertex).xyz, 1 )).xyz;
+				o.ase_texcoord4.xyz = ase_worldPos;
+				float3 ase_worldNormal = UnityObjectToWorldNormal(v.normal);
+				o.ase_texcoord5.xyz = ase_worldNormal;
+				
+				o.ase_texcoord3.xy = v.ase_texcoord.xy;
+				
+				//setting value to unused interpolator channels and avoid initialization warnings
+				o.ase_texcoord3.zw = 0;
+				o.ase_texcoord4.w = 0;
+				o.ase_texcoord5.w = 0;
+				#ifdef ASE_ABSOLUTE_VERTEX_POS
+					float3 defaultVertexValue = v.vertex.xyz;
+				#else
+					float3 defaultVertexValue = float3(0, 0, 0);
+				#endif
+				float3 vertexValue = defaultVertexValue;
+				#ifdef ASE_ABSOLUTE_VERTEX_POS
+					v.vertex.xyz = vertexValue;
+				#else
+					v.vertex.xyz += vertexValue;
+				#endif
+				v.vertex.w = 1;
+				v.normal = v.normal;
+				v.tangent = v.tangent;
+
+				#ifdef EDITOR_VISUALIZATION
+					o.vizUV = 0;
+					o.lightCoord = 0;
+					if (unity_VisualizationMode == EDITORVIZ_TEXTURE)
+						o.vizUV = UnityMetaVizUV(unity_EditorViz_UVIndex, v.texcoord.xy, v.texcoord1.xy, v.texcoord2.xy, unity_EditorViz_Texture_ST);
+					else if (unity_VisualizationMode == EDITORVIZ_SHOWLIGHTMASK)
+					{
+						o.vizUV = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
+						o.lightCoord = mul(unity_EditorViz_WorldToLight, mul(unity_ObjectToWorld, float4(v.vertex.xyz, 1)));
+					}
+				#endif
+
+				o.pos = UnityMetaVertexPosition(v.vertex, v.texcoord1.xy, v.texcoord2.xy, unity_LightmapST, unity_DynamicLightmapST);
+
+				return o;
+			}
+
+			#if defined(ASE_TESSELLATION)
+			struct VertexControl
+			{
+				float4 vertex : INTERNALTESSPOS;
+				float4 tangent : TANGENT;
+				float3 normal : NORMAL;
+				float4 texcoord1 : TEXCOORD1;
+				float4 texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct TessellationFactors
+			{
+				float edge[3] : SV_TessFactor;
+				float inside : SV_InsideTessFactor;
+			};
+
+			VertexControl vert ( appdata v )
+			{
+				VertexControl o;
+				UNITY_SETUP_INSTANCE_ID(v);
+				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				o.vertex = v.vertex;
+				o.tangent = v.tangent;
+				o.normal = v.normal;
+				o.texcoord1 = v.texcoord1;
+				o.texcoord2 = v.texcoord2;
+				o.ase_texcoord = v.ase_texcoord;
+				return o;
+			}
+
+			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
+			{
+				TessellationFactors o;
+				float4 tf = 1;
+				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
+				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
+				#if defined(ASE_FIXED_TESSELLATION)
+				tf = FixedTess( tessValue );
+				#elif defined(ASE_DISTANCE_TESSELLATION)
+				tf = DistanceBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, tessValue, tessMin, tessMax, UNITY_MATRIX_M, _WorldSpaceCameraPos );
+				#elif defined(ASE_LENGTH_TESSELLATION)
+				tf = EdgeLengthBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, UNITY_MATRIX_M, _WorldSpaceCameraPos, _ScreenParams );
+				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
+				tf = EdgeLengthBasedTessCull(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, tessMaxDisp, UNITY_MATRIX_M, _WorldSpaceCameraPos, _ScreenParams, unity_CameraWorldClipPlanes );
+				#endif
+				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
+				return o;
+			}
+
+			[domain("tri")]
+			[partitioning("fractional_odd")]
+			[outputtopology("triangle_cw")]
+			[patchconstantfunc("TessellationFunction")]
+			[outputcontrolpoints(3)]
+			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
+			{
+			   return patch[id];
+			}
+
+			[domain("tri")]
+			v2f DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
+			{
+				appdata o = (appdata) 0;
+				o.vertex = patch[0].vertex * bary.x + patch[1].vertex * bary.y + patch[2].vertex * bary.z;
+				o.tangent = patch[0].tangent * bary.x + patch[1].tangent * bary.y + patch[2].tangent * bary.z;
+				o.normal = patch[0].normal * bary.x + patch[1].normal * bary.y + patch[2].normal * bary.z;
+				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
+				o.texcoord2 = patch[0].texcoord2 * bary.x + patch[1].texcoord2 * bary.y + patch[2].texcoord2 * bary.z;
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				#if defined(ASE_PHONG_TESSELLATION)
+				float3 pp[3];
+				for (int i = 0; i < 3; ++i)
+					pp[i] = o.vertex.xyz - patch[i].normal * (dot(o.vertex.xyz, patch[i].normal) - dot(patch[i].vertex.xyz, patch[i].normal));
+				float phongStrength = _TessPhongStrength;
+				o.vertex.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.vertex.xyz;
+				#endif
+				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
+				return VertexFunction(o);
+			}
+			#else
+			v2f vert ( appdata v )
+			{
+				return VertexFunction( v );
+			}
+			#endif
+
+			fixed4 frag (v2f IN 
+				#ifdef _DEPTHOFFSET_ON
+				, out float outputDepth : SV_Depth
+				#endif
+				) : SV_Target
+			{
+				UNITY_SETUP_INSTANCE_ID(IN);
+
+				#ifdef LOD_FADE_CROSSFADE
+					UNITY_APPLY_DITHER_CROSSFADE(IN.pos.xy);
+				#endif
+
+				#if defined(_SPECULAR_SETUP)
+					SurfaceOutputStandardSpecular o = (SurfaceOutputStandardSpecular)0;
+				#else
+					SurfaceOutputStandard o = (SurfaceOutputStandard)0;
+				#endif
+
+				float2 uv_Control = IN.ase_texcoord3.xy * _Control_ST.xy + _Control_ST.zw;
+				float4 tex2DNode5_g2 = tex2D( _Control, uv_Control );
+				float dotResult20_g2 = dot( tex2DNode5_g2 , float4(1,1,1,1) );
+				float SplatWeight22_g2 = dotResult20_g2;
+				float localSplatClip74_g2 = ( SplatWeight22_g2 );
+				float SplatWeight74_g2 = SplatWeight22_g2;
+				{
+				#if !defined(SHADER_API_MOBILE) && defined(TERRAIN_SPLAT_ADDPASS)
+				clip(SplatWeight74_g2 == 0.0f ? -1 : 1);
+				#endif
+				}
+				float4 SplatControl26_g2 = ( tex2DNode5_g2 / ( localSplatClip74_g2 + 0.001 ) );
+				float4 temp_output_59_0_g2 = SplatControl26_g2;
+				float4 appendResult33_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness0));
+				float2 uv_Splat0 = IN.ase_texcoord3.xy * _Splat0_ST.xy + _Splat0_ST.zw;
+				float4 tex2DNode4_g2 = tex2D( _Splat0, uv_Splat0 );
+				float3 _Vector1 = float3(1,1,1);
+				float4 appendResult258_g2 = (float4(_Vector1 , 1.0));
+				float4 tintLayer0253_g2 = appendResult258_g2;
+				float4 appendResult36_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness1));
+				float2 uv_Splat1 = IN.ase_texcoord3.xy * _Splat1_ST.xy + _Splat1_ST.zw;
+				float4 tex2DNode3_g2 = tex2D( _Splat1, uv_Splat1 );
+				float3 _Vector2 = float3(1,1,1);
+				float4 appendResult261_g2 = (float4(_Vector2 , 1.0));
+				float4 tintLayer1254_g2 = appendResult261_g2;
+				float4 appendResult39_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness2));
+				float2 uv_Splat2 = IN.ase_texcoord3.xy * _Splat2_ST.xy + _Splat2_ST.zw;
+				float4 tex2DNode6_g2 = tex2D( _Splat2, uv_Splat2 );
+				float3 _Vector3 = float3(1,1,1);
+				float4 appendResult263_g2 = (float4(_Vector3 , 1.0));
+				float4 tintLayer2255_g2 = appendResult263_g2;
+				float4 appendResult42_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness3));
+				float2 uv_Splat3 = IN.ase_texcoord3.xy * _Splat3_ST.xy + _Splat3_ST.zw;
+				float4 tex2DNode7_g2 = tex2D( _Splat3, uv_Splat3 );
+				float3 _Vector4 = float3(1,1,1);
+				float4 appendResult265_g2 = (float4(_Vector4 , 1.0));
+				float4 tintLayer3256_g2 = appendResult265_g2;
+				float4 weightedBlendVar9_g2 = temp_output_59_0_g2;
+				float4 weightedBlend9_g2 = ( weightedBlendVar9_g2.x*( appendResult33_g2 * tex2DNode4_g2 * tintLayer0253_g2 ) + weightedBlendVar9_g2.y*( appendResult36_g2 * tex2DNode3_g2 * tintLayer1254_g2 ) + weightedBlendVar9_g2.z*( appendResult39_g2 * tex2DNode6_g2 * tintLayer2255_g2 ) + weightedBlendVar9_g2.w*( appendResult42_g2 * tex2DNode7_g2 * tintLayer3256_g2 ) );
+				float4 MixDiffuse28_g2 = weightedBlend9_g2;
+				float4 temp_output_60_0_g2 = MixDiffuse28_g2;
+				float4 temp_output_49_0 = temp_output_60_0_g2;
+				float4 temp_cast_6 = (_RemapMin).xxxx;
+				float4 temp_cast_7 = (_RemapMax).xxxx;
+				float4 temp_output_75_0 = saturate( (temp_cast_6 + (temp_output_49_0 - float4( 0,0,0,0 )) * (temp_cast_7 - temp_cast_6) / (float4( 1,1,1,1 ) - float4( 0,0,0,0 ))) );
+				float3 lerpResult57 = lerp( (_Gravel).rgb , (_Sand).rgb , temp_output_75_0.xyz);
+				float3 ase_worldPos = IN.ase_texcoord4.xyz;
+				float2 temp_output_8_0 = (ase_worldPos).xz;
+				float4 tex2DNode24 = tex2D( _Detail, ( temp_output_8_0 / _DetailScale ) );
+				float3 ase_worldNormal = IN.ase_texcoord5.xyz;
+				float2 temp_output_9_0 = ( (ase_worldNormal).xz * _DisplaceIntensity );
+				float4 tex2DNode21 = tex2D( _RockErosion, ( ( temp_output_8_0 + temp_output_9_0 ) / _NoiseScale ) );
+				float temp_output_15_0 = ( 1.0 - ase_worldNormal.y );
+				float temp_output_18_0 = ( ase_worldPos.y / _HeightMask );
+				float temp_output_16_0 = ( ( tex2DNode24.r + tex2DNode21.r ) * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
+				float clampResult28 = clamp( temp_output_16_0 , 0.0 , _MaxClamp );
+				float3 lerpResult12 = lerp( ( lerpResult57 + ( tex2DNode24.r * _SandTextureInfluence ) ) , ( (_Rock).rgb * clampResult28 ) , saturate( temp_output_16_0 ));
+				
+				o.Albedo = lerpResult12;
+				o.Normal = fixed3( 0, 0, 1 );
+				o.Emission = half3( 0, 0, 0 );
+				o.Alpha = 1;
+				float AlphaClipThreshold = 0.5;
+
+				#ifdef _ALPHATEST_ON
+					clip( o.Alpha - AlphaClipThreshold );
+				#endif
+
+				#ifdef _DEPTHOFFSET_ON
+					outputDepth = IN.pos.z;
+				#endif
+
+				UnityMetaInput metaIN;
+				UNITY_INITIALIZE_OUTPUT(UnityMetaInput, metaIN);
+				metaIN.Albedo = o.Albedo;
+				metaIN.Emission = o.Emission;
+				#ifdef EDITOR_VISUALIZATION
+					metaIN.VizUV = IN.vizUV;
+					metaIN.LightCoord = IN.lightCoord;
+				#endif
+				return UnityMetaFragment(metaIN);
+			}
+			ENDCG
+		}
+
+		
+		Pass
+		{
+			
+			Name "ShadowCaster"
+			Tags { "LightMode"="ShadowCaster" }
+			ZWrite On
+			ZTest LEqual
+			AlphaToMask Off
+
+			CGPROGRAM
+			#define ASE_NEEDS_FRAG_SHADOWCOORDS
+			#pragma multi_compile_instancing
+			#pragma multi_compile __ LOD_FADE_CROSSFADE
+			#pragma multi_compile_fog
+			#define ASE_FOG 1
+
+			#pragma vertex vert
+			#pragma fragment frag
+			#pragma skip_variants FOG_LINEAR FOG_EXP FOG_EXP2
+			#pragma multi_compile_shadowcaster
+			#ifndef UNITY_PASS_SHADOWCASTER
+				#define UNITY_PASS_SHADOWCASTER
+			#endif
+			#include "HLSLSupport.cginc"
+			#ifndef UNITY_INSTANCED_LOD_FADE
+				#define UNITY_INSTANCED_LOD_FADE
+			#endif
+			#ifndef UNITY_INSTANCED_SH
+				#define UNITY_INSTANCED_SH
+			#endif
+			#ifndef UNITY_INSTANCED_LIGHTMAPSTS
+				#define UNITY_INSTANCED_LIGHTMAPSTS
+			#endif
+			#if ( SHADER_API_D3D11 || SHADER_API_GLCORE || SHADER_API_GLES || SHADER_API_GLES3 || SHADER_API_METAL || SHADER_API_VULKAN )
+				#define CAN_SKIP_VPOS
+			#endif
+			#include "UnityShaderVariables.cginc"
+			#include "UnityCG.cginc"
+			#include "Lighting.cginc"
+			#include "UnityPBSLighting.cginc"
+
+			#pragma multi_compile_local __ _ALPHATEST_ON
+			#pragma shader_feature_local _MASKMAP
+
+			struct appdata {
+				float4 vertex : POSITION;
+				float4 tangent : TANGENT;
+				float3 normal : NORMAL;
+				float4 texcoord1 : TEXCOORD1;
+				float4 texcoord2 : TEXCOORD2;
+				
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct v2f {
+				V2F_SHADOW_CASTER;
+				
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				UNITY_VERTEX_OUTPUT_STEREO
+			};
+
+			#ifdef UNITY_STANDARD_USE_DITHER_MASK
+				sampler3D _DitherMaskLOD;
+			#endif
+			#ifdef ASE_TESSELLATION
+				float _TessPhongStrength;
+				float _TessValue;
+				float _TessMin;
+				float _TessMax;
+				float _TessEdgeLength;
+				float _TessMaxDisp;
+			#endif
+			uniform sampler2D _Mask2;
+			uniform sampler2D _Mask0;
+			uniform sampler2D _Mask1;
+			uniform sampler2D _Mask3;
+			uniform float4 _MaskMapRemapScale0;
+			uniform float4 _MaskMapRemapOffset2;
+			uniform float4 _MaskMapRemapScale2;
+			uniform float4 _MaskMapRemapScale1;
+			uniform float4 _MaskMapRemapOffset1;
+			uniform float4 _MaskMapRemapScale3;
+			uniform float4 _MaskMapRemapOffset3;
+			uniform float4 _MaskMapRemapOffset0;
+
+
+			
+			v2f VertexFunction (appdata v  ) {
+				UNITY_SETUP_INSTANCE_ID(v);
+				v2f o;
+				UNITY_INITIALIZE_OUTPUT(v2f,o);
+				UNITY_TRANSFER_INSTANCE_ID(v,o);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+
+				
+				#ifdef ASE_ABSOLUTE_VERTEX_POS
+					float3 defaultVertexValue = v.vertex.xyz;
+				#else
+					float3 defaultVertexValue = float3(0, 0, 0);
+				#endif
+				float3 vertexValue = defaultVertexValue;
+				#ifdef ASE_ABSOLUTE_VERTEX_POS
+					v.vertex.xyz = vertexValue;
+				#else
+					v.vertex.xyz += vertexValue;
+				#endif
+				v.vertex.w = 1;
+				v.normal = v.normal;
+				v.tangent = v.tangent;
+
+				TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
+				return o;
+			}
+
+			#if defined(ASE_TESSELLATION)
+			struct VertexControl
+			{
+				float4 vertex : INTERNALTESSPOS;
+				float4 tangent : TANGENT;
+				float3 normal : NORMAL;
+				float4 texcoord1 : TEXCOORD1;
+				float4 texcoord2 : TEXCOORD2;
 				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
@@ -3137,16 +2262,16 @@ Shader "SH_VenusTerrainFirstPass"
 				float inside : SV_InsideTessFactor;
 			};
 
-			VertexControl vert ( VertexInput v )
+			VertexControl vert ( appdata v )
 			{
 				VertexControl o;
 				UNITY_SETUP_INSTANCE_ID(v);
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				o.vertex = v.vertex;
-				o.ase_normal = v.ase_normal;
-				o.ase_tangent = v.ase_tangent;
-				o.texcoord = v.texcoord;
+				o.tangent = v.tangent;
+				o.normal = v.normal;
 				o.texcoord1 = v.texcoord1;
+				o.texcoord2 = v.texcoord2;
 				
 				return o;
 			}
@@ -3160,11 +2285,11 @@ Shader "SH_VenusTerrainFirstPass"
 				#if defined(ASE_FIXED_TESSELLATION)
 				tf = FixedTess( tessValue );
 				#elif defined(ASE_DISTANCE_TESSELLATION)
-				tf = DistanceBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), _WorldSpaceCameraPos );
+				tf = DistanceBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, tessValue, tessMin, tessMax, UNITY_MATRIX_M, _WorldSpaceCameraPos );
 				#elif defined(ASE_LENGTH_TESSELLATION)
-				tf = EdgeLengthBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams );
+				tf = EdgeLengthBasedTess(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, UNITY_MATRIX_M, _WorldSpaceCameraPos, _ScreenParams );
 				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
-				tf = EdgeLengthBasedTessCull(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), _WorldSpaceCameraPos, _ScreenParams, unity_CameraWorldClipPlanes );
+				tf = EdgeLengthBasedTessCull(v[0].vertex, v[1].vertex, v[2].vertex, edgeLength, tessMaxDisp, UNITY_MATRIX_M, _WorldSpaceCameraPos, _ScreenParams, unity_CameraWorldClipPlanes );
 				#endif
 				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
 				return o;
@@ -3177,23 +2302,23 @@ Shader "SH_VenusTerrainFirstPass"
 			[outputcontrolpoints(3)]
 			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
 			{
-				return patch[id];
+			   return patch[id];
 			}
 
 			[domain("tri")]
-			VertexOutput DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
+			v2f DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
 			{
-				VertexInput o = (VertexInput) 0;
+				appdata o = (appdata) 0;
 				o.vertex = patch[0].vertex * bary.x + patch[1].vertex * bary.y + patch[2].vertex * bary.z;
-				o.ase_normal = patch[0].ase_normal * bary.x + patch[1].ase_normal * bary.y + patch[2].ase_normal * bary.z;
-				o.ase_tangent = patch[0].ase_tangent * bary.x + patch[1].ase_tangent * bary.y + patch[2].ase_tangent * bary.z;
-				o.texcoord = patch[0].texcoord * bary.x + patch[1].texcoord * bary.y + patch[2].texcoord * bary.z;
+				o.tangent = patch[0].tangent * bary.x + patch[1].tangent * bary.y + patch[2].tangent * bary.z;
+				o.normal = patch[0].normal * bary.x + patch[1].normal * bary.y + patch[2].normal * bary.z;
 				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
+				o.texcoord2 = patch[0].texcoord2 * bary.x + patch[1].texcoord2 * bary.y + patch[2].texcoord2 * bary.z;
 				
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
-					pp[i] = o.vertex.xyz - patch[i].ase_normal * (dot(o.vertex.xyz, patch[i].ase_normal) - dot(patch[i].vertex.xyz, patch[i].ase_normal));
+					pp[i] = o.vertex.xyz - patch[i].normal * (dot(o.vertex.xyz, patch[i].normal) - dot(patch[i].vertex.xyz, patch[i].normal));
 				float phongStrength = _TessPhongStrength;
 				o.vertex.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.vertex.xyz;
 				#endif
@@ -3201,253 +2326,75 @@ Shader "SH_VenusTerrainFirstPass"
 				return VertexFunction(o);
 			}
 			#else
-			VertexOutput vert ( VertexInput v )
+			v2f vert ( appdata v )
 			{
 				return VertexFunction( v );
 			}
 			#endif
 
-			FragmentOutput frag ( VertexOutput IN
-								#ifdef ASE_DEPTH_WRITE_ON
-								,out float outputDepth : ASE_SV_DEPTH
-								#endif
-								 )
+			fixed4 frag (v2f IN 
+				#ifdef _DEPTHOFFSET_ON
+				, out float outputDepth : SV_Depth
+				#endif
+				#if !defined( CAN_SKIP_VPOS )
+				, UNITY_VPOS_TYPE vpos : VPOS
+				#endif
+				) : SV_Target
 			{
 				UNITY_SETUP_INSTANCE_ID(IN);
-				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN);
 
 				#ifdef LOD_FADE_CROSSFADE
-					LODDitheringTransition( IN.clipPos.xyz, unity_LODFade.x );
+					UNITY_APPLY_DITHER_CROSSFADE(IN.pos.xy);
 				#endif
 
-				#if defined(ENABLE_TERRAIN_PERPIXEL_NORMAL)
-					float2 sampleCoords = (IN.lightmapUVOrVertexSH.zw / _TerrainHeightmapRecipSize.zw + 0.5f) * _TerrainHeightmapRecipSize.xy;
-					float3 WorldNormal = TransformObjectToWorldNormal(normalize(SAMPLE_TEXTURE2D(_TerrainNormalmapTexture, sampler_TerrainNormalmapTexture, sampleCoords).rgb * 2 - 1));
-					float3 WorldTangent = -cross(GetObjectToWorldMatrix()._13_23_33, WorldNormal);
-					float3 WorldBiTangent = cross(WorldNormal, -WorldTangent);
+				#if defined(_SPECULAR_SETUP)
+					SurfaceOutputStandardSpecular o = (SurfaceOutputStandardSpecular)0;
 				#else
-					float3 WorldNormal = normalize( IN.tSpace0.xyz );
-					float3 WorldTangent = IN.tSpace1.xyz;
-					float3 WorldBiTangent = IN.tSpace2.xyz;
+					SurfaceOutputStandard o = (SurfaceOutputStandard)0;
 				#endif
 
-				float3 WorldPosition = float3(IN.tSpace0.w,IN.tSpace1.w,IN.tSpace2.w);
-				float3 WorldViewDirection = _WorldSpaceCameraPos.xyz  - WorldPosition;
-				float4 ShadowCoords = float4( 0, 0, 0, 0 );
-
-				float4 ClipPos = IN.clipPosV;
-				float4 ScreenPos = ComputeScreenPos( IN.clipPosV );
-
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-					ShadowCoords = IN.shadowCoord;
-				#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-					ShadowCoords = TransformWorldToShadowCoord( WorldPosition );
-				#else
-					ShadowCoords = float4(0, 0, 0, 0);
-				#endif
-
-				WorldViewDirection = SafeNormalize( WorldViewDirection );
-
-				float4 appendResult33_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness0));
-				float2 uv_Splat0 = IN.ase_texcoord7.xy * _Splat0_ST.xy + _Splat0_ST.zw;
-				float4 tex2DNode4_g2 = tex2D( _Splat0, uv_Splat0 );
-				float2 uv_Control = IN.ase_texcoord7.xy * _Control_ST.xy + _Control_ST.zw;
-				float4 tex2DNode5_g2 = tex2D( _Control, uv_Control );
-				float dotResult20_g2 = dot( tex2DNode5_g2 , float4(1,1,1,1) );
-				float SplatWeight22_g2 = dotResult20_g2;
-				float localSplatClip74_g2 = ( SplatWeight22_g2 );
-				float SplatWeight74_g2 = SplatWeight22_g2;
-				{
-				#if !defined(SHADER_API_MOBILE) && defined(TERRAIN_SPLAT_ADDPASS)
-				clip(SplatWeight74_g2 == 0.0f ? -1 : 1);
-				#endif
-				}
-				float4 SplatControl26_g2 = ( tex2DNode5_g2 / ( localSplatClip74_g2 + 0.001 ) );
-				float4 appendResult258_g2 = (float4(( (SplatControl26_g2).rrr * (_DiffuseRemapScale0).rgb ) , 1.0));
-				float4 tintLayer0253_g2 = appendResult258_g2;
-				float4 appendResult36_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness1));
-				float2 uv_Splat1 = IN.ase_texcoord7.xy * _Splat1_ST.xy + _Splat1_ST.zw;
-				float4 tex2DNode3_g2 = tex2D( _Splat1, uv_Splat1 );
-				float4 appendResult261_g2 = (float4(( (SplatControl26_g2).ggg * (_DiffuseRemapScale1).rgb ) , 1.0));
-				float4 tintLayer1254_g2 = appendResult261_g2;
-				float4 appendResult39_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness2));
-				float2 uv_Splat2 = IN.ase_texcoord7.xy * _Splat2_ST.xy + _Splat2_ST.zw;
-				float4 tex2DNode6_g2 = tex2D( _Splat2, uv_Splat2 );
-				float4 appendResult263_g2 = (float4(( (SplatControl26_g2).bbb * (_DiffuseRemapScale2).rgb ) , 1.0));
-				float4 tintLayer2255_g2 = appendResult263_g2;
-				float4 appendResult42_g2 = (float4(1.0 , 1.0 , 1.0 , _Smoothness3));
-				float2 uv_Splat3 = IN.ase_texcoord7.xy * _Splat3_ST.xy + _Splat3_ST.zw;
-				float4 tex2DNode7_g2 = tex2D( _Splat3, uv_Splat3 );
-				float4 appendResult265_g2 = (float4(( (SplatControl26_g2).aaa * (_DiffuseRemapScale3).rgb ) , 1.0));
-				float4 tintLayer3256_g2 = appendResult265_g2;
-				float4 weightedBlendVar9_g2 = float4(1,1,1,1);
-				float4 weightedBlend9_g2 = ( weightedBlendVar9_g2.x*( appendResult33_g2 * tex2DNode4_g2 * tintLayer0253_g2 ) + weightedBlendVar9_g2.y*( appendResult36_g2 * tex2DNode3_g2 * tintLayer1254_g2 ) + weightedBlendVar9_g2.z*( appendResult39_g2 * tex2DNode6_g2 * tintLayer2255_g2 ) + weightedBlendVar9_g2.w*( appendResult42_g2 * tex2DNode7_g2 * tintLayer3256_g2 ) );
-				float4 MixDiffuse28_g2 = weightedBlend9_g2;
-				float4 temp_output_60_0_g2 = MixDiffuse28_g2;
-				float4 temp_output_49_0 = temp_output_60_0_g2;
-				float4 temp_cast_5 = (_RemapMin).xxxx;
-				float4 temp_cast_6 = (_RemapMax).xxxx;
-				float4 temp_output_75_0 = saturate( (temp_cast_5 + (temp_output_49_0 - float4( 0,0,0,0 )) * (temp_cast_6 - temp_cast_5) / (float4( 1,1,1,1 ) - float4( 0,0,0,0 ))) );
-				float3 lerpResult57 = lerp( (_Gravel).rgb , (_Sand).rgb , temp_output_75_0.xyz);
-				float2 temp_output_8_0 = (WorldPosition).xz;
-				float4 tex2DNode24 = tex2D( _Detail, ( temp_output_8_0 / _DetailScale ) );
-				float2 temp_output_9_0 = ( (WorldNormal).xz * _DisplaceIntensity );
-				float4 tex2DNode21 = tex2D( _RockErosion, ( ( temp_output_8_0 + temp_output_9_0 ) / _NoiseScale ) );
-				float temp_output_15_0 = ( 1.0 - WorldNormal.y );
-				float temp_output_18_0 = ( WorldPosition.y / _HeightMask );
-				float temp_output_16_0 = ( ( tex2DNode24.r + tex2DNode21.r ) * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
-				float clampResult28 = clamp( temp_output_16_0 , 0.0 , _MaxClamp );
-				float3 lerpResult12 = lerp( ( lerpResult57 + ( tex2DNode24.r * _SandTextureInfluence ) ) , ( (_Rock).rgb * clampResult28 ) , saturate( temp_output_16_0 ));
 				
-				float3 surf_pos107_g1 = WorldPosition;
-				float3 surf_norm107_g1 = WorldNormal;
-				float height107_g1 = ( tex2DNode21.r * temp_output_15_0 * temp_output_18_0 * _MaskIntensity );
-				float scale107_g1 = _NormalStrenght;
-				float3 localPerturbNormal107_g1 = PerturbNormal107_g1( surf_pos107_g1 , surf_norm107_g1 , height107_g1 , scale107_g1 );
-				float3x3 ase_worldToTangent = float3x3(WorldTangent,WorldBiTangent,WorldNormal);
-				float3 worldToTangentDir42_g1 = mul( ase_worldToTangent, localPerturbNormal107_g1);
-				
-				float4 appendResult205_g2 = (float4(_Smoothness0 , _Smoothness1 , _Smoothness2 , _Smoothness3));
-				float4 appendResult206_g2 = (float4(tex2DNode4_g2.a , tex2DNode3_g2.a , tex2DNode6_g2.a , tex2DNode7_g2.a));
-				float4 defaultSmoothness210_g2 = ( appendResult205_g2 * appendResult206_g2 );
-				float localComputeMasks130_g2 = ( 0.0 );
-				float4 masks0130_g2 = float4( 0,0,0,0 );
-				float4 masks1130_g2 = float4( 0,0,0,0 );
-				float4 masks2130_g2 = float4( 0,0,0,0 );
-				float4 masks3130_g2 = float4( 0,0,0,0 );
-				float4 appendResult135_g2 = (float4(_LayerHasMask0 , _LayerHasMask1 , _LayerHasMask2 , _LayerHasMask3));
-				float4 layerHasMask136_g2 = appendResult135_g2;
-				float4 hasMask130_g2 = layerHasMask136_g2;
-				float2 uvMask0130_g2 = uv_Splat0;
-				float2 uvMask1130_g2 = uv_Splat1;
-				float2 uvMask2130_g2 = uv_Splat2;
-				float2 uvMask3130_g2 = uv_Splat3;
-				{
-				masks0130_g2 = 0.5h;
-				masks1130_g2 = 0.5h;
-				masks2130_g2 = 0.5h;
-				masks3130_g2 = 0.5h;
-				#ifdef _MASKMAP
-				masks0130_g2 = lerp(masks0130_g2, SAMPLE_TEXTURE2D(_Mask0, sampler_Mask0, uvMask0130_g2), hasMask130_g2.x);
-				masks1130_g2 = lerp(masks1130_g2, SAMPLE_TEXTURE2D(_Mask1, sampler_Mask0, uvMask1130_g2), hasMask130_g2.y);
-				masks2130_g2 = lerp(masks2130_g2, SAMPLE_TEXTURE2D(_Mask2, sampler_Mask0, uvMask2130_g2), hasMask130_g2.z);
-				masks3130_g2 = lerp(masks3130_g2, SAMPLE_TEXTURE2D(_Mask3, sampler_Mask0, uvMask3130_g2), hasMask130_g2.w);
-				#endif
-				masks0130_g2 *= _MaskMapRemapScale0.rgba;
-				masks0130_g2 += _MaskMapRemapOffset0.rgba;
-				masks1130_g2 *= _MaskMapRemapScale1.rgba;
-				masks1130_g2 += _MaskMapRemapOffset1.rgba;
-				masks2130_g2 *= _MaskMapRemapScale2.rgba;
-				masks2130_g2 += _MaskMapRemapOffset2.rgba;
-				masks3130_g2 *= _MaskMapRemapScale3.rgba;
-				masks3130_g2 += _MaskMapRemapOffset3.rgba;
-				}
-				float4 mask0138_g2 = masks0130_g2;
-				float4 mask1139_g2 = masks1130_g2;
-				float4 mask2140_g2 = masks2130_g2;
-				float4 mask3141_g2 = masks3130_g2;
-				float4 appendResult158_g2 = (float4((mask0138_g2).w , (mask1139_g2).w , (mask2140_g2).w , (mask3141_g2).w));
-				float4 maskSmoothness149_g2 = appendResult158_g2;
-				float4 lerpResult215_g2 = lerp( defaultSmoothness210_g2 , maskSmoothness149_g2 , layerHasMask136_g2);
-				float dotResult216_g2 = dot( lerpResult215_g2 , SplatControl26_g2 );
-				float4 temp_cast_9 = (_Roughness).xxxx;
-				float4 lerpResult69 = lerp( ( temp_output_49_0 * dotResult216_g2 ) , temp_cast_9 , saturate( temp_output_16_0 ));
-				
-
-				float3 BaseColor = lerpResult12;
-				float3 Normal = worldToTangentDir42_g1;
-				float3 Emission = 0;
-				float3 Specular = 0.5;
-				float Metallic = 0;
-				float Smoothness = lerpResult69.x;
-				float Occlusion = 1;
-				float Alpha = 1;
+				o.Normal = fixed3( 0, 0, 1 );
+				o.Occlusion = 1;
+				o.Alpha = 1;
 				float AlphaClipThreshold = 0.5;
 				float AlphaClipThresholdShadow = 0.5;
-				float3 BakedGI = 0;
-				float3 RefractionColor = 1;
-				float RefractionIndex = 1;
-				float3 Transmission = 1;
-				float3 Translucency = 1;
 
-				#ifdef ASE_DEPTH_WRITE_ON
-					float DepthValue = IN.clipPos.z;
-				#endif
-
-				#ifdef _ALPHATEST_ON
-					clip(Alpha - AlphaClipThreshold);
-				#endif
-
-				InputData inputData;
-				inputData.positionWS = WorldPosition;
-				inputData.viewDirectionWS = WorldViewDirection;
-				inputData.shadowCoord = ShadowCoords;
-
-				#ifdef _NORMALMAP
-					#if _NORMAL_DROPOFF_TS
-					inputData.normalWS = TransformTangentToWorld(Normal, half3x3( WorldTangent, WorldBiTangent, WorldNormal ));
-					#elif _NORMAL_DROPOFF_OS
-					inputData.normalWS = TransformObjectToWorldNormal(Normal);
-					#elif _NORMAL_DROPOFF_WS
-					inputData.normalWS = Normal;
+				#ifdef _ALPHATEST_SHADOW_ON
+					if (unity_LightShadowBias.z != 0.0)
+						clip(o.Alpha - AlphaClipThresholdShadow);
+					#ifdef _ALPHATEST_ON
+					else
+						clip(o.Alpha - AlphaClipThreshold);
 					#endif
-					inputData.normalWS = NormalizeNormalPerPixel(inputData.normalWS);
 				#else
-					inputData.normalWS = WorldNormal;
-				#endif
-
-				#ifdef ASE_FOG
-					inputData.fogCoord = 0; // we don't apply fog in the gbuffer pass
-				#endif
-
-				inputData.vertexLighting = IN.fogFactorAndVertexLight.yzw;
-				#if defined(ENABLE_TERRAIN_PERPIXEL_NORMAL)
-					float3 SH = SampleSH(inputData.normalWS.xyz);
-				#else
-					float3 SH = IN.lightmapUVOrVertexSH.xyz;
-				#endif
-
-				inputData.bakedGI = SAMPLE_GI( IN.lightmapUVOrVertexSH.xy, SH, inputData.normalWS );
-
-				#ifdef ASE_BAKEDGI
-					inputData.bakedGI = BakedGI;
-				#endif
-
-				BRDFData brdfData;
-				InitializeBRDFData( BaseColor, Metallic, Specular, Smoothness, Alpha, brdfData);
-				half4 color;
-				color.rgb = GlobalIllumination( brdfData, inputData.bakedGI, Occlusion, inputData.normalWS, inputData.viewDirectionWS);
-				color.a = Alpha;
-
-				#ifdef ASE_FINAL_COLOR_ALPHA_MULTIPLY
-					color.rgb *= color.a;
-				#endif
-
-				#ifdef ASE_FOG
-					#ifdef TERRAIN_SPLAT_ADDPASS
-						color.rgb = MixFogColor(color.rgb, half3( 0, 0, 0 ), IN.fogFactorAndVertexLight.x );
-					#else
-						color.rgb = MixFog(color.rgb, IN.fogFactorAndVertexLight.x);
+					#ifdef _ALPHATEST_ON
+						clip(o.Alpha - AlphaClipThreshold);
 					#endif
 				#endif
 
-				#ifdef ASE_DEPTH_WRITE_ON
-					outputDepth = DepthValue;
+				#if defined( CAN_SKIP_VPOS )
+				float2 vpos = IN.pos;
 				#endif
 
-				return BRDFDataToGbuffer(brdfData, inputData, Smoothness, Emission + color.rgb);
+				#ifdef UNITY_STANDARD_USE_DITHER_MASK
+					half alphaRef = tex3D(_DitherMaskLOD, float3(vpos.xy*0.25,o.Alpha*0.9375)).a;
+					clip(alphaRef - 0.01);
+				#endif
+
+				#ifdef _DEPTHOFFSET_ON
+					outputDepth = IN.pos.z;
+				#endif
+
+				SHADOW_CASTER_FRAGMENT(IN)
 			}
-
-			ENDHLSL
+			ENDCG
 		}
 		
 	}
+	CustomEditor "ASEMaterialInspector"
 	
-	CustomEditor "UnityEditor.ShaderGraph.PBRMasterGUI"
-	Fallback "Hidden/InternalErrorShader"
-	
-	Dependency "BaseMapShader"="ASESampleShaders/SimpleTerrainBase"
-
+	Fallback Off
 }
 /*ASEBEGIN
 Version=19108
@@ -3503,16 +2450,14 @@ Node;AmplifyShaderEditor.SaturateNode;75;2317.804,-1296.423;Inherit;False;1;0;FL
 Node;AmplifyShaderEditor.RangedFloatNode;76;1827.878,-1259.719;Inherit;False;Property;_RemapMax;RemapMax;25;0;Create;True;0;0;0;False;0;False;0;0.63;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.LerpOp;57;2886.602,-1445.333;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;61;2571.019,-1302.327;Inherit;False;2;2;0;FLOAT4;0,0,0,0;False;1;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;77;3206.634,-332.8741;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;1;New Amplify Shader;94348b07e5e8bab40bd6c8a1e3df54cd;True;ExtraPrePass;0;0;ExtraPrePass;5;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;4;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;UniversalMaterialType=Lit;True;3;True;12;all;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;0;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;79;3206.634,-332.8741;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;1;New Amplify Shader;94348b07e5e8bab40bd6c8a1e3df54cd;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;4;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;UniversalMaterialType=Lit;True;3;True;12;all;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;True;1;False;;True;3;False;;False;True;1;LightMode=ShadowCaster;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;80;3206.634,-332.8741;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;1;New Amplify Shader;94348b07e5e8bab40bd6c8a1e3df54cd;True;DepthOnly;0;3;DepthOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;4;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;UniversalMaterialType=Lit;True;3;True;12;all;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;True;1;False;;False;False;True;1;LightMode=DepthOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;81;3206.634,-332.8741;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;1;New Amplify Shader;94348b07e5e8bab40bd6c8a1e3df54cd;True;Meta;0;4;Meta;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;4;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;UniversalMaterialType=Lit;True;3;True;12;all;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;82;3206.634,-332.8741;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;1;New Amplify Shader;94348b07e5e8bab40bd6c8a1e3df54cd;True;Universal2D;0;5;Universal2D;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;4;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;UniversalMaterialType=Lit;True;3;True;12;all;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;False;False;True;1;False;;True;3;False;;True;False;0;False;;0;False;;True;1;LightMode=Universal2D;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;83;3206.634,-332.8741;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;1;New Amplify Shader;94348b07e5e8bab40bd6c8a1e3df54cd;True;DepthNormals;0;6;DepthNormals;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;4;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;UniversalMaterialType=Lit;True;3;True;12;all;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;;True;3;False;;False;True;1;LightMode=DepthNormals;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;84;3206.634,-332.8741;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;1;New Amplify Shader;94348b07e5e8bab40bd6c8a1e3df54cd;True;GBuffer;0;7;GBuffer;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;4;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;UniversalMaterialType=Lit;True;3;True;12;all;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;False;0;False;;0;False;;True;1;LightMode=UniversalGBuffer;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.RangedFloatNode;73;1831.379,-1376.211;Inherit;False;Property;_RemapMin;RemapMin;26;0;Create;True;0;0;0;False;0;False;0;0.87;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;78;3206.634,-332.8741;Float;False;True;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;12;SH_VenusTerrainFirstPass;94348b07e5e8bab40bd6c8a1e3df54cd;True;Forward;0;1;Forward;18;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;True;True;0;False;;True;3;False;;True;False;0;False;;0;False;;True;5;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;UniversalMaterialType=Lit;SplatCount=2;True;3;True;12;all;0;True;True;0;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;True;True;1;False;;True;3;False;;True;False;0;False;;0;False;;True;1;LightMode=UniversalForward;False;False;0;Hidden/InternalErrorShader;1;BaseMapShader=ASESampleShaders/SimpleTerrainBase;0;Standard;38;Workflow;1;0;Surface;0;638261728759889063;  Refraction Model;0;0;  Blend;0;0;Two Sided;1;0;Fragment Normal Space,InvertActionOnDeselection;0;0;Transmission;0;0;  Transmission Shadow;0.5,False,;0;Translucency;0;0;  Translucency Strength;1,False,;0;  Normal Distortion;0.5,False,;0;  Scattering;2,False,;0;  Direct;0.9,False,;0;  Ambient;0.1,False,;0;  Shadow;0.5,False,;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;Receive Shadows;1;0;GPU Instancing;1;0;LOD CrossFade;0;638261634604021439;Built-in Fog;1;638261728702624881;_FinalColorxAlpha;0;0;Meta Pass;1;0;Override Baked GI;0;0;Extra Pre Pass;0;0;DOTS Instancing;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,;0;  Type;0;0;  Tess;16,False,;0;  Min;10,False,;0;  Max;25,False,;0;  Edge Length;16,False,;0;  Max Displacement;25,False,;0;Write Depth;0;0;  Early Z;0;0;Vertex Position,InvertActionOnDeselection;1;0;0;8;False;True;True;True;True;True;True;True;True;;False;0
 Node;AmplifyShaderEditor.FunctionNode;49;1633.056,-1179.476;Inherit;False;Four Splats First Pass Terrain;1;;2;37452fdfb732e1443b7e39720d05b708;2,102,0,85,0;7;59;FLOAT4;0,0,0,0;False;60;FLOAT4;0,0,0,0;False;61;FLOAT3;0,0,0;False;57;FLOAT;0;False;58;FLOAT;0;False;201;FLOAT;0;False;62;FLOAT;0;False;7;FLOAT4;0;FLOAT3;14;FLOAT;56;FLOAT;45;FLOAT;200;FLOAT;19;FLOAT3;17
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;85;3206.634,-332.8741;Float;False;False;-1;2;ASEMaterialInspector;0;1;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ExtraPrePass;0;0;ExtraPrePass;6;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;86;3206.634,-332.8741;Float;False;True;-1;2;ASEMaterialInspector;0;4;SH_VenusTerrainFirstPass;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardBase;0;1;ForwardBase;18;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;40;Workflow,InvertActionOnDeselection;1;0;Surface;0;0;  Blend;0;0;  Refraction Model;0;0;  Dither Shadows;1;0;Two Sided;1;0;Deferred Pass;1;0;Transmission;0;0;  Transmission Shadow;0.5,False,;0;Translucency;0;0;  Translucency Strength;1,False,;0;  Normal Distortion;0.5,False,;0;  Scattering;2,False,;0;  Direct;0.9,False,;0;  Ambient;0.1,False,;0;  Shadow;0.5,False,;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;Receive Shadows;1;0;GPU Instancing;1;0;LOD CrossFade;1;0;Built-in Fog;1;0;Ambient Light;1;0;Meta Pass;1;0;Add Pass;1;0;Override Baked GI;0;0;Extra Pre Pass;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,;0;  Type;0;0;  Tess;16,False,;0;  Min;10,False,;0;  Max;25,False,;0;  Edge Length;16,False,;0;  Max Displacement;25,False,;0;Fwd Specular Highlights Toggle;0;0;Fwd Reflections Toggle;0;0;Disable Batching;0;0;Vertex Position,InvertActionOnDeselection;1;0;0;6;False;True;True;True;True;True;False;;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;87;3206.634,-332.8741;Float;False;False;-1;2;ASEMaterialInspector;0;1;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardAdd;0;2;ForwardAdd;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;4;1;False;;1;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;True;1;LightMode=ForwardAdd;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;88;3206.634,-332.8741;Float;False;False;-1;2;ASEMaterialInspector;0;1;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Deferred;0;3;Deferred;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Deferred;True;2;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;89;3206.634,-332.8741;Float;False;False;-1;2;ASEMaterialInspector;0;1;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Meta;0;4;Meta;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;90;3206.634,-332.8741;Float;False;False;-1;2;ASEMaterialInspector;0;1;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ShadowCaster;0;5;ShadowCaster;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;;True;3;False;;False;True;1;LightMode=ShadowCaster;False;False;0;;0;0;Standard;0;False;0
 WireConnection;8;0;2;0
 WireConnection;7;0;8;0
 WireConnection;7;1;9;0
@@ -3575,8 +2520,8 @@ WireConnection;57;1;53;0
 WireConnection;57;2;75;0
 WireConnection;61;0;75;0
 WireConnection;61;1;66;0
-WireConnection;78;0;12;0
-WireConnection;78;1;30;40
-WireConnection;78;4;69;0
+WireConnection;86;0;12;0
+WireConnection;86;1;30;40
+WireConnection;86;5;69;0
 ASEEND*/
-//CHKSM=D0CE9946F02A50C7781CBF817E79DC630B10716C
+//CHKSM=C6D5C94E0A928FE4B063F1267BC8A73F7C38A9C3

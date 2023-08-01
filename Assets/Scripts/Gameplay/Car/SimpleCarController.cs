@@ -5,12 +5,11 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 
-public class SimpleCarController : MonoBehaviour
+public class SimpleCarController : PlayerController
 {
-    //public FollowCam CameraScript;
 
-    private float m_horizontalInput;
-    private float m_verticalInput;
+ //   private float m_horizontalInput;
+ //   private float m_verticalInput;
     private float m_steeringAngle;
 
     public WheelCollider frontDriverW, frontPassengerW;
@@ -103,6 +102,9 @@ public class SimpleCarController : MonoBehaviour
         //    }
 
         //   UIPanel.Instance.BoostButtonElla.onClick.AddListener(BoostCall);
+        
+        var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
+        playerInput.Action.started += x => OnBoostInput();
     }
 
     private void OnEnable()
@@ -115,13 +117,21 @@ public class SimpleCarController : MonoBehaviour
     private void OnMoveInput(Vector2 input)
     {
         _input = input;
-        Debug.LogWarning("Input X: " + _input.x + "\nInput Y: " + _input.y);
     }
-
+    
+    private void OnBoostInput()
+    {
+        if (BoostCoolingDown == false)
+        {
+            //  RemoveBarriers();
+            Boost();
+        }
+    }
+    
     private void FixedUpdate()
     {
-        // CalculateArrowDirection();
-        // GetInput();
+       //  CalculateArrowDirection();
+         GetInput();
 
         // if car is on slope... (should ideally also check for if it's grounded)  ->  slide of
         if (Mathf.Abs(transform.rotation.x) >= 0.3f)
@@ -133,17 +143,16 @@ public class SimpleCarController : MonoBehaviour
         //ReverseLogic();
 
            Steer();
+           Accelerate();
 
-        //   Accelerate();
-
-        //   CheckForCollision();
-        //   UpdateWheelPoses();
-        //   ApplyBrakes();
+         //  CheckForCollision();
+           UpdateWheelPoses();
+           ApplyBrakes();
 
         //   // get the wheels spinning, needed to have the boost work from still position
-        //   BoostWheelColliderSpin();
+          BoostWheelColliderSpin();
 
-        //   LimitSpeed();
+           LimitSpeed();
     }
 
 
@@ -220,168 +229,38 @@ public class SimpleCarController : MonoBehaviour
         transform.rotation = _resetRotation;
     }
 
-    //  public void GetInput()
-    //  {
-    //      if(pcControls)
-    //      {
-    //          m_horizontalInput = _arrowKeyDirection.x;
-    //          m_verticalInput = _arrowKeyDirection.y;
-    //      }
-    //      else
-    //      {
-    //          //m_horizontalInput = UIPanel.Instance.Joystick.Horizontal;
-    //          //m_verticalInput = UIPanel.Instance.Joystick.Vertical;
-    //          // adjusted sens...
-    //          m_horizontalInput = UIPanel.Instance.JoystickAdjustedHorizontal;
-    //          m_verticalInput = UIPanel.Instance.JoystickAdjustedVertical;
-    //      }
-//
-//
-    //      //// input keyboard //
-    //      //m_horizontalInput = Input.GetAxis("Horizontal");
-    //      //m_verticalInput = Input.GetAxis("Vertical");
-//
-    //      //if (m_horizontalInput != 0 || m_verticalInput != 0)
-    //      //{
-    //      //    _inputBeingGiven = true;
-    //      //}
-    //      //else
-    //      //{
-    //      //    _inputBeingGiven = false;
-    //      //    _currentMovingDirection = MovingDirections.None;
-    //      //}
-//
-    //      //if (_inputBeingGiven == true)
-    //      //{
-    //      //    // 1) first check basic directions
-    //      //    if (m_horizontalInput < 0)
-    //      //    {
-    //      //        _currentMovingDirection = MovingDirections.Left;
-    //      //    }
-    //      //    else if (m_horizontalInput > 0)
-    //      //    {
-    //      //        _currentMovingDirection = MovingDirections.Right;
-    //      //    }
-//
-    //      //    if (m_verticalInput < 0)
-    //      //    {
-    //      //        _currentMovingDirection = MovingDirections.Down;
-    //      //    }
-    //      //    else if (m_verticalInput > 0)
-    //      //    {
-    //      //        _currentMovingDirection = MovingDirections.Up;
-    //      //    }
-//
-    //      //    // 2) extra checks for diagonal directions
-    //      //    if (m_horizontalInput < 0 && m_verticalInput < 0)
-    //      //    {
-    //      //        _currentMovingDirection = MovingDirections.LeftDown;
-    //      //    }
-    //      //    if (m_horizontalInput < 0 && m_verticalInput > 0)
-    //      //    {
-    //      //        _currentMovingDirection = MovingDirections.LeftUp;
-    //      //    }
-    //      //    if (m_horizontalInput > 0 && m_verticalInput < 0)
-    //      //    {
-    //      //        _currentMovingDirection = MovingDirections.RightDown;
-    //      //    }
-    //      //    if (m_horizontalInput > 0 && m_verticalInput > 0)
-    //      //    {
-    //      //        _currentMovingDirection = MovingDirections.RightUp;
-    //      //    }
-//
-    //      //}
-//
-    //      //// decide on the vector2 direction the car should move with
-    //      //switch (_currentMovingDirection)
-    //      //{
-    //      //    case MovingDirections.None:
-    //      //        _currentMoveDirectionVector = new Vector2(0, 0);
-    //      //        break;
-    //      //    case MovingDirections.Left:
-    //      //        _currentMoveDirectionVector = new Vector2(-1, 0);
-    //      //        break;
-    //      //    case MovingDirections.Right:
-    //      //        _currentMoveDirectionVector = new Vector2(1, 0);
-    //      //        break;
-    //      //    case MovingDirections.Down:
-    //      //        _currentMoveDirectionVector = new Vector2(0, -1);
-    //      //        break;
-    //      //    case MovingDirections.Up:
-    //      //        _currentMoveDirectionVector = new Vector2(0, 1);
-    //      //        break;
-    //      //    case MovingDirections.LeftDown:
-    //      //        _currentMoveDirectionVector = new Vector2(-1, -1);
-    //      //        break;
-    //      //    case MovingDirections.LeftUp:
-    //      //        _currentMoveDirectionVector = new Vector2(-1, 1);
-    //      //        break;
-    //      //    case MovingDirections.RightDown:
-    //      //        _currentMoveDirectionVector = new Vector2(1, -1);
-    //      //        break;
-    //      //    case MovingDirections.RightUp:
-    //      //        _currentMoveDirectionVector = new Vector2(1, 1);
-    //      //        break;
-    //      //}
-    //      ////                //               //
-//
-    //      //Debug.Log(Mathf.Abs(m_horizontalInput) + Mathf.Abs(m_verticalInput));
-//
-    //      if (Input.GetKey(KeyCode.Space) && BoostCoolingDown == false)
-    //      {
-    //          BoostCall();
-    //      }
-//
-//
-    //      if (Mathf.Abs(m_horizontalInput) + Mathf.Abs(m_verticalInput) == 0 && IsBoosting == false) // if there's no input being made...
-    //      {
-    //          _motorTorque = 0.0f;
-    //          _brakeTorque = motorForce;
-//
-    //          // freeze y rot, set angular vel.y to 0
-    //          _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
-    //          _rigidbody.angularVelocity = new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
-    //      }
-    //      else if (Mathf.Abs(m_horizontalInput) + Mathf.Abs(m_verticalInput) <= 0.18f && IsBoosting == false) // if slight input is being made...
-    //      {
-    //          _motorTorque = motorForce / 2;
-    //          _brakeTorque = motorForce / 2;
-    //      }
-    //      else // if major input...
-    //      {
-    //          _rigidbody.constraints = RigidbodyConstraints.None;
-//
-    //          _motorTorque = motorForce;
-    //          _brakeTorque = 0.0f;
-    //      }
-//
-    //      // additional rotational fix
-    //      if (Mathf.Abs(m_horizontalInput) + Mathf.Abs(m_verticalInput) == 0)
-    //      {
-    //          _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
-    //          _rigidbody.angularVelocity = new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
-    //      }
-//
-//
-    //      // previous code for slowing down on space //
-    //      //if (Input.GetKey(KeyCode.Space))
-    //      //{
-    //      //    _motorTorque = 0.0f;
-    //      //    _brakeTorque = brakeForce;
-    //      //}
-    //      //else
-    //      //{
-    //      //    _motorTorque = motorForce;
-    //      //    _brakeTorque = 0.0f;
-    //      //}
-    //      //
-//
-    //  }
+      public void GetInput()
+      {
+          if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0 && IsBoosting == false) // if there's no input being made...
+          {
+              _motorTorque = 0.0f;
+              _brakeTorque = motorForce;
 
-    private void GetDirection()
-    {
-    }
+              // freeze y rot, set angular vel.y to 0
+              _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
+              _rigidbody.angularVelocity = new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
+          }
+          else if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) <= 0.18f && IsBoosting == false) // if slight input is being made...
+          {
+              _motorTorque = motorForce / 2;
+              _brakeTorque = motorForce / 2;
+          }
+          else // if major input...
+          {
+              _rigidbody.constraints = RigidbodyConstraints.None;
 
+              _motorTorque = motorForce;
+              _brakeTorque = 0.0f;
+          }
+
+          // additional rotational fix
+          if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0)
+          {
+              _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
+              _rigidbody.angularVelocity = new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
+          }
+      }
+      
     private void ApplyBrakes()
     {
         //  frontDriverW.brakeTorque = _brakeTorque;
@@ -398,23 +277,8 @@ public class SimpleCarController : MonoBehaviour
 
         float currentAngleDiffTarget;
         currentAngleDiffTarget = Vector2.SignedAngle(new Vector2(flatForward.x, flatForward.z), _input);
-        //float currentAngleDiffTarget = Vector2.SignedAngle(new Vector2(flatForward.x, flatForward.z), _currentMoveDirectionVector.normalized);
 
-        //if (IsBoosting == true)
-        //{
-        //    if (PC_Controls == true)
-        //    {
-        //        // freeze y rot, set angular vel.y to 0
-        //        _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
-        //        _rigidbody.angularVelocity = new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
-        //    }
-        //}
-        //else
-        //{
-        //m_steeringAngle = Mathf.Clamp(currentAngleDiffTarget, -maxSteerAngle, maxSteerAngle) * joystickDirection.magnitude;
         m_steeringAngle = Mathf.Clamp(currentAngleDiffTarget, -maxSteerAngle, maxSteerAngle) * 0.8f;
-        //}
-
 
         // slight rotation towards target of this transform
         if (_input.magnitude > 0.1f)
@@ -436,7 +300,8 @@ public class SimpleCarController : MonoBehaviour
     // perhaps also implement this for rear wheel drive? 
     private void Accelerate()
     {
-        var joyStickMagnitude = _input.magnitude;
+        
+        var joyStickMagnitude = (_input).normalized.magnitude;
         frontDriverW.motorTorque = Mathf.Abs(joyStickMagnitude) * _motorTorque;
         frontPassengerW.motorTorque = Mathf.Abs(joyStickMagnitude) * _motorTorque;
         rearDriverW.motorTorque = Mathf.Abs(joyStickMagnitude) * _motorTorque;
@@ -463,30 +328,6 @@ public class SimpleCarController : MonoBehaviour
 
         _transform.position = _pos;
         _transform.rotation = _quat;
-    }
-
-    private void Update()
-    {
-        if (Input.GetMouseButton(0)) // if clicked && rdy to walk && walking enabled
-        {
-            CalculatePath(Input.mousePosition);
-        }
-    }
-
-    private void CalculatePath(Vector2 position)
-    {
-        Ray ray = Camera.main.ScreenPointToRay(position); // Ray that represents finger press
-
-        RaycastHit hit; // Object hit by ray
-
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, ~_ignoreMe))
-        {
-            if (hit.collider.tag != "Player")
-            {
-                //   _agent.SetDestination(hit.point);
-                //  target.transform.position = hit.point;
-            }
-        }
     }
 
     private void CheckForCollision()
@@ -528,16 +369,7 @@ public class SimpleCarController : MonoBehaviour
             _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
         }
     }
-
-    public void BoostCall()
-    {
-        if (BoostCoolingDown == false)
-        {
-            RemoveBarriers();
-            Boost();
-        }
-    }
-
+    
     private void Boost()
     {
         _rigidbody.AddForce(transform.forward * _boostStrength, ForceMode.VelocityChange);
@@ -558,29 +390,28 @@ public class SimpleCarController : MonoBehaviour
             rearPassengerW.motorTorque = 170;
         }
     }
-
-
+    
     private IEnumerator DecreaseMaxSpeed()
     {
         _hasBoostedRecently = true;
         IsBoosting = true;
         OnBoost?.Invoke();
 
-        _particleLeftPipe.SetActive(true);
-        _particleRightPipe.SetActive(true);
+   //    _particleLeftPipe.SetActive(true);
+   //    _particleRightPipe.SetActive(true);
 
-        yield return new WaitForSeconds(1);
+       yield return new WaitForSeconds(1);
 
-        _particleLeftPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-        _particleLeftPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+   //    _particleLeftPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
+   //    _particleLeftPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
 
-        _particleRightPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-        _particleRightPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+   //    _particleRightPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
+   //    _particleRightPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
 
-        yield return new WaitForSeconds(1);
+       yield return new WaitForSeconds(1);
 
-        _particleLeftPipe.SetActive(false);
-        _particleRightPipe.SetActive(false);
+   //    _particleLeftPipe.SetActive(false);
+   //    _particleRightPipe.SetActive(false);
 
         IsBoosting = false;
         OnNormalize?.Invoke();
@@ -597,7 +428,7 @@ public class SimpleCarController : MonoBehaviour
         BoostCoolingDown = false;
     }
 
-    private void RemoveBarriers()
+    /*private void RemoveBarriers()
     {
         for (int i = 0; i < _rockWallColliders.Length; i++)
         {
@@ -611,9 +442,9 @@ public class SimpleCarController : MonoBehaviour
         {
             _rockWallColliders[i].enabled = false;
         }
-    }
+    }*/
 
-    private void CalculateArrowDirection()
+    /*private void CalculateArrowDirection()
     {
         float horizontal = 0;
         float vertical = 0;
@@ -645,5 +476,5 @@ public class SimpleCarController : MonoBehaviour
         }
 
   //      _arrowKeyDirection = new Vector2(horizontal, vertical);
-    }
+    }*/
 }

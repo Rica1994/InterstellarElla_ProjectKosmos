@@ -16,8 +16,6 @@ public class ArcVisualizingTool : EditorWindow
 
     private EllaExploring _ellaExploringScript;
 
-    //private CinemachineSmoothPath
-
 
     [MenuItem("Window/Arc Visualizing Tool")]
     public static void ShowWindow()
@@ -55,11 +53,7 @@ public class ArcVisualizingTool : EditorWindow
             }
 
             // inform the editor that the scene has changed
-            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
-
-
-            // find the player to access its gravity
-            //_ellaExploringScript = FindObjectOfType<EllaExploring>();
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());        
         }
     }
 }
