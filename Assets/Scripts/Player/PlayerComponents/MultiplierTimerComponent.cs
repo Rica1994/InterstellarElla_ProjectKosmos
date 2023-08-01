@@ -78,6 +78,11 @@ public class MultiplierTimerComponent : MonoBehaviour
 
     public void Activate()
     {
+        // TARGET MULTIPLIER IS THE ISSUE !!!!
+
+        //Debug.Log(_targetMultiplier + " - " + _isLerpingIn + " - " + _lerpInSpeed);
+        //Debug.Log("----");
+
         _currentTime = _time;
         _isTicking = true;
         _isLerpingIn = true;
@@ -88,6 +93,8 @@ public class MultiplierTimerComponent : MonoBehaviour
     {
         if (_shouldLerpIn && _isLerpingIn)
         {
+            //Debug.Log(_targetMultiplier + " - " + _isLerpingIn + " - " + _lerpInSpeed);
+
             Lerp(_targetMultiplier, ref _isLerpingIn, _lerpInSpeed);
         }
         else if (_shouldLerpOut && _isLerpingOut)
@@ -109,7 +116,8 @@ public class MultiplierTimerComponent : MonoBehaviour
         _isTicking = false;
         OnTimerEnded?.Invoke();
         _isLerpingOut = true;
-        _targetMultiplier = 1.0f;
+
+        //_targetMultiplier = 1.0f;  // THIS CAUSED ME PAIN
     }
 
     private void Lerp(float targetMultiplier, ref bool isLerping, float lerpSpeed)
