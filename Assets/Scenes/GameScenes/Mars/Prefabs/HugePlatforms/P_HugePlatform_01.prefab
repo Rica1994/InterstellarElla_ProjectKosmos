@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 7218727667772087236}
   - component: {fileID: 7218727667772087237}
   - component: {fileID: 7218727667772087234}
+  - component: {fileID: 468336506834095887}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
@@ -125,8 +126,22 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.0000001, y: 1, z: 1.0000001}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.9906355, y: 0.28575093, z: 0.9816027}
+  m_Center: {x: -0.0046824175, y: 0.3571234, z: -0.016317055}
+--- !u!136 &468336506834095887
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7218727667772087232}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.2502471
+  m_Height: 1.2746195
+  m_Direction: 1
+  m_Center: {x: -0.0005229852, y: -0.13626283, z: 0.018273855}
 --- !u!1001 &1153488269028805447
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -138,6 +153,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: P_Cave_Pillar
       objectReference: {fileID: 0}
+    - target: {fileID: 3032502982921091621, guid: 35c743efe5ca3404eaaeb9b825ed9092, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ed7d0211d24b9e64c86b90663360ea0d, type: 2}
     - target: {fileID: 4535091654899420615, guid: 35c743efe5ca3404eaaeb9b825ed9092, type: 3}
       propertyPath: m_RootOrder
       value: 1

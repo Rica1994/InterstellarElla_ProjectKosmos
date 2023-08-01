@@ -9,8 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: MAT_MarsRock
   m_Shader: {fileID: 4800000, guid: 1cf722243c497e747a726eaa22226cdf, type: 3}
-  m_ShaderKeywords: _COLORVARIATION_ON _HASVERTEXMASKS1_ON _HEIGHTMASKON1_ON _HEIGHTMASKON_ON
-    _OBJECTSPACE_ON _SANDMASKON_ON _VERTEXCOLORMASKS1_AO _VERTEXCOLORMASKS_AO _VERTEXCOLORMASKS_D
+  m_ShaderKeywords: _HASVERTEXMASKS1_ON _HEIGHTMASKON1_ON _HEIGHTMASKON_ON _OBJECTSPACE_ON
+    _SANDMASKON_ON _VERTEXCOLORMASKS1_AO _VERTEXCOLORMASKS_AO _VERTEXCOLORMASKS_D
     _VERTEXCOLORMASKS_DIRT _VERTEXMASKAO_AO _VERTEXMASKGRUNGE_ON _VERTEXMASKS_AO
   m_LightmapFlags: 6
   m_EnableInstancingVariants: 0
@@ -30,7 +30,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Rock:
-        m_Texture: {fileID: 2800000, guid: e955a59092a218e4e9861f0d837f8f8f, type: 3}
+        m_Texture: {fileID: 2800000, guid: 432ef94ab2357044d93c4663d13c6dec, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture0:
@@ -52,7 +52,7 @@ Material:
     m_Floats:
     - _AOIntensity: 1.74
     - _AlphaCutoff: 0.5
-    - _ColorVariation: 1
+    - _ColorVariation: 0
     - _ColorVariationIntensity: 0.05
     - _DepthFade: 114.1
     - _EnvironmentReflections: 1
@@ -72,7 +72,7 @@ Material:
     - _SandMaskOn: 1
     - _SandShadeBias: -2.2
     - _SandShadePower: 0.59
-    - _SandShadeScale: 2.76
+    - _SandShadeScale: -0.53
     - _Smoothness: 0
     - _SpecularHighlights: 1
     - _SunColorInfluence: 0.32
@@ -83,7 +83,7 @@ Material:
     - _TransScattering: 2
     - _TransShadow: 0.9
     - _Translucency: 1
-    - _VariationIntensity: 3.45
+    - _VariationIntensity: 4.02
     - _VertexColorMasks: 1
     - _VertexMaskA: 0
     - _VertexMaskAO: 1
