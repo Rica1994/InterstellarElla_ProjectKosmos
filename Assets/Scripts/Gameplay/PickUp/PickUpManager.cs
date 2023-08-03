@@ -53,10 +53,10 @@ public class PickUpManager : Service
         //    throw new System.Exception("No LevelManager found in scene");
         //}
         
-        #if UNITY_EDITOR
+        //#if UNITY_EDITOR
         FindPickUps();
         SceneManager.sceneLoaded += OnSceneLoaded;
-        #endif
+        //#endif
         
         if (ServiceLocator.Instance.ServiceExists(typeof(LevelManager)) == true)
         {
