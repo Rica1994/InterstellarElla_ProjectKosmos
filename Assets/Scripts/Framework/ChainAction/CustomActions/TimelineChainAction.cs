@@ -8,6 +8,9 @@ public class TimelineChainAction : ChainAction
     [SerializeField]
     private PlayableDirector _playableDirector;
 
+    [SerializeField]
+    private Transform _skipButton;
+
     private void Awake()
     {
         _maxTime = (float)_playableDirector.duration;
@@ -17,5 +20,10 @@ public class TimelineChainAction : ChainAction
     {
         base.Execute();
         _playableDirector.Play();
+
+        if (_skipButton != null)
+        {
+            _skipButton.GetChild(0).gameObject.SetActive(true);
+        }
     }
 }

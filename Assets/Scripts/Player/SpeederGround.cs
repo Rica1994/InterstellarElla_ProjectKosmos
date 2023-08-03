@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
+using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -10,7 +11,7 @@ public class SpeederGround : PlayerController
     [Header("Speed")]
     [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f);
 
-    [SerializeField] private float _speedForward = 50f;    
+    [SerializeField] public float _speedForward = 50f;    
     [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
     [SerializeField] private float _startSidewaySpeed = 20.0f;
     [SerializeField] private float _speedSideways = 15f;
@@ -62,9 +63,9 @@ public class SpeederGround : PlayerController
     private float _fakeGroundedTimer;
     [SerializeField] private float _fakeGroundedTimeLimit = 0.25f;
     private bool _isJumping = false;
-    private bool _hasJumped = false;
+    public bool HasJumped = false;
     private bool _isGrounded = false;
-    private bool _isGroundedFake = false;
+    public bool IsGroundedFake = false;
     private bool _isApplicationQuitting = false;
 
     private MoveComponent _moveComponent;
@@ -95,7 +96,14 @@ public class SpeederGround : PlayerController
 
     [SerializeField]
     private LayerMask _playerLayerMask;
-    
+
+
+    [Header("Sounds")]
+    [SerializeField]
+    private AudioElement _hoveringAmbienceSound;
+
+    public float additionalDistance = 0.1f;
+
     //private void OnValidate()
     //{
     //    SpeedForward = _speedForward;
@@ -104,6 +112,9 @@ public class SpeederGround : PlayerController
     private void Start()
     {
         _lastPosition = transform.position;
+
+        // Hovering ambience sound
+        ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_hoveringAmbienceSound, true);
     }
 
     private void Awake()
@@ -184,18 +195,18 @@ public class SpeederGround : PlayerController
     private void FakeGroundedTimer()
     {
         // default is grounded
-        _isGroundedFake = true;
+        IsGroundedFake = true;
 
         // if I have just jumped -> fake grounded = false until _isGrounded happens
-        if (_hasJumped == true)
+        if (HasJumped == true)
         {
-            _isGroundedFake = false;
+            IsGroundedFake = false;
 
             // the moment we touch the floor...
             if (_isGrounded == true)
             {
-                _isGroundedFake = true;
-                _hasJumped = false;
+                IsGroundedFake = true;
+                HasJumped = false;
             }
 
             // don't need to go beyond this line of code if we are in here
@@ -210,14 +221,14 @@ public class SpeederGround : PlayerController
 
             if (_fakeGroundedTimer >= _fakeGroundedTimeLimit)
             {
-                _isGroundedFake = false;
+                IsGroundedFake = false;
             }
         }
         else // if CC is grounded, this is grounded
         {
             _fakeGroundedTimer = 0;
 
-            _isGroundedFake = true;
+            IsGroundedFake = true;
         }
     }
 
@@ -304,10 +315,10 @@ public class SpeederGround : PlayerController
     {
         if (_isJumping == true)
         {
-            if (_hasJumped == false)
+            if (HasJumped == false)
             {
                 _yVelocity = 0.0f;
-                _hasJumped = true;
+                HasJumped = true;
             }
 
             _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
@@ -366,7 +377,7 @@ public class SpeederGround : PlayerController
 
     private void OnJumpInput()
     {
-        if (_isGroundedFake == true)
+        if (IsGroundedFake == true)
         {
             _isJumping = true;
         }
@@ -374,6 +385,8 @@ public class SpeederGround : PlayerController
 
     private void FixedUpdate()
     {
+        RaycastDownwards();
+
         // Calculate normalized velocity
         _velocity = (transform.position - _lastPosition) / Time.deltaTime;
         _velocityNormalized = _velocity.normalized;
@@ -421,5 +434,17 @@ public class SpeederGround : PlayerController
     public void SetSpeedMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
     {
         _speedBoostComponent = multiplierTimerComponent;
+    }
+
+    private void RaycastDownwards()
+    {
+        CapsuleCollider capsuleCollider = GetComponent<CapsuleCollider>();
+
+        float raycastLength = capsuleCollider.height * 0.5f + additionalDistance;
+        Vector3 raycastOrigin = transform.position;
+        Vector3 raycastDirection = Vector3.down;
+
+        Ray ray = new Ray(raycastOrigin, raycastDirection);
+        RaycastHit hit;
     }
 }

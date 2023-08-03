@@ -3,36 +3,76 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class StatisticsMeter : MonoBehaviour
 {
-    [SerializeField]
-    private Text _fps;
-    [SerializeField]
-    private Text _qualitySetting;
+    [Header("Settings")]
 
-    int m_frameCounter = 0;
-    float m_timeCounter = 0.0f;
-    float m_lastFramerate = 0.0f;
-    public float m_refreshTime = 0.5f;
+    [SerializeField]
+    private bool _fpsCounter = true;
+    [SerializeField]
+    private bool _qualityTier = true;
+    [SerializeField]
+    private bool _scenesLoaded = true;
+    [SerializeField]
+    private bool _deviceInfo = true;
+    [SerializeField]
+    private float _refreshTime = 0.5f;
+
+
+    [Header("References")]
+
+    [SerializeField]
+    private Text _fpsText;
+    [SerializeField]
+    private Text _qualitySettingText;
+    [SerializeField]
+    private Text _scenesLoadedText;
+    [SerializeField]
+    private Text _deviceNameText;
+
+    private int _frameCounter = 0;
+    private float _timeCounter = 0.0f;
+    private float _lastFramerate = 0.0f;
+
+
+    private void Awake()
+    {
+        if (_deviceInfo)
+        {
+            _deviceNameText.text = "Device Model: " + SystemInfo.deviceModel + 
+                "\nDevice operatingSystem: " + SystemInfo.operatingSystem;
+        }
+    }
 
     private void Update()
     {
-        if (m_timeCounter < m_refreshTime)
+        if (_fpsCounter)
         {
-            m_timeCounter += Time.deltaTime;
-            m_frameCounter++;
-        }
-        else
-        {
-            //This code will break if you set your m_refreshTime to 0, which makes no sense.
-            m_lastFramerate = (float)m_frameCounter / m_timeCounter;
-            m_frameCounter = 0;
-            m_timeCounter = 0.0f;
+            if (_timeCounter < _refreshTime)
+            {
+                _timeCounter += Time.deltaTime;
+                _frameCounter++;
+            }
+            else
+            {
+                //This code will break if you set your m_refreshTime to 0, which makes no sense.
+                _lastFramerate = (float)_frameCounter / _timeCounter;
+                _frameCounter = 0;
+                _timeCounter = 0.0f;
+            }
+            _fpsText.text = "FPS: " + _lastFramerate.ToString();
         }
 
-        _fps.text = "FPS: " + m_lastFramerate.ToString();
-        _qualitySetting.text = "Quality: " + QualitySettings.GetQualityLevel();
+        if (_qualityTier)
+        {
+            _qualitySettingText.text = "Quality: " + QualitySettings.GetQualityLevel();
+        }
 
+        if (_scenesLoaded)
+        {
+            _scenesLoadedText.text = "Scenes loaded: " + SceneManager.sceneCount.ToString();
+        }
     }
 }
