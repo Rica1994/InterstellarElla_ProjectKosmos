@@ -104,6 +104,12 @@ public class SpeederGround : PlayerController
 
     public float additionalDistance = 0.1f;
 
+<<<<<<< HEAD
+=======
+    [SerializeField]
+    private Transform _trail;
+
+>>>>>>> 05ce0ee5b4f429667cfcd4bc32dbc6aaacd22b55
     //private void OnValidate()
     //{
     //    SpeedForward = _speedForward;
@@ -446,5 +452,19 @@ public class SpeederGround : PlayerController
 
         Ray ray = new Ray(raycastOrigin, raycastDirection);
         RaycastHit hit;
+<<<<<<< HEAD
+=======
+
+        if (Physics.Raycast(ray, out hit, raycastLength))
+        {
+            // Raycast hit something
+            Vector3 hitPosition = hit.point;
+
+            // Do something with the hit position
+            Debug.Log("Hit position: " + hitPosition);
+            _trail.position = hitPosition;
+        }
+
+>>>>>>> 05ce0ee5b4f429667cfcd4bc32dbc6aaacd22b55
     }
 }
