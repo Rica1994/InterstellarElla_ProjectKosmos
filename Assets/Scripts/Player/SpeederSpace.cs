@@ -66,6 +66,8 @@ public class SpeederSpace : PlayerController
         {
             // Get Cinemachine information: dolly track camera offset
             CinemachineBrain cmBrain = CinemachineCore.Instance.GetActiveBrain(0);
+
+            // get the virtual camera the brain is using
             CinemachineVirtualCamera virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
 
             // virtual camera is null at start
