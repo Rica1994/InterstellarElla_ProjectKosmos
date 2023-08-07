@@ -19,7 +19,7 @@ public class MaggieTriggerChainAction : ChainAction
     {
         if (other.TryGetComponent(out PlayerController player) == true)
         {
-            //Debug.Log("Completing action");
+            Debug.Log("Completing action");
             _userBasedActionCompleted = true;
         }
     }
