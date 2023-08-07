@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
-using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -11,20 +10,21 @@ public class SpeederGround : PlayerController
     [Header("Speed")]
     [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f);
 
-    [SerializeField] public float _speedForward = 50f;    
-    [SerializeField, Range(0.0f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
-    //[SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
+    [SerializeField] private float _speedForward = 50f;
+    [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
     [SerializeField] private float _startSidewaySpeed = 20.0f;
     [SerializeField] private float _speedSideways = 15f;
     [SerializeField] private float _startSideWaySpeedAcceleration = 5.0f;
+
     [SerializeField] private float _sidewaysAcceleration = 5.0f;
     //public static float SpeedForward;
-    
+
     [Header("Maximum Input ranges joystick")]
     [SerializeField,] private float _forwardAngleRange = 120f;
+
     [SerializeField] private float _horizontalAngleRange = 60f;
 
-    
+
     [Header("Boost")]
     [SerializeField, Range(1.0f, 3.0f)] private float _boostSpeedMultiplier = 2f;
 
@@ -41,7 +41,7 @@ public class SpeederGround : PlayerController
     private float _bounceFactor = 0.5f;
 
     [SerializeField] private float _minimumSpeedToBounce = 30.0f;
-    
+
     [Header("Hover")]
     [SerializeField]
     private float _hoverDisplacement = 0.5f;
@@ -64,23 +64,23 @@ public class SpeederGround : PlayerController
     private float _fakeGroundedTimer;
     [SerializeField] private float _fakeGroundedTimeLimit = 0.25f;
     private bool _isJumping = false;
-    public bool HasJumped = false;
+    private bool _hasJumped = false;
     private bool _isGrounded = false;
-    public bool IsGroundedFake = false;
+    private bool _isGroundedFake = false;
     private bool _isApplicationQuitting = false;
 
     private MoveComponent _moveComponent;
     private JumpComponent _jumpComponent;
     private GravityComponent _gravityComponent;
     private SpeederGroundHoveringComponent _hoveringComponent;
-    
+
     private MultiplierTimerComponent _speedBoostComponent;
     private MultiplierTimerComponent _jumpBoostComponent;
     private MultiplierTimerComponent _knockbackComponent;
 
     private Vector3 _lastPosition;
     private Vector3 _velocity;
-    
+
     private float _hoverMovement = 1.0f;
 
     [SerializeField]
@@ -91,19 +91,15 @@ public class SpeederGround : PlayerController
     [SerializeField]
     private Transform _visual;
 
-    
+
     [SerializeField]
     private Transform _target;
 
     [SerializeField]
     private LayerMask _playerLayerMask;
 
-
-    [Header("Sounds")]
     [SerializeField]
-    private AudioElement _hoveringAmbienceSound;
-
-    public float additionalDistance = 0.1f;
+    private float _knockbackForce = 200.0f;
 
     //private void OnValidate()
     //{
@@ -113,9 +109,6 @@ public class SpeederGround : PlayerController
     private void Start()
     {
         _lastPosition = transform.position;
-
-        // Hovering ambience sound
-        ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_hoveringAmbienceSound, true);
     }
 
     private void Awake()
@@ -129,10 +122,11 @@ public class SpeederGround : PlayerController
         _jumpComponent = new JumpComponent();
         _gravityComponent = new GravityComponent();
         _hoveringComponent = new SpeederGroundHoveringComponent(_visual, _characterController);
-        
+
         _speedBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostSpeedMultiplier, true, 2f, true, 1f);
         _jumpBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostJumpMultiplier, true, 2f, true, 1f);
-        _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier, true, false);
+        _knockbackComponent =
+            new MultiplierTimerComponent(_knockbackDuration, 0.0f, _knockbackMultiplier, true, 1f, true, 1f);
 
         _moveDirection.Normalize();
         transform.forward = _moveDirection;
@@ -162,13 +156,13 @@ public class SpeederGround : PlayerController
         _speedBoostComponent.Update();
         _jumpBoostComponent.Update();
         _knockbackComponent.Update();
-        
+
         Move();
-        
+
         Jump();
 
         ApplyGravity();
-        
+
         _hoveringComponent.UpdateHovering(_upDownSpeed, _hoverDisplacement);
     }
 
@@ -196,18 +190,18 @@ public class SpeederGround : PlayerController
     private void FakeGroundedTimer()
     {
         // default is grounded
-        IsGroundedFake = true;
+        _isGroundedFake = true;
 
         // if I have just jumped -> fake grounded = false until _isGrounded happens
-        if (HasJumped == true)
+        if (_hasJumped == true)
         {
-            IsGroundedFake = false;
+            _isGroundedFake = false;
 
             // the moment we touch the floor...
             if (_isGrounded == true)
             {
-                IsGroundedFake = true;
-                HasJumped = false;
+                _isGroundedFake = true;
+                _hasJumped = false;
             }
 
             // don't need to go beyond this line of code if we are in here
@@ -222,14 +216,14 @@ public class SpeederGround : PlayerController
 
             if (_fakeGroundedTimer >= _fakeGroundedTimeLimit)
             {
-                IsGroundedFake = false;
+                _isGroundedFake = false;
             }
         }
         else // if CC is grounded, this is grounded
         {
             _fakeGroundedTimer = 0;
 
-            IsGroundedFake = true;
+            _isGroundedFake = true;
         }
     }
 
@@ -255,9 +249,9 @@ public class SpeederGround : PlayerController
 
     private void Move()
     {
-       // float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
-       // if (angle < 0.0f) angle += 360.0f;
-        
+        // float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
+        // if (angle < 0.0f) angle += 360.0f;
+
         float inputX = _input.x;
         float inputY = _input.y;
 
@@ -270,14 +264,16 @@ public class SpeederGround : PlayerController
         {
             inputX = Mathf.Sign(_input.x);
         }*/
-        
+
         var direction = _moveDirection * 1f + _rightVector * -_input.x;
         Vector3 slopeVelocity = AdjustVelocityToSlope(direction);
 
         if (_xVelocity <= _startSidewaySpeed - 0.1f)
         {
-            _xVelocity = Mathf.Clamp(_xVelocity + (_startSidewaySpeed * _startSideWaySpeedAcceleration * Time.deltaTime), 0.0f, _startSidewaySpeed) *
-                         Mathf.Abs(inputX);
+            _xVelocity =
+                Mathf.Clamp(_xVelocity + (_startSidewaySpeed * _startSideWaySpeedAcceleration * Time.deltaTime), 0.0f,
+                    _startSidewaySpeed) *
+                Mathf.Abs(inputX);
         }
         else
         {
@@ -285,13 +281,20 @@ public class SpeederGround : PlayerController
                 Mathf.Clamp(_xVelocity + (_sidewaysAcceleration * Time.deltaTime), _startSidewaySpeed, _speedSideways) *
                 Mathf.Abs(inputX);
         }
-        
- //       Debug.Log("2  X " + inputX + "\n XVelocity " + _xVelocity);
 
-        
-        _zVelocity = _speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier));
-        Vector3 speed = new Vector3(_xVelocity, _speedForward, _zVelocity * _knockbackComponent.Multiplier) *
-                        _speedBoostComponent.Multiplier;
+        //       Debug.Log("2  X " + inputX + "\n XVelocity " + _xVelocity);
+
+        if (_knockbackComponent.IsTicking)
+        {
+            _zVelocity = -_speedForward * _knockbackComponent.Multiplier;
+        }
+        else
+        {
+            _zVelocity = _speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) *  _speedBoostComponent.Multiplier;
+        }
+
+
+        Vector3 speed = new Vector3(_xVelocity, _speedForward, _zVelocity);
 
         // OG
         //Vector3 speed = new Vector3(
@@ -316,10 +319,10 @@ public class SpeederGround : PlayerController
     {
         if (_isJumping == true)
         {
-            if (HasJumped == false)
+            if (_hasJumped == false)
             {
                 _yVelocity = 0.0f;
-                HasJumped = true;
+                _hasJumped = true;
             }
 
             _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
@@ -330,9 +333,8 @@ public class SpeederGround : PlayerController
 
     private void Hover()
     {
-        
     }
-    
+
     private void ApplyGravity()
     {
         _gravityComponent.ApplyGravity(_characterController, ref _yVelocity,
@@ -378,7 +380,7 @@ public class SpeederGround : PlayerController
 
     private void OnJumpInput()
     {
-        if (IsGroundedFake == true)
+        if (_isGroundedFake == true)
         {
             _isJumping = true;
         }
@@ -386,8 +388,6 @@ public class SpeederGround : PlayerController
 
     private void FixedUpdate()
     {
-        RaycastDownwards();
-
         // Calculate normalized velocity
         _velocity = (transform.position - _lastPosition) / Time.deltaTime;
         _velocityNormalized = _velocity.normalized;
@@ -435,17 +435,5 @@ public class SpeederGround : PlayerController
     public void SetSpeedMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
     {
         _speedBoostComponent = multiplierTimerComponent;
-    }
-
-    private void RaycastDownwards()
-    {
-        CapsuleCollider capsuleCollider = GetComponent<CapsuleCollider>();
-
-        float raycastLength = capsuleCollider.height * 0.5f + additionalDistance;
-        Vector3 raycastOrigin = transform.position;
-        Vector3 raycastDirection = Vector3.down;
-
-        Ray ray = new Ray(raycastOrigin, raycastDirection);
-        RaycastHit hit;
     }
 }
