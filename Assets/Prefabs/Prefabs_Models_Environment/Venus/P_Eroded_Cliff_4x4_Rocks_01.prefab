@@ -82,14 +82,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6252972308858133758, guid: fc2b890fff1d0c543a735d1be2cfba08, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: fc2b890fff1d0c543a735d1be2cfba08, type: 3}
       propertyPath: m_Name
       value: SM_Eroded_Cliff_4x4_Rocks_01
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -6252972308858133758, guid: fc2b890fff1d0c543a735d1be2cfba08, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fc2b890fff1d0c543a735d1be2cfba08, type: 3}
 --- !u!4 &6323672573444919653 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fc2b890fff1d0c543a735d1be2cfba08, type: 3}
   m_PrefabInstance: {fileID: 5785027442375521934}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4611722395098417907 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1173375562318871677, guid: fc2b890fff1d0c543a735d1be2cfba08, type: 3}
+  m_PrefabInstance: {fileID: 5785027442375521934}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &4982736841156651627
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611722395098417907}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -7097844544177412249, guid: fc2b890fff1d0c543a735d1be2cfba08, type: 3}
