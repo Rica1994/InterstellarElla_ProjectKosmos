@@ -38,6 +38,8 @@ public class SpeederSpace : PlayerController
 
     public bool IsBoosting => _boostComponent.IsTicking;
 
+    public bool InvertControls;
+
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -66,6 +68,8 @@ public class SpeederSpace : PlayerController
         {
             // Get Cinemachine information: dolly track camera offset
             CinemachineBrain cmBrain = CinemachineCore.Instance.GetActiveBrain(0);
+
+            // get the virtual camera the brain is using
             CinemachineVirtualCamera virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
 
             // virtual camera is null at start
@@ -123,19 +127,39 @@ public class SpeederSpace : PlayerController
 
     private void CheckBounds()
     {
-        // If player is at the left or right bounds
-        if ((transform.localPosition.x <= (_leftBottomBounds.x + _cameraBoundOffset) && _input.x < 0f) ||
-            (transform.localPosition.x >= (_rightTopBounds.x - _cameraBoundOffset) && _input.x > 0f))
+        if (InvertControls == false)
         {
-            _input.x = 0f;
+            // If player is at the left or right bounds
+            if ((transform.localPosition.x <= (_leftBottomBounds.x + _cameraBoundOffset) && _input.x < 0f) ||
+                (transform.localPosition.x >= (_rightTopBounds.x - _cameraBoundOffset) && _input.x > 0f))
+            {
+                _input.x = 0f;
+            }
+
+            // If player at the top or bottom bounds
+            if ((transform.localPosition.y <= (_leftBottomBounds.y + _cameraBoundOffset) && _input.y < 0f) ||
+                (transform.localPosition.y >= (_rightTopBounds.y - _cameraBoundOffset) && _input.y > 0f))
+            {
+                _input.y = 0f;
+            }
+        }
+        else
+        {
+            // If player is at the left or right bounds
+            if ((transform.localPosition.x <= (_leftBottomBounds.x + _cameraBoundOffset) && _input.x > 0f) ||
+                (transform.localPosition.x >= (_rightTopBounds.x - _cameraBoundOffset) && _input.x < 0f))
+            {
+                _input.x = 0f;
+            }
+
+            // If player at the top or bottom bounds
+            if ((transform.localPosition.y <= (_leftBottomBounds.y + _cameraBoundOffset) && _input.y > 0f) ||
+                (transform.localPosition.y >= (_rightTopBounds.y - _cameraBoundOffset) && _input.y < 0f))
+            {
+                _input.y = 0f;
+            }
         }
 
-        // If player at the top or bottom bounds
-        if ((transform.localPosition.y <= (_leftBottomBounds.y + _cameraBoundOffset) && _input.y < 0f) ||
-            (transform.localPosition.y >= (_rightTopBounds.y - _cameraBoundOffset) && _input.y > 0f))
-        {
-            _input.y = 0f;
-        }
     }
 
     private void Move()
@@ -144,10 +168,15 @@ public class SpeederSpace : PlayerController
         CheckBounds();
 
         _dollyCart.m_Speed = _baseSpeed * _boostComponent.Multiplier * _knockbackComponent.Multiplier;
-        
+
         // Calculate direction to move 
         Vector3 direction = _dollyCart.transform.right * _input.x;
         direction += _dollyCart.transform.up * _input.y;
+
+        if (InvertControls == true)
+        {
+            direction = new Vector3(-direction.x, -direction.y, -direction.z);
+        }
 
         _moveComponent.Move(_characterController, direction, _moveSpeed);
 

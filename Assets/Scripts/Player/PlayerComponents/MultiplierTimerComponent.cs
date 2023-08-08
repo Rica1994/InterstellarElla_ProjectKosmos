@@ -75,6 +75,24 @@ public class MultiplierTimerComponent : MonoBehaviour
         _lerpInSpeed = lerpInSpeed;
         _lerpOutSpeed = lerpOutSpeed;
     }
+    
+    public MultiplierTimerComponent(float time, float multiplier, float targetMultiplier, bool shouldLerpOut, float lerpInSpeed, bool shouldLerpIn, float lerpOutSpeed)
+    {
+        _time = time;
+        _currentTime = 0f;
+        _targetMultiplier = targetMultiplier;
+        _currentMultiplier = multiplier;
+
+        if (shouldLerpIn)
+        {
+            _currentMultiplier = 1f;
+        }
+
+        _shouldLerpIn = shouldLerpIn;
+        _shouldLerpOut = shouldLerpOut;
+        _lerpInSpeed = lerpInSpeed;
+        _lerpOutSpeed = lerpOutSpeed;
+    }
 
     public void Activate()
     {
