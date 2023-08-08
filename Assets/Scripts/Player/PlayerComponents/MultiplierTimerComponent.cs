@@ -38,6 +38,12 @@ public class MultiplierTimerComponent : MonoBehaviour
     public bool IsTicking => _isTicking;
     public float Multiplier => IsTicking ? _currentMultiplier : 1f;
 
+    public float Time
+    {
+        get => _time;
+        set => _time = value;
+    }
+    
     // Lerp expansion
     private float _currentMultiplier;
     private bool _isLerpingIn = false;
@@ -126,23 +132,23 @@ public class MultiplierTimerComponent : MonoBehaviour
         // Track boost time
         if (_currentTime > 0)
         {
-            _currentTime -= Time.deltaTime;
+            _currentTime -= UnityEngine.Time.deltaTime;
             return;
         }
 
         // If timer has ended, notify
-        _isTicking = false;
+       // _isTicking = false;
         OnTimerEnded?.Invoke();
         _isLerpingOut = true;
 
-        //_targetMultiplier = 1.0f;  // THIS CAUSED ME PAIN
+       // _targetMultiplier = 1.0f;  // THIS CAUSED ME PAIN
     }
 
     private void Lerp(float targetMultiplier, ref bool isLerping, float lerpSpeed)
     {
         if (Mathf.Abs(_currentMultiplier - targetMultiplier) > .1f)
         {
-            _currentMultiplier = Mathf.Lerp(_currentMultiplier, targetMultiplier, Time.deltaTime * lerpSpeed);
+            _currentMultiplier = Mathf.Lerp(_currentMultiplier, targetMultiplier, UnityEngine.Time.deltaTime * lerpSpeed);
         }
         else
         {

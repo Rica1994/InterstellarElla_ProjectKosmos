@@ -21,6 +21,8 @@ public class GameManager : Service
     private bool _isMobile = false;
     public bool IsMobileWebGl => _isMobile;
 
+    public LayerMask PlayerLayermask;
+
 #if !UNITY_EDITOR && UNITY_WEBGL
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern bool IsMobile();
