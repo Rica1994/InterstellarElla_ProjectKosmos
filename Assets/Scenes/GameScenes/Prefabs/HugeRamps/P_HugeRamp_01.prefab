@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 397802438937245053}
+  - component: {fileID: -8106566340687729804}
+  - component: {fileID: -8806521128608665986}
   m_Layer: 0
   m_Name: P_HugeRamp_01
   m_TagString: Untagged
@@ -31,6 +33,40 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-8106566340687729804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7034718420156804461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12a0eee9f23d894499ff4ed87bb97146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _time: 0.75
+  _targetMultiplier: -1
+  _shouldLerpIn: 1
+  _shouldLerpOut: 1
+  _lerpInSpeed: 0.7
+  _lerpOutSpeed: 0.7
+--- !u!114 &-8806521128608665986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7034718420156804461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 086379a684ebe134ca81419aaa7a9ee8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _knockBackMultiplierComponent: {fileID: -8106566340687729804}
+  _destroyOnHit: 0
+  _disableColliderOnHit: 0
+  ObstacleColliders: []
 --- !u!1001 &7056740436935250181
 PrefabInstance:
   m_ObjectHideFlags: 0

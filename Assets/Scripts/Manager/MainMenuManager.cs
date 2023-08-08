@@ -213,15 +213,15 @@ public class MainMenuManager : Service
         switch (_levelIndex)
         {
             case 0:
-                return SceneType.S_Mars_1_0_IntroCutscene;
+                return SceneType.S_Level_4_0_Work;
             case 1:
-                return SceneType.S_Level_3_0_Work;
+                return SceneType.S_Level_4_0_Work;
             case 2:
-                return SceneType.S_Level_3_0_Work;
+                return SceneType.S_Level_4_0_Work;
             case 3:
                 return SceneType.S_Level_4_0_Work;
             case 4:
-                return SceneType.S_Level_5_0_Work;
+                return SceneType.S_Level_4_0_Work;
             default:
                 return SceneType.None;
         }
@@ -239,7 +239,7 @@ public class MainMenuManager : Service
             case 3:
                 return SceneType.S_Level_4_0_Build;
             case 4:
-                return SceneType.S_Level_5_0_Build;
+                return SceneType.S_Level_4_0_Build;
             default:
                 return SceneType.None;
         }

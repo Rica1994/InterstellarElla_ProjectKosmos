@@ -80,13 +80,14 @@ public class SwitchPath : MonoBehaviour
             // Set position on other track
             _playerDollyCart.m_Position = _playerDollyCart.m_Path.FromPathNativeUnits(targetPoint, CinemachinePathBase.PositionUnits.Distance); ;
 
+             // !! [DISABLED WITH NEW CAM] !! //
             // Adjust priority in cameras so new track camera is active
-            var virtualCamera = _toSmoothPath.gameObject.GetComponentInChildren<CinemachineVirtualCamera>(true);
-            if (virtualCamera)
-            {
-                virtualCamera.gameObject.SetActive(true);
-                virtualCamera.MoveToTopOfPrioritySubqueue();
-            }
+            //var virtualCamera = _toSmoothPath.gameObject.GetComponentInChildren<CinemachineVirtualCamera>(true);
+            //if (virtualCamera)
+            //{
+            //    virtualCamera.gameObject.SetActive(true);
+            //    virtualCamera.MoveToTopOfPrioritySubqueue();
+            //}
 
             Destroy(gameObject);
         }
