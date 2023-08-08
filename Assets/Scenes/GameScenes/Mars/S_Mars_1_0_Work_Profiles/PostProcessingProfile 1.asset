@@ -56,6 +56,50 @@ MonoBehaviour:
   scale:
     overrideState: 1
     value: 1.06
+--- !u!114 &-2294212521552587509
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40b924e2dad56384a8df2a1e111bb675, type: 3}
+  m_Name: Vignette
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  mode:
+    overrideState: 0
+    value: 0
+  color:
+    overrideState: 0
+    value: {r: 0, g: 0, b: 0, a: 1}
+  center:
+    overrideState: 0
+    value: {x: 0.5, y: 0.5}
+  intensity:
+    overrideState: 1
+    value: 0.181
+  smoothness:
+    overrideState: 0
+    value: 0.2
+  roundness:
+    overrideState: 0
+    value: 1
+  rounded:
+    overrideState: 0
+    value: 0
+  mask:
+    overrideState: 0
+    value: {fileID: 0}
+    defaultState: 1
+  opacity:
+    overrideState: 0
+    value: 1
 --- !u!114 &-2066762632933504695
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -109,36 +153,36 @@ MonoBehaviour:
     value: 1
   temperature:
     overrideState: 1
-    value: 34
+    value: 11.4
   tint:
     overrideState: 1
-    value: 0
+    value: 5.1
   colorFilter:
     overrideState: 1
     value: {r: 0.9636236, g: 1.1728004, b: 1.6608797, a: 1}
   hueShift:
     overrideState: 1
-    value: 3
+    value: 0
   saturation:
     overrideState: 1
     value: 0
   brightness:
     overrideState: 1
-    value: -33
+    value: -24.5
   postExposure:
     overrideState: 0
     value: 0
   contrast:
     overrideState: 1
-    value: 4
+    value: 3.1
   mixerRedOutRedIn:
     overrideState: 1
     value: 114
   mixerRedOutGreenIn:
-    overrideState: 0
+    overrideState: 1
     value: 0
   mixerRedOutBlueIn:
-    overrideState: 0
+    overrideState: 1
     value: 0
   mixerGreenOutRedIn:
     overrideState: 0
@@ -160,13 +204,13 @@ MonoBehaviour:
     value: 100
   lift:
     overrideState: 1
-    value: {x: 1, y: 1, z: 1, w: 0}
+    value: {x: 0.95841855, y: 1, z: 0.9943654, w: 0}
   gamma:
     overrideState: 1
     value: {x: 1, y: 1, z: 1, w: -0.23627518}
   gain:
     overrideState: 1
-    value: {x: 1, y: 1, z: 1, w: 0.13898538}
+    value: {x: 0.9942539, y: 1, z: 0.9655843, w: 0.13898538}
   masterCurve:
     overrideState: 0
     value:
@@ -1377,7 +1421,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e6292b2c06870d4495f009f912b9600, type: 3}
-  m_Name: PostProcessingProfile
+  m_Name: PostProcessingProfile 1
   m_EditorClassIdentifier: 
   settings:
   - {fileID: 2051315023638801674}
@@ -1387,6 +1431,36 @@ MonoBehaviour:
   - {fileID: -2066762632933504695}
   - {fileID: -5587322252263191183}
   - {fileID: 2518699488861611839}
+  - {fileID: -2294212521552587509}
+  - {fileID: 1169325575232333151}
+--- !u!114 &1169325575232333151
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d65e486e4de6e5448a8fbb43dc8756a0, type: 3}
+  m_Name: Grain
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  colored:
+    overrideState: 0
+    value: 1
+  intensity:
+    overrideState: 1
+    value: 0.224
+  size:
+    overrideState: 1
+    value: 0.44
+  lumContrib:
+    overrideState: 0
+    value: 0.8
 --- !u!114 &2051315023638801674
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1405,10 +1479,10 @@ MonoBehaviour:
     value: 1
   intensity:
     overrideState: 1
-    value: 37.34
+    value: 115.36
   threshold:
     overrideState: 1
-    value: 2.05
+    value: 1.75
   softKnee:
     overrideState: 1
     value: 0.5
@@ -1478,13 +1552,13 @@ MonoBehaviour:
     value: 1
   focusDistance:
     overrideState: 1
-    value: 4.41
+    value: 6.6
   aperture:
     overrideState: 1
-    value: 4.5
+    value: 13.3
   focalLength:
     overrideState: 1
-    value: 50
+    value: 98
   kernelSize:
     overrideState: 1
     value: 3
@@ -1509,10 +1583,10 @@ MonoBehaviour:
     value: 0
   intensity:
     overrideState: 1
-    value: 0.55
+    value: 0.66
   color:
     overrideState: 1
-    value: {r: 0.13207549, g: 0.047763143, b: 0.005606976, a: 1}
+    value: {r: 0.1981132, g: 0.054208092, b: 0.04018334, a: 1}
   ambientOnly:
     overrideState: 0
     value: 1
@@ -1533,7 +1607,7 @@ MonoBehaviour:
     value: 0
   radius:
     overrideState: 1
-    value: 0.15
+    value: 0.27
   quality:
     overrideState: 1
     value: 0
