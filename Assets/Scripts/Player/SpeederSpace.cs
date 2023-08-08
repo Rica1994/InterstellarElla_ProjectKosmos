@@ -25,6 +25,11 @@ public class SpeederSpace : PlayerController
     private MultiplierTimerComponent _boostComponent;
     private MultiplierTimerComponent _knockbackComponent;
 
+    // Camera
+    [Header("put in the StartPath camera")]
+    [SerializeField]
+    private CinemachineVirtualCamera CameraWithDollyTrack;
+
     // Movement
     private Vector2 _input;
     private float _baseSpeed;
@@ -38,7 +43,11 @@ public class SpeederSpace : PlayerController
 
     public bool IsBoosting => _boostComponent.IsTicking;
 
+    [Header("Inversion of controls")]
     public bool InvertControls;
+
+
+
 
     private void Awake()
     {
@@ -59,28 +68,35 @@ public class SpeederSpace : PlayerController
 
     private void Start()
     {
-        StartCoroutine(SetBounds());
+        SetBounds();
     }
 
-    private IEnumerator SetBounds()
+    private void SetBounds()
     {
         if (CinemachineCore.Instance.BrainCount > 0)
         {
-            // Get Cinemachine information: dolly track camera offset
-            CinemachineBrain cmBrain = CinemachineCore.Instance.GetActiveBrain(0);
+            //// Get Cinemachine information: dolly track camera offset
+            //CinemachineBrain cmBrain = CinemachineCore.Instance.GetActiveBrain(0);
 
-            // get the virtual camera the brain is using
-            CinemachineVirtualCamera virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
+            //// get the virtual camera the brain is using (outdated)
+            //CinemachineVirtualCamera virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
 
-            // virtual camera is null at start
-            while(!virtualCamera)
-            {
-                yield return null;
-                virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
-            }
+            //// virtual camera is null at start
+            //while(!virtualCamera)
+            //{
+            //    yield return null;
+            //    virtualCamera = cmBrain.ActiveVirtualCamera as CinemachineVirtualCamera;
+            //}
 
-            var dollyCamera = virtualCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
+            //var dollyCamera = virtualCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
+
+            //
+            var dollyCamera = CameraWithDollyTrack.GetCinemachineComponent<CinemachineTrackedDolly>();
+            //
+
             Assert.IsNotNull(dollyCamera, $"[{GetType()}] - Virtual camera does not have a dolly track component");
+
+
             Vector3 offset = dollyCamera.m_PathOffset;
 
             // Get local camera bounds by temporarily creating a camera at 0,0,0 without rotation
