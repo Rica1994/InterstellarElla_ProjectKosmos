@@ -1,5 +1,50 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6587707653840128622
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5758969630158094907}
+  - component: {fileID: 9216909250765008776}
+  m_Layer: 0
+  m_Name: Collision
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5758969630158094907
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6587707653840128622}
+  m_LocalRotation: {x: -0.029511062, y: -0, z: -0, w: 0.99956447}
+  m_LocalPosition: {x: 0.49, y: 5.53, z: 0.18}
+  m_LocalScale: {x: 510.2086, y: 556.38556, z: 581.28265}
+  m_Children: []
+  m_Father: {fileID: 1736487521263639764}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: -3.382, y: 0, z: 0}
+--- !u!64 &9216909250765008776
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6587707653840128622}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -7461810274146446580, guid: 763c432ffe245d84f9a09557c833004a, type: 3}
 --- !u!1 &8431712424575955999
 GameObject:
   m_ObjectHideFlags: 0
@@ -28,6 +73,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1970127574101918571}
+  - {fileID: 5758969630158094907}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -85,15 +131,34 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 748026283621f424fa2e36ca570e393b, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 6ab20552155518441a14b57753a74a3b, type: 2}
+      objectReference: {fileID: 2100000, guid: ed7d0211d24b9e64c86b90663360ea0d, type: 2}
     - target: {fileID: 919132149155446097, guid: 748026283621f424fa2e36ca570e393b, type: 3}
       propertyPath: m_Name
       value: SM_Cave_Stalagmite_05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 748026283621f424fa2e36ca570e393b, type: 3}
+--- !u!1 &1160974584162048465 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 748026283621f424fa2e36ca570e393b, type: 3}
+  m_PrefabInstance: {fileID: 2080088989732267136}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1970127574101918571 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 748026283621f424fa2e36ca570e393b, type: 3}
   m_PrefabInstance: {fileID: 2080088989732267136}
   m_PrefabAsset: {fileID: 0}
+--- !u!136 &2488987379660278741
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1160974584162048465}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.1138272
+  m_Height: 14.927447
+  m_Direction: 1
+  m_Center: {x: 0.15188289, y: 7.5426745, z: -0.11736965}

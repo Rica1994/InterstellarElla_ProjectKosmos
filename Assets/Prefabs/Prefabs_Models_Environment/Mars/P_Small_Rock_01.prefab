@@ -23,7 +23,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1457120863444713411}
-  m_LocalRotation: {x: 0.000000021855694, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -85,15 +85,34 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 6d6d157cdbd709946adb79ffe546a813, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 6ab20552155518441a14b57753a74a3b, type: 2}
+      objectReference: {fileID: 2100000, guid: ed7d0211d24b9e64c86b90663360ea0d, type: 2}
     - target: {fileID: 919132149155446097, guid: 6d6d157cdbd709946adb79ffe546a813, type: 3}
       propertyPath: m_Name
       value: SM_Small_Rock_01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d6d157cdbd709946adb79ffe546a813, type: 3}
+--- !u!1 &2534798871182562583 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6d6d157cdbd709946adb79ffe546a813, type: 3}
+  m_PrefabInstance: {fileID: 3453139366462416966}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2911219303214059437 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6d6d157cdbd709946adb79ffe546a813, type: 3}
   m_PrefabInstance: {fileID: 3453139366462416966}
   m_PrefabAsset: {fileID: 0}
+--- !u!64 &1650054438264441897
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2534798871182562583}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6688669723080561833, guid: 6d6d157cdbd709946adb79ffe546a813, type: 3}

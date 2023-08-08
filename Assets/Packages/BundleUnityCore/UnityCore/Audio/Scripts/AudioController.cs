@@ -51,10 +51,11 @@ namespace UnityCore
                 public AudioAction Action;               
                 public bool Fade;
                 public float Delay;
+                public bool Loop;
 
 
                 // called for play()
-                public AudioJob(AudioElement audioEM, AudioAction action, bool fade, float delay)
+                public AudioJob(AudioElement audioEM, AudioAction action, bool fade, float delay, bool loop)
                 {
                     AudioEM.Clip = audioEM.Clip;
                     AudioEM.Type = audioEM.Type;
@@ -67,6 +68,7 @@ namespace UnityCore
                     Action = action;
                     Fade = fade;
                     Delay = delay;
+                    Loop = loop;
                 }
 
                 // called for stop() 
@@ -106,7 +108,11 @@ namespace UnityCore
 
             public void PlayAudio(AudioElement audioEm, bool fade = false, float delay = 0f)
             {
-                AddJobClip(new AudioJob(audioEm, AudioAction.START, fade, delay));
+                AddJobClip(new AudioJob(audioEm, AudioAction.START, fade, delay, false));
+            }
+            public void PlayAudio(AudioElement audioEm, bool loop)
+            {
+                AddJobClip(new AudioJob(audioEm, AudioAction.START, false, 0, loop));
             }
             // restart and stop should not require a specific clip, but should realize what the currently playing clip is
             public void StopAudio(AudioType type, bool fade = false, float delay = 0f)
@@ -210,6 +216,8 @@ namespace UnityCore
                 // getting the volume/pitch and leaving them on default value if got values are 0
                 float volumeToUse = 1;
                 float pitchToUse = 1;
+                bool loopToUse = false;
+
                 if (job.AudioEM.Volume != 0)
                 {
                     volumeToUse = job.AudioEM.Volume;
@@ -218,6 +226,7 @@ namespace UnityCore
                 {
                     pitchToUse = job.AudioEM.Pitch;
                 }
+                loopToUse = job.Loop;
 
                 // adjust pitch slightly if bool was checked
                 if (job.AudioEM.RandomizePitchSlightly == true)
@@ -239,6 +248,7 @@ namespace UnityCore
                             trackToUse.Source.clip = job.AudioEM.Clip; 
                             trackToUse.Source.volume = volumeToUse;
                             trackToUse.Source.pitch = pitchToUse;
+                            trackToUse.Source.loop = loopToUse;
                             trackToUse.Source.Play();
                             break;
                         case AudioAction.STOP:
