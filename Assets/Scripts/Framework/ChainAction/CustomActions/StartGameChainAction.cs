@@ -15,6 +15,6 @@ public class StartGameChainAction : ChainAction
     {
         base.Execute();
         Destroy(_cutsceneObject);
-        _speederGround._speedForward = 26f;
+        _speederGround.enabled = true;
     }
 }

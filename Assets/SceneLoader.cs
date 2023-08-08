@@ -40,6 +40,7 @@ public class SceneLoader : MonoBehaviour
     {
         if (!SystemInfo.deviceModel.StartsWith("Safari"))
         {
+            _speederGround.enabled = false;
             StartGameplay();
         }
     }
@@ -112,7 +113,7 @@ public class SceneLoader : MonoBehaviour
 
     private void StartGameplay()
     {
-        _speederGround._speedForward = 26f;
+        _speederGround.enabled = true;
         _dynamoDollyCart.enabled = true;
         Destroy(gameObject);
     }

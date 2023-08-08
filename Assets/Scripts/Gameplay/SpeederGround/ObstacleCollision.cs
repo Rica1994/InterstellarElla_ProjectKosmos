@@ -27,11 +27,6 @@ public class ObstacleCollision : MonoBehaviour
         {
             player.Collide();
 
-            foreach (Collider collider in _colliders)
-            {
-                collider.enabled = false;
-            }
-
             if (_destroyOnHit)
             {
                 Destroy(gameObject);
