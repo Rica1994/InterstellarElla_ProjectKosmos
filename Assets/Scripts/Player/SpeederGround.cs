@@ -79,6 +79,7 @@ public class SpeederGround : PlayerController
 
     private Vector3 _lastPosition;
     private Vector3 _velocity;
+    private float _slopeYVelocity;
 
     private LayerMask _playerLayerMask;
 
@@ -129,6 +130,14 @@ public class SpeederGround : PlayerController
         _rightVector = Vector3.Cross(_moveDirection, Vector3.up);
     }
 
+    private bool IsGrounded()
+    {
+        var ray = new Ray(transform.position, Vector3.down);
+
+        Debug.DrawLine(ray.origin, ray.origin + ray.direction * 2f, Color.red);
+        return Physics.Raycast(ray, out RaycastHit hitInfo, 2f, ~_playerLayerMask);
+    }
+
     public override void UpdateController()
     {
         base.UpdateController();
@@ -137,7 +146,7 @@ public class SpeederGround : PlayerController
 
         bool wasGrounded = _isGrounded;
         var lastYVelocity = _yVelocity;
-        _isGrounded = _characterController.isGrounded;
+        _isGrounded = IsGrounded();
 
         Debug.Log("Is Grounded: " + _isGrounded);
 
@@ -153,11 +162,11 @@ public class SpeederGround : PlayerController
         _jumpBoostComponent.Update();
         _knockbackComponent.Update();
 
+        Jump();
+        ApplyGravity();
+
         Move();
 
-        Jump();
-
-        ApplyGravity();
 
         _hoveringComponent.UpdateHovering(_upDownSpeed, _hoverDisplacement);
     }
@@ -166,7 +175,7 @@ public class SpeederGround : PlayerController
     {
         var ray = new Ray(transform.position, Vector3.down);
 
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, 2f))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 2f, ~_playerLayerMask))
         {
             var slopeDirection = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
             var adjustedVelocity = slopeDirection * velocity;
@@ -237,27 +246,13 @@ public class SpeederGround : PlayerController
     {
         _isJumping = true;
     }
-    
-    private void Move()
-    {
-        // float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
-        // if (angle < 0.0f) angle += 360.0f;
 
+    private void Move()
+    { 
         float inputX = _input.x;
         float inputY = _input.y;
-
-        /*if (angle >= 90 - _forwardAngleRange && angle <= 90 + _forwardAngleRange)
-        {
-            inputY = Mathf.Sign(_input.y);
-        }
-//
-        if ((angle <= _horizontalAngleRange && angle >= -_horizontalAngleRange) || (angle > 180.0f - _horizontalAngleRange && angle <= 180) || (angle >= -180 && angle < -180 + _horizontalAngleRange))
-        {
-            inputX = Mathf.Sign(_input.x);
-        }*/
-
+  
         var direction = _moveDirection * 1f + _rightVector * -_input.x;
-        Vector3 slopeVelocity = AdjustVelocityToSlope(direction);
 
         if (_xVelocity <= _startSidewaySpeed - 0.1f)
         {
@@ -273,28 +268,29 @@ public class SpeederGround : PlayerController
                 Mathf.Abs(inputX);
         }
 
-        //       Debug.Log("2  X " + inputX + "\n XVelocity " + _xVelocity);
+        
+        _zVelocity =
+            (_speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) *
+             _speedBoostComponent.Multiplier) * _knockbackComponent.Multiplier;
 
-     //   if (_knockbackComponent.IsTicking)
-     //   {
-     //       _zVelocity = -_speedForward * _knockbackComponent.Multiplier;
-     //   }
-     //   else
-     //   {
-            _zVelocity = (_speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) *  _speedBoostComponent.Multiplier) * _knockbackComponent.Multiplier;
-     //   }
+        var lastSlopeVelocity = _slopeYVelocity;
+        Vector3 speed = new Vector3(_xVelocity, _yVelocity, _zVelocity);
+        Vector3 move = new Vector3(direction.x * speed.x, 0.0f, direction.z * speed.z);
+        move = AdjustVelocityToSlope(move);
+        _slopeYVelocity = move.y;
+        move.y += speed.y;
 
+        // Add slope Y-velocity when transitioning from a slope
+        if (!_isGrounded)
+        {
+            if (_yVelocity < 0f) // Only add slope velocity if the current Y-velocity is negative (downward)
+            {
+                _yVelocity += lastSlopeVelocity; // Add the slope Y-velocity
+            }
+        }
 
-        Vector3 speed = new Vector3(_xVelocity, _speedForward, _zVelocity);
-
-        // OG
-        //Vector3 speed = new Vector3(
-        //    _xVelocity, 
-        //    0, 
-        //    _speedForward * /*Mathf.Clamp((_input.y * _tiltMultiplier), 0.5f, _tiltMultiplier)*  */ _knockbackComponent.Multiplier)
-        //    * _speedBoostComponent.Multiplier;
-
-        _moveComponent.Move(_characterController, slopeVelocity, speed);
+        _characterController.Move(move * Time.deltaTime);
+        // _moveComponent.Move(_characterController, slopeVelocity, speed);
     }
 
     private void Land(float landingVelocity)
@@ -328,6 +324,11 @@ public class SpeederGround : PlayerController
 
     private void ApplyGravity()
     {
+        if (_isGrounded)
+        {
+            _slopeYVelocity = _yVelocity;
+        }
+
         _gravityComponent.ApplyGravity(_characterController, ref _yVelocity,
             _gravityValue /** (1 + (Mathf.Clamp01(_input.y) * _tiltMultiplier))*/, _isGrounded);
     }

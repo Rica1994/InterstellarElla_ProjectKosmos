@@ -15,7 +15,7 @@ public class GravityComponent
         }
         yVelocity += gravity * Time.deltaTime;
 
-        characterController.Move(new Vector3(0f, yVelocity * Time.deltaTime, 0f));
+     //   characterController.Move(new Vector3(0f, yVelocity * Time.deltaTime, 0f));
     }
 
 
