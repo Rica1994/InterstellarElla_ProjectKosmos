@@ -73,6 +73,8 @@ public class SwitchPath : MonoBehaviour
         // Has player reached waypoint
         if (_playerDollyCart.m_Position >= distOfWaypoint)
         {
+            Debug.Log("Swapped path");
+
             // Switch track
             _playerDollyCart.m_Path = _toSmoothPath;
             // Find point on other track

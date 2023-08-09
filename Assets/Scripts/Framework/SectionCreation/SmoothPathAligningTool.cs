@@ -47,7 +47,11 @@ public class SmoothPathAligningTool : EditorWindow
 
             if (_cinePath != null)
             {
-                
+
+            }
+            else if (selectedObject.GetComponentInChildren<CinemachineSmoothPath>() != null)
+            {
+                _cinePath = selectedObject.GetComponentInChildren<CinemachineSmoothPath>();
             }
             else
             {
@@ -98,13 +102,26 @@ public class SmoothPathAligningTool : EditorWindow
             {
                 for (int i = 0; i < _smoothPathBox.ObjectsToBeAlligned.Count; i++)
                 {
-                    float closestPathFloat = _cinePath.FindClosestPoint(_smoothPathBox.ObjectsToBeAlligned[i].transform.position, 0 ,-1, 20);
+                    var objectToAlign = _smoothPathBox.ObjectsToBeAlligned[i];
+                    float closestPathFloat = _cinePath.FindClosestPoint(objectToAlign.transform.position, 0 ,-1, 20);
 
                     Vector3 closestPathPosition = _cinePath.EvaluatePosition(closestPathFloat);
                     Quaternion closestPathQuaternion = _cinePath.EvaluateOrientation(closestPathFloat);
 
-                    _smoothPathBox.ObjectsToBeAlligned[i].transform.position = closestPathPosition;
-                    _smoothPathBox.ObjectsToBeAlligned[i].transform.rotation = closestPathQuaternion;
+                    objectToAlign.transform.position = closestPathPosition;
+
+                    // do not rotate the paths (cinemachine doesnt properly work with rotated paths) !!!
+                    if (objectToAlign.GetComponentInChildren<CinemachineSmoothPath>() == null)
+                    {
+                        objectToAlign.transform.rotation = closestPathQuaternion;
+                    }
+                    else
+                    {
+                        // paths are set to 0,0,0.  the entry trigger however is alligned with the path
+                        objectToAlign.transform.rotation = Quaternion.Euler(0,0,0);
+                        objectToAlign.GetComponentInChildren<AttachWaypointsToPath>().StartTrigger.transform.rotation = closestPathQuaternion;
+                    }
+
 
                     EditorUtility.SetDirty(_smoothPathBox.ObjectsToBeAlligned[i]);
                 }

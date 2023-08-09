@@ -8,6 +8,9 @@ public class AttachWaypointsToPath : MonoBehaviour
     [SerializeField] private CinemachineSmoothPath _pathToAttachTo;
     private CinemachineSmoothPath _pathToAttachFrom;
 
+    [Header("Trigger object which the player needs to enter")]
+    public GameObject StartTrigger;
+
     private void Awake()
     {
         if(!TryGetComponent(out _pathToAttachFrom))
