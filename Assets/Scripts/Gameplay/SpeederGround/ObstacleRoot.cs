@@ -87,6 +87,7 @@ public class ObstacleRoot : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     public void CollectColliders()
     {
         var colliders = GetComponentsInChildren<Collider>().ToList();
@@ -122,6 +123,7 @@ public class ObstacleRoot : MonoBehaviour
             ObstacleColliders.Add(obstacleCollision);
         }
     }
+#endif
 
     public void PrintColliders()
     {
