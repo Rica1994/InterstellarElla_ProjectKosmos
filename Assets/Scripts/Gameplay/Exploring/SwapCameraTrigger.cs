@@ -5,7 +5,7 @@ using UnityEngine;
 public class SwapCameraTrigger : MonoBehaviour
 {
     [SerializeField]
-    private SwapCamera _swapCamera;
+    private SwapCameraSpeederGround _swapCamera;
 
     private Coroutine _coroutineCooldown;
 
@@ -15,9 +15,9 @@ public class SwapCameraTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out EllaExploring exploringScript) && _triggered == false)
+        if (other.TryGetComponent(out SpeederGround speeder) && _triggered == false)
         {
-            _swapCamera.SwapToNewVirtualCamera(exploringScript);
+            _swapCamera.SwapToNewVirtualCamera(speeder);
 
             _coroutineCooldown = StartCoroutine(CooldDown());
 
