@@ -20,7 +20,7 @@ public class ObstacleRoot : MonoBehaviour
     
     [SerializeField, HideInInspector]
     private List<ObstacleCollision> ObstacleColliders = new List<ObstacleCollision>();
-
+    
     private void OnValidate()
     {
         var otherObstacleRoot = gameObject.GetComponent<ObstacleRoot>();
@@ -78,7 +78,8 @@ public class ObstacleRoot : MonoBehaviour
             if (angle > player.CollisionAngle) return;
             
             player.Collide(_knockBackMultiplierComponent);
-        
+            ServiceLocator.Instance.GetService<LevelManager>().PlayerHitObstacle();
+            
             if (_destroyOnHit)
             {
                 Destroy(gameObject);

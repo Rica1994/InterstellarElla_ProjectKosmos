@@ -36,7 +36,7 @@ public class MultiplierTimerComponent : MonoBehaviour
     private bool _isTicking = false;
 
     public bool IsTicking => _isTicking;
-    public float Multiplier => IsTicking ? _currentMultiplier : 1f;
+    public float Multiplier => _currentMultiplier;
 
     public float Time
     {
@@ -137,7 +137,7 @@ public class MultiplierTimerComponent : MonoBehaviour
         }
 
         // If timer has ended, notify
-       // _isTicking = false;
+        _isTicking = false;
         OnTimerEnded?.Invoke();
         _isLerpingOut = true;
 
