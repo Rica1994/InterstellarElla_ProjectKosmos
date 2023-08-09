@@ -259,7 +259,7 @@ public class LevelManager : Service
         {
             Debug.Log("Player Hit more than " + _maxAmountHitsForRespawn + " times!");
             var tempPlayer = FindAnyObjectByType<PlayerController>().gameObject;
-            ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint);
+            ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint, true);
         }
     }
 }

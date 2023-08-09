@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -61,6 +62,11 @@ public class Helpers
    public static IEnumerator Flicker(GameObject go, float flickerTime, int flickerSpeed = 10)
    {
       var meshRenderers = go.GetComponentsInChildren<MeshRenderer>();
+      var skinnedMeshRenderers = go.GetComponentsInChildren<SkinnedMeshRenderer>();
+      List<Renderer> renderers = new List<Renderer>();
+      renderers.AddRange(meshRenderers);
+      renderers.AddRange(skinnedMeshRenderers);
+      
       if (meshRenderers.Length <= 0) yield break;
 
       float timeFlickering = 0.0f;
@@ -68,7 +74,7 @@ public class Helpers
       
       while (timeFlickering < flickerTime)
       {
-         foreach (var meshRenderer in meshRenderers) meshRenderer.enabled = !meshRenderer.enabled;
+         foreach (var meshRenderer in renderers) meshRenderer.enabled = !meshRenderer.enabled;
 
          yield return new WaitForSeconds(timeBetweenEachFlicker);
       
