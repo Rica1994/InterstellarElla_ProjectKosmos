@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 [DefaultExecutionOrder(-200)]
 public class LevelManager : Service
@@ -24,6 +26,16 @@ public class LevelManager : Service
     [Header("Triggers")]
     [SerializeField]
     private TriggerHandler _endGameTrigger;
+
+    [SerializeField]
+    private GameObject _firstCheckPoint;
+    
+    [SerializeField]
+    private float _maxHitIntervalThreshold = 2.0f;
+    
+    [SerializeField]
+    private int _maxAmountHitsForRespawn = 3;
+    
     private List<TriggerHandler> _deathTriggers = new List<TriggerHandler>();
     private TriggerHandler _lastLoadingTrigger;
     private TriggerHandler _lastDestroyingTrigger;
@@ -47,7 +59,8 @@ public class LevelManager : Service
 
     private bool _hasEndedLevel;
 
-
+    private float _timeSinceLastHit = 0.0f;
+    private int _amountTimesHit = 0;
 
     #region Unity Functions
 
@@ -65,6 +78,9 @@ public class LevelManager : Service
             _deathTriggers.Add(trigger);
             trigger.OnTriggered += OnDeathTriggered;
         }
+
+        if (_firstCheckPoint == null) Debug.LogError("First checkPoint not attached!");
+        _currentCheckpoint = _firstCheckPoint;
     }
 
     private void Start()
@@ -82,6 +98,15 @@ public class LevelManager : Service
         //Debug.Log(_sectionNameToLoad + " first section im trying to load");
 
         LoadSection();
+    }
+
+    private void Update()
+    {
+        if (_amountTimesHit >= 1) _timeSinceLastHit += Time.deltaTime;
+        if (_timeSinceLastHit > _maxHitIntervalThreshold)
+        {
+            _amountTimesHit = 0;
+        }
     }
 
     #endregion
@@ -225,5 +250,16 @@ public class LevelManager : Service
             }
         }
     }
-    
+
+    public void PlayerHitObstacle()
+    {
+        _amountTimesHit++;
+        _timeSinceLastHit = 0.0f;
+        if (_amountTimesHit >= _maxAmountHitsForRespawn)
+        {
+            Debug.Log("Player Hit more than " + _maxAmountHitsForRespawn + " times!");
+            var tempPlayer = FindAnyObjectByType<PlayerController>().gameObject;
+            ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint);
+        }
+    }
 }
