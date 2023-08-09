@@ -23,6 +23,13 @@ public class ObstacleRoot : MonoBehaviour
 
     private void OnValidate()
     {
+        var otherObstacleRoot = gameObject.GetComponent<ObstacleRoot>();
+        if (otherObstacleRoot != null && otherObstacleRoot != this)
+        {
+            Debug.LogError("Can't add more than two obstacle roots on one object!", gameObject);
+            DestroyImmediate(this);
+            return;
+        }
         if (_obstacleCollision == null) _obstacleCollision = GetComponent<ObstacleCollision>();
         if (_knockBackMultiplierComponent == null) _knockBackMultiplierComponent = GetComponent<MultiplierTimerComponent>();
     }
@@ -90,34 +97,51 @@ public class ObstacleRoot : MonoBehaviour
 #if UNITY_EDITOR
     public void CollectColliders()
     {
-        var colliders = GetComponentsInChildren<Collider>().ToList();
+        var children = GetComponentsInChildren<Transform>().ToList();
         ResetObstacleRoot();
 
-        foreach (var collider in colliders)
+        var otherRootColliders = new List<Collider>();
+
+        foreach (var t in children)
         {
+            // skip ourselves
+            if (t == transform) continue;
+            
             // Check if this object has a root already
-            var root = collider.gameObject.GetComponent<ObstacleRoot>();
+            var root = t.GetComponent<ObstacleRoot>();
             
             if (root != null)
             {
                 // Collect the children of this root
-                var children = collider.gameObject.GetComponentsInChildren<Collider>();
+                var rootChildren = root.GetComponentsInChildren<Collider>();
+                otherRootColliders.AddRange(rootChildren);
                 
-                // Remove the children from this collection
-                foreach (var child in children)
-                {
-                    colliders.Remove(child);
-                }
+               //// Remove the children from this collection
+               //foreach (var child in children)
+               //{
+               //    colliders.Remove(child);
+               //}
 
                 continue;
             }
             
-            var obstacleCollision = collider.gameObject.GetComponent<ObstacleCollision>();
+            // Check if t has a collider
+            var col = t.GetComponent<Collider>();
+            if (col == null) continue;
+
+            // Check if this collider is part of another root collider
+            if (otherRootColliders.Find(x => x == col))
+            {
+                otherRootColliders.Remove(col);
+                continue;
+            }
+            
+            var obstacleCollision = t.GetComponent<ObstacleCollision>();
             if (obstacleCollision == null)
             {
               //  Undo.RecordObject((UnityEngine.Object)collider.gameObject, "Add Obstacle Collision to gameobject");
                 // If the component does not exist, add it and keep track of it
-                obstacleCollision = Undo.AddComponent<ObstacleCollision>(collider.gameObject);
+                obstacleCollision = Undo.AddComponent<ObstacleCollision>(t.gameObject);
             }
 
             ObstacleColliders.Add(obstacleCollision);
