@@ -193,8 +193,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1068474750}
-  m_LocalRotation: {x: 0.23750147, y: 0.000000016714058, z: -0.000000004086541, w: 0.9713872}
-  m_LocalPosition: {x: 0, y: 2.46, z: -4.73}
+  m_LocalRotation: {x: 0.2375023, y: -0.000000008357023, z: 0.0000000020432769, w: 0.97138697}
+  m_LocalPosition: {x: 0, y: 2.46, z: -4.7299805}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 883979801}
@@ -420,8 +420,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3687131221669572322}
-  m_LocalRotation: {x: 0.23750147, y: 0.000000016714058, z: -0.000000004086541, w: 0.9713872}
-  m_LocalPosition: {x: 0, y: 2.46, z: -4.73}
+  m_LocalRotation: {x: 0.2375023, y: -0.000000008357023, z: 0.0000000020432769, w: 0.97138697}
+  m_LocalPosition: {x: 0, y: 2.46, z: -4.7299805}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3687131222379983860}
@@ -646,6 +646,7 @@ GameObject:
   - component: {fileID: 3687131222379983861}
   - component: {fileID: 3687131222379983818}
   - component: {fileID: 1363185951}
+  - component: {fileID: 926220231}
   m_Layer: 3
   m_Name: P_EllaSpeederGround
   m_TagString: Player
@@ -853,6 +854,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &926220231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3687131222379983859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b750dd82cd16db47b657737978f8635, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _impactParticle: {fileID: 2666474114887262825, guid: a435d22611deb864793e7c2b1a1232bf, type: 3}
+  _groundTrailParticle: {fileID: 4757362547419311459, guid: 972fa0d619f8937468efefa176f1f6c4, type: 3}
+  _yThreshold: 1
 --- !u!1001 &601613355
 PrefabInstance:
   m_ObjectHideFlags: 0
