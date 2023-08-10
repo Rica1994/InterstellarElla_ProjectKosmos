@@ -213,7 +213,7 @@ public class MainMenuManager : Service
         switch (_levelIndex)
         {
             case 0:
-                return SceneType.S_Level_1_0_Work;
+                return SceneType.S_Mars_1_1_Work;
             case 1:
                 return SceneType.S_Level_2_0_Work;
             case 2:
