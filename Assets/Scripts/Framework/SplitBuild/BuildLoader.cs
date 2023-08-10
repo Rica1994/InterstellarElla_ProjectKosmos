@@ -9,7 +9,7 @@ public class BuildLoader : MonoBehaviour
     private Text _dataText;
 
     [SerializeField]
-    private Counter _counter = 99999999999999999999;
+    private Counter _counter;
 
     void Start()
     {
