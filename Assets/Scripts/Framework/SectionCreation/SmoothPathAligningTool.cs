@@ -115,10 +115,15 @@ public class SmoothPathAligningTool : EditorWindow
                     {
                         objectToAlign.transform.rotation = closestPathQuaternion;
                     }
+                    else if (objectToAlign.TryGetComponent(out PathPickups pathPickups) == true) // path pickups do need to be alligned
+                    {
+                        objectToAlign.transform.rotation = closestPathQuaternion;
+                    }
                     else
                     {
                         // paths are set to 0,0,0.  the entry trigger however is alligned with the path
-                        objectToAlign.transform.rotation = Quaternion.Euler(0,0,0);
+                        Debug.Log(objectToAlign.gameObject.name + " I might be an issue");
+                        objectToAlign.transform.rotation = Quaternion.Euler(0, 0, 0);
                         objectToAlign.GetComponentInChildren<AttachWaypointsToPath>().StartTrigger.transform.rotation = closestPathQuaternion;
                     }
 
