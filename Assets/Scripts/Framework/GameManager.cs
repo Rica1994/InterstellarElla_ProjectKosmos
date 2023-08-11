@@ -64,9 +64,13 @@ public class GameManager : Service
         
     }
 
-    public void RespawnPlayer(GameObject player, GameObject checkpoint)
+    public void RespawnPlayer(GameObject player, GameObject checkpoint, bool addFlash = false)
     {
         player.transform.position = checkpoint.transform.position;
+        if (addFlash)
+        {
+            StartCoroutine(Helpers.Flicker(player, 4.0f, 5));
+        }
     }
 
     private void Update()

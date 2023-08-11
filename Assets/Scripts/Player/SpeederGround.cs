@@ -371,7 +371,7 @@ public class SpeederGround : PlayerController
 
     private void OnJumpInput()
     {
-        if (_isGroundedFake == true)
+        if (_isGroundedFake == true && _knockbackComponent.IsTicking == false)
         {
             _isJumping = true;
         }
