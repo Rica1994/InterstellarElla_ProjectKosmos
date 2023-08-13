@@ -13,14 +13,14 @@ public class PickUpManager : Service
     public delegate void PickUpDelegate(int pickUpsPickedUp);
 
     public event PickUpDelegate PickUpPickedUpEvent;
-    
+
     #endregion
-    
+
     private List<PickUp> _pickUps = new List<PickUp>();
-    
+
     private int _pickUpsPickedUp = 0;
-    private List<EllaPickupType> _foundEllaPickups =new List<EllaPickupType>();
-    
+    private List<EllaPickupType> _foundEllaPickups = new List<EllaPickupType>();
+
     public int PickUpsPickedUp => _pickUpsPickedUp;
     public List<EllaPickupType> FoundEllaPickUps => _foundEllaPickups;
 
@@ -41,6 +41,14 @@ public class PickUpManager : Service
     private AudioElement _soundEffectPickup1;
     [SerializeField]
     private AudioElement _soundEffectPickup2;
+
+    [Header("Pickup timer stuff")]
+    [SerializeField]
+    private float _pickupComboTimeLimit;
+    private float _pickupComboTimer;
+
+    private int _pickupCurrentCombo = 0;
+    private int _pickupComboLimit = 5;
 
 
     private void Start()
@@ -76,6 +84,28 @@ public class PickUpManager : Service
         // this will only subscribe the prefabs in the ASSETS (is an issue !)
         //serviceLocator.GetService<LevelManager>().Sections.ForEach(x => x.Loaded += OnSectionLoaded);
     }
+
+    private void Update()
+    {
+        if (_pickupCurrentCombo > 0)
+        {
+            // start timer
+            _pickupComboTimer += Time.deltaTime;
+
+            // limit the timer, reset values
+            if (_pickupComboTimer >= _pickupComboTimeLimit)
+            {
+                _pickupCurrentCombo = 0;
+                _pickupComboTimer = 0;
+                _soundEffectPickup1.Pitch = 1;
+            }
+        }
+    }
+
+
+
+
+
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
@@ -133,8 +163,11 @@ public class PickUpManager : Service
         {
             _pickUpsPickedUp++;
 
-            // play sound
-            //ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEffectPickup1);
+            // play sound with specified pitch
+            ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEffectPickup1);
+
+            // adjust the combo-pitch           
+            AdjustPitch(_pickupCurrentCombo);
         }
 
         //// spawn particle
@@ -142,5 +175,17 @@ public class PickUpManager : Service
           //CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
 
           PickUpPickedUpEvent?.Invoke(_pickUpsPickedUp);
+    }
+
+
+    private void AdjustPitch(int currentCombo)
+    {
+        _pickupCurrentCombo += 1;
+
+        // only increase pitch 5 times
+        if (currentCombo <= 5)
+        {
+            _soundEffectPickup1.Pitch += 0.1f;
+        }
     }
 }

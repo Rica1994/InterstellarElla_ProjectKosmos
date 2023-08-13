@@ -52,8 +52,8 @@ public class PickUp : MonoBehaviour
         ServiceLocator.Instance.GetService<ParticleManager>().
         CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
 
-        // play sound
-        ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEffectPickup1);
+        // play sound (happens in pickup-manager)
+        //ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEffectPickup1);
 
         Destroy(gameObject);
     }
