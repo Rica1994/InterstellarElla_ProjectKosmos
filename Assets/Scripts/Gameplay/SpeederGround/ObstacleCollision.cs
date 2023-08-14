@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,37 +6,35 @@ using UnityEngine.Assertions;
 
 public class ObstacleCollision : MonoBehaviour
 {
-    [SerializeField] private bool _destroyOnHit = false;
-    private Collider[] _colliders;
+    public delegate void ObstacleCollisionDelegate(PlayerController player);
+
+    public event ObstacleCollisionDelegate CollidedEvent;
+
+    private Collider _collider;
 
     private void Awake()
     {
-        // Do not call get component when object will get destroyed when hit
-        if (_destroyOnHit)
-        {
-            _colliders = new Collider[] {};
-            return;
-        }
-
-        _colliders = GetComponentsInChildren<Collider>();
-        Assert.IsNotNull( _colliders, $"[{GetType()}] - colliders not found" );
+        _collider = GetComponent<Collider>();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.TryGetComponent(out PlayerController player))
         {
-            player.Collide();
-
-            foreach (Collider collider in _colliders)
-            {
-                collider.enabled = false;
-            }
-
-            if (_destroyOnHit)
-            {
-                Destroy(gameObject);
-            }
+            CollidedEvent?.Invoke(player);
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.TryGetComponent(out PlayerController player))
+        {
+            CollidedEvent?.Invoke(player);
+        }
+    }
+
+    public void SetCollider(bool enable)
+    {
+        _collider.enabled = enable;
     }
 }

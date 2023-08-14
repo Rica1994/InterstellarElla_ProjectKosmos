@@ -21,6 +21,8 @@ public class GameManager : Service
     private bool _isMobile = false;
     public bool IsMobileWebGl => _isMobile;
 
+    public LayerMask PlayerLayermask;
+
 #if !UNITY_EDITOR && UNITY_WEBGL
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern bool IsMobile();
@@ -62,9 +64,13 @@ public class GameManager : Service
         
     }
 
-    public void RespawnPlayer(GameObject player, GameObject checkpoint)
+    public void RespawnPlayer(GameObject player, GameObject checkpoint, bool addFlash = false)
     {
         player.transform.position = checkpoint.transform.position;
+        if (addFlash)
+        {
+            StartCoroutine(Helpers.Flicker(player, 4.0f, 5));
+        }
     }
 
     private void Update()

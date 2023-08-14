@@ -20,8 +20,8 @@ public class SetLightAsSunDirectionShaderGlobal : MonoBehaviour
     #if UNITY_EDITOR
     private void Update()
     {
-        Shader.SetGlobalVector("SunDirection", SunLight.gameObject.transform.eulerAngles);
-        Shader.SetGlobalVector("SunColor", SunLight.color * SunLight.intensity);
+        //Shader.SetGlobalVector("SunDirection", SunLight.gameObject.transform.eulerAngles);
+        //Shader.SetGlobalVector("SunColor", SunLight.color * SunLight.intensity);
     }
     #endif
 }

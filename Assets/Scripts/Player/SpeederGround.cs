@@ -76,10 +76,11 @@ public class SpeederGround : PlayerController
 
     private MultiplierTimerComponent _speedBoostComponent;
     private MultiplierTimerComponent _jumpBoostComponent;
-    private MultiplierTimerComponent _knockbackComponent;
 
     private Vector3 _lastPosition;
     private Vector3 _velocity;
+
+    private LayerMask _playerLayerMask;
 
     private float _hoverMovement = 1.0f;
 
@@ -95,12 +96,6 @@ public class SpeederGround : PlayerController
     [SerializeField]
     private Transform _target;
 
-    [SerializeField]
-    private LayerMask _playerLayerMask;
-
-    [SerializeField]
-    private float _knockbackForce = 200.0f;
-
     //private void OnValidate()
     //{
     //    SpeedForward = _speedForward;
@@ -109,6 +104,7 @@ public class SpeederGround : PlayerController
     private void Start()
     {
         _lastPosition = transform.position;
+        _playerLayerMask = ServiceLocator.Instance.GetService<GameManager>().PlayerLayermask;
     }
 
     private void Awake()
@@ -241,12 +237,7 @@ public class SpeederGround : PlayerController
     {
         _isJumping = true;
     }
-
-    public override void Collide()
-    {
-        _knockbackComponent.Activate();
-    }
-
+    
     private void Move()
     {
         // float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
@@ -284,14 +275,14 @@ public class SpeederGround : PlayerController
 
         //       Debug.Log("2  X " + inputX + "\n XVelocity " + _xVelocity);
 
-        if (_knockbackComponent.IsTicking)
-        {
-            _zVelocity = -_speedForward * _knockbackComponent.Multiplier;
-        }
-        else
-        {
-            _zVelocity = _speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) *  _speedBoostComponent.Multiplier;
-        }
+     //   if (_knockbackComponent.IsTicking)
+     //   {
+     //       _zVelocity = -_speedForward * _knockbackComponent.Multiplier;
+     //   }
+     //   else
+     //   {
+            _zVelocity = (_speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) *  _speedBoostComponent.Multiplier) * _knockbackComponent.Multiplier;
+     //   }
 
 
         Vector3 speed = new Vector3(_xVelocity, _speedForward, _zVelocity);
@@ -380,7 +371,7 @@ public class SpeederGround : PlayerController
 
     private void OnJumpInput()
     {
-        if (_isGroundedFake == true)
+        if (_isGroundedFake == true && _knockbackComponent.IsTicking == false)
         {
             _isJumping = true;
         }
@@ -435,5 +426,10 @@ public class SpeederGround : PlayerController
     public void SetSpeedMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
     {
         _speedBoostComponent = multiplierTimerComponent;
+    }
+
+    public void SetKnockBackMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
+    {
+        _knockbackComponent = multiplierTimerComponent;
     }
 }

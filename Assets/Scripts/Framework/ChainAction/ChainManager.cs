@@ -2,10 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ChainManager : MonoBehaviourSingleton<ChainManager>
 {
     private Chain _chain;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    private void OnSceneUnloaded(Scene arg0)
+    {
+        if (_chain != null) _chain.StopChain();
+        _chain = null;
+    }
 
     private void Update()
     {
@@ -31,5 +44,11 @@ public class ChainManager : MonoBehaviourSingleton<ChainManager>
     private void OnChainCompleted(Chain chain)
     {
         _chain = null;
+    }
+
+    public Chain GetChain()
+    {
+        Chain CurrentChain = _chain;
+        return CurrentChain;
     }
 }
