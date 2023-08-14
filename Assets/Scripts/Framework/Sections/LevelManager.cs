@@ -79,8 +79,15 @@ public class LevelManager : Service
             trigger.OnTriggered += OnDeathTriggered;
         }
 
-        if (_firstCheckPoint == null) Debug.LogError("First checkPoint not attached!");
-        _currentCheckpoint = _firstCheckPoint;
+        if (_firstCheckPoint == null)
+        {
+            var newSpawnPoint = new GameObject("Place Holder CheckPoint");
+            var player = FindAnyObjectByType<PlayerController>().gameObject;
+            newSpawnPoint.transform.SetPositionAndRotation(player.transform.position, player.transform.rotation);
+            _currentCheckpoint = newSpawnPoint;
+            Debug.LogWarning("First checkPoint not attached! Using Players transform instead");
+        }
+        else _currentCheckpoint = _firstCheckPoint;
     }
 
     private void Start()
