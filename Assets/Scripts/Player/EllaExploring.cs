@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class EllaExploring : PlayerController
 {
@@ -104,16 +106,17 @@ public class EllaExploring : PlayerController
             (ParticleType.PS_BoostBoots, _bootParticleRight);
         _particleBootRight.Stop();
     }
+
     private void OnEnable()
     {
         // Subscribe to events
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
 
-        playerInput.MoveNormalized.performed += x => OnMoveInput(x.ReadValue<Vector2>());
-        playerInput.MoveNormalized.canceled += x => OnMoveInput(x.ReadValue<Vector2>());
+        playerInput.MoveNormalized.performed += OnMoveInput;
+        playerInput.MoveNormalized.canceled += OnMoveInput;
  
-        playerInput.Action.performed += x => OnHoverInput();
-        playerInput.Action.canceled += x => OnHoverCanceled();
+        playerInput.Action.performed += OnHoverInput;
+        playerInput.Action.canceled += OnHoverCanceled;
     }
     private void OnDisable()
     {
@@ -127,12 +130,13 @@ public class EllaExploring : PlayerController
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
 
         // Unsubscribe to events
-        playerInput.MoveNormalized.performed -= x => OnMoveInput(x.ReadValue<Vector2>());
-        playerInput.MoveNormalized.canceled -= x => OnMoveInput(x.ReadValue<Vector2>());
+        playerInput.MoveNormalized.performed -= OnMoveInput;
+        playerInput.MoveNormalized.canceled -= OnMoveInput;
 
-        playerInput.Action.performed -= x => OnHoverInput();
-        playerInput.Action.canceled -= x => OnHoverCanceled();
+        playerInput.Action.performed -= OnHoverInput;
+        playerInput.Action.canceled -= OnHoverCanceled;
     }
+
     private void OnApplicationQuit()
     {
         _isApplicationQuitting = true;
@@ -218,26 +222,25 @@ public class EllaExploring : PlayerController
     {
         StartCoroutine(ToggleMove(durationBlocked));
     }
-
-
-
-
-    private void OnMoveInput(Vector2 input)
+    
+    private void OnMoveInput(InputAction.CallbackContext obj)
     {
-        _input = input;
+        var x = obj.ReadValue<Vector2>();
+        _input = x;
     }
-    private void OnHoverInput()
+    private void OnHoverInput(InputAction.CallbackContext obj)
     {
         // make sure I'm not in a jump pad bounce when trying to do this
         _isTryingHover = true;
     }
-    private void OnHoverCanceled()
+    private void OnHoverCanceled(InputAction.CallbackContext obj)
     {
         // make sure I'm not in a jump pad bounce when trying to do this
         _isTryingHover = false;
         _startedHoverFromGround = false;
         _hoverComponent.HoverValueReset();
 
+        Debug.Log(this.name);
         // stop particle
         _particleBootLeft.Stop();
         _particleBootRight.Stop();

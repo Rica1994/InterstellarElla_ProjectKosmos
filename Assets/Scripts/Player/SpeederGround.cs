@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
 public class SpeederGround : PlayerController
@@ -336,11 +337,11 @@ public class SpeederGround : PlayerController
     {
         // Subscribe to events
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
-        playerInput.Move.performed += x => OnMoveInput(x.ReadValue<Vector2>());
-        playerInput.Move.canceled += x => OnMoveInput(x.ReadValue<Vector2>());
-        playerInput.Action.started += x => OnJumpInput();
+        playerInput.Move.performed += OnMoveInput;
+        playerInput.Move.canceled += OnMoveInput;
+        playerInput.Action.started += OnJumpInput;
     }
-
+    
     private void OnDisable()
     {
         if (_isApplicationQuitting)
@@ -353,9 +354,9 @@ public class SpeederGround : PlayerController
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
 
         // Unsubscribe to events
-        playerInput.Move.performed -= x => OnMoveInput(x.ReadValue<Vector2>());
-        playerInput.Move.canceled -= x => OnMoveInput(x.ReadValue<Vector2>());
-        playerInput.Action.started -= x => OnJumpInput();
+        playerInput.Move.performed -= OnMoveInput;
+        playerInput.Move.canceled -= OnMoveInput;
+        playerInput.Action.started -= OnJumpInput;
     }
 
     private void OnApplicationQuit()
@@ -363,13 +364,13 @@ public class SpeederGround : PlayerController
         _isApplicationQuitting = true;
     }
 
-    private void OnMoveInput(Vector2 input)
+    private void OnMoveInput(InputAction.CallbackContext obj)
     {
-        _input = input;
+        _input = obj.ReadValue<Vector2>();
         Debug.LogWarning("Input X: " + _input.x + "\nInput Y: " + _input.y);
     }
 
-    private void OnJumpInput()
+    private void OnJumpInput(InputAction.CallbackContext obj)
     {
         if (_isGroundedFake == true && _knockbackComponent.IsTicking == false)
         {

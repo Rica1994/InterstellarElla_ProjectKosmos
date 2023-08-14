@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
 public class SimpleCarController : PlayerController
@@ -112,13 +113,13 @@ public class SimpleCarController : PlayerController
     private void OnEnable()
     {
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
-        playerInput.Move.performed += x => OnMoveInput(x.ReadValue<Vector2>());
-        playerInput.Move.canceled += x => OnMoveInput(x.ReadValue<Vector2>());
+        playerInput.Move.performed += OnMoveInput;
+        playerInput.Move.canceled += OnMoveInput;
     }
 
-    private void OnMoveInput(Vector2 input)
+    private void OnMoveInput(InputAction.CallbackContext obj)
     {
-        _input = input;
+        _input = obj.ReadValue<Vector2>();
     }
     
     private void OnBoostInput()
