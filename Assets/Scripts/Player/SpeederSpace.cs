@@ -15,6 +15,7 @@ public class SpeederSpace : PlayerController
     [SerializeField, Range(0.0f, 1.0f)] private float _knockbackMultiplier = .3f;
 
     [SerializeField] private float _moveSpeed = 20f;
+    [SerializeField] private float _rotationSpeed = 1f;
     [SerializeField] private float _cameraBoundOffset = 1f;
 
     // Controllers
@@ -34,6 +35,12 @@ public class SpeederSpace : PlayerController
     // Movement
     private Vector2 _input;
     private float _baseSpeed;
+    // Movement visuals
+    private Vector3 TargetRotation;
+    private Vector3 CurrentRotation;
+    [Header("Player visuals")]
+    [SerializeField] private GameObject _playerVisuals;
+    [SerializeField] private GameObject _lookTarget;
 
     // Utility
     private bool _isApplicationQuitting = false;
@@ -197,12 +204,55 @@ public class SpeederSpace : PlayerController
 
         _moveComponent.Move(_characterController, direction, _moveSpeed);
 
+        // visualize the model rotating
+        AnimateModel();
+
         // Allow player to only move/rotate within local bounds and never on the z axis
         _characterController.enabled = false;
         var pos = transform.localPosition;
         transform.localPosition = new Vector3(pos.x, pos.y, 0f);
         transform.localRotation = Quaternion.identity;
         _characterController.enabled = true;
+    }
+
+    private void AnimateModel()
+    {
+        if (InvertControls == true)
+        {
+
+        }
+        else
+        {
+
+        }
+
+        // Rotate towards Target
+        var rot = Quaternion.FromToRotation(_playerVisuals.transform.forward,
+            _lookTarget.transform.position - _playerVisuals.transform.position) * _playerVisuals.transform.rotation;
+
+        _playerVisuals.transform.rotation = Quaternion.Lerp(_playerVisuals.transform.rotation, rot, 0.2f);
+
+        // Rotates along the the forward axis according to the left of right velocity
+        var rotationalFactor = Mathf.Clamp(_input.x, -1.0f, 1.0f);
+
+        rot = Quaternion.Euler(0.0f, rotationalFactor * 45.0f, 0.0f);
+        //Debug.Log("old rotation for me to use -> " + rot.eulerAngles);
+        rot = Quaternion.Euler(_dollyCart.transform.rotation.eulerAngles.x, 
+            _dollyCart.transform.rotation.eulerAngles.y + (rotationalFactor * 45.0f), 
+            _dollyCart.transform.rotation.eulerAngles.z);
+
+        //Debug.Log("dolly cart rotation -> " + _dollyCart.transform.rotation.eulerAngles);
+        //Debug.Log("new rotation -> " + rot.eulerAngles);
+
+        _playerVisuals.transform.rotation = Quaternion.Lerp(_playerVisuals.transform.rotation, rot, 0.1f);
+
+        // Rotate along x axis according to the vertical input
+        rotationalFactor = Mathf.Clamp(_input.y, -1.0f, 1.0f);
+        rot = Quaternion.Euler(_dollyCart.transform.rotation.eulerAngles.x + (-rotationalFactor * 90.0f),
+            _dollyCart.transform.rotation.eulerAngles.y,
+            _dollyCart.transform.rotation.eulerAngles.z);
+
+        _playerVisuals.transform.rotation = Quaternion.Lerp(_playerVisuals.transform.rotation, rot, 0.1f);
     }
 
     private void OnEnable()

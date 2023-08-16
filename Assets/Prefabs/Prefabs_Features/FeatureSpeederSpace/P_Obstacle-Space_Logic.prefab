@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 7106990563161551605}
   - component: {fileID: 7930902396862498089}
   - component: {fileID: 3408342834602900505}
+  - component: {fileID: 2973357043573906202}
+  - component: {fileID: 7483790935310327771}
   m_Layer: 0
   m_Name: P_Obstacle-Space_Logic
   m_TagString: Untagged
@@ -57,3 +59,37 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2973357043573906202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6700424543798837980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12a0eee9f23d894499ff4ed87bb97146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _time: 1
+  _targetMultiplier: 0.25
+  _shouldLerpIn: 1
+  _shouldLerpOut: 1
+  _lerpInSpeed: 0.5
+  _lerpOutSpeed: 0.5
+--- !u!114 &7483790935310327771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6700424543798837980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 086379a684ebe134ca81419aaa7a9ee8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _knockBackMultiplierComponent: {fileID: 2973357043573906202}
+  _destroyOnHit: 1
+  _disableColliderOnHit: 1
+  ObstacleColliders: []
