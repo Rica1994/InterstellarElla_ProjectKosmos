@@ -66,17 +66,17 @@ public class PickUpManager : Service
         SceneManager.sceneLoaded += OnSceneLoaded;
         //#endif
         
-        if (ServiceLocator.Instance.ServiceExists(typeof(LevelManager)) == true)
-        {
-            var levelManager = ServiceLocator.Instance.GetService<LevelManager>();
-
-            levelManager.OnSectionLoaded += OnSectionLoaded;
-
-            // assigning proper pickups for level
-            var levelIndexString = levelManager.DecodeSceneString()[0].ToString();
-            _pickupToLoad = _pickupNameBase + levelIndexString;
-            PickupNormalVisual = Resources.Load(_pickupToLoad, typeof(GameObject)) as GameObject;
-        }
+     //   if (ServiceLocator.Instance.ServiceExists(typeof(LevelManager)) == true)
+     //   {
+     //       var levelManager = ServiceLocator.Instance.GetService<LevelManager>();
+//
+     //       levelManager.OnSectionLoaded += OnSectionLoaded;
+//
+     //       // assigning proper pickups for level
+     //       var levelIndexString = levelManager.DecodeSceneString()[0].ToString();
+     //       _pickupToLoad = _pickupNameBase + levelIndexString;
+     //       PickupNormalVisual = Resources.Load(_pickupToLoad, typeof(GameObject)) as GameObject;
+     //   }
 
         /// Disabling the event subscriptions as they don't really function ///
         // this will only subscribe the prefabs in the SCENE (works as long as script execution order is taken into account)

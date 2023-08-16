@@ -25,7 +25,6 @@ public class SpeederSpace : PlayerController
     // Components
     private MoveComponent _moveComponent;
     private MultiplierTimerComponent _boostComponent;
-    private MultiplierTimerComponent _knockbackComponent;
 
     // Camera
     [Header("put in the StartPath camera")]
@@ -127,7 +126,6 @@ public class SpeederSpace : PlayerController
         base.UpdateController();
 
         _boostComponent.Update();
-        _knockbackComponent.Update();
 
         Move();
     }
@@ -145,7 +143,7 @@ public class SpeederSpace : PlayerController
 
     public override void Collide(MultiplierTimerComponent knockbackComponent)
     {
-        _knockbackComponent.Activate();
+        base.Collide(knockbackComponent);
         ServiceLocator.Instance.GetService<VirtualCameraManager>().ResetZoom();
     }
 

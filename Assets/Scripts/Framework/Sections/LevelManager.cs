@@ -92,19 +92,19 @@ public class LevelManager : Service
 
     private void Start()
     {
-        _sceneStringArrray = SceneManager.GetActiveScene().name.Split("_"[0]);
-        _levelIndexString = DecodeSceneString()[0].ToString();
-        _levelSceneIndexString = DecodeSceneString()[1].ToString();
+  //     _sceneStringArrray = SceneManager.GetActiveScene().name.Split("_"[0]);
+  //     _levelIndexString = DecodeSceneString()[0].ToString();
+  //     _levelSceneIndexString = DecodeSceneString()[1].ToString();
 
-        _sectionIndex = 0;
-        _sectionIndexString = _sectionIndex.ToString();
+  //     _sectionIndex = 0;
+  //     _sectionIndexString = _sectionIndex.ToString();
 
-        _sectionNameBase = _sectionNamePrefix + "_" + _levelIndexString + "_" + _levelSceneIndexString;
-        _sectionNameToLoad = _sectionNameBase + "_" + _sectionIndexString;
+  //     _sectionNameBase = _sectionNamePrefix + "_" + _levelIndexString + "_" + _levelSceneIndexString;
+  //     _sectionNameToLoad = _sectionNameBase + "_" + _sectionIndexString;
 
-        //Debug.Log(_sectionNameToLoad + " first section im trying to load");
+  //     //Debug.Log(_sectionNameToLoad + " first section im trying to load");
 
-        LoadSection();
+  //     LoadSection();
     }
 
     private void Update()
