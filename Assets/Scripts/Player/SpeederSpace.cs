@@ -11,16 +11,13 @@ public class SpeederSpace : PlayerController
     [SerializeField] private float _boostDuration = 3.0f;
     [SerializeField, Range(1.0f, 3.0f)] private float _boostMultiplier = 1.5f;
 
-    [SerializeField] private float _knockbackDuration = 3f;
-    [SerializeField, Range(0.0f, 1.0f)] private float _knockbackMultiplier = .3f;
-
     [SerializeField] private float _moveSpeed = 20f;
     [SerializeField] private float _rotationSpeed = 1f;
     [SerializeField] private float _cameraBoundOffset = 1f;
 
     // Controllers
     private CharacterController _characterController;
-    private CinemachineDollyCart _dollyCart; 
+    private CinemachineDollyCart _dollyCart;
 
     // Components
     private MoveComponent _moveComponent;
@@ -30,19 +27,25 @@ public class SpeederSpace : PlayerController
     [Header("put in the StartPath camera")]
     [SerializeField]
     private CinemachineVirtualCamera CameraWithDollyTrack;
+
     [Header("actual camera that will be rendering")]
     [SerializeField]
     private CinemachineVirtualCamera CameraFollow;
+
     private CinemachineTransposer CameraFollowTransposer;
 
     // Movement
     private Vector2 _input;
+
     private float _baseSpeed;
+
     // Movement visuals
     private Vector3 TargetRotation;
     private Vector3 CurrentRotation;
+
     [Header("Player visuals")]
     [SerializeField] private GameObject _playerVisuals;
+
     [SerializeField] private GameObject _lookTarget;
 
     // Utility
@@ -58,8 +61,6 @@ public class SpeederSpace : PlayerController
     public bool InvertControls;
 
 
-
-
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -73,15 +74,12 @@ public class SpeederSpace : PlayerController
         _moveComponent = new MoveComponent();
         _boostComponent = new MultiplierTimerComponent(_boostDuration, _boostMultiplier, true, 2f, true, 1f);
         _boostComponent.OnTimerEnded += BoostEnded;
-
-        _knockbackComponent = new MultiplierTimerComponent(_knockbackDuration, _knockbackMultiplier, true, false);
     }
 
-    private void Start()
+    void Start()
     {
+        base.Start();
         SetBounds();
-
-        CameraFollowTransposer = CameraFollow.GetCinemachineComponent<CinemachineTransposer>();
     }
 
     private void SetBounds()
@@ -115,7 +113,7 @@ public class SpeederSpace : PlayerController
             // Get local camera bounds by temporarily creating a camera at 0,0,0 without rotation
             GameObject obj = new GameObject("TestCamera");
             Camera cam = obj.AddComponent<Camera>();
-            
+
             // Set bounds of camera based off of dolly track offset
             float distance = Vector3.Distance(gameObject.transform.position, gameObject.transform.position - offset);
 
@@ -144,9 +142,9 @@ public class SpeederSpace : PlayerController
         // angleX and angleY don't make much sense anymore when both are being adjusted ... fu*k rotations
 
         // get negative numbers instead of 0-360 range (this way i get the (-10)-(10) range)
-        float angleX = _dollyCart.transform.rotation.eulerAngles.x; 
+        float angleX = _dollyCart.transform.rotation.eulerAngles.x;
         angleX = (angleX > 180) ? angleX - 360 : angleX;
-        float angleY = _dollyCart.transform.rotation.eulerAngles.y; 
+        float angleY = _dollyCart.transform.rotation.eulerAngles.y;
         angleY = (angleY > 180) ? angleY - 360 : angleY;
 
         // normalize / lerp the angles
@@ -157,7 +155,7 @@ public class SpeederSpace : PlayerController
         float offsetY = Mathf.Lerp(-2f, 2f, normalizedRotationY);
 
         Vector3 lerpedVector = new Vector3(offsetX, offsetY, -4.75f);
-        CameraFollowTransposer.m_FollowOffset = lerpedVector;
+      //  CameraFollowTransposer.m_FollowOffset = lerpedVector;
     }
 
     public void Boost()
@@ -211,7 +209,6 @@ public class SpeederSpace : PlayerController
                 _input.y = 0f;
             }
         }
-
     }
 
     private void Move()
@@ -260,8 +257,8 @@ public class SpeederSpace : PlayerController
 
         rot = Quaternion.Euler(0.0f, rotationalFactor * 45.0f, 0.0f);
         //Debug.Log("old rotation for me to use -> " + rot.eulerAngles);
-        rot = Quaternion.Euler(_dollyCart.transform.rotation.eulerAngles.x, 
-            _dollyCart.transform.rotation.eulerAngles.y + (rotationalFactor * 45.0f), 
+        rot = Quaternion.Euler(_dollyCart.transform.rotation.eulerAngles.x,
+            _dollyCart.transform.rotation.eulerAngles.y + (rotationalFactor * 45.0f),
             _dollyCart.transform.rotation.eulerAngles.z);
 
         //Debug.Log("dolly cart rotation -> " + _dollyCart.transform.rotation.eulerAngles);
@@ -303,6 +300,7 @@ public class SpeederSpace : PlayerController
         playerInput.Move.performed -= OnMoveInput;
         playerInput.Move.canceled -= OnMoveInput;
     }
+
     private void OnApplicationQuit()
     {
         _isApplicationQuitting = true;

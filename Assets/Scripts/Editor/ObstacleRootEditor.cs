@@ -12,6 +12,29 @@ public class ObstacleRootEditor : Editor
         base.OnInspectorGUI();
         
         ObstacleRoot obstacleRoot = (ObstacleRoot)target;
+
+        bool destroyOnHit = serializedObject.FindProperty("_destroyOnHit").boolValue;
+        
+        // Show the additional fields only when _destroyOnHit is true
+        if (destroyOnHit)
+        {
+            // SerializedProperty for _destroyTrigger
+            SerializedProperty destroyTriggerProperty = serializedObject.FindProperty("_destroyTrigger");
+            EditorGUILayout.PropertyField(destroyTriggerProperty);
+
+            // SerializedProperty for _destroyAfterWhile
+            SerializedProperty destroyAfterWhileProperty = serializedObject.FindProperty("_destroyAfterWhile");
+            EditorGUILayout.PropertyField(destroyAfterWhileProperty);
+
+            // Access _knockBackMultiplierComponent using the serialized field
+            if (obstacleRoot.KnockBackMultiplierComponent != null && destroyTriggerProperty.boolValue == false)
+            {
+                destroyAfterWhileProperty.floatValue = obstacleRoot.KnockBackMultiplierComponent.Time + 0.05f;
+            }
+            
+            // Apply modifications to serializedObject
+            serializedObject.ApplyModifiedProperties();
+        }
         
         // Set the button size
         float buttonWidth = 200f;
@@ -54,6 +77,8 @@ public class ObstacleRootEditor : Editor
 
         GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
+        
+        
     }
 }
 #endif
