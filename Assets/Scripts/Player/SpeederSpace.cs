@@ -30,6 +30,10 @@ public class SpeederSpace : PlayerController
     [Header("put in the StartPath camera")]
     [SerializeField]
     private CinemachineVirtualCamera CameraWithDollyTrack;
+    [Header("actual camera that will be rendering")]
+    [SerializeField]
+    private CinemachineVirtualCamera CameraFollow;
+    private CinemachineTransposer CameraFollowTransposer;
 
     // Movement
     private Vector2 _input;
@@ -76,6 +80,8 @@ public class SpeederSpace : PlayerController
     private void Start()
     {
         SetBounds();
+
+        CameraFollowTransposer = CameraFollow.GetCinemachineComponent<CinemachineTransposer>();
     }
 
     private void SetBounds()
@@ -127,7 +133,31 @@ public class SpeederSpace : PlayerController
 
         _boostComponent.Update();
 
+        //UpdateCameraOffset();
+        //Debug.Log(_dollyCart.transform.forward);
+
         Move();
+    }
+
+    private void UpdateCameraOffset()
+    {
+        // angleX and angleY don't make much sense anymore when both are being adjusted ... fu*k rotations
+
+        // get negative numbers instead of 0-360 range (this way i get the (-10)-(10) range)
+        float angleX = _dollyCart.transform.rotation.eulerAngles.x; 
+        angleX = (angleX > 180) ? angleX - 360 : angleX;
+        float angleY = _dollyCart.transform.rotation.eulerAngles.y; 
+        angleY = (angleY > 180) ? angleY - 360 : angleY;
+
+        // normalize / lerp the angles
+        float normalizedRotationX = Mathf.InverseLerp(-80f, 80f, angleX);
+        float offsetX = Mathf.Lerp(-2.5f, 2.5f, normalizedRotationX);
+
+        float normalizedRotationY = Mathf.InverseLerp(-35f, 35f, angleY);
+        float offsetY = Mathf.Lerp(-2f, 2f, normalizedRotationY);
+
+        Vector3 lerpedVector = new Vector3(offsetX, offsetY, -4.75f);
+        CameraFollowTransposer.m_FollowOffset = lerpedVector;
     }
 
     public void Boost()
@@ -215,15 +245,6 @@ public class SpeederSpace : PlayerController
 
     private void AnimateModel()
     {
-        if (InvertControls == true)
-        {
-
-        }
-        else
-        {
-
-        }
-
         // Rotate towards Target
         var rot = Quaternion.FromToRotation(_playerVisuals.transform.forward,
             _lookTarget.transform.position - _playerVisuals.transform.position) * _playerVisuals.transform.rotation;
@@ -232,6 +253,10 @@ public class SpeederSpace : PlayerController
 
         // Rotates along the the forward axis according to the left of right velocity
         var rotationalFactor = Mathf.Clamp(_input.x, -1.0f, 1.0f);
+        if (InvertControls == true)
+        {
+            rotationalFactor *= -1;
+        }
 
         rot = Quaternion.Euler(0.0f, rotationalFactor * 45.0f, 0.0f);
         //Debug.Log("old rotation for me to use -> " + rot.eulerAngles);
@@ -246,6 +271,11 @@ public class SpeederSpace : PlayerController
 
         // Rotate along x axis according to the vertical input
         rotationalFactor = Mathf.Clamp(_input.y, -1.0f, 1.0f);
+        if (InvertControls == true)
+        {
+            rotationalFactor *= -1;
+        }
+
         rot = Quaternion.Euler(_dollyCart.transform.rotation.eulerAngles.x + (-rotationalFactor * 90.0f),
             _dollyCart.transform.rotation.eulerAngles.y,
             _dollyCart.transform.rotation.eulerAngles.z);

@@ -39,7 +39,7 @@ public class SmoothPathAligningTool : EditorWindow
 
     private void AllignObjectsWithinSmoothBoxToSelectedPath()
     {
-        if (GUILayout.Button("Select Path"))
+        if (GUILayout.Button("Step 1 : Select a Path"))
         {
             // find the path to which we want to lock our obstacles/pickups to
             GameObject selectedObject = Selection.activeGameObject;
@@ -59,7 +59,7 @@ public class SmoothPathAligningTool : EditorWindow
             }
         }
 
-        if (GUILayout.Button("Select The SmoothBox"))
+        if (GUILayout.Button("Step 2 : Select The SmoothBox"))
         {
             // find the path to which we want to lock our obstacles/pickups to
             GameObject selectedObject = Selection.activeGameObject;
@@ -96,7 +96,7 @@ public class SmoothPathAligningTool : EditorWindow
 
 
 
-        if (GUILayout.Button("Allign objects in Smoothbox to Path"))
+        if (GUILayout.Button("Step 3 : Allign objects in Smoothbox to Path"))
         {
             if (_cinePath != null && _smoothPathBox != null)
             {
@@ -115,14 +115,14 @@ public class SmoothPathAligningTool : EditorWindow
                     {
                         objectToAlign.transform.rotation = closestPathQuaternion;
                     }
-                    else if (objectToAlign.TryGetComponent(out PathPickups pathPickups) == true) // path pickups do need to be alligned
+                    else if (objectToAlign.TryGetComponent(out PathPickups pathPickups) == true) // path pickups are allowed to be alligned
                     {
                         objectToAlign.transform.rotation = closestPathQuaternion;
                     }
                     else
                     {
                         // paths are set to 0,0,0.  the entry trigger however is alligned with the path
-                        Debug.Log(objectToAlign.gameObject.name + " I might be an issue");
+                        //Debug.Log(objectToAlign.gameObject.name + " I might be an issue");
                         objectToAlign.transform.rotation = Quaternion.Euler(0, 0, 0);
                         objectToAlign.GetComponentInChildren<AttachWaypointsToPath>().StartTrigger.transform.rotation = closestPathQuaternion;
                     }
