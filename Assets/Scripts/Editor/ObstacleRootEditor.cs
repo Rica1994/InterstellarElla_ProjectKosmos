@@ -30,6 +30,15 @@ public class ObstacleRootEditor : Editor
             if (obstacleRoot.KnockBackMultiplierComponent != null && destroyTriggerProperty.boolValue == false)
             {
                 destroyAfterWhileProperty.floatValue = obstacleRoot.KnockBackMultiplierComponent.Time + 0.05f;
+                if (obstacleRoot.KnockBackMultiplierComponent.ShouldLerpIn && obstacleRoot.KnockBackMultiplierComponent.LerpInSpeed > 0.001f)
+                {
+                    destroyAfterWhileProperty.floatValue += 1 / obstacleRoot.KnockBackMultiplierComponent.LerpInSpeed;
+                }
+                
+                if (obstacleRoot.KnockBackMultiplierComponent.ShouldLerpOut && obstacleRoot.KnockBackMultiplierComponent.LerpOutSpeed > 0.001f)
+                {
+                    destroyAfterWhileProperty.floatValue += 1 / obstacleRoot.KnockBackMultiplierComponent.LerpOutSpeed;
+                }
             }
             
             // Apply modifications to serializedObject
