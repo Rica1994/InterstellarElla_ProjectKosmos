@@ -20,6 +20,8 @@ public class SmoothPathAligningTool : EditorWindow
 
     private List<PathPickups> _pathsPickups = new List<PathPickups>();
 
+    bool _isAlternatePath;
+
 
     [MenuItem("Window/Smooth Path Aligning Tool")]
     public static void ShowWindow()
@@ -114,36 +116,59 @@ public class SmoothPathAligningTool : EditorWindow
 
         if (GUILayout.Button("Step 4 : Allign objects in Smoothbox to Path"))
         {
+            if (FindObjectsOfType<ParentSpacePath>().Length > 1)
+            {
+                Debug.LogWarning("more than 1 ParentSpacePath gameobject is enabled! make sure only 1 is active and try again");
+                return;
+            }
+
             if (_cinePath != null && _smoothPathBox != null)
             {
                 var tempListForParenting = new List<SmoothPathToBeAlligned>();
 
+                // check if selected path is an alternate path
+                _isAlternatePath = false;
+                if (_cinePath.GetComponentInChildren<SwitchPath>() != null)
+                {
+                    _isAlternatePath = true;
+                }
+
+                // check each object and if possible, allign it to the selected path
                 for (int i = 0; i < _smoothPathBox.ObjectsToBeAlligned.Count; i++)
                 {
                     var objectToAlign = _smoothPathBox.ObjectsToBeAlligned[i];
-                    tempListForParenting.Add(objectToAlign);
-                    float closestPathFloat = _cinePath.FindClosestPoint(objectToAlign.transform.position, 0 ,-1, 20);
 
-                    Vector3 closestPathPosition = _cinePath.EvaluatePosition(closestPathFloat);
-                    Quaternion closestPathQuaternion = _cinePath.EvaluateOrientation(closestPathFloat);
-
-                    objectToAlign.transform.position = closestPathPosition;
-
-                    // do not rotate the paths (cinemachine doesnt properly work with rotated paths) !!!
-                    if (objectToAlign.GetComponentInChildren<CinemachineSmoothPath>() == null)
+                    // do not allign the object if : 1) I am an alternate path + 2) the object is an alternate path 
+                    // (current logic would make it impossible to allign a split path with another split path)
+                    if (_isAlternatePath == true && objectToAlign.GetComponentInChildren<SwitchPath>() != null)
                     {
-                        objectToAlign.transform.rotation = closestPathQuaternion;
-                    }
-                    else if (objectToAlign.TryGetComponent(out PathPickups pathPickups) == true) // path pickups are allowed to be alligned
-                    {
-                        objectToAlign.transform.rotation = closestPathQuaternion;
+                        // do not allign the object
                     }
                     else
                     {
-                        // paths are set to 0,0,0.  the entry trigger however is alligned with the path
-                        //Debug.Log(objectToAlign.gameObject.name + " I might be an issue");
-                        objectToAlign.transform.rotation = Quaternion.Euler(0, 0, 0);
-                        objectToAlign.GetComponentInChildren<AttachWaypointsToPath>().StartTrigger.transform.rotation = closestPathQuaternion;
+                        tempListForParenting.Add(objectToAlign);
+                        float closestPathFloat = _cinePath.FindClosestPoint(objectToAlign.transform.position, 0, -1, 20);
+
+                        Vector3 closestPathPosition = _cinePath.EvaluatePosition(closestPathFloat);
+                        Quaternion closestPathQuaternion = _cinePath.EvaluateOrientation(closestPathFloat);
+
+                        objectToAlign.transform.position = closestPathPosition;
+
+                        // do not rotate the paths (cinemachine doesnt properly work with rotated paths) !!!
+                        if (objectToAlign.GetComponentInChildren<CinemachineSmoothPath>() == null)
+                        {
+                            objectToAlign.transform.rotation = closestPathQuaternion;
+                        }
+                        else if (objectToAlign.TryGetComponent(out PathPickups pathPickups) == true) // path pickups are allowed to be alligned
+                        {
+                            objectToAlign.transform.rotation = closestPathQuaternion;
+                        }
+                        else
+                        {
+                            // paths are set to 0,0,0.  the entry trigger however is alligned with the path
+                            objectToAlign.transform.rotation = Quaternion.Euler(0, 0, 0);
+                            objectToAlign.GetComponentInChildren<AttachWaypointsToPath>().StartTrigger.transform.rotation = closestPathQuaternion;
+                        }
                     }
 
                     EditorUtility.SetDirty(_smoothPathBox.ObjectsToBeAlligned[i]);
@@ -166,7 +191,7 @@ public class SmoothPathAligningTool : EditorWindow
                         if (obj.GetComponentInChildren<CinemachineSmoothPath>() != null && obj.GetComponent<PathPickups>() == null)
                         {
                             // do nothing
-                            Debug.Log("not parenting this as it is a split path " + obj.name);
+                            //Debug.Log("not parenting this as it is a split path " + obj.name);
                         }
                         else if (obj.GetComponentInChildren<BoostRing>() != null)
                         {
