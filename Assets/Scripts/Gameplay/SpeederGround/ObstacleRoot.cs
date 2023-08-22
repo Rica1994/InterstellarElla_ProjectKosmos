@@ -89,7 +89,13 @@ public class ObstacleRoot : MonoBehaviour
             if (angle > player.CollisionAngle) return;
 
             player.Collide(_knockBackMultiplierComponent);
-            ServiceLocator.Instance.GetService<LevelManager>().PlayerHitObstacle();
+
+            // do not call this if I'm in space, only ground
+            if (player.GetComponent<SpeederGround>() != null)
+            {
+                ServiceLocator.Instance.GetService<LevelManager>().PlayerHitObstacle();
+            }
+            
             
             if (_disableColliderOnHit)
             {
