@@ -162,7 +162,8 @@ public class SmoothPathAligningTool : EditorWindow
                     // then parent them accordingly
                     foreach (var obj in tempListForParenting.OrderBy(v => v.transform.position.z))
                     {
-                        if (obj.GetComponentInChildren<CinemachineSmoothPath>() != null)
+                        // do not parent split paths, do parent paths that have pickups
+                        if (obj.GetComponentInChildren<CinemachineSmoothPath>() != null && obj.GetComponent<PathPickups>() == null)
                         {
                             // do nothing
                             Debug.Log("not parenting this as it is a split path " + obj.name);
