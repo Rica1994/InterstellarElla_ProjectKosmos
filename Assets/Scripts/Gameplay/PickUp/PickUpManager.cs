@@ -48,7 +48,7 @@ public class PickUpManager : Service
     private float _pickupComboTimer;
 
     private int _pickupCurrentCombo = 0;
-    private int _pickupComboLimit = 5;
+    private int _pickupComboLimit = 10;
 
 
     private void Start()
@@ -65,18 +65,18 @@ public class PickUpManager : Service
         FindPickUps();
         SceneManager.sceneLoaded += OnSceneLoaded;
         //#endif
-        
-     //   if (ServiceLocator.Instance.ServiceExists(typeof(LevelManager)) == true)
-     //   {
-     //       var levelManager = ServiceLocator.Instance.GetService<LevelManager>();
-//
-     //       levelManager.OnSectionLoaded += OnSectionLoaded;
-//
-     //       // assigning proper pickups for level
-     //       var levelIndexString = levelManager.DecodeSceneString()[0].ToString();
-     //       _pickupToLoad = _pickupNameBase + levelIndexString;
-     //       PickupNormalVisual = Resources.Load(_pickupToLoad, typeof(GameObject)) as GameObject;
-     //   }
+
+        //if (ServiceLocator.Instance.ServiceExists(typeof(LevelManager)) == true)
+        //{
+        //    var levelManager = ServiceLocator.Instance.GetService<LevelManager>();
+
+        //    levelManager.OnSectionLoaded += OnSectionLoaded;
+
+        //    // assigning proper pickups for level
+        //    var levelIndexString = levelManager.DecodeSceneString()[0].ToString();
+        //    _pickupToLoad = _pickupNameBase + levelIndexString;
+        //    PickupNormalVisual = Resources.Load(_pickupToLoad, typeof(GameObject)) as GameObject;
+        //}
 
         /// Disabling the event subscriptions as they don't really function ///
         // this will only subscribe the prefabs in the SCENE (works as long as script execution order is taken into account)
@@ -155,9 +155,6 @@ public class PickUpManager : Service
         if (pickup as EllaPickUp)
         {
             _foundEllaPickups.Add(((EllaPickUp)pickup).Type);
-
-            // play sound
-            //ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEffectPickup2);
         } 
         else
         {
@@ -183,9 +180,11 @@ public class PickUpManager : Service
         _pickupCurrentCombo += 1;
 
         // only increase pitch 5 times
-        if (currentCombo <= 5)
+        if (currentCombo <= 10)
         {
-            _soundEffectPickup1.Pitch += 0.1f;
+            _soundEffectPickup1.Pitch += 0.05f;
         }
+
+        _pickupComboTimer = 0;
     }
 }
