@@ -21,7 +21,7 @@ public class BezierCurveDrawer : MonoBehaviour
     public float V0 = 10f; // Initial velocity
 
     public int numPoints = 50; // Number of trajectory points
-    public float maxTime = 3f; // Maximum distance of the trajectory
+    public float maxDistance = 50f; // Maximum distance of the trajectory
 
     void OnDrawGizmos()
     {
@@ -31,7 +31,6 @@ public class BezierCurveDrawer : MonoBehaviour
         } 
         float angleRad = alpha * Mathf.Deg2Rad;
         float cosAngleSq = Mathf.Cos(angleRad) * Mathf.Cos(angleRad);
-        float maxDistance = maxTime * V0;
 
         for (int i = 0; i < numPoints; i++)
         {
@@ -43,6 +42,7 @@ public class BezierCurveDrawer : MonoBehaviour
             Gizmos.DrawSphere(startPosition + point, 0.5f);
         }
     }
+
 }
 
 #endif
