@@ -8,9 +8,6 @@ using UnityEngine.InputSystem;
 public class SpeederSpace : PlayerController
 {
     // Parameters
-    [SerializeField] private float _boostDuration = 3.0f;
-    [SerializeField, Range(1.0f, 3.0f)] private float _boostMultiplier = 1.5f;
-
     [SerializeField] private float _moveSpeed = 20f;
     [SerializeField] private float _rotationSpeed = 1f;
     [SerializeField] private float _cameraBoundOffset = 1f;
@@ -72,8 +69,7 @@ public class SpeederSpace : PlayerController
 
         // Create components
         _moveComponent = new MoveComponent();
-        _boostComponent = new MultiplierTimerComponent(_boostDuration, _boostMultiplier, true, 2f, true, 1f);
-        _boostComponent.OnTimerEnded += BoostEnded;
+        _boostComponent = new MultiplierTimerComponent(0.0f, 1.5f, true, 2f, true, 1f);
     }
 
     void Start()
@@ -129,7 +125,7 @@ public class SpeederSpace : PlayerController
     {
         base.UpdateController();
 
-        _boostComponent.UpdateMultiplier();
+     //   _boostComponent.Update();
 
         //UpdateCameraOffset();
         //Debug.Log(_dollyCart.transform.forward);
@@ -158,15 +154,18 @@ public class SpeederSpace : PlayerController
       //  CameraFollowTransposer.m_FollowOffset = lerpedVector;
     }
 
-    public void Boost()
+    public void Boost(MultiplierTimerComponent boostComponent)
     {
+        _boostComponent = boostComponent;
         _boostComponent.Activate();
+        _boostComponent.OnTimerEnded += BoostEnded;
         ServiceLocator.Instance.GetService<VirtualCameraManager>().ZoomOut();
     }
 
     private void BoostEnded()
     {
         ServiceLocator.Instance.GetService<VirtualCameraManager>().ResetZoom();
+        _boostComponent.OnTimerEnded -= BoostEnded;
     }
 
     public override void Collide(MultiplierTimerComponent knockbackComponent)
@@ -216,7 +215,7 @@ public class SpeederSpace : PlayerController
         // Adjust input according to bounds
         CheckBounds();
 
-        _dollyCart.m_Speed = _baseSpeed * _boostComponent.Multiplier * _knockbackComponent.Multiplier;
+        _dollyCart.m_Speed = _baseSpeed * _boostComponent.Multiplier * KnockbackMultiplier;
 
         // Calculate direction to move 
         Vector3 direction = _dollyCart.transform.right * _input.x;

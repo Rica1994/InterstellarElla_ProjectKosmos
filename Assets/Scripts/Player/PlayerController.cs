@@ -9,8 +9,10 @@ public abstract class PlayerController : MonoBehaviour
     private float _collisionAngle = 60.0f;
 
     protected MultiplierTimerComponent _knockbackComponent;
+    protected float KnockbackMultiplier => _knockbackComponent == null ? 1.0f : _knockbackComponent.Multiplier;
 
     public float CollisionAngle => _collisionAngle;
+
     
     protected void Start()
     {

@@ -6,7 +6,6 @@
     <title>Unity WebGL Player | InterstellarEllaKosmos</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-    <link rel="manifest" href="manifest.webmanifest">
   </head>
   <body>
     <div id="unity-container">
@@ -56,12 +55,13 @@
         updateBannerVisibility();
       }
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/MarsBlockout_03.loader.js";
-      var config = {
-        dataUrl: buildUrl + "/MarsBlockout_03.data",
-        frameworkUrl: buildUrl + "/MarsBlockout_03.framework.js",
-        codeUrl: buildUrl + "/MarsBlockout_03.wasm",
+	var buildUrl = "Build";
+	var buildName = window.location.pathname.split('/').slice(-2, -1)[0];
+	var loaderUrl = buildUrl + "/" + buildName + ".loader.js";
+	var config = {
+  	dataUrl: buildUrl + "/" + buildName + ".data",
+  	frameworkUrl: buildUrl + "/" + buildName + ".framework.js",
+ 	codeUrl: buildUrl + "/" + buildName + ".wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "FabriqueFantastique",
         productName: "InterstellarEllaKosmos",

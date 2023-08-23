@@ -73,6 +73,7 @@ public class SpeederGround : PlayerController
     private MultiplierTimerComponent _speedBoostComponent;
     private MultiplierTimerComponent _jumpBoostComponent;
 
+
     private Vector3 _lastPosition;
     private Vector3 _velocity;
 
@@ -95,10 +96,7 @@ public class SpeederGround : PlayerController
     [SerializeField]
     private float _visualLerpSpeed = 2.5f;
     
-    //private void OnValidate()
-    //{
-    //    SpeedForward = _speedForward;
-    //}
+
 
     private void Start()
     {
@@ -120,8 +118,6 @@ public class SpeederGround : PlayerController
 
         _speedBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostSpeedMultiplier, true, 2f, true, 1f);
         _jumpBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostJumpMultiplier, true, 2f, true, 1f);
-        _knockbackComponent =
-            new MultiplierTimerComponent(0.0f, 0.0f, 1.0f, true, 1f, true, 1f);
 
         _moveDirection.Normalize();
         transform.forward = _moveDirection;
@@ -147,10 +143,6 @@ public class SpeederGround : PlayerController
         }
 
         FakeGroundedTimer();
-
-        _speedBoostComponent.UpdateMultiplier();
-        _jumpBoostComponent.UpdateMultiplier();
-        _knockbackComponent.UpdateMultiplier();
 
         Move();
 
@@ -317,13 +309,13 @@ public class SpeederGround : PlayerController
 
         //       Debug.Log("2  X " + inputX + "\n XVelocity " + _xVelocity);
 
-     //   if (_knockbackComponent.IsTicking)
-     //   {
-     //       _zVelocity = -_speedForward * _knockbackComponent.Multiplier;
-     //   }
-     //   else
-     //   {
-            _zVelocity = (_speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) *  _speedBoostComponent.Multiplier) * _knockbackComponent.Multiplier;
+        //   if (_knockbackComponent.IsTicking)
+        //   {
+        //       _zVelocity = -_speedForward * _knockbackComponent.Multiplier;
+        //   }
+        //   else
+        //   {
+        _zVelocity = (_speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) * _speedBoostComponent.Multiplier) * KnockbackMultiplier;
      //   }
 
 
