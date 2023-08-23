@@ -19,5 +19,4 @@ public class BoostRing : MonoBehaviour
             speeder.Boost(_multiplierComponent);
         }
     }
-
 }
