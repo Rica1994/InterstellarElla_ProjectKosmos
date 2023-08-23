@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class MultiplierTimerComponent : MonoBehaviour
 {
@@ -28,9 +26,6 @@ public class MultiplierTimerComponent : MonoBehaviour
     
     [SerializeField]
     private float _lerpOutSpeed = 1f;
-
-    [SerializeField]
-    private float _startMultiplierValue = 0.0f;
     
     #endregion
 
@@ -49,20 +44,16 @@ public class MultiplierTimerComponent : MonoBehaviour
         set => _time = value;
     }
     
-    public float LerpInSpeed => _lerpInSpeed;
-    public float LerpOutSpeed => _lerpOutSpeed;
-    public bool ShouldLerpIn => _shouldLerpIn;
-    public bool ShouldLerpOut => _shouldLerpOut;
-    
     // Lerp expansion
-    private float _currentMultiplier = 1.0f;
+    private float _currentMultiplier;
     private bool _isLerpingIn = false;
     private bool _isLerpingOut = false;
-    private float _currentLerpValue = 0.0f;
-    private float _startLerpMultiplierValue = 0.0f;
-    
+
     #endregion
-    
+
+
+
+
     public MultiplierTimerComponent(float time, float multiplier)
         : this(time, multiplier, false, 1f, false, 1f)
     {
@@ -109,11 +100,6 @@ public class MultiplierTimerComponent : MonoBehaviour
         _lerpOutSpeed = lerpOutSpeed;
     }
 
-    private void Awake()
-    {
-        _currentMultiplier = _startMultiplierValue;
-    }
-
     public void Activate()
     {
         // TARGET MULTIPLIER IS THE ISSUE !!!!
@@ -124,8 +110,7 @@ public class MultiplierTimerComponent : MonoBehaviour
         _currentTime = _time;
         _isTicking = true;
         _isLerpingIn = true;
-        if (_shouldLerpIn == false) _currentMultiplier = _targetMultiplier;
-        else _startLerpMultiplierValue = _currentMultiplier;
+        _currentMultiplier = _targetMultiplier;
     }
 
     public void UpdateMultiplier()
@@ -154,26 +139,19 @@ public class MultiplierTimerComponent : MonoBehaviour
         // If timer has ended, notify
         _isTicking = false;
         OnTimerEnded?.Invoke();
-        
-        if (_shouldLerpOut)
-        {
-            _isLerpingOut = true;
-            _startMultiplierValue = _currentMultiplier;
-        }
-        else
-        {
-            _currentMultiplier = 1.0f;
-        }
+        _isLerpingOut = true;
+
+       // _targetMultiplier = 1.0f;  // THIS CAUSED ME PAIN
     }
 
     private void Lerp(float targetMultiplier, ref bool isLerping, float lerpSpeed)
     {
-        _currentLerpValue = Mathf.Clamp01(_currentLerpValue + UnityEngine.Time.deltaTime * lerpSpeed);
-        _currentMultiplier = Mathf.Lerp(_startMultiplierValue, targetMultiplier, _currentLerpValue);
-        
-        if (Mathf.Approximately(_currentMultiplier,targetMultiplier))
+        if (Mathf.Abs(_currentMultiplier - targetMultiplier) > .1f)
         {
-            _currentLerpValue = 0.0f;
+            _currentMultiplier = Mathf.Lerp(_currentMultiplier, targetMultiplier, UnityEngine.Time.deltaTime * lerpSpeed);
+        }
+        else
+        {
             _currentMultiplier = targetMultiplier;
             isLerping = false;
         }
