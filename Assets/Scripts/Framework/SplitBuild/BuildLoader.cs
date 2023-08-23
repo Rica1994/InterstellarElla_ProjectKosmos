@@ -47,9 +47,10 @@ public class BuildLoader : MonoBehaviour
 
     public void LoadAnotherBuild(string buildURL)
     {
+
         // Add the data you want to transfer as URL parameters
-        string url = $"../{buildURL}?data=" + UnityEngine.Networking.UnityWebRequest.EscapeURL(_counter.counter.ToString());
-        
-        Application.ExternalEval($"window.location.href = '{url}';");
+        buildURL += "?data=" + UnityEngine.Networking.UnityWebRequest.EscapeURL(_counter.counter.ToString());
+
+        Application.ExternalEval($"window.location.href = '{buildURL}';");
     }
 }

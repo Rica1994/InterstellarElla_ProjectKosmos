@@ -15,8 +15,6 @@ public class PickUp : MonoBehaviour
     [SerializeField]
     private AudioElement _soundEffectPickup1;
 
-    private bool _pickedUp;
-
     private void Start()
     {
         var collider = GetComponent<Collider>();
@@ -34,7 +32,7 @@ public class PickUp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<PlayerController>() != null && _pickedUp == false)
+        if (other.GetComponent<PlayerController>() != null)
         {
             PickedUp();
         }
@@ -44,9 +42,7 @@ public class PickUp : MonoBehaviour
     {
         OnPickUp?.Invoke(this);
 
-        PlayerFeedback();
-
-        _pickedUp = true;
+        PlayerFeedback();      
     }
     protected virtual void PlayerFeedback()
     {
