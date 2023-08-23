@@ -128,7 +128,7 @@ public class MultiplierTimerComponent : MonoBehaviour
         else _startLerpMultiplierValue = _currentMultiplier;
     }
 
-    public void Update()
+    public void UpdateMultiplier()
     {
         if (_shouldLerpIn && _isLerpingIn)
         {

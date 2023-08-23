@@ -129,7 +129,7 @@ public class SpeederSpace : PlayerController
     {
         base.UpdateController();
 
-        _boostComponent.Update();
+        _boostComponent.UpdateMultiplier();
 
         //UpdateCameraOffset();
         //Debug.Log(_dollyCart.transform.forward);

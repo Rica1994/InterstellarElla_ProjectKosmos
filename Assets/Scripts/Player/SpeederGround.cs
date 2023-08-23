@@ -128,9 +128,9 @@ public class SpeederGround : PlayerController
         _rightVector = Vector3.Cross(_moveDirection, Vector3.up);
     }
 
-    public override void UpdateController()
+    public override void FixedUpdateController()
     {
-        base.UpdateController();
+        base.FixedUpdateController();
 
         // !!Keep this execution order!!
 
@@ -148,9 +148,9 @@ public class SpeederGround : PlayerController
 
         FakeGroundedTimer();
 
-        _speedBoostComponent.Update();
-        _jumpBoostComponent.Update();
-        _knockbackComponent.Update();
+        _speedBoostComponent.UpdateMultiplier();
+        _jumpBoostComponent.UpdateMultiplier();
+        _knockbackComponent.UpdateMultiplier();
 
         Move();
 
