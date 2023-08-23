@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 
 public class ObstacleCollision : MonoBehaviour
 {
-    public delegate void ObstacleCollisionDelegate(PlayerController player);
+    public delegate void ObstacleCollisionDelegate(PlayerController player, ObstacleCollision obstacle);
 
     public event ObstacleCollisionDelegate CollidedEvent;
 
@@ -21,7 +21,7 @@ public class ObstacleCollision : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent(out PlayerController player))
         {
-            CollidedEvent?.Invoke(player);
+            CollidedEvent?.Invoke(player, this);
         }
     }
 
@@ -29,7 +29,7 @@ public class ObstacleCollision : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out PlayerController player))
         {
-            CollidedEvent?.Invoke(player);
+            CollidedEvent?.Invoke(player, this);
         }
     }
 

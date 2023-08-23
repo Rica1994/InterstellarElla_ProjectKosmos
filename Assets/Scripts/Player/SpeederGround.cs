@@ -50,11 +50,6 @@ public class SpeederGround : PlayerController
     [SerializeField]
     private float _upDownSpeed = 1.0f;
 
-    [Header("Knockback")]
-    [SerializeField] private float _knockbackDuration = 3f;
-
-    [SerializeField, Range(0.0f, 1.0f)] private float _knockbackMultiplier = .3f;
-
     private CharacterController _characterController;
     private Vector3 _rightVector;
     private Vector2 _input;
@@ -126,7 +121,7 @@ public class SpeederGround : PlayerController
         _speedBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostSpeedMultiplier, true, 2f, true, 1f);
         _jumpBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostJumpMultiplier, true, 2f, true, 1f);
         _knockbackComponent =
-            new MultiplierTimerComponent(_knockbackDuration, 0.0f, _knockbackMultiplier, true, 1f, true, 1f);
+            new MultiplierTimerComponent(0.0f, 0.0f, 1.0f, true, 1f, true, 1f);
 
         _moveDirection.Normalize();
         transform.forward = _moveDirection;
