@@ -11,7 +11,7 @@ public class SpeederGround : PlayerController
     [Header("Speed")]
     [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f);
 
-    [SerializeField] private float _speedForward = 50f;
+    public float speedForward = 50f;
     [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
     [SerializeField] private float _startSidewaySpeed = 20.0f;
     [SerializeField] private float _speedSideways = 15f;
@@ -134,7 +134,7 @@ public class SpeederGround : PlayerController
         var lastYVelocity = _yVelocity;
         _isGrounded = _characterController.isGrounded;
 
-        Debug.Log("Is Grounded: " + _isGrounded);
+        //Debug.Log("Is Grounded: " + _isGrounded);
 
         // Apply landing
         if (wasGrounded == false && wasGrounded != _isGrounded)
@@ -315,11 +315,11 @@ public class SpeederGround : PlayerController
         //   }
         //   else
         //   {
-        _zVelocity = (_speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) * _speedBoostComponent.Multiplier) * KnockbackMultiplier;
+        _zVelocity = (speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) * _speedBoostComponent.Multiplier) * KnockbackMultiplier;
      //   }
 
 
-        Vector3 speed = new Vector3(_xVelocity, _speedForward, _zVelocity);
+        Vector3 speed = new Vector3(_xVelocity, speedForward, _zVelocity);
 
         // OG
         //Vector3 speed = new Vector3(
@@ -405,7 +405,7 @@ public class SpeederGround : PlayerController
 
     private void OnJumpInput(InputAction.CallbackContext obj)
     {
-        if (_isGroundedFake == true && _knockbackComponent.IsTicking == false)
+        if (_isGroundedFake == true)
         {
             _isJumping = true;
         }
