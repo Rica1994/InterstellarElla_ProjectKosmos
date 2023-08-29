@@ -2,7 +2,6 @@
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using UnityEditor;
 
 [InitializeOnLoad]
 public class PlayModeStateListener
@@ -14,29 +13,22 @@ public class PlayModeStateListener
 
     private static void OnPlayModeStateChange(PlayModeStateChange state)
     {
+        TargetSpawner[] spawners = UnityEngine.Object.FindObjectsOfType<TargetSpawner>();
+        if (spawners.Length <= 0) return; // Exit if no spawners
+
+        TargetSpawner spawner = spawners[0];  // Assuming you only have one spawner
+
         if (state == PlayModeStateChange.ExitingPlayMode)
         {
-            var spawner = Object.FindObjectOfType<TargetSpawner>();
-            spawner?.SaveObjectPositionsToFile();
+            spawner.SaveObjectPositionsToFile();
         }
         else if (state == PlayModeStateChange.EnteredEditMode)
         {
-            var spawner = Object.FindObjectOfType<TargetSpawner>();
-            if (spawner != null)
+            if (File.Exists(spawner.SavePath)) // Using instance to access SavePath
             {
-                var savePath = spawner.SavePath;
-                if (File.Exists(savePath))
+                if (EditorUtility.DisplayDialog("Spawn objects?", "Would you like to spawn the saved objects?", "Yes", "No"))
                 {
-                    var jsonData = File.ReadAllText(savePath);
-                    var data = JsonUtility.FromJson<TargetSpawner.SerializationWrapper<Vector3>>(jsonData);
-                    foreach (var position in data.List)
-                    {
-                        GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(spawner.objectToSpawn);
-                        if (instance != null)
-                        {
-                            instance.transform.position = position;
-                        }
-                    }
+                    spawner.EditorLoadAndSpawnObjectsFromFile();
                 }
             }
         }
