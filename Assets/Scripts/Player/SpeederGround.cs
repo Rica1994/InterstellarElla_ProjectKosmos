@@ -38,7 +38,8 @@ public class SpeederGround : PlayerController
     [SerializeField] private float _gravityValue = -9.81f;
 
 
-    [FormerlySerializedAs("_landingBounceValueFactor")] [SerializeField]
+    [FormerlySerializedAs("_landingBounceValueFactor")]
+    [SerializeField]
     private float _bounceFactor = 0.5f;
 
     [SerializeField] private float _minimumSpeedToBounce = 30.0f;
@@ -95,7 +96,7 @@ public class SpeederGround : PlayerController
 
     [SerializeField]
     private float _visualLerpSpeed = 2.5f;
-    
+
 
 
     private void Start()
@@ -134,7 +135,7 @@ public class SpeederGround : PlayerController
         var lastYVelocity = _yVelocity;
         _isGrounded = _characterController.isGrounded;
 
-        Debug.Log("Is Grounded: " + _isGrounded);
+        //Debug.Log("Is Grounded: " + _isGrounded);
 
         // Apply landing
         if (wasGrounded == false && wasGrounded != _isGrounded)
@@ -151,7 +152,7 @@ public class SpeederGround : PlayerController
         ApplyGravity();
 
         _hoveringComponent.UpdateHovering(_upDownSpeed, _hoverDisplacement);
-        
+
         UpdateVisual();
     }
 
@@ -271,7 +272,7 @@ public class SpeederGround : PlayerController
     {
         _isJumping = true;
     }
-    
+
     private void Move()
     {
         // float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
@@ -316,7 +317,7 @@ public class SpeederGround : PlayerController
         //   else
         //   {
         _zVelocity = (_speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) * _speedBoostComponent.Multiplier) * KnockbackMultiplier;
-     //   }
+        //   }
 
 
         Vector3 speed = new Vector3(_xVelocity, _speedForward, _zVelocity);
@@ -374,7 +375,7 @@ public class SpeederGround : PlayerController
         playerInput.Move.canceled += OnMoveInput;
         playerInput.Action.started += OnJumpInput;
     }
-    
+
     private void OnDisable()
     {
         if (_isApplicationQuitting)
@@ -405,7 +406,7 @@ public class SpeederGround : PlayerController
 
     private void OnJumpInput(InputAction.CallbackContext obj)
     {
-        if (_isGroundedFake == true && _knockbackComponent.IsTicking == false)
+        if (_isGroundedFake == true)
         {
             _isJumping = true;
         }
@@ -413,7 +414,7 @@ public class SpeederGround : PlayerController
 
     private void FixedUpdate()
     {
-        
+
     }
 
     public void SetJumpMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
