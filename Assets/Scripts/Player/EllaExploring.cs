@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -74,6 +75,10 @@ public class EllaExploring : PlayerController
     public bool BlockMove;
     public Coroutine CCToggleRoutine;
     private Vector3 _slopeMovement;
+
+    [Header("Sounds")]
+    [SerializeField] private AudioElement _soundBoostLooping;
+
 
 
     private void Awake()
