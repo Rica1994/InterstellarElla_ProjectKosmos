@@ -16,9 +16,10 @@ public class Lever : MonoBehaviour
     [SerializeField] private Animation _animationLever;
 
     [Header("Swap Cameras I influence")]
-    [SerializeField] private SwapCamera _swapCameraActiveBeforeLeverHit;
-    [SerializeField] private SwapCamera _swapCameraActiveAfterLeverHit;
-    [SerializeField] private SwapCamera _swapCameraActiveAfterLeverHitOnLever;
+    [SerializeField] private List<SwapCamera> _swapCamerasActiveBeforeLeverHit = new List<SwapCamera>();
+    [SerializeField] private List<SwapCamera> _swapCamerasActiveAfterLeverHit = new List<SwapCamera>();
+
+    [SerializeField] private SwapCamera _swapCameraActiveAfterLeverHitOnLever; // single swapcemra that is right on top of the lever
 
 
     private float _cutsceneBufferTime = 1.5f;
@@ -61,15 +62,25 @@ public class Lever : MonoBehaviour
 
     private void SwapCurrentActiveCamera(bool hitLever = false, bool activateOnLeverCamera = false)
     {
-        if (_swapCameraActiveBeforeLeverHit != null)
+        for (int i = 0; i < _swapCamerasActiveAfterLeverHit.Count; i++)
         {
-            _swapCameraActiveBeforeLeverHit.gameObject.SetActive(!hitLever);
+            _swapCamerasActiveAfterLeverHit[i].gameObject.SetActive(hitLever);
+        }
+
+        for (int i = 0; i < _swapCamerasActiveBeforeLeverHit.Count; i++)
+        {
+            // if this is executed in the start, and the camera i'm checking for has been disabled (by the loop above)... 
+            // (needed check in case a SwapCamera is enabled by Lever"A" but disabled by Lever"B"
+            if (hitLever == false && _swapCamerasActiveBeforeLeverHit[i].gameObject.activeSelf == false)
+            {
+                // do nothing
+            }
+            else
+            {
+                _swapCamerasActiveBeforeLeverHit[i].gameObject.SetActive(!hitLever);
+            }
         }
         
-        if (_swapCameraActiveAfterLeverHit != null)
-        {
-            _swapCameraActiveAfterLeverHit.gameObject.SetActive(hitLever);
-        }
 
         // this one only gets disabled in start, enable at specifically the end of the cutscene
         if (activateOnLeverCamera == true)

@@ -235,6 +235,8 @@ namespace UnityCore
                     case SceneType.S_Level_3_2_Build: return "S_Level_3_2_Build";
                     case SceneType.S_Level_3_3_Work: return "S_Level_3_3_Work";
                     case SceneType.S_Level_3_3_Build: return "S_Level_3_3_Build";
+                    case SceneType.S_Level_3_4_Work: return "S_Level_3_4_Work";
+                    case SceneType.S_Level_3_4_Build: return "S_Level_3_4_Build";
 
                     case SceneType.S_Level_4_0_Work: return "S_Level_4_0_Work";
                     case SceneType.S_Level_4_0_Build: return "S_Level_4_0_Build";
@@ -278,6 +280,8 @@ namespace UnityCore
                     case "S_Level_3_2_Build": return SceneType.S_Level_3_2_Build;
                     case "S_Level_3_3_Work": return SceneType.S_Level_3_3_Work;
                     case "S_Level_3_3_Build": return SceneType.S_Level_3_3_Build;
+                    case "S_Level_3_4_Work": return SceneType.S_Level_3_4_Work;
+                    case "S_Level_3_4_Build": return SceneType.S_Level_3_4_Build;
 
                     case "S_Level_4_0_Work": return SceneType.S_Level_4_0_Work;
                     case "S_Level_4_0_Build": return SceneType.S_Level_4_0_Build;

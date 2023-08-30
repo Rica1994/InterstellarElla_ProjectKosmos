@@ -31,6 +31,8 @@ namespace UnityCore
             S_Level_3_2_Build = 23,
             S_Level_3_3_Work = 24,
             S_Level_3_3_Build = 25,
+            S_Level_3_4_Work = 32,
+            S_Level_3_4_Build = 33,
 
             S_Level_4_0_Work = 12,
             S_Level_4_0_Build = 13,
