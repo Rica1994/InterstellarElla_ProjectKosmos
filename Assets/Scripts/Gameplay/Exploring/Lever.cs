@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityCore.Audio;
 using UnityEngine;
 
 public class Lever : MonoBehaviour
@@ -19,7 +20,12 @@ public class Lever : MonoBehaviour
     [SerializeField] private List<SwapCamera> _swapCamerasActiveBeforeLeverHit = new List<SwapCamera>();
     [SerializeField] private List<SwapCamera> _swapCamerasActiveAfterLeverHit = new List<SwapCamera>();
 
-    [SerializeField] private SwapCamera _swapCameraActiveAfterLeverHitOnLever; // single swapcemra that is right on top of the lever
+    [SerializeField] private SwapCamera _swapCameraActiveAfterLeverHitOnLever; // single swapcamera that is right on top of the lever
+
+    [Header("Sounds")]
+    [SerializeField] private AudioElement _soundLeverPull;
+
+    private AudioController _audioController;
 
 
     private float _cutsceneBufferTime = 1.5f;
@@ -48,6 +54,9 @@ public class Lever : MonoBehaviour
 
         // activate animation lever
         _animationLever.Play();
+
+        // play sound lever
+        _audioController.PlayAudio(_soundLeverPull);
 
         // start routine for JumpPad
         StartCoroutine(EnableJumpPad());
@@ -99,7 +108,7 @@ public class Lever : MonoBehaviour
         yield return new WaitForSeconds(_animationCamera.clip.length - _cutsceneBufferTime);
 
         // activates JumpPad
-        _jumpPad.ActivateJumpPad();
+        _jumpPad.ActivateJumpPad(true);
 
         yield return new WaitForSeconds(_cutsceneBufferTime + 0.1f);
 

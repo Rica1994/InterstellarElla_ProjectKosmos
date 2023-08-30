@@ -30,10 +30,6 @@ public class JumpPad : MonoBehaviour
     [SerializeField, Range(0.01f, 0.5f)] private float _zoomFactor = 0.02f;
     [SerializeField, Range(1f, 4f)] private float _zoomLimit = 2.5f;
 
-    [Header("Audio")]
-    [SerializeField] private AudioElement _audioJumpPadTriggered;
-    [SerializeField] private AudioElement _audioJumpPadActivation;
-
     [Header("Visualizations Arc")]
     [SerializeField]
     private int _iterations = 20;
@@ -52,6 +48,12 @@ public class JumpPad : MonoBehaviour
 
     private bool _isOnCooldown;
 
+    [Header("Sounds")]
+    [SerializeField] private AudioElement _soundActivation;
+    [SerializeField] private AudioElement _soundEntered;
+
+    [SerializeField] private AudioSource _mySoundIdleSource;
+
 
     private void Start()
     {
@@ -59,7 +61,7 @@ public class JumpPad : MonoBehaviour
 
         if (_isActive == true)
         {
-            ActivateJumpPad();
+            ActivateJumpPad(false);
         }
         if (_swapCamera != null)
         {
@@ -97,7 +99,7 @@ public class JumpPad : MonoBehaviour
                 ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>().ZoomOutCamera(_zoomDuration, _zoomFactor, _zoomLimit);
 
                 // play sound effect
-                ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_audioJumpPadTriggered);
+                ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEntered);
             }           
         }
     }
@@ -168,10 +170,14 @@ public class JumpPad : MonoBehaviour
         var particleIdle = ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleLocalSpacePermanent(ParticleType.PS_JumpPadIdle, _visuals.transform);
         particleIdle.Play();
 
+        // play sound activation
         if (playSoundActivation == true)
         {
-            ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_audioJumpPadActivation);
+            ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundActivation);
         }
+
+        // enable sound idle
+        _mySoundIdleSource.enabled = true;
     }
 
     // call this from external in-editor button
