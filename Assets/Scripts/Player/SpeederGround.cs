@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
+using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -58,6 +59,8 @@ public class SpeederGround : PlayerController
     private float _zVelocity = 0f;
 
     private float _fakeGroundedTimer;
+
+    [Header("Other")]
     [SerializeField] private float _fakeGroundedTimeLimit = 0.25f;
     private bool _isJumping = false;
     private bool _hasJumped = false;
@@ -88,20 +91,25 @@ public class SpeederGround : PlayerController
 
     [SerializeField]
     private Transform _visual;
-
-
     [SerializeField]
     private Transform _target;
-
     [SerializeField]
     private float _visualLerpSpeed = 2.5f;
-    
+
+    [Header("Sounds")]
+    [SerializeField] private AudioElement _soundJump;
+    [SerializeField] private AudioElement _soundLand;
+    [SerializeField] private AudioElement _soundBounce;
+
+    private AudioController _audioController;
 
 
     private void Start()
     {
         _lastPosition = transform.position;
         _playerLayerMask = ServiceLocator.Instance.GetService<GameManager>().PlayerLayermask;
+
+        _audioController = ServiceLocator.Instance.GetService<AudioController>();
     }
 
     private void Awake()
@@ -271,6 +279,11 @@ public class SpeederGround : PlayerController
     {
         _isJumping = true;
     }
+
+    public void PlayBounceBackSound()
+    {
+        _audioController.PlayAudio(_soundBounce);
+    }
     
     private void Move()
     {
@@ -337,6 +350,9 @@ public class SpeederGround : PlayerController
         if (landingVelocity > _minimumSpeedToBounce)
         {
             _yVelocity = landingVelocity * _bounceFactor;
+
+            // play sound
+            _audioController.PlayAudio(_soundLand);
         }
     }
 
@@ -351,6 +367,9 @@ public class SpeederGround : PlayerController
             }
 
             _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
+
+            // play sound
+            _audioController.PlayAudio(_soundJump);
         }
 
         _isJumping = false;

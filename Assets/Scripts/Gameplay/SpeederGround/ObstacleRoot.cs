@@ -91,9 +91,10 @@ public class ObstacleRoot : MonoBehaviour
             player.Collide(_knockBackMultiplierComponent);
 
             // do not call this if I'm in space, only ground
-            if (player.GetComponent<SpeederGround>() != null)
+            SpeederGround speeder = player.GetComponent<SpeederGround>();
+            if (speeder != null)
             {
-                ServiceLocator.Instance.GetService<LevelManager>().PlayerHitObstacle();
+                ServiceLocator.Instance.GetService<LevelManager>().PlayerHitObstacle(speeder);
             }
             
             
