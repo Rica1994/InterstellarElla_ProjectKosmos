@@ -36,6 +36,8 @@ public class Lever : MonoBehaviour
     private void Start()
     {
         SwapCurrentActiveCamera(false, true);
+
+        _audioController = ServiceLocator.Instance.GetService<AudioController>();
     }
 
 
