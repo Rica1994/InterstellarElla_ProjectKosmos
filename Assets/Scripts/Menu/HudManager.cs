@@ -11,10 +11,10 @@ public class HudManager : MonoBehaviour
     private void Start()
     {
         var gameManager = ServiceLocator.Instance.GetService<GameManager>();
-        if (!gameManager.IsMobileWebGl)
-        {
-            _joystick.SetActive(false);
-            _action.SetActive(false);
-        }
+        //if (!gameManager.IsMobileWebGl)
+        //{
+        //    _joystick.SetActive(false);
+        //    _action.SetActive(false);
+        //}
     }
 }

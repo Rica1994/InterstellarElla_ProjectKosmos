@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class GameManager : Service
 {
-    [SerializeField]
-    private bool _simulateMobile = false;
+    //[SerializeField]
+    //private bool _simulateMobile = false;
     
     private PlayerController _playerController;
 
@@ -18,15 +18,14 @@ public class GameManager : Service
         RemoteCar,
     }
 
-    private bool _isMobile = false;
-    public bool IsMobileWebGl => _isMobile;
+    //private bool _isMobile = false;
+    //public bool IsMobileWebGl => _isMobile;
 
     public LayerMask PlayerLayermask;
 
-#if !UNITY_EDITOR && UNITY_WEBGL
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern bool IsMobile();
-#endif
+
 
     protected override void OnEnable()
     {
@@ -38,10 +37,8 @@ public class GameManager : Service
             Debug.LogWarning("No player controller found in this scene");
         }
 
-        _isMobile = _simulateMobile;
-#if !UNITY_EDITOR && UNITY_WEBGL
-        _isMobile = IsMobile();
-#endif
+        //_isMobile = _simulateMobile;
+        //_isMobile = IsMobile();
     }
 
     public void EndGame()

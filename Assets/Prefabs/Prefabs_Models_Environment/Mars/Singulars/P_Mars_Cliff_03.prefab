@@ -51,6 +51,7 @@ MonoBehaviour:
   _shouldLerpOut: 1
   _lerpInSpeed: 0.7
   _lerpOutSpeed: 0.7
+  _startMultiplierValue: 0
 --- !u!114 &1562815018897163345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,6 +66,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _knockBackMultiplierComponent: {fileID: 1603194814307224041}
   _destroyOnHit: 0
+  _destroyTrigger: 0
+  _destroyAfterWhile: 0
   _disableColliderOnHit: 0
   ObstacleColliders:
   - {fileID: 2943122781882958385}
@@ -139,20 +142,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5f50b7677537be54c88091ffe5e9f480, type: 3}
   m_PrefabInstance: {fileID: 3430593933538483107}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &8846760236119719899
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2547492370390640370}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -3531946766418785785, guid: 5f50b7677537be54c88091ffe5e9f480, type: 3}
 --- !u!114 &2943122781882958385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,3 +154,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fcd741387cea484d8d54716dcef743b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!64 &4162647614964446867
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2547492370390640370}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 2092175412129688800, guid: 5f50b7677537be54c88091ffe5e9f480, type: 3}
