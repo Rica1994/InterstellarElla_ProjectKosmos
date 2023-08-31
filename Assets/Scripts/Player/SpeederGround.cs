@@ -293,6 +293,12 @@ public class SpeederGround : PlayerController
         float inputX = _input.x;
         float inputY = _input.y;
 
+        // max out speed if stick is pressed "z-amount" forward
+        if (inputY >= 0.4f)
+        {
+            inputY = 1;
+        }
+
         /*if (angle >= 90 - _forwardAngleRange && angle <= 90 + _forwardAngleRange)
         {
             inputY = Mathf.Sign(_input.y);
