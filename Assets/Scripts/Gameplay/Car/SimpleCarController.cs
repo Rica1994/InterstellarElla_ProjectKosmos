@@ -9,9 +9,8 @@ using UnityEngine.Serialization;
 
 public class SimpleCarController : PlayerController
 {
-
- //   private float m_horizontalInput;
- //   private float m_verticalInput;
+    [SerializeField] private Transform _transformFollower;
+    
     private float m_steeringAngle;
 
     public WheelCollider frontDriverW, frontPassengerW;
@@ -44,7 +43,6 @@ public class SimpleCarController : PlayerController
 
     private Vector3 _resetPosition;
     private Quaternion _resetRotation;
-
 
     [SerializeField]
     private float _boostStrength = 4f, _boostCooldownDuration;
@@ -81,6 +79,7 @@ public class SimpleCarController : PlayerController
     public static event NormalSpeed OnNormalize;
 
     private Vector2 _input;
+    public Transform TransformFollower => _transformFollower;
 
 
     private void Start()
@@ -275,23 +274,35 @@ public class SimpleCarController : PlayerController
 
     private void Steer()
     {
-        // Angle difference between forward and the current target.
-        var flatForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
-
-        float currentAngleDiffTarget;
-        currentAngleDiffTarget = Vector2.SignedAngle(new Vector2(flatForward.x, flatForward.z), _input);
-
-        m_steeringAngle = Mathf.Clamp(currentAngleDiffTarget, -maxSteerAngle, maxSteerAngle) * 0.8f;
-
-        // slight rotation towards target of this transform
+        // Slight rotation towards the target of this transform
         if (_input.magnitude > 0.1f)
         {
-            Vector3 target;
-            target = new Vector3(_input.x, 0.0f, _input.y);
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(target, Vector3.up), 0.1f);
+            // Calculate the target rotation based on the input values.
+            Quaternion rotation;
+            var rotationAngle = Mathf.Atan2(_input.x, _input.y) * Mathf.Rad2Deg;
+            rotation = Quaternion.Euler(0.0f, rotationAngle, 0.0f);
+
+            // Create the target rotation for smooth rotation
+            var targetRot = rotation * _transformFollower.rotation;
+
+            // Calculate the difference in angle between the current and target forward vectors
+            var newForward = rotation * _transformFollower.forward;
+            var angle = Vector3.Angle(transform.forward, newForward);
+
+            // Project the forward vectors onto the horizontal plane
+            var flatForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
+
+            // Calculate the steering angle based on the angle difference
+            float currentAngleDiffTarget;
+            currentAngleDiffTarget = Vector2.SignedAngle(new Vector2(flatForward.x, flatForward.z), new Vector2(newForward.x, newForward.z));
+            m_steeringAngle = Mathf.Clamp(currentAngleDiffTarget, -maxSteerAngle, maxSteerAngle) * 0.8f;
+
+            // Apply the target rotation smoothly
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 0.1f);
         }
 
-        if (_movingReverse == false)
+        // Apply steering angles to the wheels if not moving in reverse
+        if (!_movingReverse)
         {
             frontDriverW.steerAngle = -m_steeringAngle;
             frontPassengerW.steerAngle = -m_steeringAngle;

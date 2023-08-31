@@ -19,7 +19,7 @@ public class VirtualCameraManagerExploring : Service
 
     private bool _runningZoomCoroutine;
 
-    private float _originalCameraDistance_1, _originalCameraDistance_2;
+    private float _originalCameraDistance, _newCameraDistance;
 
     private float _currentZoomFactor;
 
@@ -35,7 +35,7 @@ public class VirtualCameraManagerExploring : Service
         if (thirdPersonFollow != null)
         {
             // set original cam distance
-            _originalCameraDistance_1 = thirdPersonFollow.CameraDistance;
+            _originalCameraDistance = thirdPersonFollow.CameraDistance;
 
             // add the 3rd person component to a list as well
             _virtualCameraFollows.Add(thirdPersonFollow);
@@ -43,7 +43,7 @@ public class VirtualCameraManagerExploring : Service
         else if (framingTransposer != null)
         {
             // set original cam distance
-            _originalCameraDistance_1 = framingTransposer.m_CameraDistance;
+            _originalCameraDistance = framingTransposer.m_CameraDistance;
 
             // add the framing transposer component to a list as well
             _virtualCameraFramingTransposers.Add(framingTransposer);
@@ -80,10 +80,12 @@ public class VirtualCameraManagerExploring : Service
         var thirdPersonFollow = virtualCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
         var framingTransposer = virtualCam.GetCinemachineComponent<CinemachineFramingTransposer>();
 
+
+
         if (thirdPersonFollow != null)
         {
             // set original cam distance
-            _originalCameraDistance_2 = thirdPersonFollow.CameraDistance;
+            _newCameraDistance = thirdPersonFollow.CameraDistance;
             //  set this new cameras 'CameraDistance' to its value + the currently adjusted zoom (in case we get a camera swap mid-zoom)
             thirdPersonFollow.CameraDistance += _currentZoomFactor;
 
@@ -93,7 +95,7 @@ public class VirtualCameraManagerExploring : Service
         else if(framingTransposer != null)
         {
             // set original cam distance
-            _originalCameraDistance_2 = framingTransposer.m_CameraDistance;
+            _newCameraDistance = framingTransposer.m_CameraDistance;
             //  set this new cameras 'CameraDistance' to its value + the currently adjusted zoom (in case we get a camera swap mid-zoom)
             framingTransposer.m_CameraDistance += _currentZoomFactor;
 
@@ -101,6 +103,8 @@ public class VirtualCameraManagerExploring : Service
             _virtualCameraFramingTransposers.Add(framingTransposer);
         }
         
+
+
 
         // set the blend speed
         _camBrain.m_DefaultBlend.m_Time = blendSpeed;
@@ -158,30 +162,31 @@ public class VirtualCameraManagerExploring : Service
 
     private IEnumerator RemoveCameraAfterBlend()
     {
-        yield return new WaitForSeconds(_camBrain.m_DefaultBlend.m_Time + 1f);
+        yield return new WaitForSeconds(_camBrain.m_DefaultBlend.m_Time + 0.1f);
 
         if (_currentlyActiveVirtualCameras.Count > 1)
         {
-            GameObject previousCamera = _currentlyActiveVirtualCameras[0].gameObject;           
-            previousCamera.SetActive(false);
+            CinemachineVirtualCamera previousCamera = _currentlyActiveVirtualCameras[0];           
+            previousCamera.gameObject.SetActive(false);
 
-            if (_virtualCameraFollows.Count > 0)
+            // check for framing transposer or thirdperson camera
+            Cinemachine3rdPersonFollow thirdPersonFollowPreviousCam = previousCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+            CinemachineFramingTransposer framingTransposerPreviousCam;
+            if (thirdPersonFollowPreviousCam != null)
             {
-                // set camera distance to original of camera getting removed
-                _virtualCameraFollows[0].CameraDistance = _originalCameraDistance_1;
-
+                thirdPersonFollowPreviousCam.CameraDistance = _originalCameraDistance;
                 _virtualCameraFollows.RemoveAt(0);
             }
-            else if (_virtualCameraFramingTransposers.Count > 0)
+            else
             {
-                // set camera distance to original of camera getting removed
-                _virtualCameraFramingTransposers[0].m_CameraDistance = _originalCameraDistance_1;
+                framingTransposerPreviousCam = previousCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
 
-                _virtualCameraFramingTransposers.RemoveAt(0);
+                framingTransposerPreviousCam.m_CameraDistance = _originalCameraDistance;
+                _virtualCameraFramingTransposers.RemoveAt(0);              
             }
 
-            // re-place the camera distance value of the 1st float
-            _originalCameraDistance_1 = _originalCameraDistance_2;
+            // re-fresh the camera distance value 
+            _originalCameraDistance = _newCameraDistance;
 
             _currentlyActiveVirtualCameras.RemoveAt(0);      
         }

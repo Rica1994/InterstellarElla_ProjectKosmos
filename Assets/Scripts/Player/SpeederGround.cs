@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
+using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -11,7 +12,7 @@ public class SpeederGround : PlayerController
     [Header("Speed")]
     [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f);
 
-    [SerializeField] private float _speedForward = 50f;
+    public float speedForward = 50f;
     [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
     [SerializeField] private float _startSidewaySpeed = 20.0f;
     [SerializeField] private float _speedSideways = 15f;
@@ -38,8 +39,7 @@ public class SpeederGround : PlayerController
     [SerializeField] private float _gravityValue = -9.81f;
 
 
-    [FormerlySerializedAs("_landingBounceValueFactor")]
-    [SerializeField]
+    [FormerlySerializedAs("_landingBounceValueFactor")] [SerializeField]
     private float _bounceFactor = 0.5f;
 
     [SerializeField] private float _minimumSpeedToBounce = 30.0f;
@@ -59,6 +59,8 @@ public class SpeederGround : PlayerController
     private float _zVelocity = 0f;
 
     private float _fakeGroundedTimer;
+
+    [Header("Other")]
     [SerializeField] private float _fakeGroundedTimeLimit = 0.25f;
     private bool _isJumping = false;
     private bool _hasJumped = false;
@@ -89,20 +91,25 @@ public class SpeederGround : PlayerController
 
     [SerializeField]
     private Transform _visual;
-
-
     [SerializeField]
     private Transform _target;
-
     [SerializeField]
     private float _visualLerpSpeed = 2.5f;
 
+    [Header("Sounds")]
+    [SerializeField] private AudioElement _soundJump;
+    [SerializeField] private AudioElement _soundLand;
+    [SerializeField] private AudioElement _soundBounce;
+
+    private AudioController _audioController;
 
 
     private void Start()
     {
         _lastPosition = transform.position;
         _playerLayerMask = ServiceLocator.Instance.GetService<GameManager>().PlayerLayermask;
+
+        _audioController = ServiceLocator.Instance.GetService<AudioController>();
     }
 
     private void Awake()
@@ -152,7 +159,7 @@ public class SpeederGround : PlayerController
         ApplyGravity();
 
         _hoveringComponent.UpdateHovering(_upDownSpeed, _hoverDisplacement);
-
+        
         UpdateVisual();
     }
 
@@ -273,6 +280,11 @@ public class SpeederGround : PlayerController
         _isJumping = true;
     }
 
+    public void PlayBounceBackSound()
+    {
+        _audioController.PlayAudio(_soundBounce);
+    }
+    
     private void Move()
     {
         // float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
@@ -316,11 +328,11 @@ public class SpeederGround : PlayerController
         //   }
         //   else
         //   {
-        _zVelocity = (_speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) * _speedBoostComponent.Multiplier) * KnockbackMultiplier;
-        //   }
+        _zVelocity = (speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) * _speedBoostComponent.Multiplier) * KnockbackMultiplier;
+     //   }
 
 
-        Vector3 speed = new Vector3(_xVelocity, _speedForward, _zVelocity);
+        Vector3 speed = new Vector3(_xVelocity, speedForward, _zVelocity);
 
         // OG
         //Vector3 speed = new Vector3(
@@ -338,6 +350,9 @@ public class SpeederGround : PlayerController
         if (landingVelocity > _minimumSpeedToBounce)
         {
             _yVelocity = landingVelocity * _bounceFactor;
+
+            // play sound
+            _audioController.PlayAudio(_soundLand);
         }
     }
 
@@ -352,6 +367,9 @@ public class SpeederGround : PlayerController
             }
 
             _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
+
+            // play sound
+            _audioController.PlayAudio(_soundJump);
         }
 
         _isJumping = false;
@@ -375,7 +393,7 @@ public class SpeederGround : PlayerController
         playerInput.Move.canceled += OnMoveInput;
         playerInput.Action.started += OnJumpInput;
     }
-
+    
     private void OnDisable()
     {
         if (_isApplicationQuitting)
@@ -414,7 +432,7 @@ public class SpeederGround : PlayerController
 
     private void FixedUpdate()
     {
-
+        
     }
 
     public void SetJumpMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)

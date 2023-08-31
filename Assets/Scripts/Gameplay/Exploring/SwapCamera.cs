@@ -36,11 +36,11 @@ public class SwapCamera : MonoBehaviour
     {
         if (_virtualCamera.gameObject.activeSelf == false)
         {
-            Debug.Log("Triggered the sawpping to a new cam");
+            Debug.Log("Triggered the swapping to a new cam");
 
             if (_isStatic == true)
             {
-                // do nothing in particular with th target
+                // do nothing in particular with the target
             }
             else
             {

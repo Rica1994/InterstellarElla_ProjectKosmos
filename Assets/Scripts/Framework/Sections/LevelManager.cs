@@ -258,10 +258,14 @@ public class LevelManager : Service
         }
     }
 
-    public void PlayerHitObstacle()
+    public void PlayerHitObstacle(SpeederGround speeder)
     {
         _amountTimesHit++;
         _timeSinceLastHit = 0.0f;
+
+        // play sound
+        speeder.PlayBounceBackSound();
+
         if (_amountTimesHit >= _maxAmountHitsForRespawn)
         {
             Debug.Log("Player Hit more than " + _maxAmountHitsForRespawn + " times!");
