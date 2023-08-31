@@ -63,6 +63,13 @@ public class JumpPad : MonoBehaviour
         {
             ActivateJumpPad(false);
         }
+        else
+        {
+            // disable sound idle
+            _mySoundIdleSource.enabled = false;
+        }
+
+
         if (_swapCamera != null)
         {
             _swapCamera.gameObject.SetActive(false);
