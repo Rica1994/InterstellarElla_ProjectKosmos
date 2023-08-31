@@ -215,13 +215,13 @@ public class MainMenuManager : Service
             case 0:
                 return SceneType.S_Mars_1_1_Work;
             case 1:
-                return SceneType.S_Level_2_0_Work;
+                return SceneType.S_Level_3_0_Work;
             case 2:
                 return SceneType.S_Level_3_0_Work;
             case 3:
-                return SceneType.S_Level_4_0_Work;
+                return SceneType.S_Level_4_3_Work;
             case 4:
-                return SceneType.S_Level_5_0_Work;
+                return SceneType.S_Level_4_3_Work;
             default:
                 return SceneType.None;
         }
