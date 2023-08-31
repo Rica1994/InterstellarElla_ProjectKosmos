@@ -53,6 +53,7 @@ MonoBehaviour:
   _shouldLerpOut: 1
   _lerpInSpeed: 0.7
   _lerpOutSpeed: 0.7
+  _startMultiplierValue: 0
 --- !u!114 &-3968867045069930708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,6 +68,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _knockBackMultiplierComponent: {fileID: 6732933287794942571}
   _destroyOnHit: 0
+  _destroyTrigger: 0
+  _destroyAfterWhile: 0
   _disableColliderOnHit: 0
   ObstacleColliders: []
 --- !u!1001 &1457769757125731184
@@ -219,6 +222,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -1.158
       objectReference: {fileID: 0}
+    - target: {fileID: 4996872453964719271, guid: 1d576a3fa7b84f242ab237143b008bc4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6624156636221563726, guid: 1d576a3fa7b84f242ab237143b008bc4, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -234,23 +241,25 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2073869258773804519, guid: 1d576a3fa7b84f242ab237143b008bc4, type: 3}
   m_PrefabInstance: {fileID: 7745293282022083148}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &620734550064132841 stripped
+--- !u!1 &503949131191186139 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 7197181000924215461, guid: 1d576a3fa7b84f242ab237143b008bc4, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7891058770705463447, guid: 1d576a3fa7b84f242ab237143b008bc4, type: 3}
   m_PrefabInstance: {fileID: 7745293282022083148}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1973055428405273225
-MonoBehaviour:
+--- !u!64 &1739035498191268355
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 620734550064132841}
+  m_GameObject: {fileID: 503949131191186139}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fcd741387cea484d8d54716dcef743b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 8420025093082467829, guid: 9a8f948bf865e674795a9eb680c41707, type: 3}
 --- !u!1001 &7932913873078282565
 PrefabInstance:
   m_ObjectHideFlags: 0
