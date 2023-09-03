@@ -355,6 +355,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 24.426, y: -227.562, z: 14.239}
+--- !u!137 &631921857 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -6097967258309838875, guid: b4dbdce37300ebd4185468ad66e0b923, type: 3}
+  m_PrefabInstance: {fileID: 1876260910}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1086968802
 GameObject:
   m_ObjectHideFlags: 0
@@ -1440,11 +1445,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!137 &1876260915 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -6613108699660039676, guid: b4dbdce37300ebd4185468ad66e0b923, type: 3}
-  m_PrefabInstance: {fileID: 1876260910}
-  m_PrefabAsset: {fileID: 0}
 --- !u!137 &1876260916 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 5711091692413848919, guid: b4dbdce37300ebd4185468ad66e0b923, type: 3}
@@ -1462,12 +1462,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ed2eb1ec7518f409a211428e1cbd86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  voiceSource: {fileID: 1086968807}
-  closedMouth: {fileID: 1251331310}
-  halfOpenMouth: {fileID: 1876260916}
-  openMouth: {fileID: 1876260915}
-  thresholdHalfOpen: 0.06
-  thresholdOpen: 0.15
+  _voiceSource: {fileID: 1086968807}
+  _closedMouth: {fileID: 1251331310}
+  _halfOpenMouth: {fileID: 1876260916}
+  _openMouth: {fileID: 631921857}
+  _thresholdHalfOpen: 0.06
+  _thresholdOpen: 0.15
 --- !u!1001 &2123113948
 PrefabInstance:
   m_ObjectHideFlags: 0
