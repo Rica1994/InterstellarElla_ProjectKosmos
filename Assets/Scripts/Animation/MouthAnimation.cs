@@ -11,6 +11,11 @@ public class MouthAnimation : MonoBehaviour
     [SerializeField]
     private SkinnedMeshRenderer _openMouth;
 
+    [SerializeField, Range(0f, 1f)]
+    private float _timeTillNextMouthChange = 0.08f;
+
+    private float _timePassedWithCurrentMouth = 0.0f;
+
     [Header("Thresholds")]
     [SerializeField]
     [Range(0f, 1f)]
@@ -31,28 +36,34 @@ public class MouthAnimation : MonoBehaviour
     {
         if (_voiceSource.isPlaying)
         {
-            float volume = RMSValue();
+            _timePassedWithCurrentMouth += Time.deltaTime;
 
-            if (volume < _thresholdHalfOpen)
+            if (_timePassedWithCurrentMouth > _timeTillNextMouthChange)
             {
-                //Debug.Log("Closed Mouth Activated");
-                _closedMouth.enabled = true;
-                _halfOpenMouth.enabled = false;
-                _openMouth.enabled = false;
-            }
-            else if (volume >= _thresholdHalfOpen && volume < _thresholdOpen)
-            {
-                //Debug.Log("Half Open Mouth Activated");
-                _closedMouth.enabled = false;
-                _halfOpenMouth.enabled = true;
-                _openMouth.enabled = false;
-            }
-            else
-            {
-                //Debug.Log("Open Mouth Activated");
-                _closedMouth.enabled = false;
-                _halfOpenMouth.enabled = false;
-                _openMouth.enabled = true;
+                _timePassedWithCurrentMouth = 0.0f;
+                float volume = RMSValue();
+
+                if (volume < _thresholdHalfOpen)
+                {
+                    //Debug.Log("Closed Mouth Activated");
+                    _closedMouth.enabled = true;
+                    _halfOpenMouth.enabled = false;
+                    _openMouth.enabled = false;
+                }
+                else if (volume >= _thresholdHalfOpen && volume < _thresholdOpen)
+                {
+                    //Debug.Log("Half Open Mouth Activated");
+                    _closedMouth.enabled = false;
+                    _halfOpenMouth.enabled = true;
+                    _openMouth.enabled = false;
+                }
+                else
+                {
+                    //Debug.Log("Open Mouth Activated");
+                    _closedMouth.enabled = false;
+                    _halfOpenMouth.enabled = false;
+                    _openMouth.enabled = true;
+                }
             }
         }
     }
