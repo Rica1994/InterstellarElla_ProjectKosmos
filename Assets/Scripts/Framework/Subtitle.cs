@@ -5,8 +5,24 @@ using UnityEngine;
 
 public class Subtitle : MonoBehaviour
 {
-    public void SetSubtitleText(string subtitle)
+    [SerializeField]
+    private string[] _subtitles;
+
+    public int subtitleIndex;
+
+    private int _previousSubtitleIndex = -1;
+
+    private void Update()
     {
-        GetComponent<TextMeshProUGUI>().text = subtitle;
+        CheckForSubtitleChange();
+    }
+
+    public void CheckForSubtitleChange()
+    {
+        if (subtitleIndex != _previousSubtitleIndex)
+        {
+            GetComponent<TextMeshProUGUI>().text = _subtitles[subtitleIndex];
+            _previousSubtitleIndex = subtitleIndex;
+        }
     }
 }
