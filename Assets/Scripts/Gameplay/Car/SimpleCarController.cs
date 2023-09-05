@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cinemachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,9 @@ using UnityEngine.Serialization;
 public class SimpleCarController : PlayerController
 {
     [SerializeField] private Transform _transformFollower;
-    
+
+    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
+
     private float m_steeringAngle;
 
     public WheelCollider frontDriverW, frontPassengerW;
@@ -50,7 +53,7 @@ public class SimpleCarController : PlayerController
     private float _maxSpeedBoosted;
     private float _speed;
     [SerializeField]
-    private  float _maxSpeed = 8; // top 2 max speeds get assigned to this value when needed
+    private float _maxSpeed = 8; // top 2 max speeds get assigned to this value when needed
 
     private bool _hasBoostedRecently, _boostIsDeclining;
     public bool BoostCoolingDown;
@@ -66,7 +69,7 @@ public class SimpleCarController : PlayerController
 
     private bool _inputBeingGiven;
 
-//    private MovingDirections _currentMovingDirection;
+    //    private MovingDirections _currentMovingDirection;
     private Vector2 _currentMoveDirectionVector;
     private bool _movingReverse;
 
@@ -80,6 +83,8 @@ public class SimpleCarController : PlayerController
 
     private Vector2 _input;
     public Transform TransformFollower => _transformFollower;
+
+    public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
 
 
     private void Start()
@@ -104,7 +109,7 @@ public class SimpleCarController : PlayerController
         //    }
 
         //   UIPanel.Instance.BoostButtonElla.onClick.AddListener(BoostCall);
-        
+
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
         playerInput.Action.started += x => OnBoostInput();
     }
@@ -120,7 +125,7 @@ public class SimpleCarController : PlayerController
     {
         _input = obj.ReadValue<Vector2>();
     }
-    
+
     private void OnBoostInput()
     {
         if (BoostCoolingDown == false)
@@ -129,11 +134,11 @@ public class SimpleCarController : PlayerController
             Boost();
         }
     }
-    
+
     private void FixedUpdate()
     {
-       //  CalculateArrowDirection();
-         GetInput();
+        //  CalculateArrowDirection();
+        GetInput();
 
         // if car is on slope... (should ideally also check for if it's grounded)  ->  slide of
         if (Mathf.Abs(transform.rotation.x) >= 0.3f)
@@ -144,17 +149,17 @@ public class SimpleCarController : PlayerController
 
         //ReverseLogic();
 
-           Steer();
-           Accelerate();
+        Steer();
+        Accelerate();
 
-         //  CheckForCollision();
-           UpdateWheelPoses();
-           ApplyBrakes();
+        //  CheckForCollision();
+        UpdateWheelPoses();
+        ApplyBrakes();
 
         //   // get the wheels spinning, needed to have the boost work from still position
-          BoostWheelColliderSpin();
+        BoostWheelColliderSpin();
 
-           LimitSpeed();
+        LimitSpeed();
     }
 
 
@@ -231,38 +236,31 @@ public class SimpleCarController : PlayerController
         transform.rotation = _resetRotation;
     }
 
-      public void GetInput()
-      {
-          if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0 && IsBoosting == false) // if there's no input being made...
-          {
-              _motorTorque = 0.0f;
-              _brakeTorque = motorForce;
+    public void GetInput()
+    {
+        if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0)
+        {
+            _motorTorque = 0.0f;
+            _brakeTorque = motorForce;
 
-              // freeze y rot, set angular vel.y to 0
-              _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
-              _rigidbody.angularVelocity = new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
-          }
-          else if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) <= 0.18f && IsBoosting == false) // if slight input is being made...
-          {
-              _motorTorque = motorForce / 2;
-              _brakeTorque = motorForce / 2;
-          }
-          else // if major input...
-          {
-              _rigidbody.constraints = RigidbodyConstraints.None;
+            // freeze y rot, set angular vel.y to 0
+           _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
+           _rigidbody.angularVelocity = Vector3.zero;  //new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
+        }
+        else if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) <= 0.18f && IsBoosting == false) // if slight input is being made...
+        {
+            _motorTorque = motorForce / 2;
+            _brakeTorque = motorForce / 2;
+        }
+        else // if major input...
+        {
+            _rigidbody.constraints = RigidbodyConstraints.None;
 
-              _motorTorque = motorForce;
-              _brakeTorque = 0.0f;
-          }
+            _motorTorque = motorForce;
+            _brakeTorque = 0.0f;
+        }
+    }
 
-          // additional rotational fix
-          if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0)
-          {
-              _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
-              _rigidbody.angularVelocity = new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
-          }
-      }
-      
     private void ApplyBrakes()
     {
         //  frontDriverW.brakeTorque = _brakeTorque;
@@ -287,7 +285,6 @@ public class SimpleCarController : PlayerController
 
             // Calculate the difference in angle between the current and target forward vectors
             var newForward = rotation * _transformFollower.forward;
-            var angle = Vector3.Angle(transform.forward, newForward);
 
             // Project the forward vectors onto the horizontal plane
             var flatForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
@@ -314,7 +311,7 @@ public class SimpleCarController : PlayerController
     // perhaps also implement this for rear wheel drive? 
     private void Accelerate()
     {
-        
+
         var joyStickMagnitude = (_input).normalized.magnitude;
         frontDriverW.motorTorque = Mathf.Abs(joyStickMagnitude) * _motorTorque;
         frontPassengerW.motorTorque = Mathf.Abs(joyStickMagnitude) * _motorTorque;
@@ -383,12 +380,13 @@ public class SimpleCarController : PlayerController
             _rigidbody.velocity = _rigidbody.velocity.normalized * _speed;
         }
     }
-    
+
     private void Boost()
     {
         _rigidbody.AddForce(transform.forward * _boostStrength, ForceMode.VelocityChange);
 
-  //      Camera.main.GetComponentInParent<FollowCam>().ZoomOut();
+        //      Camera.main.GetComponentInParent<FollowCam>().ZoomOut();
+        StartCoroutine(ZoomOut());
 
         StartCoroutine(ActivateBoostCooldown()); // cooldown period
         StartCoroutine(DecreaseMaxSpeed()); // sets booleans regarding speed / activates particles        
@@ -404,28 +402,28 @@ public class SimpleCarController : PlayerController
             rearPassengerW.motorTorque = 170;
         }
     }
-    
+
     private IEnumerator DecreaseMaxSpeed()
     {
         _hasBoostedRecently = true;
         IsBoosting = true;
         OnBoost?.Invoke();
 
-   //    _particleLeftPipe.SetActive(true);
-   //    _particleRightPipe.SetActive(true);
+        //    _particleLeftPipe.SetActive(true);
+        //    _particleRightPipe.SetActive(true);
 
-       yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1);
 
-   //    _particleLeftPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-   //    _particleLeftPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+        //    _particleLeftPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
+        //    _particleLeftPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
 
-   //    _particleRightPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-   //    _particleRightPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+        //    _particleRightPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
+        //    _particleRightPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
 
-       yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1);
 
-   //    _particleLeftPipe.SetActive(false);
-   //    _particleRightPipe.SetActive(false);
+        //    _particleLeftPipe.SetActive(false);
+        //    _particleRightPipe.SetActive(false);
 
         IsBoosting = false;
         OnNormalize?.Invoke();
@@ -440,6 +438,41 @@ public class SimpleCarController : PlayerController
         yield return new WaitForSeconds(_boostCooldownDuration);
 
         BoostCoolingDown = false;
+    }
+
+    private IEnumerator ZoomOut()
+    {
+        float zoomTime = 2.0f;
+        float passedTimeZoomingOut = 0.0f;
+       
+        float initialFOV = VirtualCamera.m_Lens.FieldOfView;
+        float targetFOV = 108.0f;
+       
+        float maxTimeZoomedOut = 3.0f;
+
+        while (passedTimeZoomingOut < zoomTime)
+        {
+            passedTimeZoomingOut += Time.deltaTime;
+            VirtualCamera.m_Lens.FieldOfView = Mathf.Lerp(initialFOV, targetFOV, passedTimeZoomingOut / zoomTime);
+
+            yield return null;
+        }
+
+        passedTimeZoomingOut = 0.0f;
+     //   VirtualCamera.m_Lens.FieldOfView = targetFOV;
+
+        yield return new WaitForSeconds(maxTimeZoomedOut);
+
+        targetFOV = initialFOV;
+        initialFOV = VirtualCamera.m_Lens.FieldOfView;
+
+        while (passedTimeZoomingOut < zoomTime)
+        {
+            passedTimeZoomingOut += Time.deltaTime;
+            VirtualCamera.m_Lens.FieldOfView = Mathf.Lerp(initialFOV, targetFOV, passedTimeZoomingOut / zoomTime);
+
+            yield return null;
+        }
     }
 
     /*private void RemoveBarriers()
