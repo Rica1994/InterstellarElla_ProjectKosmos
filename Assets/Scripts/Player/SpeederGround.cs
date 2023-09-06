@@ -108,7 +108,6 @@ public class SpeederGround : PlayerController
     {
         _lastPosition = transform.position;
         _playerLayerMask = ServiceLocator.Instance.GetService<GameManager>().PlayerLayermask;
-
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
     }
 
@@ -448,5 +447,10 @@ public class SpeederGround : PlayerController
     public void SetKnockBackMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
     {
         _knockbackComponent = multiplierTimerComponent;
+    }
+
+    public void SetInput(Vector2 input)
+    {
+        _input = input;
     }
 }

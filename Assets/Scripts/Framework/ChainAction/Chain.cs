@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class Chain
 {
@@ -54,6 +55,24 @@ public class Chain
     {
         _currentChainAction.OnExit();
         Debug.Log($"ChainAction {_currentChainAction.name} completed");
+        _chainActions.Dequeue();
+        if (_chainActions.Count > 0)
+        {
+            ChainAction nextChainAction = _chainActions.Peek();
+            nextChainAction.OnEnter();
+            nextChainAction.Execute();
+        }
+        else
+        {
+            OnChainCompleted?.Invoke(this);
+        }
+    }
+
+    public void EndCurrentChainAction(PlayableDirector playableDirector)
+    {
+        _currentChainAction.OnExit();
+        Debug.Log($"ChainAction {_currentChainAction.name} completed");
+        playableDirector.Stop();
         _chainActions.Dequeue();
         if (_chainActions.Count > 0)
         {

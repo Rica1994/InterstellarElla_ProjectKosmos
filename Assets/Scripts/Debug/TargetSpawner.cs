@@ -40,7 +40,7 @@ public class TargetSpawner : MonoBehaviour
         positions.Add(spawnedObject.transform.position);
 #endif
     }
-
+#if UNITY_EDITOR
     public void SaveObjectPositionsToFile()
     {
         File.WriteAllText(SavePath, JsonUtility.ToJson(new SerializationWrapper<Vector3> { List = positions }));
@@ -57,6 +57,7 @@ public class TargetSpawner : MonoBehaviour
             instance.transform.position = pos;
         }
     }
+#endif
 
     [System.Serializable]
     public class SerializationWrapper<T>
