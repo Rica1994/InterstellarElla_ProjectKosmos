@@ -11,10 +11,6 @@ public class PickUp : MonoBehaviour
     public delegate void PickUpCallback(PickUp pickUp);
     public event PickUpCallback OnPickUp;
 
-    [Header("Audio")]
-    [SerializeField]
-    private AudioElement _soundEffectPickup1;
-
     private bool _pickedUp;
 
     private void Start()
@@ -50,14 +46,9 @@ public class PickUp : MonoBehaviour
     }
     protected virtual void PlayerFeedback()
     {
-        // this should only execute when just playing in the scene (no sectionloaders)
-
-        // spawn particle (present in pickup manager)
-        ServiceLocator.Instance.GetService<ParticleManager>().
-        CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
-
-        // play sound (happens in pickup-manager)
-        //ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEffectPickup1);
+        // spawn particle (present in particle manager)
+        ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
+        // sound is played through event with PickupManager
 
         Destroy(gameObject);
     }
