@@ -46,7 +46,8 @@ namespace UnityCore
             S_Level_5_0_Work = 15,
             S_Level_5_0_Build = 16,
 
-            S_Mars_1_0_IntroCutscene = 19
+            S_Mars_1_0_IntroCutscene = 19,
+            S_GameStartUpScene = 34,
         }
     }
 }

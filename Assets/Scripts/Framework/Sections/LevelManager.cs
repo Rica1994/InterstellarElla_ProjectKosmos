@@ -27,6 +27,7 @@ public class LevelManager : Service
     [SerializeField]
     private TriggerHandler _endGameTrigger;
 
+    [Header("Respawn Logic")]
     [SerializeField]
     private GameObject _firstCheckPoint;
     
@@ -61,6 +62,9 @@ public class LevelManager : Service
 
     private float _timeSinceLastHit = 0.0f;
     private int _amountTimesHit = 0;
+
+    [Header("Cutscene")]
+    public Transform cutsceneCameras;
 
     #region Unity Functions
 
