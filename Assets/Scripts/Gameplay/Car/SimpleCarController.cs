@@ -60,9 +60,12 @@ public class SimpleCarController : PlayerController
     public bool IsBoosting; // bool used for checking collisions with rock walls
 
     private Rigidbody _rigidbody;
+    public Rigidbody Rigid => _rigidbody;
 
     [SerializeField]
     private GameObject _particleLeftPipe, _particleRightPipe;
+    [SerializeField]
+    private GameObject _particleLeftJet, _particleRightJet;
 
     //   private RockWall[] _rockWallScripts;
     private Collider[] _rockWallColliders;
@@ -87,6 +90,23 @@ public class SimpleCarController : PlayerController
     public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
 
 
+    public Coroutine ToggleFakeGravityRoutine;
+    //private GravityComponent _gravityComponent;
+    private bool _isPerfectJumping;
+    [Header("custom gravity")]
+    [SerializeField]
+    private bool _useCustomGravity;
+    public bool UseCustomGravity => _useCustomGravity;
+    [SerializeField]
+    private float _gravityValue = -9.81f;
+    public float GravityValue => _gravityValue;
+
+
+
+    private void Awake()
+    {
+        //_gravityComponent = new GravityComponent();
+    }
     private void Start()
     {
         _ignoreMe = LayerMask.GetMask("UI", "Ignore Raycast");
@@ -112,6 +132,15 @@ public class SimpleCarController : PlayerController
 
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
         playerInput.Action.started += x => OnBoostInput();
+
+        if (_useCustomGravity == true)
+        {
+            _rigidbody.useGravity = false;
+        }
+        else
+        {
+            _rigidbody.useGravity = true;
+        }
     }
 
     private void OnEnable()
@@ -147,7 +176,7 @@ public class SimpleCarController : PlayerController
             _motorTorque = motorForce;
         }
 
-        //ReverseLogic();
+        //ReverseLogic();   
 
         Steer();
         Accelerate();
@@ -160,6 +189,18 @@ public class SimpleCarController : PlayerController
         BoostWheelColliderSpin();
 
         LimitSpeed();
+
+        if (_useCustomGravity == true)
+        {
+            ApplyGravity();
+        }      
+    }
+
+
+    // doesnt work properly
+    public void ApplyGravity()
+    {
+        _rigidbody.AddForce(new Vector3(0, -1.0f, 0) * 1 * _gravityValue * _rigidbody.mass * (-1));
     }
 
 
@@ -392,6 +433,83 @@ public class SimpleCarController : PlayerController
         StartCoroutine(DecreaseMaxSpeed()); // sets booleans regarding speed / activates particles        
     }
 
+    public void ForceBoost(bool withHop = true, float hopStrength = 10)
+    {
+        Boost();
+
+        // add the option to hop vertically 
+        if (withHop == true)
+        {
+            //_rigidbody.AddForce(new Vector3(0, 1.0f, 0) * hopStrength);
+            _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, hopStrength, _rigidbody.velocity.z);
+
+            // activate particle for a second or 2
+            StartCoroutine(ParticleJetsRoutine());
+
+            Debug.Log("hopped");
+        }
+    }
+
+    public void AutoJumpToggleFakeGravity(float timeOfFlight, float fakeGravity)
+    {
+        // stop a  possible previous jumppad coroutine
+        if (ToggleFakeGravityRoutine != null)
+        {
+            StopCoroutine(ToggleFakeGravityRoutine);
+        }
+
+        // start the new jumppad coroutine
+        ToggleFakeGravityRoutine = StartCoroutine(ToggleFakeGravity(timeOfFlight, fakeGravity));
+
+        // particles jets
+        StartCoroutine(ParticleJetsRoutine(timeOfFlight / 2f));
+
+        // play sound
+        //_audioController.PlayAudio(_soundJump);
+    }
+
+
+    private IEnumerator ParticleJetsRoutine(float duration = 0.5f)
+    {
+        _particleLeftJet.SetActive(true);
+        _particleRightJet.SetActive(true);
+
+        yield return new WaitForSeconds(duration);
+
+        _particleLeftJet.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
+        _particleLeftJet.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+
+        _particleRightJet.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
+        _particleRightJet.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+
+        yield return new WaitForSeconds(1f);
+
+        _particleLeftJet.SetActive(false);
+        _particleRightJet.SetActive(false);
+
+    }
+    private IEnumerator ToggleFakeGravity(float timeOfFlight, float fakeGravity)
+    {
+        _useCustomGravity = true;
+        _rigidbody.useGravity = false;
+
+        float originalPlayerGravity = _gravityValue;
+
+        if (fakeGravity > 0)
+        {
+            fakeGravity *= -1;
+        }
+        _gravityValue = fakeGravity;
+
+
+        yield return new WaitForSeconds(timeOfFlight);
+
+        _gravityValue = originalPlayerGravity;
+
+        _useCustomGravity = false;
+        _rigidbody.useGravity = true;
+    }
+
     private void BoostWheelColliderSpin()
     {
         if (IsBoosting == true)
@@ -409,21 +527,21 @@ public class SimpleCarController : PlayerController
         IsBoosting = true;
         OnBoost?.Invoke();
 
-        //    _particleLeftPipe.SetActive(true);
-        //    _particleRightPipe.SetActive(true);
+        _particleLeftPipe.SetActive(true);
+        _particleRightPipe.SetActive(true);
 
         yield return new WaitForSeconds(1);
 
-        //    _particleLeftPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-        //    _particleLeftPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+        _particleLeftPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
+        _particleLeftPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
 
-        //    _particleRightPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-        //    _particleRightPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+        _particleRightPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
+        _particleRightPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
 
         yield return new WaitForSeconds(1);
 
-        //    _particleLeftPipe.SetActive(false);
-        //    _particleRightPipe.SetActive(false);
+        _particleLeftPipe.SetActive(false);
+        _particleRightPipe.SetActive(false);
 
         IsBoosting = false;
         OnNormalize?.Invoke();
