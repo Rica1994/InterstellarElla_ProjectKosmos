@@ -40,7 +40,8 @@ public class GameManager : Service
 
         _isMobile = _simulateMobile;
 #if !UNITY_EDITOR && UNITY_WEBGL
-        _isMobile = IsMobile();
+        //_isMobile = IsMobile();
+        _isMobile = true;
 #endif
     }
 
