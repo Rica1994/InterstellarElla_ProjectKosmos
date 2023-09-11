@@ -48,7 +48,7 @@ public class SimpleCarController : PlayerController
     private Quaternion _resetRotation;
 
     [SerializeField]
-    private float _boostStrength = 4f, _boostCooldownDuration;
+    private float _boostStrength = 4f, _boostCooldownDuration, _boostDuration;
 
     private float _maxSpeedBoosted;
     private float _speed;
@@ -72,6 +72,16 @@ public class SimpleCarController : PlayerController
     //    private MovingDirections _currentMovingDirection;
     private Vector2 _currentMoveDirectionVector;
     private bool _movingReverse;
+
+    private bool _isFloating = false;
+
+    [SerializeField]
+    private float _targetHeight = 2.0f; // Target floating height above ground
+
+    [SerializeField]
+    private float _floatForce = 5.0f;   // Adjust this value as needed for appropriate floating force
+
+
 
     public delegate void BoostActive();
 
@@ -98,7 +108,7 @@ public class SimpleCarController : PlayerController
 
         _rigidbody = GetComponent<Rigidbody>();
         _speed = _maxSpeed;
-        _maxSpeedBoosted = _maxSpeed + _boostStrength + 1.5f;
+        _maxSpeedBoosted = _maxSpeed + _boostStrength;
 
 
         //    _rockWallScripts = FindObjectsOfType<RockWall>();
@@ -158,6 +168,13 @@ public class SimpleCarController : PlayerController
 
         //   // get the wheels spinning, needed to have the boost work from still position
         BoostWheelColliderSpin();
+
+
+        if (_isFloating)
+        {
+            AdjustHeight();
+            ApplyAirControl();
+        }
 
         LimitSpeed();
     }
@@ -244,8 +261,8 @@ public class SimpleCarController : PlayerController
             _brakeTorque = motorForce;
 
             // freeze y rot, set angular vel.y to 0
-           _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
-           _rigidbody.angularVelocity = Vector3.zero;  //new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
+            _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
+            _rigidbody.angularVelocity = Vector3.zero;  //new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
         }
         else if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) <= 0.18f && IsBoosting == false) // if slight input is being made...
         {
@@ -383,7 +400,12 @@ public class SimpleCarController : PlayerController
 
     private void Boost()
     {
-        _rigidbody.AddForce(transform.forward * _boostStrength, ForceMode.VelocityChange);
+        // Add force to move the car forward and slightly upwards
+        //Vector3 boostDirection = (transform.forward + transform.up).normalized;
+       // _rigidbody.AddForce(boostDirection * _boostStrength, ForceMode.VelocityChange);
+
+        // Start the float coroutine
+        StartCoroutine(FloatInAir());
 
         //      Camera.main.GetComponentInParent<FollowCam>().ZoomOut();
         StartCoroutine(ZoomOut());
@@ -444,10 +466,10 @@ public class SimpleCarController : PlayerController
     {
         float zoomTime = 2.0f;
         float passedTimeZoomingOut = 0.0f;
-       
+
         float initialFOV = VirtualCamera.m_Lens.FieldOfView;
         float targetFOV = 108.0f;
-       
+
         float maxTimeZoomedOut = 3.0f;
 
         while (passedTimeZoomingOut < zoomTime)
@@ -459,7 +481,7 @@ public class SimpleCarController : PlayerController
         }
 
         passedTimeZoomingOut = 0.0f;
-     //   VirtualCamera.m_Lens.FieldOfView = targetFOV;
+        //   VirtualCamera.m_Lens.FieldOfView = targetFOV;
 
         yield return new WaitForSeconds(maxTimeZoomedOut);
 
@@ -524,4 +546,52 @@ public class SimpleCarController : PlayerController
 
   //      _arrowKeyDirection = new Vector2(horizontal, vertical);
     }*/
+
+    private IEnumerator FloatInAir()
+    {
+        // disable gravity to make the car float
+        _rigidbody.useGravity = false;
+
+        // Set the floating flag
+        _isFloating = true;
+
+        // Wait for some time to float
+        yield return new WaitForSeconds(_boostDuration); // Float for 2 seconds, adjust as needed
+
+        // Reset gravity to normal
+        _rigidbody.useGravity = true;
+
+        // Reset the floating flag
+        _isFloating = false;
+    }
+
+    private void AdjustHeight()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, -Vector3.up, out hit, 10.0f, ~ServiceLocator.Instance.GetService<GameManager>().PlayerLayermask))
+        {
+            float distanceToGround = hit.distance;
+            if (distanceToGround >= _targetHeight)
+            {
+                var vel = _rigidbody.velocity;
+                _rigidbody.velocity = new Vector3(vel.x, 0.0f, vel.z);
+                return;
+            }
+            // If the distance is greater than the target height, apply upward force.
+            // If the distance is less than the target height, apply downward force.
+            float forceDirection = distanceToGround < _targetHeight ? 1.0f : -1.0f;
+
+            // The force magnitude depends on how far away we are from the target height.
+            float forceMagnitude = Mathf.Abs(distanceToGround - _targetHeight) * _floatForce;
+
+            _rigidbody.AddForce(Vector3.up * forceDirection * forceMagnitude, ForceMode.Acceleration);
+        }
+    }
+
+    private void ApplyAirControl()
+    {
+        // Use the input to apply air control
+        Vector3 airControlForce = new Vector3(_input.x, 0, _input.y); // Adjust the multiplier as needed
+        _rigidbody.velocity += airControlForce * _speed * Time.deltaTime;
+    }
 }
