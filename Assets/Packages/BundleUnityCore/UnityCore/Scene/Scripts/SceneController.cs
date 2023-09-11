@@ -246,9 +246,13 @@ namespace UnityCore
                     case SceneType.S_Level_4_2_Build: return "S_Level_4_2_Build";
                     case SceneType.S_Level_4_3_Work: return "S_Level_4_3_Work";
                     case SceneType.S_Level_4_3_Build: return "S_Level_4_3_Build";
+                    case SceneType.S_Level_4_4_Work: return "S_Level_4_4_Work";
+                    case SceneType.S_Level_4_5_Work: return "S_Level_4_5_Work";
 
                     case SceneType.S_Level_5_0_Work: return "S_Level_5_0_Work";
                     case SceneType.S_Level_5_0_Build: return "S_Level_5_0_Build";
+                    case SceneType.S_Level_5_1_Work: return "S_Level_5_1_Work";
+                    case SceneType.S_Level_5_2_Work: return "S_Level_5_2_Work";
 
                     case SceneType.S_Mars_1_0_IntroCutscene: return "S_Mars_1_0_IntroCutscene";
                     case SceneType.S_GameStartUpScene: return "S_GameStartUpScene";
@@ -292,9 +296,13 @@ namespace UnityCore
                     case "S_Level_4_2_Build": return SceneType.S_Level_4_2_Build;
                     case "S_Level_4_3_Work": return SceneType.S_Level_4_3_Work;
                     case "S_Level_4_3_Build": return SceneType.S_Level_4_3_Build;
+                    case "S_Level_4_4_Work": return SceneType.S_Level_4_4_Work;
+                    case "S_Level_4_5_Work": return SceneType.S_Level_4_5_Work;
 
                     case "S_Level_5_0_Work": return SceneType.S_Level_5_0_Work;
                     case "S_Level_5_0_Build": return SceneType.S_Level_5_0_Build;
+                    case "S_Level_5_1_Work": return SceneType.S_Level_5_1_Work;
+                    case "S_Level_5_2_Work": return SceneType.S_Level_5_2_Work;
 
                     case "S_Mars_1_0_IntroCutscene": return SceneType.S_Mars_1_0_IntroCutscene; 
                     case "S_GameStartUpScene": return SceneType.S_GameStartUpScene; 

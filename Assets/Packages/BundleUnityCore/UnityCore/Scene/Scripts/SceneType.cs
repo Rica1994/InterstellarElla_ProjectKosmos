@@ -42,9 +42,13 @@ namespace UnityCore
             S_Level_4_2_Build = 29,
             S_Level_4_3_Work = 30,
             S_Level_4_3_Build = 31,
+            S_Level_4_4_Work = 35,
+            S_Level_4_5_Work = 36,
 
             S_Level_5_0_Work = 15,
             S_Level_5_0_Build = 16,
+            S_Level_5_1_Work = 37,
+            S_Level_5_2_Work = 38,
 
             S_Mars_1_0_IntroCutscene = 19,
             S_GameStartUpScene = 34,
