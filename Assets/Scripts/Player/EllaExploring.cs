@@ -223,6 +223,17 @@ public class EllaExploring : PlayerController
         // start the new jumppad coroutine
         CCToggleRoutine = StartCoroutine(ToggleCharacterController(timeOfFlight));        
     }
+    public void JumpPadCCToggleFakeGravity(float timeOfFlight, float fakeGravity)
+    {
+        // stop a  possible previous jumppad coroutine
+        if (CCToggleRoutine != null)
+        {
+            StopCoroutine(CCToggleRoutine);
+        }
+
+        // start the new jumppad coroutine
+        CCToggleRoutine = StartCoroutine(ToggleCharacterControllerFakeGravity(timeOfFlight, fakeGravity));
+    }
     public void ToggleMoveInput(float durationBlocked)
     {
         StartCoroutine(ToggleMove(durationBlocked));
@@ -492,5 +503,26 @@ public class EllaExploring : PlayerController
 
         CharacterControl.enabled = true;
         Collider.enabled = false;
+    }
+    private IEnumerator ToggleCharacterControllerFakeGravity(float timeOfFlight, float fakeGravity)
+    {
+        float originalPlayerGravity = _gravityValue;
+
+        if (fakeGravity > 0)
+        {
+            fakeGravity *= -1;
+        }
+        _gravityValue = fakeGravity;
+
+
+        CharacterControl.enabled = false;
+        Collider.enabled = true;
+
+        yield return new WaitForSeconds(timeOfFlight);
+
+        CharacterControl.enabled = true;
+        Collider.enabled = false;
+
+        _gravityValue = originalPlayerGravity;
     }
 }
