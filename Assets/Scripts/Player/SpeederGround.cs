@@ -69,6 +69,8 @@ public class SpeederGround : PlayerController
     [HideInInspector]
     public bool IsGrounded => _isGroundedFake;
     private bool _isApplicationQuitting = false;
+    [SerializeField]
+    private ParticleSystem _particleDustTrail;
 
     private MoveComponent _moveComponent;
     private JumpComponent _jumpComponent;
@@ -209,6 +211,15 @@ public class SpeederGround : PlayerController
         }
 
         FakeGroundedTimer();
+
+        if (_isGrounded == true)
+        {
+            _particleDustTrail.gameObject.SetActive(true);
+        }
+        else
+        {
+            _particleDustTrail.gameObject.SetActive(false);
+        }
 
         if (_characterController.enabled == true)
         {
