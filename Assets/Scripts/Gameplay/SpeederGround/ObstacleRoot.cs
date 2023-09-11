@@ -84,7 +84,7 @@ public class ObstacleRoot : MonoBehaviour
             if (obCol == null) return;
 
             var angle = Vector3.Angle(player.transform.forward, -hitInfo.normal);
-            Debug.Log("Angle: " + angle);
+           // Debug.Log("Angle: " + angle);
 
             if (angle > player.CollisionAngle) return;
 
