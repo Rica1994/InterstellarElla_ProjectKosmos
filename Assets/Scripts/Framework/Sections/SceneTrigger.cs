@@ -5,12 +5,16 @@ using UnityEngine;
 
 public class SceneTrigger : MonoBehaviour
 {
-    [SerializeField]
-    private SceneType _sceneToLoad;
+    private LevelManager _levelManager;
+
+    private void OnEnable()
+    {
+        _levelManager = ServiceLocator.Instance.GetService<LevelManager>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        // get the next scene depending on my scene index
-        ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(_sceneToLoad, null, false, UnityCore.Menus.PageType.Loading);
-    }
+        _levelManager = ServiceLocator.Instance.GetService<LevelManager>();
+        ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(_levelManager.NextScene, null, false, UnityCore.Menus.PageType.Loading);
+    }   
 }
