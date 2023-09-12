@@ -13,7 +13,13 @@ public class MaggieChainAction : ChainAction
 
     private void Start()
     {
-        _maggie = FindObjectOfType<Maggie>(true);
+        _maggie = FindObjectOfType<Maggie>();
+        _maggie.gameObject.SetActive(false);
+        if (_maggie == null)
+        {
+            Debug.LogError("No Maggie found! Please add maggie in the scene");
+            return;
+        }
         _maxTime = _maggie.PopUpLength + _maggie.PopDownLength + _maggieVoiceClip.Clip.length;
     }
 

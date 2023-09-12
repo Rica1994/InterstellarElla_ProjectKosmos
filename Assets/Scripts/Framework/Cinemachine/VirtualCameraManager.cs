@@ -31,7 +31,7 @@ public class VirtualCameraManager : Service
 
     private void Start()
     {
-        var virtualCameras = FindObjectsByType<CinemachineVirtualCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        var virtualCameras = FindObjectsOfType<CinemachineVirtualCamera>();
         _virtualCameras.AddRange(virtualCameras);
 
         CinemachineVirtualCamera cameraPlayerFollow = null;

@@ -90,7 +90,7 @@ public class LevelManager : Service
         if (_firstCheckPoint == null)
         {
             var newSpawnPoint = new GameObject("Place Holder CheckPoint");
-            var player = FindAnyObjectByType<PlayerController>().gameObject;
+            var player = FindObjectOfType<PlayerController>().gameObject;
             newSpawnPoint.transform.SetPositionAndRotation(player.transform.position, player.transform.rotation);
             _currentCheckpoint = newSpawnPoint;
             Debug.LogWarning("First checkPoint not attached! Using Players transform instead");
@@ -210,7 +210,7 @@ public class LevelManager : Service
         {
             if (hasEntered)
             {
-                var tempPlayer = FindAnyObjectByType<PlayerController>().gameObject;
+                var tempPlayer = FindObjectOfType<PlayerController>().gameObject;
                 ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint);
             }
         }
@@ -277,7 +277,7 @@ public class LevelManager : Service
         if (_amountTimesHit >= _maxAmountHitsForRespawn)
         {
             Debug.Log("Player Hit more than " + _maxAmountHitsForRespawn + " times!");
-            var tempPlayer = FindAnyObjectByType<PlayerController>().gameObject;
+            var tempPlayer = FindObjectOfType<PlayerController>().gameObject;
             ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint, true);
         }
     }
