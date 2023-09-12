@@ -289,6 +289,11 @@ public class SpeederGround : PlayerController
         _knockbackComponent = multiplierTimerComponent;
     }
 
+    public void SetInput(Vector2 input)
+    {
+        _input = input;
+    }
+
     #endregion
 
 
