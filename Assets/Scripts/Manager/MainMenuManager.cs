@@ -12,7 +12,7 @@ public class MainMenuManager : Service
     private int _levelIndex = 0;
     private MenuLevel _currentLevel;
     public MenuLevel CurrentLevel => _currentLevel;
-    
+
     [Header("Menu Animator")]
     [SerializeField]
     private MenuAnimator _menuAnimator;
@@ -103,11 +103,35 @@ public class MainMenuManager : Service
                 break;
         }
 
+#if UNITY_EDITOR
         // load the loading scene first, then the actual scene for gameplay
         _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);
+#elif UNITY_WEBGL
+        string mainFolder = $"../{GetPlanetNameFromEnum(sceneToLoad)}";
+        string buildString = $"{sceneToLoad}";
+        
+        Application.ExternalEval($"window.location.href = '{mainFolder + buildString + ".html"}';");
+#endif
+
     }
 
-
+    public string GetPlanetNameFromEnum(SceneType sceneType)
+    {
+        var sceneTypeString = sceneType.ToString();
+        if (sceneTypeString.Contains("Level_1") || sceneTypeString.Contains("Mars"))
+            return "Mars/";
+        else if (sceneTypeString.Contains("Level_2"))
+            return "Pluto/";
+        else if (sceneTypeString.Contains("Level_3"))
+            return "Venus/";
+        else if (sceneTypeString.Contains("Level_4"))
+            return "Saturn/";
+        else if (sceneTypeString.Contains("Level_5"))
+            return "Mercury/";
+        else if (sceneTypeString.Contains("Quiz"))
+            return "";
+        else return "";
+    }
 
     public void ForwardLevel()
     {
