@@ -250,7 +250,8 @@ namespace UnityCore
                     case SceneType.S_Level_5_0_Work: return "S_Level_5_0_Work";
                     case SceneType.S_Level_5_0_Build: return "S_Level_5_0_Build";
 
-                    case SceneType.S_Mars_1_0_IntroCutscene: return "S_Mars_1_0_IntroCutscene"; //
+                    case SceneType.S_Mars_1_0_IntroCutscene: return "S_Mars_1_0_IntroCutscene";
+                    case SceneType.S_GameStartUpScene: return "S_GameStartUpScene";
                     default:
                         Debug.Log("Scene [" + scene + "] does not contain a string for a valid scene. ");
                         return string.Empty;
@@ -295,7 +296,8 @@ namespace UnityCore
                     case "S_Level_5_0_Work": return SceneType.S_Level_5_0_Work;
                     case "S_Level_5_0_Build": return SceneType.S_Level_5_0_Build;
 
-                    case "S_Mars_1_0_IntroCutscene": return SceneType.S_Mars_1_0_IntroCutscene; //
+                    case "S_Mars_1_0_IntroCutscene": return SceneType.S_Mars_1_0_IntroCutscene; 
+                    case "S_GameStartUpScene": return SceneType.S_GameStartUpScene; 
 
                     default:
                         Debug.Log("Scene [" + scene + "] does not contain a type for a valid scene. ");
