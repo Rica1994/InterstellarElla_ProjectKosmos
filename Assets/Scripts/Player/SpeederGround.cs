@@ -115,6 +115,11 @@ public class SpeederGround : PlayerController
 
     private AudioController _audioController;
 
+    [Header("Exploring settings")]
+    [SerializeField]
+    private bool _isExploringVersion;
+
+
 
 
 
@@ -225,14 +230,21 @@ public class SpeederGround : PlayerController
         {
             Move();
         }
-        
-        Jump();
+
+        if (_isExploringVersion == false)
+        {
+            Jump();
+        }
 
         ApplyGravity();
 
-        _hoveringComponent.UpdateHovering(_upDownSpeed, _hoverDisplacement);
+        if (_isExploringVersion == false)
+        {
+            _hoveringComponent.UpdateHovering(_upDownSpeed, _hoverDisplacement);
 
-        UpdateVisual();
+            UpdateVisual();
+        }
+
     }
 
     public void BoostSpeed()

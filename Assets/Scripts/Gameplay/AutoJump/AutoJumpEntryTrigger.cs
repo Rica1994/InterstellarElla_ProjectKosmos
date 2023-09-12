@@ -15,6 +15,8 @@ public class AutoJumpEntryTrigger : MonoBehaviour
     [SerializeField]
     private GameObject _spawnCentre, _spawnLeft, _spawnRight;
 
+    private bool _onCooldown;
+
     private Vector3 _boxColSizeXEntry;
     private Vector3 _boxColEdgeXEntry;
     private Vector3 _boxColSizeXExit;
@@ -77,8 +79,10 @@ public class AutoJumpEntryTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out PlayerController player))
-        {
+        if (other.TryGetComponent(out PlayerController player) && _onCooldown == false)
+        {            
+            StartCoroutine(StartCooldown());
+
             if (other.TryGetComponent(out SpeederGround speeder))
             {
                 _autoJumpMaster.PlayerIsInTrigger = true;
@@ -176,8 +180,15 @@ public class AutoJumpEntryTrigger : MonoBehaviour
         }
     }
 
-    
 
+    private IEnumerator StartCooldown()
+    {
+        _onCooldown = true;
+
+        yield return new WaitForSeconds(1f);
+
+        _onCooldown = false;
+    }
 
     private void SetExitPosition(PlayerController player)
     {
