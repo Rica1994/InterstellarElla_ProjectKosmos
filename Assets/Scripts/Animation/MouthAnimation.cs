@@ -1,3 +1,4 @@
+using UnityCore.Audio;
 using UnityEngine;
 
 public class MouthAnimation : MonoBehaviour
@@ -53,6 +54,9 @@ public class MouthAnimation : MonoBehaviour
     private void Start()
     {
         samples = new float[_sampleDataLength];
+
+        _voiceSource = ServiceLocator.Instance.GetService<AudioController>().TracksMaggie[0].Source as AudioSource;
+
     }
 
     private void Update()

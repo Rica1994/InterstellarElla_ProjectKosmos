@@ -11,7 +11,8 @@ namespace UnityCore
             OST = 1,            
             SFX_UI = 2,
             SFX_Player = 3,
-            SFX_World = 4
+            SFX_World = 4,
+            SFX_Maggie = 5,
         }
     }
 }

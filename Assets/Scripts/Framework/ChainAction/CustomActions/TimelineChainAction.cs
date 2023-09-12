@@ -9,7 +9,7 @@ public class TimelineChainAction : ChainAction
     private PlayableDirector _playableDirector;
 
     [SerializeField]
-    private Transform _skipButton;
+    private SkipCutscene _skipButton;
 
     private void Awake()
     {
@@ -23,7 +23,7 @@ public class TimelineChainAction : ChainAction
 
         if (_skipButton != null)
         {
-            _skipButton.GetChild(0).gameObject.SetActive(true);
+            _skipButton.transform.GetChild(0).gameObject.SetActive(true);
         }
     }
 }
