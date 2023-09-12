@@ -13,8 +13,8 @@ public class EllaExploring : PlayerController
     private float _rotationSpeed = 1.5f;
 
     [Header("Boost")]
-    [SerializeField, Range(0.8f, 3.0f)] private float _hoverSpeed = 1.5f;
-    [SerializeField, Range(1f, 5.0f)] private float _hoverDistance = 2f;
+    [SerializeField] private float _hoverStrengthMax = 7f;
+    private double _hoverStrength;
     [SerializeField] private float _hoverDurationLimit = 2f;
     //[SerializeField] private float _hoverCooldownLength = 0.5f;
     //private bool _hoverOnCooldown;
@@ -56,9 +56,9 @@ public class EllaExploring : PlayerController
 
     private float _yVelocity = 0f;
 
-    private float _maxHoverHeight;
     private float _hoverTimer;
     private float _groundedAnimationTimer;
+    private float _groundedAnimationBuffer = 0.2f;
     private bool _isHovering = false;
     private bool _isTryingHover = false;
     private bool _canHover = false;
@@ -223,6 +223,17 @@ public class EllaExploring : PlayerController
         // start the new jumppad coroutine
         CCToggleRoutine = StartCoroutine(ToggleCharacterController(timeOfFlight));        
     }
+    public void JumpPadCCToggleFakeGravity(float timeOfFlight, float fakeGravity)
+    {
+        // stop a  possible previous jumppad coroutine
+        if (CCToggleRoutine != null)
+        {
+            StopCoroutine(CCToggleRoutine);
+        }
+
+        // start the new jumppad coroutine
+        CCToggleRoutine = StartCoroutine(ToggleCharacterControllerFakeGravity(timeOfFlight, fakeGravity));
+    }
     public void ToggleMoveInput(float durationBlocked)
     {
         StartCoroutine(ToggleMove(durationBlocked));
@@ -245,7 +256,7 @@ public class EllaExploring : PlayerController
         _startedHoverFromGround = false;
         _hoverComponent.HoverValueReset();
 
-        Debug.Log(this.name);
+        //Debug.Log(this.name);
         // stop particle
         _particleBootLeft.Stop();
         _particleBootRight.Stop();
@@ -325,13 +336,19 @@ public class EllaExploring : PlayerController
             _animatorComponent.SetAnimatorBool(_animator, _boolMoving, false);
         }
 
-        // if grounded==false, only set the grounded bool if this has been false for 0.2 seconds 
-        if (_isGrounded == false)
-        {
-            _groundedAnimationTimer += Time.deltaTime;
 
+        // if grounded ==false, only set the grounded bool if this has been false for 0.2 seconds + IF IM NOT BOOSTING
+        if (_isGrounded == false && _isHovering == true)
+        {
+            // instant
+            _groundedAnimationTimer = _groundedAnimationBuffer;
+            _animatorComponent.SetAnimatorBool(_animator, _boolGrounded, _isGrounded);
+        }
+        else if (_isGrounded == false)
+        {
             // if my timer exceeds the limit -> start falling
-            if (_groundedAnimationTimer >= 0.2f)
+            _groundedAnimationTimer += Time.deltaTime;          
+            if (_groundedAnimationTimer >= _groundedAnimationBuffer)
             {
                 _animatorComponent.SetAnimatorBool(_animator, _boolGrounded, _isGrounded);
             }
@@ -348,6 +365,7 @@ public class EllaExploring : PlayerController
         
         _animatorComponent.SetAnimatorBool(_animator, _boolBoosting, _isHovering);     
     }
+
     private void Hover()
     {
         // hover timer
@@ -359,6 +377,7 @@ public class EllaExploring : PlayerController
             _hoverTimer += Time.deltaTime;
             if (_hoverTimer >= _hoverDurationLimit)
             {
+                _hoverTimer = _hoverDurationLimit;
                 _canHover = false;
                 //_hoverOnCooldown = true;
 
@@ -372,6 +391,7 @@ public class EllaExploring : PlayerController
             _characterController.stepOffset = 0.1f;
         }
 
+
         //// hover cooldown timer
         //if (_hoverOnCooldown == true)
         //{
@@ -383,26 +403,32 @@ public class EllaExploring : PlayerController
         //    }
         //}
 
+
+
         // hover logic
         if (_canHover == true && _isTryingHover == true)
         {
-            // if I'm grounded, set the max height
+            // if I'm grounded, set the max boost strength
             if (_isGrounded == true)
             {
-                _maxHoverHeight = transform.position.y + _hoverDistance;
+                _hoverStrength = _hoverStrengthMax;
 
                 _startedHoverFromGround = true;
             }
+            else
+            {
+                // adjust hover strength exponentially
+                float t = _hoverTimer / _hoverDurationLimit;
+                float timePercent = SmoothStop5(t);
 
-            // have distinct hover between starting from ground and air
-            //if (_startedHoverFromGround == true)
-            //{
-            //    _hoverComponent.HoverFromGround(_characterController, ref _yVelocity, _hoverSpeed, _maxHoverHeight, transform.position.y);
-            //}
-            //else
-            //{
-                _hoverComponent.Hover(_characterController, ref _yVelocity, _hoverSpeed, _maxHoverHeight, transform.position.y);
-            //}
+                _hoverStrength = timePercent * _hoverStrengthMax;
+            }
+
+            
+
+            _hoverComponent.HoverNew(_characterController, ref _yVelocity, _hoverStrength);
+            
+
 
             // play particle
             if (_playingBoostParticle == false)
@@ -426,9 +452,29 @@ public class EllaExploring : PlayerController
 
             _playingBoostParticle = false;
         }
-
-
     }
+
+    // Source -> https://gizma.com/easing/
+    //private double EaseOutCirc()
+    //{
+    //    float caluclatedStrength = Mathf.Sqrt((float)(1 - Math.Pow(_hoverStrength - 1, 2)));
+
+    //    Debug.Log(caluclatedStrength);
+
+    //    return caluclatedStrength;
+    //}
+    private float SmoothStop5(float t) // returns a smooth'd value in range[0,1], starting 0 at first, increasing rapidly, to then teeter off at the end
+    {
+        float s = (1f - t);
+
+        return Mathf.Pow(s, 3);
+    }
+
+
+
+
+
+
     private void ApplyGravity()
     {
         if (_isHovering == false)
@@ -457,5 +503,26 @@ public class EllaExploring : PlayerController
 
         CharacterControl.enabled = true;
         Collider.enabled = false;
+    }
+    private IEnumerator ToggleCharacterControllerFakeGravity(float timeOfFlight, float fakeGravity)
+    {
+        float originalPlayerGravity = _gravityValue;
+
+        if (fakeGravity > 0)
+        {
+            fakeGravity *= -1;
+        }
+        _gravityValue = fakeGravity;
+
+
+        CharacterControl.enabled = false;
+        Collider.enabled = true;
+
+        yield return new WaitForSeconds(timeOfFlight);
+
+        CharacterControl.enabled = true;
+        Collider.enabled = false;
+
+        _gravityValue = originalPlayerGravity;
     }
 }

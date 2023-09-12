@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,10 +9,16 @@ public class AimCamera : MonoBehaviour
     private TriggerHandler _triggerHandler;
 
     [SerializeField]
-    private float rotationSpeed = 1.0f; // Speed of the rotation
+    private float _lerpSpeed = 1.0f; // Speed of the rotation
 
     [SerializeField]
-    private float rotationDuration = 1.0f; // Duration of the rotation
+    private float _lerpDuration = 1.0f; // Duration of the rotation
+
+    [SerializeField]
+    private bool _useHeightOffset = false;
+
+    [SerializeField]
+    private Vector3 _shoulderOffset; 
 
     private Coroutine rotationCoroutine;
 
@@ -32,24 +39,29 @@ public class AimCamera : MonoBehaviour
             {
                 StopCoroutine(rotationCoroutine);
             }
-            rotationCoroutine = StartCoroutine(RotateTowardsTarget(carController.TransformFollower.transform));
+            rotationCoroutine = StartCoroutine(MoveAndRotateTowardsTarget(carController));
         }
     }
 
-    private IEnumerator RotateTowardsTarget(Transform targetTransform)
+    private IEnumerator MoveAndRotateTowardsTarget(SimpleCarController carController)
     {
         float elapsedTime = 0f;
-        Quaternion initialRotation = targetTransform.rotation;
+        Quaternion initialRotation = carController.TransformFollower.transform.rotation;
         Quaternion targetRotation = transform.rotation;
+        var thirdPersonFollow = carController.VirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+        var initialFollowOffset = thirdPersonFollow.ShoulderOffset;
+        var targetFollowOffset = new Vector3(initialFollowOffset.x, _useHeightOffset ? _shoulderOffset.y : initialFollowOffset.y, _shoulderOffset.z);
 
-        while (elapsedTime < rotationDuration)
+        while (elapsedTime < _lerpDuration)
         {
-            float t = elapsedTime / rotationDuration;
-            targetTransform.rotation = Quaternion.Slerp(initialRotation, targetRotation, t * rotationSpeed);
+            float t = elapsedTime / _lerpDuration;
+            carController.TransformFollower.transform.rotation = Quaternion.Slerp(initialRotation, targetRotation, t * _lerpSpeed);
+            thirdPersonFollow.ShoulderOffset = Vector3.Slerp(initialFollowOffset, targetFollowOffset, t * _lerpSpeed);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        targetTransform.rotation = targetRotation;
+        carController.TransformFollower.rotation = targetRotation;
+        thirdPersonFollow.ShoulderOffset = targetFollowOffset;
     }
 }

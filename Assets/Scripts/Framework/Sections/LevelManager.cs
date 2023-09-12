@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityCore.Audio;
+using UnityCore.Scene;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -26,6 +27,9 @@ public class LevelManager : Service
     [Header("Triggers")]
     [SerializeField]
     private TriggerHandler _endGameTrigger;
+    [SerializeField]
+    private SceneType _nextScene;
+    public SceneType NextScene => _nextScene;
 
     [Header("Respawn Logic")]
     [SerializeField]

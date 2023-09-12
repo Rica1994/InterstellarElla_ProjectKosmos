@@ -26,6 +26,18 @@ public class HoverComponent
         characterController.Move(new Vector3(0f, yVelocity * Time.deltaTime, 0f));
     }
 
+    public void HoverNew(CharacterController characterController, ref float yVelocity, double hoverStrength)
+    {
+        if (yVelocity < 0)
+        {
+            yVelocity = 0f;
+        }
+
+        yVelocity = (float)hoverStrength;
+
+        characterController.Move(new Vector3(0f, yVelocity * Time.deltaTime, 0f));
+    }
+
     public void HoverFromGround(CharacterController characterController, ref float yVelocity, float hoverUpVelocity, float maxHeight, float playerHeight)
     {
         _hoverActiveTimer += Time.deltaTime;
