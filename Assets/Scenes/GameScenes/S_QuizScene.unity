@@ -123,6 +123,55 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &11710209
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 11710211}
+  - component: {fileID: 11710210}
+  m_Layer: 0
+  m_Name: VenusSequence
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &11710210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11710209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b0db30a911b095408b9229d57285617, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chainActions:
+  - {fileID: 1865558718}
+  - {fileID: 1226615342}
+  _startOnAwake: 0
+--- !u!4 &11710211
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11710209}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 551.0756, y: 284.1159, z: 1.4980774}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1865558719}
+  - {fileID: 1226615343}
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &57160999 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6, type: 3}
@@ -240,7 +289,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7926606816940189294, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7926606816940189294, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -282,8 +331,105 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8755988260889094649, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8755988260889094649, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8755988260889094649, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8755988260889094649, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8755988260889094649, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8755988260889094649, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8755988260889094649, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8755988260889094649, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8755988260889094649, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8755988260889094649, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8755988260889094649, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8755988260889094649, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b3ad37f3b38f694fb268141fa5866d0, type: 3}
+--- !u!1 &310008825
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 310008827}
+  - component: {fileID: 310008826}
+  m_Layer: 0
+  m_Name: PlutoSequence
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &310008826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310008825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b0db30a911b095408b9229d57285617, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chainActions:
+  - {fileID: 1693127046}
+  - {fileID: 2047596338}
+  _startOnAwake: 0
+--- !u!4 &310008827
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310008825}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 551.0756, y: 284.1159, z: 1.4980774}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1693127047}
+  - {fileID: 2047596339}
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &461517884
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,6 +512,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &478083616
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 478083618}
+  - component: {fileID: 478083617}
+  m_Layer: 0
+  m_Name: SaturnSequence
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &478083617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478083616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b0db30a911b095408b9229d57285617, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chainActions:
+  - {fileID: 1723060379}
+  - {fileID: 1969612810}
+  _startOnAwake: 0
+--- !u!4 &478083618
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478083616}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 551.0756, y: 284.1159, z: 1.4980774}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1723060380}
+  - {fileID: 1969612811}
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &498350115
 GameObject:
@@ -495,6 +690,55 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &603474714
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 603474716}
+  - component: {fileID: 603474715}
+  m_Layer: 0
+  m_Name: MercurySequence
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &603474715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 603474714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b0db30a911b095408b9229d57285617, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chainActions:
+  - {fileID: 1701308223}
+  - {fileID: 1964860521}
+  _startOnAwake: 0
+--- !u!4 &603474716
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 603474714}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 551.0756, y: 284.1159, z: 1.4980774}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1701308224}
+  - {fileID: 1964860522}
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &797099797
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +785,7 @@ MonoBehaviour:
   _useUserBasedAction: 1
   _quiz: {fileID: 57160999}
   _questions:
-  - QuestionString: Waar dient Magnesium voor?
+  - QuestionString: "Op Mars kan je\u2026"
     AudioElement:
       Clip: {fileID: 8300000, guid: d69bbbca7b792a0458a9ad72eeeee481, type: 3}
       Type: 4
@@ -551,11 +795,11 @@ MonoBehaviour:
       PitchLowerLimitAddition: 0.2
       PitchUpperLimitAddition: 0.2
     AnswerStrings:
-    - Het helpt onze tanden en spieren sterk te houden.
-    - Het wordt gebruikt om snoepjes extra zoet te maken.
-    - Het wordt gebruikt om onze haren glanzend en sterk te maken.
-    CorrectIndex: 0
-  - QuestionString: Hoe ziet Mars eruit?
+    - Niet zo hoog springen dan op aarde
+    - Hoger springen dan op aarde
+    - 'Niet springen '
+    CorrectIndex: 1
+  - QuestionString: Waarom duren de dagen op Mars langer dan op de aarde?
     AudioElement:
       Clip: {fileID: 8300000, guid: ef49391939e2a2b4d9b9b8ce25ed75c0, type: 3}
       Type: 4
@@ -565,11 +809,11 @@ MonoBehaviour:
       PitchLowerLimitAddition: 0.2
       PitchUpperLimitAddition: 0.2
     AnswerStrings:
-    - Blauw
-    - Groen
-    - Rood
+    - Mars staat verder van de zon af dan de aarde
+    - Mars is iets kleiner dan de aarde
+    - Mars draait trager om zijn eigen as
     CorrectIndex: 2
-  - QuestionString: In welke voedingsmiddelen zit Magnesium?
+  - QuestionString: Hoe wordt Mars ook wel eens genoemd?
     AudioElement:
       Clip: {fileID: 8300000, guid: 713a39b6b4824b54caf22012ccc84f1f, type: 3}
       Type: 4
@@ -579,10 +823,254 @@ MonoBehaviour:
       PitchLowerLimitAddition: 0.2
       PitchUpperLimitAddition: 0.2
     AnswerStrings:
-    - Spaghetti en tomaten
-    - Bananen, noten, spinazie
-    - Frietjes
+    - De droge zee
+    - Het lege bos
+    - 'De koude woestijn '
+    CorrectIndex: 2
+--- !u!1 &1226615341
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1226615343}
+  - component: {fileID: 1226615342}
+  m_Layer: 0
+  m_Name: QuizAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1226615342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226615341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f487bc58e7c6f6943b86edf554b37992, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 1
+  _quiz: {fileID: 57160999}
+  _questions:
+  - QuestionString: Welke giftige stof bevatten de wolken boven Venus?
+    AudioElement:
+      Clip: {fileID: 8300000, guid: d69bbbca7b792a0458a9ad72eeeee481, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - ' Zwavelzuur'
+    - Asbest
+    - Kwik
+    CorrectIndex: 0
+  - QuestionString: "Op Venus is er \u2026 "
+    AudioElement:
+      Clip: {fileID: 8300000, guid: ef49391939e2a2b4d9b9b8ce25ed75c0, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - Meer, maar wel zwakkere wind dan op aarde
+    - Meer en sterkere wind dan op aarde
+    - Minder, maar wel sterkere wind
+    CorrectIndex: 2
+  - QuestionString: Wie of wat is Cleopatra?
+    AudioElement:
+      Clip: {fileID: 8300000, guid: 713a39b6b4824b54caf22012ccc84f1f, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - 'De koningin van Venus '
+    - Een krater op Venus
+    - 'Een meteoriet op Venus '
     CorrectIndex: 1
+--- !u!4 &1226615343
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226615341}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 11710211}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1693127045
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1693127047}
+  - component: {fileID: 1693127046}
+  m_Layer: 0
+  m_Name: AudioAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1693127046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693127045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a95db4ad03c0de640b2685d6c858d850, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _audioElement:
+    Clip: {fileID: 8300000, guid: ac7701e17f96717438895befad85b933, type: 3}
+    Type: 4
+    Volume: 1
+    Pitch: 1
+    RandomizePitchSlightly: 0
+    PitchLowerLimitAddition: 0.2
+    PitchUpperLimitAddition: 0.2
+--- !u!4 &1693127047
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693127045}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 310008827}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1701308222
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1701308224}
+  - component: {fileID: 1701308223}
+  m_Layer: 0
+  m_Name: AudioAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1701308223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1701308222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a95db4ad03c0de640b2685d6c858d850, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _audioElement:
+    Clip: {fileID: 8300000, guid: ac7701e17f96717438895befad85b933, type: 3}
+    Type: 4
+    Volume: 1
+    Pitch: 1
+    RandomizePitchSlightly: 0
+    PitchLowerLimitAddition: 0.2
+    PitchUpperLimitAddition: 0.2
+--- !u!4 &1701308224
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1701308222}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 603474716}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1723060378
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1723060380}
+  - component: {fileID: 1723060379}
+  m_Layer: 0
+  m_Name: AudioAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1723060379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723060378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a95db4ad03c0de640b2685d6c858d850, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _audioElement:
+    Clip: {fileID: 8300000, guid: ac7701e17f96717438895befad85b933, type: 3}
+    Type: 4
+    Volume: 1
+    Pitch: 1
+    RandomizePitchSlightly: 0
+    PitchLowerLimitAddition: 0.2
+    PitchUpperLimitAddition: 0.2
+--- !u!4 &1723060380
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723060378}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 478083618}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1796135122
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,7 +1082,7 @@ GameObject:
   - component: {fileID: 1796135124}
   - component: {fileID: 1796135123}
   m_Layer: 0
-  m_Name: Sequence
+  m_Name: MarsSequence
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -615,7 +1103,7 @@ MonoBehaviour:
   _chainActions:
   - {fileID: 498350116}
   - {fileID: 797099799}
-  _startOnAwake: 1
+  _startOnAwake: 0
 --- !u!4 &1796135124
 Transform:
   m_ObjectHideFlags: 0
@@ -630,7 +1118,324 @@ Transform:
   - {fileID: 498350117}
   - {fileID: 797099798}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1865558717
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1865558719}
+  - component: {fileID: 1865558718}
+  m_Layer: 0
+  m_Name: AudioAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1865558718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865558717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a95db4ad03c0de640b2685d6c858d850, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _audioElement:
+    Clip: {fileID: 8300000, guid: ac7701e17f96717438895befad85b933, type: 3}
+    Type: 4
+    Volume: 1
+    Pitch: 1
+    RandomizePitchSlightly: 0
+    PitchLowerLimitAddition: 0.2
+    PitchUpperLimitAddition: 0.2
+--- !u!4 &1865558719
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865558717}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 11710211}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1964860520
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1964860522}
+  - component: {fileID: 1964860521}
+  m_Layer: 0
+  m_Name: QuizAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1964860521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964860520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f487bc58e7c6f6943b86edf554b37992, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 1
+  _quiz: {fileID: 57160999}
+  _questions:
+  - QuestionString: "Op Mercurius is er\u2026"
+    AudioElement:
+      Clip: {fileID: 8300000, guid: d69bbbca7b792a0458a9ad72eeeee481, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - Minder zwaartekracht dan op de aarde
+    - Meer zwaartekracht dan op de aarde
+    - Evenveel zwaartekracht als op de aarde
+    CorrectIndex: 0
+  - QuestionString: Waardoor is er ijs op Mercurius?
+    AudioElement:
+      Clip: {fileID: 8300000, guid: ef49391939e2a2b4d9b9b8ce25ed75c0, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - Het is afkomstig uit de kern van de planeet
+    - Door een sneeuwballengevecht van reuzenaliens
+    - 'Door kometen die op de polen neerstortten '
+    CorrectIndex: 2
+  - QuestionString: Waaruit bestaan de kern en de mantel van Mercurius voornamelijk?
+    AudioElement:
+      Clip: {fileID: 8300000, guid: 713a39b6b4824b54caf22012ccc84f1f, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - Silica en ijzer
+    - Silicone en aluminium
+    - Silicium en koper
+    CorrectIndex: 0
+--- !u!4 &1964860522
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964860520}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 603474716}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1969612809
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1969612811}
+  - component: {fileID: 1969612810}
+  m_Layer: 0
+  m_Name: QuizAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1969612810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969612809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f487bc58e7c6f6943b86edf554b37992, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 1
+  _quiz: {fileID: 57160999}
+  _questions:
+  - QuestionString: Hoe heet de maan van Saturnus die groter is dan de planeet Mercurius?
+    AudioElement:
+      Clip: {fileID: 8300000, guid: d69bbbca7b792a0458a9ad72eeeee481, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - Enceladus
+    - Titan
+    - Thetys
+    CorrectIndex: 1
+  - QuestionString: Uit welke twee gassen bestaat Saturnus?
+    AudioElement:
+      Clip: {fileID: 8300000, guid: ef49391939e2a2b4d9b9b8ce25ed75c0, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - Fluor en stikstof
+    - Helium en waterstof
+    - Krypton en zuurstof
+    CorrectIndex: 1
+  - QuestionString: Hoe heet een van de herdermanen van Saturnus?
+    AudioElement:
+      Clip: {fileID: 8300000, guid: 713a39b6b4824b54caf22012ccc84f1f, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - Pot
+    - Vergiet
+    - Pan
+    CorrectIndex: 2
+--- !u!4 &1969612811
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969612809}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 478083618}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2047596337
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2047596339}
+  - component: {fileID: 2047596338}
+  m_Layer: 0
+  m_Name: QuizAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2047596338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047596337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f487bc58e7c6f6943b86edf554b37992, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 1
+  _quiz: {fileID: 57160999}
+  _questions:
+  - QuestionString: 'Bestaat er een ondergrondse oceaan op Pluto? '
+    AudioElement:
+      Clip: {fileID: 8300000, guid: d69bbbca7b792a0458a9ad72eeeee481, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - Waarschijnlijk, maar het is nog niet bewezen
+    - Nee, dat kan niet door de speciale atmosfeer daar
+    - Ja, en er zijn er meerdere
+    CorrectIndex: 0
+  - QuestionString: Waarom maakt een uitbarsting van een ijsvulkaan op Pluto geen
+      lawaai?
+    AudioElement:
+      Clip: {fileID: 8300000, guid: ef49391939e2a2b4d9b9b8ce25ed75c0, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - De uitbarstingen van een ijsvulkaan daar zijn maar heel klein
+    - De atmosfeer is zo dun dat geluidsgolven zich niet voort kunnen bewegen
+    - De atmosfeer is zo dik dat geluidsgolven er niet door kunnen
+    CorrectIndex: 1
+  - QuestionString: Waaruit bestaat het ijs dat je op Pluto vindt?
+    AudioElement:
+      Clip: {fileID: 8300000, guid: 713a39b6b4824b54caf22012ccc84f1f, type: 3}
+      Type: 4
+      Volume: 1
+      Pitch: 1
+      RandomizePitchSlightly: 0
+      PitchLowerLimitAddition: 0.2
+      PitchUpperLimitAddition: 0.2
+    AnswerStrings:
+    - Meestal uit stikstof
+    - 'Uit room '
+    - Voor meer dan de helft uit water
+    CorrectIndex: 0
+--- !u!4 &2047596339
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047596337}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 310008827}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4235481272832367315
 PrefabInstance:
