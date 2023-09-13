@@ -51,12 +51,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12a0eee9f23d894499ff4ed87bb97146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _time: 0.75
+  _time: 0.4
   _targetMultiplier: -1
   _shouldLerpIn: 1
   _shouldLerpOut: 1
-  _lerpInSpeed: 0.7
-  _lerpOutSpeed: 0.7
+  _lerpInSpeed: 3
+  _lerpOutSpeed: 1
+  _startMultiplierValue: 0
 --- !u!114 &-5897230233878800928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,6 +72,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _knockBackMultiplierComponent: {fileID: -4145516711391671693}
   _destroyOnHit: 0
+  _destroyTrigger: 0
+  _destroyAfterWhile: 0
   _disableColliderOnHit: 0
   ObstacleColliders: []
 --- !u!1001 &434039710019413236

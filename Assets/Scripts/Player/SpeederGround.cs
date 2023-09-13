@@ -66,7 +66,11 @@ public class SpeederGround : PlayerController
     private bool _hasJumped = false;
     private bool _isGrounded = false;
     private bool _isGroundedFake = false;
+    [HideInInspector]
+    public bool IsGrounded => _isGroundedFake;
     private bool _isApplicationQuitting = false;
+    [SerializeField]
+    private ParticleSystem _particleDustTrail;
 
     private MoveComponent _moveComponent;
     private JumpComponent _jumpComponent;
@@ -96,6 +100,14 @@ public class SpeederGround : PlayerController
     [SerializeField]
     private float _visualLerpSpeed = 2.5f;
 
+    [Header("Auto-jump stuff")]
+    public AutoJumpMaster CurrentAutoJumpMaster;
+    public Coroutine CCToggleRoutine;
+    [SerializeField]
+    private Rigidbody _rigidbody;
+    public Rigidbody Rigid => _rigidbody;
+
+
     [Header("Sounds")]
     [SerializeField] private AudioElement _soundJump;
     [SerializeField] private AudioElement _soundLand;
@@ -103,14 +115,15 @@ public class SpeederGround : PlayerController
 
     private AudioController _audioController;
 
+    [Header("Exploring settings")]
+    [SerializeField]
+    private bool _isExploringVersion;
 
-    private void Start()
-    {
-        _lastPosition = transform.position;
-        _playerLayerMask = ServiceLocator.Instance.GetService<GameManager>().PlayerLayermask;
 
-        _audioController = ServiceLocator.Instance.GetService<AudioController>();
-    }
+
+
+
+    #region Unity Functions
 
     private void Awake()
     {
@@ -131,10 +144,62 @@ public class SpeederGround : PlayerController
         transform.forward = _moveDirection;
         _rightVector = Vector3.Cross(_moveDirection, Vector3.up);
     }
+    private void Start()
+    {
+        _lastPosition = transform.position;
+        _playerLayerMask = ServiceLocator.Instance.GetService<GameManager>().PlayerLayermask;
+
+        _audioController = ServiceLocator.Instance.GetService<AudioController>();
+    }
+    private void OnEnable()
+    {
+        // Subscribe to events
+        var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
+        playerInput.Move.performed += OnMoveInput;
+        playerInput.Move.canceled += OnMoveInput;
+        playerInput.Action.started += OnJumpInput;
+    }
+    private void OnDisable()
+    {
+        if (_isApplicationQuitting)
+        {
+            return;
+        }
+
+        // If service locator does not exist anymore, there is no need to unsubscribe:
+        // References of this script will not be saved by the input manager anyway since this is also destroyed
+        var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
+
+        // Unsubscribe to events
+        playerInput.Move.performed -= OnMoveInput;
+        playerInput.Move.canceled -= OnMoveInput;
+        playerInput.Action.started -= OnJumpInput;
+    }
+    private void FixedUpdate()
+    {
+
+    }
+    private void OnApplicationQuit()
+    {
+        _isApplicationQuitting = true;
+    }
+
+    #endregion
+    
+
+
+    #region Public Functions
 
     public override void FixedUpdateController()
     {
         base.FixedUpdateController();
+
+        // auto-jump related
+        if (_characterController.enabled == false)
+        {
+            // add personal gravity to rigidbody
+            _rigidbody.AddForce(new Vector3(0, -1.0f, 0) * 1 * _gravityValue * (-1));
+        }
 
         // !!Keep this execution order!!
 
@@ -152,139 +217,89 @@ public class SpeederGround : PlayerController
 
         FakeGroundedTimer();
 
-        Move();
+        if (_isGrounded == true)
+        {
+            _particleDustTrail.gameObject.SetActive(true);
+        }
+        else
+        {
+            _particleDustTrail.gameObject.SetActive(false);
+        }
 
-        Jump();
+        if (_characterController.enabled == true)
+        {
+            Move();
+        }
+
+        if (_isExploringVersion == false)
+        {
+            Jump();
+        }
 
         ApplyGravity();
 
-        _hoveringComponent.UpdateHovering(_upDownSpeed, _hoverDisplacement);
-        
-        UpdateVisual();
-    }
-
-    private void UpdateVisual()
-    {
-        // Calculate normalized velocity
-        _velocity = (transform.position - _lastPosition) / Time.deltaTime;
-        _velocityNormalized = _velocity.normalized;
-        _lastPosition = transform.position;
-
-        _target.transform.localPosition = new Vector3(_velocityNormalized.x * 2, 0, 5.14f);
-
-        // Rotate towards Target
-        var rot = Quaternion.FromToRotation(_visual.transform.forward,
-            _target.transform.position - _visual.transform.position) * _visual.transform.rotation;
-        _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.2f);
-
-        //Rotate towards Normal
-        RaycastHit hitInfo = new RaycastHit();
-
-        // floor
-        if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, 2.0f, ~_playerLayerMask))
+        if (_isExploringVersion == false)
         {
-            var angle = Vector3.Angle(Vector3.up, hitInfo.normal);
-            //Debug.Log("Angle: " + angle + "\nOn Object: " + hitInfo.transform.name);
-            if (Mathf.Abs(angle) > 10f)
-            {
-                // Calculate the rotation needed from the up vector to the normal
-                rot = Quaternion.FromToRotation(_visual.transform.up, hitInfo.normal) * _visual.transform.rotation;
-                _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, _visualLerpSpeed * Time.deltaTime);
-            }
+            _hoveringComponent.UpdateHovering(_upDownSpeed, _hoverDisplacement);
+
+            UpdateVisual();
         }
 
-        // Rotates along the the forward axis according to the left of right velocity
-        var rotationalFactor = Mathf.Clamp(_velocityNormalized.x, -1.0f, 1.0f);
-        rot = Quaternion.Euler(0.0f, 0.0f, -rotationalFactor * 80.0f);
-        _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, _visualLerpSpeed * Time.deltaTime);
-
-        // Rotate along x axis according to the vertical input
-        rotationalFactor = Mathf.Clamp(_input.y, -1.0f, 1.0f);
-        rot = Quaternion.Euler(rotationalFactor * 90.0f, 0.0f, 0.0f);
-        _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, _visualLerpSpeed * Time.deltaTime);
-    }
-
-    private Vector3 AdjustVelocityToSlope(Vector3 velocity)
-    {
-        var ray = new Ray(transform.position, Vector3.down);
-
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, 2f))
-        {
-            var slopeDirection = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
-            var adjustedVelocity = slopeDirection * velocity;
-
-
-            if (adjustedVelocity.y < 0)
-            {
-                // Debug.Log("returning slope vel");
-                return adjustedVelocity;
-            }
-        }
-
-        return velocity;
-    }
-
-
-    private void FakeGroundedTimer()
-    {
-        // default is grounded
-        _isGroundedFake = true;
-
-        // if I have just jumped -> fake grounded = false until _isGrounded happens
-        if (_hasJumped == true)
-        {
-            _isGroundedFake = false;
-
-            // the moment we touch the floor...
-            if (_isGrounded == true)
-            {
-                _isGroundedFake = true;
-                _hasJumped = false;
-            }
-
-            // don't need to go beyond this line of code if we are in here
-            return;
-        }
-
-
-        // if timer exceeds limit, we are not grounded
-        if (_isGrounded == false)
-        {
-            _fakeGroundedTimer += Time.deltaTime;
-
-            if (_fakeGroundedTimer >= _fakeGroundedTimeLimit)
-            {
-                _isGroundedFake = false;
-            }
-        }
-        else // if CC is grounded, this is grounded
-        {
-            _fakeGroundedTimer = 0;
-
-            _isGroundedFake = true;
-        }
     }
 
     public void BoostSpeed()
     {
         _speedBoostComponent.Activate();
     }
-
     public void BoostJump()
     {
         _jumpBoostComponent.Activate();
     }
-
     public void ForceJump()
     {
         _isJumping = true;
     }
-
     public void PlayBounceBackSound()
     {
         _audioController.PlayAudio(_soundBounce);
     }
-    
+    public void AutoJumpCCToggleFakeGravity(float timeOfFlight, float fakeGravity)
+    {
+        // stop a  possible previous jumppad coroutine
+        if (CCToggleRoutine != null)
+        {
+            StopCoroutine(CCToggleRoutine);
+        }
+
+        // start the new jumppad coroutine
+        CCToggleRoutine = StartCoroutine(ToggleCharacterControllerFakeGravity(timeOfFlight, fakeGravity));
+        // play sound
+        _audioController.PlayAudio(_soundJump);
+    }
+    public void SetJumpMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
+    {
+        _jumpBoostComponent = multiplierTimerComponent;
+    }
+    public void SetSpeedMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
+    {
+        _speedBoostComponent = multiplierTimerComponent;
+    }
+    public void SetKnockBackMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
+    {
+        _knockbackComponent = multiplierTimerComponent;
+    }
+
+    public void SetInput(Vector2 input)
+    {
+        _input = input;
+    }
+
+    #endregion
+
+
+
+    #region Private Functions
+
     private void Move()
     {
         // float angle = Mathf.Atan2(_input.y, _input.x) * Mathf.Rad2Deg;
@@ -329,7 +344,7 @@ public class SpeederGround : PlayerController
         //   else
         //   {
         _zVelocity = (speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) * _speedBoostComponent.Multiplier) * KnockbackMultiplier;
-     //   }
+        //   }
 
 
         Vector3 speed = new Vector3(_xVelocity, speedForward, _zVelocity);
@@ -343,7 +358,6 @@ public class SpeederGround : PlayerController
 
         _moveComponent.Move(_characterController, slopeVelocity, speed);
     }
-
     private void Land(float landingVelocity)
     {
         landingVelocity = Mathf.Abs(landingVelocity);
@@ -355,7 +369,6 @@ public class SpeederGround : PlayerController
             _audioController.PlayAudio(_soundLand);
         }
     }
-
     private void Jump()
     {
         if (_isJumping == true)
@@ -374,79 +387,169 @@ public class SpeederGround : PlayerController
 
         _isJumping = false;
     }
-
     private void Hover()
     {
     }
-
     private void ApplyGravity()
     {
-        _gravityComponent.ApplyGravity(_characterController, ref _yVelocity,
-            _gravityValue /** (1 + (Mathf.Clamp01(_input.y) * _tiltMultiplier))*/, _isGrounded);
-    }
-
-    private void OnEnable()
-    {
-        // Subscribe to events
-        var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
-        playerInput.Move.performed += OnMoveInput;
-        playerInput.Move.canceled += OnMoveInput;
-        playerInput.Action.started += OnJumpInput;
-    }
-    
-    private void OnDisable()
-    {
-        if (_isApplicationQuitting)
+        if (_characterController.enabled == true)
         {
+            _gravityComponent.ApplyGravity(_characterController, ref _yVelocity,
+              _gravityValue /** (1 + (Mathf.Clamp01(_input.y) * _tiltMultiplier))*/, _isGrounded);
+        }
+
+    }
+    private void UpdateVisual()
+    {
+        // Calculate normalized velocity
+        _velocity = (transform.position - _lastPosition) / Time.deltaTime;
+        _velocityNormalized = _velocity.normalized;
+        _lastPosition = transform.position;
+
+        _target.transform.localPosition = new Vector3(_velocityNormalized.x * 2, 0, 5.14f);
+
+        // Rotate towards Target
+        var rot = Quaternion.FromToRotation(_visual.transform.forward,
+            _target.transform.position - _visual.transform.position) * _visual.transform.rotation;
+        _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.2f);
+
+        //Rotate towards Normal
+        RaycastHit hitInfo = new RaycastHit();
+
+        // floor
+        if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, 2.0f, ~_playerLayerMask))
+        {
+            var angle = Vector3.Angle(Vector3.up, hitInfo.normal);
+            //Debug.Log("Angle: " + angle + "\nOn Object: " + hitInfo.transform.name);
+            if (Mathf.Abs(angle) > 10f)
+            {
+                // Calculate the rotation needed from the up vector to the normal
+                rot = Quaternion.FromToRotation(_visual.transform.up, hitInfo.normal) * _visual.transform.rotation;
+                _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, _visualLerpSpeed * Time.deltaTime);
+            }
+        }
+
+        // Rotates along the the forward axis according to the left of right velocity
+        var rotationalFactor = Mathf.Clamp(_velocityNormalized.x, -1.0f, 1.0f);
+        rot = Quaternion.Euler(0.0f, 0.0f, -rotationalFactor * 80.0f);
+        _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, _visualLerpSpeed * Time.deltaTime);
+
+        // Rotate along x axis according to the vertical input
+        rotationalFactor = Mathf.Clamp(_input.y, -1.0f, 1.0f);
+        rot = Quaternion.Euler(rotationalFactor * 90.0f, 0.0f, 0.0f);
+        _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, _visualLerpSpeed * Time.deltaTime);
+    }
+    private void FakeGroundedTimer()
+    {
+        // default is grounded
+        _isGroundedFake = true;
+
+        // if I have just jumped -> fake grounded = false until _isGrounded happens
+        if (_hasJumped == true)
+        {
+            _isGroundedFake = false;
+
+            // the moment we touch the floor...
+            if (_isGrounded == true)
+            {
+                _isGroundedFake = true;
+                _hasJumped = false;
+            }
+
+            // don't need to go beyond this line of code if we are in here
             return;
         }
 
-        // If service locator does not exist anymore, there is no need to unsubscribe:
-        // References of this script will not be saved by the input manager anyway since this is also destroyed
-        var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
 
-        // Unsubscribe to events
-        playerInput.Move.performed -= OnMoveInput;
-        playerInput.Move.canceled -= OnMoveInput;
-        playerInput.Action.started -= OnJumpInput;
+        // if timer exceeds limit, we are not grounded
+        if (_isGrounded == false)
+        {
+            _fakeGroundedTimer += Time.deltaTime;
+
+            if (_fakeGroundedTimer >= _fakeGroundedTimeLimit)
+            {
+                _isGroundedFake = false;
+            }
+        }
+        else // if CC is grounded, this is grounded
+        {
+            _fakeGroundedTimer = 0;
+
+            _isGroundedFake = true;
+        }
     }
-
-    private void OnApplicationQuit()
-    {
-        _isApplicationQuitting = true;
-    }
-
     private void OnMoveInput(InputAction.CallbackContext obj)
     {
         _input = obj.ReadValue<Vector2>();
-        Debug.LogWarning("Input X: " + _input.x + "\nInput Y: " + _input.y);
+        //Debug.LogWarning("Input X: " + _input.x + "\nInput Y: " + _input.y);
     }
-
     private void OnJumpInput(InputAction.CallbackContext obj)
     {
-        if (_isGroundedFake == true)
+        // if I'm in a trigger of an auto jump...
+        if (CurrentAutoJumpMaster != null && CurrentAutoJumpMaster.PlayerIsInTrigger == true)
+        {
+            // if it needs player input and perfect jump the player is grounded...
+            if (CurrentAutoJumpMaster.IsAutomatic == false && _isGrounded == true)
+            {
+                // discern what type of jump to make
+                if (CurrentAutoJumpMaster.IsNormalPlayerJump == false)
+                {
+                    CurrentAutoJumpMaster.CreatePerfectJumpCurve(this);
+
+                    CurrentAutoJumpMaster.DoPerfectJumpFakeGravity(this);
+                }
+                else
+                {
+                    ForceJump();
+                }
+            }
+        }
+        else if (_isGroundedFake == true && _characterController.enabled == true)
         {
             _isJumping = true;
         }
     }
-
-    private void FixedUpdate()
+    private Vector3 AdjustVelocityToSlope(Vector3 velocity)
     {
-        
+        var ray = new Ray(transform.position, Vector3.down);
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 2f))
+        {
+            var slopeDirection = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
+            var adjustedVelocity = slopeDirection * velocity;
+
+
+            if (adjustedVelocity.y < 0)
+            {
+                // Debug.Log("returning slope vel");
+                return adjustedVelocity;
+            }
+        }
+
+        return velocity;
     }
 
-    public void SetJumpMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
+    private IEnumerator ToggleCharacterControllerFakeGravity(float timeOfFlight, float fakeGravity)
     {
-        _jumpBoostComponent = multiplierTimerComponent;
+        float originalPlayerGravity = _gravityValue;
+
+        if (fakeGravity > 0)
+        {
+            fakeGravity *= -1;
+        }
+        _gravityValue = fakeGravity;
+
+
+        _characterController.enabled = false;
+        //Collider.enabled = true;
+
+        yield return new WaitForSeconds(timeOfFlight);
+
+        _characterController.enabled = true;
+        //Collider.enabled = false;
+
+        _gravityValue = originalPlayerGravity;
     }
 
-    public void SetSpeedMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
-    {
-        _speedBoostComponent = multiplierTimerComponent;
-    }
-
-    public void SetKnockBackMultiplierComponent(MultiplierTimerComponent multiplierTimerComponent)
-    {
-        _knockbackComponent = multiplierTimerComponent;
-    }
+    #endregion
 }

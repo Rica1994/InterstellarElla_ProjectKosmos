@@ -6,13 +6,27 @@ using UnityEngine;
 
 public class MainMenuManager : Service
 {
+    [Header("Included Levels")]
+    [SerializeField]
+    private bool _1 = true;
+    [SerializeField]
+    private bool _2 = true;
+    [SerializeField]
+    private bool _3 = true;
+    [SerializeField]
+    private bool _4 = true;
+    [SerializeField]
+    private bool _5 = true;
+
+    private bool[] _levelsIncluded = new bool[5];
+
     [Header("What types of scenes do I load ?")]
     public SceneChoice ScenesToLoad;
 
     private int _levelIndex = 0;
     private MenuLevel _currentLevel;
     public MenuLevel CurrentLevel => _currentLevel;
-    
+
     [Header("Menu Animator")]
     [SerializeField]
     private MenuAnimator _menuAnimator;
@@ -53,6 +67,14 @@ public class MainMenuManager : Service
     private const string _camZoom = "A_CameraLevelZoom";
 
 
+    private void Awake()
+    {
+        _levelsIncluded[0] = _1;
+        _levelsIncluded[1] = _2;
+        _levelsIncluded[2] = _3;
+        _levelsIncluded[3] = _4;
+        _levelsIncluded[4] = _5;
+    }
 
     private void Start()
     {
@@ -80,34 +102,59 @@ public class MainMenuManager : Service
 
     public void LoadLevel()
     {
-        // hide the forward & backward buttons
-        _buttonBackward.DisableButton();
-        _buttonForward.DisableButton();
-        _buttonLevelSelect.DisableButton();
-
-        // slowly scale up the clicked level, as a fade out takes place
-        _currentLevel.AnimationScaler.Play(_levelScalePop);
-        _currentLevel.AnimationRotater.Play(_levelRotateFast);
-
-        // zoom camera (needs to be animation
-        _menuAnimator.CameraAnimation.Play(_camZoom);
-
-        SceneType sceneToLoad = SceneType.None;
-        switch (ScenesToLoad)
+        if (_levelsIncluded[_levelIndex])
         {
-            case SceneChoice.Work:
-                sceneToLoad = ChooseCorrectSceneWork();
-                break;
-            case SceneChoice.Build:
-                sceneToLoad = ChooseCorrectSceneBuild();
-                break;
-        }
+            // hide the forward & backward buttons
+            _buttonBackward.DisableButton();
+            _buttonForward.DisableButton();
+            _buttonLevelSelect.DisableButton();
 
-        // load the loading scene first, then the actual scene for gameplay
-        _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);
+            // slowly scale up the clicked level, as a fade out takes place
+            _currentLevel.AnimationScaler.Play(_levelScalePop);
+            _currentLevel.AnimationRotater.Play(_levelRotateFast);
+
+            // zoom camera (needs to be animation
+            _menuAnimator.CameraAnimation.Play(_camZoom);
+
+            SceneType sceneToLoad = SceneType.None;
+            switch (ScenesToLoad)
+            {
+                case SceneChoice.Work:
+                    sceneToLoad = ChooseCorrectSceneWork();
+                    break;
+                case SceneChoice.Build:
+                    sceneToLoad = ChooseCorrectSceneBuild();
+                    break;
+            }
+#if UNITY_EDITOR
+            // load the loading scene first, then the actual scene for gameplay
+            _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);
+#elif UNITY_WEBGL
+                    string mainFolder = $"../{GetPlanetNameFromEnum(sceneToLoad)}";
+        string buildString = $"{sceneToLoad}";
+        
+        Application.ExternalEval($"window.location.href = '{mainFolder + buildString + ".html"}';");
+#endif
+        }
     }
 
-
+    public string GetPlanetNameFromEnum(SceneType sceneType)
+    {
+        var sceneTypeString = sceneType.ToString();
+        if (sceneTypeString.Contains("Level_1") || sceneTypeString.Contains("Mars"))
+            return "Mars/";
+        else if (sceneTypeString.Contains("Level_2"))
+            return "Pluto/";
+        else if (sceneTypeString.Contains("Level_3"))
+            return "Venus/";
+        else if (sceneTypeString.Contains("Level_4"))
+            return "Saturn/";
+        else if (sceneTypeString.Contains("Level_5"))
+            return "Mercury/";
+        else if (sceneTypeString.Contains("Quiz"))
+            return "";
+        else return "";
+    }
 
     public void ForwardLevel()
     {
@@ -213,7 +260,7 @@ public class MainMenuManager : Service
         switch (_levelIndex)
         {
             case 0:
-                return SceneType.S_Mars_1_1_Work;
+                return SceneType.S_Mars_1_0_IntroCutscene;
             case 1:
                 return SceneType.S_Level_2_0_Work;
             case 2:

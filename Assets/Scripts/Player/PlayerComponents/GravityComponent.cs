@@ -18,7 +18,6 @@ public class GravityComponent
         characterController.Move(new Vector3(0f, yVelocity * Time.deltaTime, 0f));
     }
 
-
     public void ApplyGravity(CharacterController characterController, ref bool canHover, ref float hoverTimer, ref float yVelocity, float gravity, float maxYvel, bool isGrounded)
     {
         if (isGrounded == true)

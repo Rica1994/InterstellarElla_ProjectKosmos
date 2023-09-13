@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sequence : MonoBehaviour
+public class Sequence : MonoBehaviour   
 {
     [SerializeField]
     private List<ChainAction> _chainActions = new List<ChainAction>();

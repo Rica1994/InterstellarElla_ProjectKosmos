@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(Collider))]
 public class TriggerHandler : MonoBehaviour
 {
     public delegate void TriggerHandlerCallBack(TriggerHandler me, Collider other, bool hasEntered);
