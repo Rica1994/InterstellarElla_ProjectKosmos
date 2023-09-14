@@ -16,22 +16,22 @@ public class SpeederGroundCutsceneStateAction : ChainAction
     [SerializeField]
     private State _state;
     [SerializeField]
-    private PlayableDirector _playableDirector;
+    private float _speederSpeed = 26;
     private Autopilot _autopilot;
     private FollowWithDamping _followWithDamping;
     private CinemachineBrain _brain;
     private LevelManager _levelManager;
     private GameObject _skipCutscene;
-    //private AudioSource _maggieAudioSource;
+    private SpeederGround _speederGround;
 
     private void Awake()
     {
-        _autopilot = FindObjectOfType<Autopilot>();
-        _followWithDamping = FindObjectOfType<FollowWithDamping>();
-        _brain = FindObjectOfType<CinemachineBrain>();
-        _levelManager = FindObjectOfType<LevelManager>();
-        _skipCutscene = FindObjectOfType<SkipCutscene>().gameObject;
-        //_maggieAudioSource = ServiceLocator.Instance.GetService<AudioController>().TracksMaggie[0].Source as AudioSource;
+        _autopilot = FindObjectOfType<Autopilot>(true);
+        _followWithDamping = FindObjectOfType<FollowWithDamping>(true);
+        _brain = FindObjectOfType<CinemachineBrain>(true);
+        _levelManager = FindObjectOfType<LevelManager>(true);
+        _skipCutscene = FindObjectOfType<SkipCutscene>(true).gameObject;
+        _speederGround = FindObjectOfType<SpeederGround>(true);
     }
 
     public override void Execute()
@@ -46,14 +46,7 @@ public class SpeederGroundCutsceneStateAction : ChainAction
                 _brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
                 _levelManager.cutsceneCameras.gameObject.SetActive(true);
                 _skipCutscene.SetActive(true);
-                //// Find the AudioTrack with the name "MaggieTrack"
-                //TimelineAsset timeline = _playableDirector.playableAsset as TimelineAsset;
-                //if (timeline == null) return;
-                //TrackAsset maggieTrack = timeline.GetOutputTracks().FirstOrDefault(t => t.name == "MaggieTrack");
-                //if (maggieTrack != null)
-                //{
-                //    _playableDirector.SetGenericBinding(maggieTrack, _maggieAudioSource);
-                //}
+                _speederGround.speedForward = _speederSpeed;
                 break;
             case State.Gameplay:
                 _autopilot.enabled = false;
@@ -63,6 +56,7 @@ public class SpeederGroundCutsceneStateAction : ChainAction
                 _brain.m_DefaultBlend.m_Time = 2;
                 _levelManager.cutsceneCameras.gameObject.SetActive(false);
                 _skipCutscene.SetActive(false);
+                _speederGround.speedForward = _speederSpeed;
                 break;
         }
     }
