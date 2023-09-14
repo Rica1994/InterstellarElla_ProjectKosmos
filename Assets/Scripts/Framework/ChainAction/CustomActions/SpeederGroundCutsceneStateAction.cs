@@ -26,12 +26,12 @@ public class SpeederGroundCutsceneStateAction : ChainAction
 
     private void Awake()
     {
-        _autopilot = FindObjectOfType<Autopilot>(true);
-        _followWithDamping = FindObjectOfType<FollowWithDamping>(true);
-        _brain = FindObjectOfType<CinemachineBrain>(true);
-        _levelManager = FindObjectOfType<LevelManager>(true);
-        _skipCutscene = FindObjectOfType<SkipCutscene>(true).gameObject;
-        _speederGround = FindObjectOfType<SpeederGround>(true);
+        _autopilot = FindObjectOfType<Autopilot>();
+        _followWithDamping = FindObjectOfType<FollowWithDamping>();
+        _brain = FindObjectOfType<CinemachineBrain>();
+        _levelManager = FindObjectOfType<LevelManager>();
+        _skipCutscene = FindObjectOfType<SkipCutscene>().gameObject;
+        _speederGround = FindObjectOfType<SpeederGround>();
     }
 
     public override void Execute()

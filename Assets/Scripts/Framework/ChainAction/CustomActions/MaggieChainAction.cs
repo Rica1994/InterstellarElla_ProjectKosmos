@@ -11,10 +11,15 @@ public class MaggieChainAction : ChainAction
 
     private Maggie _maggie;
 
-    private void Start()
+    private void Awake()
     {
-        _maggie = FindObjectOfType<Maggie>();
-        _maggie.gameObject.SetActive(false);
+        foreach (var maggie in Resources.FindObjectsOfTypeAll<Maggie>())
+        {
+
+            _maggie = maggie;
+
+        }
+
         if (_maggie == null)
         {
             Debug.LogError("No Maggie found! Please add maggie in the scene");

@@ -15,7 +15,7 @@ public class DynamoPathSwitchChainAction : ChainAction
 
     private void Awake()
     {
-        _dynamoCart = FindAnyObjectByType<CinemachineDollyCart>();
+        _dynamoCart = FindObjectOfType<CinemachineDollyCart>();
     }
 
     public override void Execute()
