@@ -40,7 +40,7 @@ MeshCollider:
   m_GameObject: {fileID: 249299446688574575}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -118,7 +118,7 @@ MeshCollider:
   m_GameObject: {fileID: 8644179357100763147}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -182,29 +182,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Cave_Stalagmite_06
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 4202130630105190075, guid: 4af1499a749242d4ba0910111b271110, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 4202130630105190075, guid: 4af1499a749242d4ba0910111b271110, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4af1499a749242d4ba0910111b271110, type: 3}
---- !u!1 &7151965675551965291 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4af1499a749242d4ba0910111b271110, type: 3}
-  m_PrefabInstance: {fileID: 8034856258228124986}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7497141320574540497 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4af1499a749242d4ba0910111b271110, type: 3}
   m_PrefabInstance: {fileID: 8034856258228124986}
   m_PrefabAsset: {fileID: 0}
---- !u!136 &6988135121828980430
-CapsuleCollider:
+--- !u!1 &1048721395519093411 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -2230331025370216551, guid: 4af1499a749242d4ba0910111b271110, type: 3}
+  m_PrefabInstance: {fileID: 8034856258228124986}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &6377833225796419796
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7151965675551965291}
+  m_GameObject: {fileID: 1048721395519093411}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.4687146
-  m_Height: 15.183021
-  m_Direction: 1
-  m_Center: {x: 0.24050999, y: 7.5704865, z: -0.025655627}
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7437132710597495331, guid: 4af1499a749242d4ba0910111b271110, type: 3}
