@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
@@ -69,6 +70,17 @@ public class SpeederSpace : PlayerController
     [SerializeField]
     private float _magnetCooldownTime = 3;
 
+    [Header("Audio")]
+    [SerializeField]
+    private AudioElement _soundCollision;
+
+    private AudioController _audioController;
+    private ParticleManager _particleManager;
+
+    [Header("Animations")]
+    [SerializeField]
+    private Animation _animationVisual;
+
 
 
     #region Unity Functions
@@ -91,6 +103,9 @@ public class SpeederSpace : PlayerController
         base.Start();
 
         _magnetSpace.EnableFullObject(false);
+
+        _audioController = ServiceLocator.Instance.GetService<AudioController>();
+        _particleManager = ServiceLocator.Instance.GetService<ParticleManager>();
 
         SetBounds();    
     }
@@ -344,6 +359,19 @@ public class SpeederSpace : PlayerController
         _boostComponent.OnTimerEnded += BoostEnded;
         ServiceLocator.Instance.GetService<VirtualCameraManager>().ZoomOut();
     }
+    public void PlayCollisionSound()
+    {
+        _audioController.PlayAudio(_soundCollision);
+    }
+    public void PlayCollisionAnimation()
+    {
+        _animationVisual.Play();
+    }
+    public void LosePickups()
+    {
+        _particleManager.CreateParticleLocalSpace(ParticleType.PS_PickupTrigger, this.transform);
+    }
+
 
     #endregion
 }
