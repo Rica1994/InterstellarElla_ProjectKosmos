@@ -281,4 +281,17 @@ public class LevelManager : Service
             ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint, true);
         }
     }
+    public void PlayerHitObstacleSpace(SpeederSpace speederSpace)
+    {
+        _timeSinceLastHit = 0.0f;
+
+        // play sound
+        speederSpace.PlayCollisionSound();
+
+        // play animation
+        speederSpace.PlayCollisionAnimation();
+
+        // lose pickups
+        speederSpace.LosePickups();
+    }
 }
