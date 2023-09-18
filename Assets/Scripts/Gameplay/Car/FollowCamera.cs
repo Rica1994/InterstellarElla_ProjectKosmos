@@ -5,18 +5,41 @@ using UnityEngine;
 public class FollowCamera : MonoBehaviour
 {
     [SerializeField]
+    public GameObject ObjectToFollowPlayer;
+
+    [SerializeField]
     private Transform _target;
 
     private Vector3 _offset;
-    // Start is called before the first frame update
+
+
     void Start()
     {
-        _offset = transform.position - _target.position;
+        if (ObjectToFollowPlayer == null)
+        {
+            ObjectToFollowPlayer = this.gameObject;
+        }
+
+
+        AdjustOffset();        
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.position = _target.position + _offset;
+        //ObjectToFollowPlayer.transform.position = _target.position + _offset;
+        ObjectToFollowPlayer.transform.position = _target.position;
+    }
+
+
+    private void AdjustOffset()
+    {
+        _offset = ObjectToFollowPlayer.transform.position - _target.position;
+    }
+
+
+    public void ChangeObjectToFollow(GameObject objToFollowPlayer)
+    {
+        ObjectToFollowPlayer = objToFollowPlayer;
+        AdjustOffset();
     }
 }

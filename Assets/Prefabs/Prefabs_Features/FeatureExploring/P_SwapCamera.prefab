@@ -25,8 +25,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2173214427757930872}
-  m_LocalRotation: {x: 0.16625944, y: 0.68728286, z: -0.16625941, w: 0.687283}
-  m_LocalPosition: {x: -3.5999985, y: 1.4000001, z: 0}
+  m_LocalRotation: {x: 0.16625935, y: 0.6872829, z: -0.16625932, w: 0.68728304}
+  m_LocalPosition: {x: -3.6, y: 1.4, z: -0.00000047683716}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2173214427784615542}
@@ -59,7 +59,10 @@ MonoBehaviour:
     NearClipPlane: 0.1
     FarClipPlane: 100
     Dutch: 0
+    ModeOverride: 0
     LensShift: {x: 0, y: 0}
+    GateFit: 2
+    m_SensorSize: {x: 1, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -165,6 +168,8 @@ MonoBehaviour:
     m_Bits: 0
   IgnoreTag: 
   CameraRadius: 0.2
+  DampingIntoCollision: 0
+  DampingFromCollision: 0
 --- !u!114 &2173214427784615537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,7 +252,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -272,7 +276,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2173214428021930653
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,7 +331,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -353,7 +355,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2173214428136584337
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,7 +410,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -434,7 +434,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2173214428653962579
 GameObject:
   m_ObjectHideFlags: 0
@@ -549,6 +548,8 @@ MonoBehaviour:
   _virtualCamera: {fileID: 2173214427757930874}
   _blendSpeed: 0.5
   _isStatic: 0
+  _meshRendererTrigger: {fileID: 2173214429207371606}
+  _targetVisuals: {fileID: 2173214428653962579}
 --- !u!1 &2173214429207371607
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,7 +607,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -631,7 +631,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &2173214429207371602
 BoxCollider:
   m_ObjectHideFlags: 0

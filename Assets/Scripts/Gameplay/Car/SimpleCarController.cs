@@ -9,28 +9,28 @@ using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
 public class SimpleCarController : PlayerController
-{
-    [SerializeField] private Transform _transformFollower;
-
-    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
-
-    private float m_steeringAngle;
-
-    public WheelCollider frontDriverW, frontPassengerW;
-    public WheelCollider rearDriverW, rearPassengerW;
-    public Transform frontDriverT, frontPassengerT;
-    public Transform rearDriverT, rearPassengerT;
+{  
+    [Header("Wheel collider references")]
+    public WheelCollider frontDriverW;
+    public WheelCollider frontPassengerW;
+    public WheelCollider rearDriverW;
+    public WheelCollider rearPassengerW;
+    public Transform frontDriverT;
+    public Transform frontPassengerT;
+    public Transform rearDriverT;
+    public Transform rearPassengerT;
 
     [SerializeField]
     private Transform _centerOfMass;
 
+    [Header("Car values")]
     // how fast can we do a uturn?
     public float maxSteerAngle = 30;
-
     // how fast we can go. (motor torque)
     public float motorForce = 50;
-
     public float brakeForce = 300.0f;
+
+    private float m_steeringAngle;
 
     /// <summary>
     /// Calculates the path for the car.
@@ -41,31 +41,27 @@ public class SimpleCarController : PlayerController
     private LayerMask _ignoreMe;
 
     private float _brakeTorque = 0.0f;
-
     private float _motorTorque = 0.0f;
 
     private Vector3 _resetPosition;
     private Quaternion _resetRotation;
 
     [SerializeField]
-    private float _boostStrength = 4f, _boostCooldownDuration;
-
-    private float _maxSpeedBoosted;
-    private float _speed;
+    private float _boostStrength = 4f;
+    [SerializeField]
+    private float _boostCooldownDuration = 3f;
     [SerializeField]
     private float _maxSpeed = 8; // top 2 max speeds get assigned to this value when needed
 
-    private bool _hasBoostedRecently, _boostIsDeclining;
+    private float _maxSpeedBoosted;
+    private float _speed;
+
     public bool BoostCoolingDown;
     public bool IsBoosting; // bool used for checking collisions with rock walls
-
+    private bool _hasBoostedRecently, _boostIsDeclining;
+      
     private Rigidbody _rigidbody;
     public Rigidbody Rigid => _rigidbody;
-
-    [SerializeField]
-    private GameObject _particleLeftPipe, _particleRightPipe;
-    [SerializeField]
-    private GameObject _particleLeftJet, _particleRightJet;
 
     //   private RockWall[] _rockWallScripts;
     private Collider[] _rockWallColliders;
@@ -77,22 +73,17 @@ public class SimpleCarController : PlayerController
     private bool _movingReverse;
 
     public delegate void BoostActive();
-
     public static event BoostActive OnBoost;
 
     public delegate void NormalSpeed();
-
     public static event NormalSpeed OnNormalize;
 
     private Vector2 _input;
-    public Transform TransformFollower => _transformFollower;
-
-    public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
 
 
-    public Coroutine ToggleFakeGravityRoutine;
-    //private GravityComponent _gravityComponent;
-    private bool _isPerfectJumping;
+
+
+
     [Header("custom gravity")]
     [SerializeField]
     private bool _useCustomGravity;
@@ -101,6 +92,30 @@ public class SimpleCarController : PlayerController
     private float _gravityValue = -9.81f;
     public float GravityValue => _gravityValue;
 
+    public Coroutine ToggleFakeGravityRoutine;
+    //private GravityComponent _gravityComponent;
+    private bool _isPerfectJumping;
+
+    [Header("Camera managing stuff")]
+    [SerializeField] private Transform _transformFollower;
+    [SerializeField]
+    private FollowCamera _followPlayerObject;
+    public Transform TransformFollower => _transformFollower;
+
+    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
+    public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
+
+    public GameObject CamerasParent;
+
+    [Header("Particles")]
+    [SerializeField]
+    private GameObject _particleLeftPipe;
+    [SerializeField]
+    private GameObject _particleRightPipe;
+    [SerializeField]
+    private GameObject _particleLeftJet;
+    [SerializeField]
+    private GameObject _particleRightJet;
 
 
     #region Unity Functions
@@ -235,10 +250,12 @@ public class SimpleCarController : PlayerController
             rotation = Quaternion.Euler(0.0f, rotationAngle, 0.0f);
 
             // Create the target rotation for smooth rotation
-            var targetRot = rotation * _transformFollower.rotation;
+            //var targetRot = rotation * _transformFollower.rotation;
+            var targetRot = rotation * _followPlayerObject.ObjectToFollowPlayer.transform.rotation;
 
             // Calculate the difference in angle between the current and target forward vectors
-            var newForward = rotation * _transformFollower.forward;
+            //var newForward = rotation * _transformFollower.forward;
+            var newForward = rotation * _followPlayerObject.ObjectToFollowPlayer.transform.forward;
 
             // Project the forward vectors onto the horizontal plane
             var flatForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
@@ -564,6 +581,10 @@ public class SimpleCarController : PlayerController
 
         // play sound
         //_audioController.PlayAudio(_soundJump);
+    }
+    public void ChangeCamera(GameObject targetSwapCam)
+    {
+        _followPlayerObject.ChangeObjectToFollow(targetSwapCam);
     }
 
     //public void ReverseLogic()

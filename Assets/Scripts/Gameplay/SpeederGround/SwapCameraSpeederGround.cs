@@ -3,26 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwapCameraSpeederGround : MonoBehaviour
+[DefaultExecutionOrder(-100)]
+public class SwapCameraSpeederGround : SwapCameraBase
 {
-    [SerializeField]
-    private CinemachineVirtualCamera _virtualCamera;
-
-    [SerializeField]
-    private float _blendSpeed = 3f;
-
-    [SerializeField]
-    private bool _isStatic = false;
-
-
-    private void Start()
+    public override void Start()
     {
-        // disable the camera in the start
-        _virtualCamera.gameObject.SetActive(false);
+        base.Start();
 
-        // parent camera to manager
-        _virtualCamera.transform.SetParent(ServiceLocator.Instance.GetService<VirtualCameraManagerSpeederGround>().transform);
+        //    // disable the camera in the start
+        //    _virtualCamera.gameObject.SetActive(false);
 
+        //    // parent camera to manager
+        //    _virtualCamera.transform.SetParent(ServiceLocator.Instance.GetService<VirtualCameraManagerSpeederGround>().transform);
     }
 
 
