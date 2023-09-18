@@ -149,7 +149,11 @@ public class MainMenuManager : Service
             string mainFolder = $"{GetPlanetNameFromEnum(sceneToLoad)}";
             string buildString = $"{sceneToLoad}";
 
-            Application.ExternalEval($"window.location.href = '{relativePath + mainFolder + buildString}';");
+            string planetCompletionsCompiled = ServiceLocator.Instance.GetService<GameManager>().PlanetCompletions.ToString();
+
+            string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(planetCompletionsCompiled)}";
+
+            Application.ExternalEval($"window.location.href = '{relativePath + mainFolder + buildString + "?data=" + data}';");
 #endif
         }
     }
