@@ -54,6 +54,11 @@ namespace UnityCore
 
             #region Public Functions
 
+            public void Load(SceneType sceneType)
+            {
+                LoadIntermissionLoading(sceneType, null, false, PageType.None, 1);
+            }
+
             public void Load(SceneType scene, SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
                 PageType loadingPage = PageType.None)
             {
@@ -98,7 +103,43 @@ namespace UnityCore
             public void LoadIntermissionLoading(SceneType scene, SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
                 PageType loadingPage = PageType.None, float timeDelayToStartFirstLoad = 1)
             {
+
+
+#if UNITY_EDITOR
+                // load the loading scene first, then the actual scene for gameplay
                 StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading));
+#elif UNITY_WEBGL
+                string currentSceneName = SceneManager.GetActiveScene().name;
+                string relativePath = GetRelativePath(currentSceneName, scene);
+
+                // int levelsToGoUp = GetLevelsToGoUp(currentSceneName);
+                //
+                // string relativePath = "";
+                //
+                // if (levelsToGoUp == 0)
+                // {
+                //     relativePath = "./";
+                // }
+                //
+                // for (int i = 0; i < levelsToGoUp; i++)
+                // {
+                //     relativePath += "../";
+                // }
+                //
+                // string mainFolder = $"{GetPlanetNameFromEnum(scene)}";
+                // string buildString = $"{scene}";
+
+                var gameManager = ServiceLocator.Instance.GetService<GameManager>();
+                gameManager.EndGame();
+                string planetCompletionsCompiled = gameManager.PlanetCompletions.ToString();
+                string currentScore = gameManager.CurrentScore.ToString("D3");
+                string currentIndex = GetLevelIndexFromTargetScene(currentSceneName);
+
+                string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(planetCompletionsCompiled + currentScore + currentIndex)}";
+
+                Application.ExternalEval($"window.location.href = '{relativePath + "?data=" + data}';");
+#endif
+
             }
             #endregion
 
@@ -106,7 +147,7 @@ namespace UnityCore
             #region Private Functions
 
             private IEnumerator LoadScene()
-            {        
+            {
                 if (m_LoadingPage != PageType.None)
                 {
                     _pageController.TurnPageOn(m_LoadingPage);
@@ -118,7 +159,7 @@ namespace UnityCore
                 SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
             }
             private IEnumerator LoadLoadingIntoTarget(float timeDelay, SceneType sceneToLoad,
-                                                      SceneLoadDelegate sceneLoadDelegate = null, bool reload = false, 
+                                                      SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
                                                       PageType loadingPage = PageType.None)
             {
                 yield return new WaitForSeconds(timeDelay);
@@ -213,49 +254,7 @@ namespace UnityCore
             // add extra scene names made for the game to this list of strings ?? 
             private string SceneTypeToString(SceneType scene)
             {
-                switch (scene)
-                {
-                    case SceneType.S_MainMenu: return "S_MainMenu";
-                    case SceneType.S_Loading: return "S_Loading";
-
-                    case SceneType.S_Level_1_0_Work: return "S_Level_1_0_Work";
-                    case SceneType.S_Level_1_0_Build: return "S_Level_1_0_Build";
-
-                    case SceneType.S_Mars_1_1_Work: return "S_Mars_1_1_Work";
-                    case SceneType.S_Mars_1_1_Build: return "S_Mars_1_1_Build";
-
-                    case SceneType.S_Level_2_0_Work: return "S_Level_2_0_Work";
-                    case SceneType.S_Level_2_0_Build: return "S_Level_2_0_Build";
-
-                    case SceneType.S_Level_3_0_Work: return "S_Level_3_0_Work";
-                    case SceneType.S_Level_3_0_Build: return "S_Level_3_0_Build";
-                    case SceneType.S_Level_3_1_Work: return "S_Level_3_1_Work";
-                    case SceneType.S_Level_3_1_Build: return "S_Level_3_1_Build";
-                    case SceneType.S_Level_3_2_Work: return "S_Level_3_2_Work";
-                    case SceneType.S_Level_3_2_Build: return "S_Level_3_2_Build";
-                    case SceneType.S_Level_3_3_Work: return "S_Level_3_3_Work";
-                    case SceneType.S_Level_3_3_Build: return "S_Level_3_3_Build";
-                    case SceneType.S_Level_3_4_Work: return "S_Level_3_4_Work";
-                    case SceneType.S_Level_3_4_Build: return "S_Level_3_4_Build";
-
-                    case SceneType.S_Level_4_0_Work: return "S_Level_4_0_Work";
-                    case SceneType.S_Level_4_0_Build: return "S_Level_4_0_Build";
-                    case SceneType.S_Level_4_1_Work: return "S_Level_4_1_Work";
-                    case SceneType.S_Level_4_1_Build: return "S_Level_4_1_Build";
-                    case SceneType.S_Level_4_2_Work: return "S_Level_4_2_Work";
-                    case SceneType.S_Level_4_2_Build: return "S_Level_4_2_Build";
-                    case SceneType.S_Level_4_3_Work: return "S_Level_4_3_Work";
-                    case SceneType.S_Level_4_3_Build: return "S_Level_4_3_Build";
-
-                    case SceneType.S_Level_5_0_Work: return "S_Level_5_0_Work";
-                    case SceneType.S_Level_5_0_Build: return "S_Level_5_0_Build";
-
-                    case SceneType.S_Mars_1_0_IntroCutscene: return "S_Mars_1_0_IntroCutscene";
-                    case SceneType.S_GameStartUpScene: return "S_GameStartUpScene";
-                    default:
-                        Debug.Log("Scene [" + scene + "] does not contain a string for a valid scene. ");
-                        return string.Empty;
-                }
+                return scene.ToString();
             }
             private SceneType StringToSceneType(string scene)
             {
@@ -296,8 +295,14 @@ namespace UnityCore
                     case "S_Level_5_0_Work": return SceneType.S_Level_5_0_Work;
                     case "S_Level_5_0_Build": return SceneType.S_Level_5_0_Build;
 
-                    case "S_Mars_1_0_IntroCutscene": return SceneType.S_Mars_1_0_IntroCutscene; 
-                    case "S_GameStartUpScene": return SceneType.S_GameStartUpScene; 
+                    case "S_Mars_1_0_IntroCutscene": return SceneType.S_Mars_1_0_IntroCutscene;
+                    case "S_GameStartUpScene": return SceneType.S_GameStartUpScene;
+                    case "S_Level_1_0": return SceneType.S_Level_1_0;
+                    case "S_Level_1_1": return SceneType.S_Level_1_1;
+                    case "S_Level_2_0": return SceneType.S_Level_2_0;
+                    case "S_Level_2_1": return SceneType.S_Level_2_1;
+                    case "S_Level_2_2": return SceneType.S_Level_2_2;
+                    case "S_Quiz": return SceneType.S_Quiz;
 
                     default:
                         Debug.Log("Scene [" + scene + "] does not contain a type for a valid scene. ");
@@ -315,6 +320,94 @@ namespace UnityCore
                 SceneManager.sceneLoaded -= OnSceneLoaded;
             }
 
+
+            private int GetLevelsToGoUp(string sceneName)
+            {
+                if (sceneName.Contains("Level"))
+                    return 2; // For scenes like S_Level_1_0_Introscene, go two levels up
+                else if (sceneName.Contains("Quiz"))
+                    return 1;
+                else
+                    return 0; // Default case, stay in the current directory
+            }
+
+            public string GetPlanetNameFromEnum(SceneType sceneType)
+            {
+                var sceneTypeString = sceneType.ToString();
+                return GetPlanetNameFromString(sceneTypeString);
+            }
+
+            public string GetPlanetNameFromString(string sceneName)
+            {
+                if (sceneName.Contains("Level_1") || sceneName.Contains("Mars"))
+                    return "Mars";
+                else if (sceneName.Contains("Level_2"))
+                    return "Pluto";
+                else if (sceneName.Contains("Level_3"))
+                    return "Venus";
+                else if (sceneName.Contains("Level_4"))
+                    return "Saturn";
+                else if (sceneName.Contains("Level_5"))
+                    return "Mercury";
+                else return "";
+            }
+
+            private string GetLevelIndexFromTargetScene(string targetScene)
+            {
+                if (targetScene.Contains("Level_1"))
+                    return "1";
+                else if (targetScene.Contains("Level_2"))
+                    return "2";
+                else if (targetScene.Contains("Level_3"))
+                    return "3";
+                else if (targetScene.Contains("Level_4"))
+                    return "4";
+                else if (targetScene.Contains("Level_5"))
+                    return "5";
+                else return "0";
+            }
+
+            private string GetRelativePath(string currentSceneName, SceneType targetScene)
+            {
+                string targetPlanetName = GetPlanetNameFromEnum(targetScene);
+                string currentPlanetName = GetPlanetNameFromString(currentSceneName);
+
+                if (currentSceneName.Contains("MainMenu"))
+                {
+                    return $"./Levels/{targetPlanetName}/{targetScene.ToString()}";
+                }
+
+                if (currentSceneName.Contains("Quiz"))
+                {
+                    // From quiz we always go to Main Menu
+                    return $"../../";
+                }
+
+
+                // If we are leaving from a planet scene
+                
+                // If our target scene is a planet
+                if (targetPlanetName.Length != 0)
+                {
+                    // if our target planet is not the same planet as the current planet
+                    if (targetPlanetName != currentPlanetName)
+                    {
+                        return $"../../{targetPlanetName}/{targetScene.ToString()}";
+                    }
+                    else return $"../{targetScene.ToString()}";
+                }
+
+                switch (targetScene)
+                {
+                    case SceneType.S_MainMenu:
+                        return "../../../";
+                    case SceneType.S_Quiz:
+                        return "../../Quiz";
+                }
+
+                Debug.LogError($"{currentSceneName} to load {targetScene.ToString()} does not work.");
+                return "";
+            }
 
             #endregion
         }
