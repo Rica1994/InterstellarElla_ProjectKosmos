@@ -218,7 +218,7 @@ public class SmoothPathAligningTool : EditorWindow
             }
         }
 
-        static float SortByPositionZ(float z1, float z2)
+        float SortByPositionZ(float z1, float z2)
         {
             return z1.CompareTo(z2);
         }

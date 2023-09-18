@@ -1,4 +1,5 @@
 using Cinemachine;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class SceneLoader : MonoBehaviour
     private SpeederGround _speederGround;
     [SerializeField]
     private CinemachineDollyCart _dynamoDollyCart;
+    [SerializeField]
+    private GameObject _Sequence;
 
     [SerializeField]
     private float _targetFPS = 40f;
@@ -38,10 +41,11 @@ public class SceneLoader : MonoBehaviour
 
     private void Awake()
     {
+            _speederGround.speedForward = 0;
+            _dynamoDollyCart.m_Speed = 0;
+            _Sequence.SetActive(false);
         if (!SystemInfo.deviceModel.StartsWith("Safari"))
         {
-            _speederGround.enabled = false;
-            StartGameplay();
         }
     }
 
@@ -113,8 +117,9 @@ public class SceneLoader : MonoBehaviour
 
     private void StartGameplay()
     {
-        _speederGround.enabled = true;
-        _dynamoDollyCart.enabled = true;
+        _speederGround.speedForward = 26;
+        _dynamoDollyCart.m_Speed = 41;
+        _Sequence.SetActive(true);
         Destroy(gameObject);
     }
 

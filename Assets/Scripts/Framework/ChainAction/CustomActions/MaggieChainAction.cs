@@ -11,9 +11,20 @@ public class MaggieChainAction : ChainAction
 
     private Maggie _maggie;
 
-    private void Start()
+    private void Awake()
     {
-        _maggie = FindObjectOfType<Maggie>(true);
+        foreach (var maggie in Resources.FindObjectsOfTypeAll<Maggie>())
+        {
+
+            _maggie = maggie;
+
+        }
+
+        if (_maggie == null)
+        {
+            Debug.LogError("No Maggie found! Please add maggie in the scene");
+            return;
+        }
         _maxTime = _maggie.PopUpLength + _maggie.PopDownLength + _maggieVoiceClip.Clip.length;
     }
 
@@ -21,12 +32,12 @@ public class MaggieChainAction : ChainAction
     {
         base.Execute();
         _maggie.gameObject.SetActive(true);
-      //  StartCoroutine(PlayAudioAfter(_maggie.PopUpLength));
-      StartCoroutine(Helpers.DoAfter(_maggie.PopUpLength, () =>
-      {
-          ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieVoiceClip);
-          StartCoroutine(Helpers.DoAfter(_maggieVoiceClip.Clip.length, () => _maggie.PopDown()));
-      }));
+        //  StartCoroutine(PlayAudioAfter(_maggie.PopUpLength));
+        StartCoroutine(Helpers.DoAfter(_maggie.PopUpLength, () =>
+        {
+            ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieVoiceClip);
+            StartCoroutine(Helpers.DoAfter(_maggieVoiceClip.Clip.length, () => _maggie.PopDown()));
+        }));
     }
 
     public override void OnExit()

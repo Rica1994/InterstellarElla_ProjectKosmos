@@ -40,7 +40,7 @@ MeshCollider:
   m_GameObject: {fileID: 4753598173932008642}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -116,7 +116,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 7830853688163497474}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 1.17
   m_Height: 14.993201
   m_Direction: 1
@@ -161,7 +161,7 @@ MeshCollider:
   m_GameObject: {fileID: 9180232365431962452}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -221,6 +221,14 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: ed7d0211d24b9e64c86b90663360ea0d, type: 2}
+    - target: {fileID: -7159174608901297053, guid: 1ebcd3efe38976847b19e1f0ee2dc2de, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1161924166454409681, guid: 1ebcd3efe38976847b19e1f0ee2dc2de, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1ebcd3efe38976847b19e1f0ee2dc2de, type: 3}
       propertyPath: m_Name
       value: SM_Cave_Stalagmite_07
@@ -237,6 +245,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1ebcd3efe38976847b19e1f0ee2dc2de, type: 3}
   m_PrefabInstance: {fileID: 2740017617124171567}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6846817038702655073 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8719734497094478158, guid: 1ebcd3efe38976847b19e1f0ee2dc2de, type: 3}
+  m_PrefabInstance: {fileID: 2740017617124171567}
+  m_PrefabAsset: {fileID: 0}
 --- !u!136 &899860731492671003
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -251,3 +264,17 @@ CapsuleCollider:
   m_Height: 14.993201
   m_Direction: 1
   m_Center: {x: 1.6573483, y: 7.4966006, z: 0.036543727}
+--- !u!64 &1992134980305273636
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6846817038702655073}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -1057013147064749491, guid: 1ebcd3efe38976847b19e1f0ee2dc2de, type: 3}
