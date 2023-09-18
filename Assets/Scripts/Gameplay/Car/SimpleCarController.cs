@@ -47,6 +47,8 @@ public class SimpleCarController : PlayerController
     private Quaternion _resetRotation;
 
     [SerializeField]
+    private float _rotationSpeed = 0.5f;
+    [SerializeField]
     private float _boostStrength = 4f;
     [SerializeField]
     private float _boostCooldownDuration = 3f;
@@ -97,10 +99,13 @@ public class SimpleCarController : PlayerController
     private bool _isPerfectJumping;
 
     [Header("Camera managing stuff")]
+    [SerializeField] private Camera CameraMainBrain;
     [SerializeField] private Transform _transformFollower;
+    public Transform TransformFollower => _transformFollower;
     [SerializeField]
     private FollowCamera _followPlayerObject;
-    public Transform TransformFollower => _transformFollower;
+    [SerializeField]
+    private FixInputOrientation _fixInputOrient;
 
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
     public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
@@ -217,6 +222,7 @@ public class SimpleCarController : PlayerController
     }
     private void GetInput()
     {
+        // if no input is detected...
         if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0)
         {
             _motorTorque = 0.0f;
@@ -226,12 +232,14 @@ public class SimpleCarController : PlayerController
             _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
             _rigidbody.angularVelocity = Vector3.zero;  //new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
         }
-        else if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) <= 0.18f && IsBoosting == false) // if slight input is being made...
+        // else if slight input is being made...
+        else if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) <= 0.18f && IsBoosting == false) 
         {
             _motorTorque = motorForce / 2;
             _brakeTorque = motorForce / 2;
         }
-        else // if major input...
+        // else if major input...
+        else
         {
             _rigidbody.constraints = RigidbodyConstraints.None;
 
@@ -247,15 +255,14 @@ public class SimpleCarController : PlayerController
             // Calculate the target rotation based on the input values.
             Quaternion rotation;
             var rotationAngle = Mathf.Atan2(_input.x, _input.y) * Mathf.Rad2Deg;
-            rotation = Quaternion.Euler(0.0f, rotationAngle, 0.0f);
+            rotation = Quaternion.Euler(0.0f, rotationAngle, 0.0f);  // - should x also not rotate depending on ground plane?
 
             // Create the target rotation for smooth rotation
-            //var targetRot = rotation * _transformFollower.rotation;
-            var targetRot = rotation * _followPlayerObject.ObjectToFollowPlayer.transform.rotation;
-
+            //var targetRot = rotation * _followPlayerObject.ObjectToFollowPlayer.transform.rotation;  // NOT working properly on angles
+            var targetRot = rotation * _fixInputOrient.transform.rotation;
             // Calculate the difference in angle between the current and target forward vectors
-            //var newForward = rotation * _transformFollower.forward;
-            var newForward = rotation * _followPlayerObject.ObjectToFollowPlayer.transform.forward;
+            //var newForward = rotation * _followPlayerObject.ObjectToFollowPlayer.transform.forward;  // NOT working properly on angles
+            var newForward = rotation * _fixInputOrient.transform.forward;
 
             // Project the forward vectors onto the horizontal plane
             var flatForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
@@ -266,7 +273,9 @@ public class SimpleCarController : PlayerController
             m_steeringAngle = Mathf.Clamp(currentAngleDiffTarget, -maxSteerAngle, maxSteerAngle) * 0.8f;
 
             // Apply the target rotation smoothly
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 0.1f);
+            //transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 0.1f);
+            var step = (360) * Time.deltaTime * _rotationSpeed;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, step);
         }
 
         // Apply steering angles to the wheels if not moving in reverse
@@ -377,6 +386,24 @@ public class SimpleCarController : PlayerController
             //Smooth rotation
             transform.rotation = Quaternion.Slerp(transform.rotation, RunnerRotation, Time.deltaTime * 10);
         }
+    }
+    private Vector3 AdjustVelocityToSlope(Vector3 velocity)
+    {
+        var ray = new Ray(transform.position, Vector3.down);
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 1.1f))
+        {
+            var slopeDirection = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
+            var adjustedVelocity = slopeDirection * velocity;
+
+            if (adjustedVelocity.y < 0)
+            {
+                //Debug.Log("returning slope vel");
+                return adjustedVelocity;
+            }
+        }
+
+        return velocity;
     }
     private IEnumerator ParticleJetsRoutine(float duration = 0.5f)
     {

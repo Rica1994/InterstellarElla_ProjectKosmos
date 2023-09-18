@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
 {
+    // I need to constantly set 'an object rotation' to an adjusted one of the followObject camera 
     [SerializeField]
     public GameObject ObjectToFollowPlayer;
 
@@ -18,10 +19,7 @@ public class FollowCamera : MonoBehaviour
         if (ObjectToFollowPlayer == null)
         {
             ObjectToFollowPlayer = this.gameObject;
-        }
-
-
-        AdjustOffset();        
+        }      
     }
 
     void Update()
@@ -29,17 +27,8 @@ public class FollowCamera : MonoBehaviour
         //ObjectToFollowPlayer.transform.position = _target.position + _offset;
         ObjectToFollowPlayer.transform.position = _target.position;
     }
-
-
-    private void AdjustOffset()
-    {
-        _offset = ObjectToFollowPlayer.transform.position - _target.position;
-    }
-
-
     public void ChangeObjectToFollow(GameObject objToFollowPlayer)
     {
         ObjectToFollowPlayer = objToFollowPlayer;
-        AdjustOffset();
     }
 }
