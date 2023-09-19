@@ -21,11 +21,23 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _ColorNoise3:
+        m_Texture: {fileID: 2800000, guid: 64e6ce3f003f04d40975bcd409397c27, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Grunge:
         m_Texture: {fileID: 2800000, guid: e955a59092a218e4e9861f0d837f8f8f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Noise111:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Noise13:
+        m_Texture: {fileID: 2800000, guid: 2320b94939e4b6541865eb6cbe65f192, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Noise14:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -101,9 +113,13 @@ Material:
     - _HeightMaskOn: 0
     - _HeightMaskOn1: 0
     - _HighlightIntensity: 0.625
+    - _MinCloud: 0.2
     - _NoiseScale: 8.06
     - _ObjectSpace: 1
+    - _Opacity: 0.72
     - _ReceiveShadows: 1
+    - _Ring_Cloud_Power: 5.83
+    - _Rings_Cloud_Strength: 4.18
     - _SandMaskHeight: 9.02
     - _SandMaskOn: 0
     - _SandShadeBias: -2.2
@@ -118,12 +134,17 @@ Material:
     - _VertexColorMasks: 3
     - __dirty: 0
     m_Colors:
+    - _CloudSpeed: {r: 0.009, g: 0, b: 0, a: 0}
+    - _Cloud_Tiling: {r: 1.14, g: -0.22, b: 0, a: 0}
     - _Color0: {r: 1, g: 0.8972746, b: 0.7688679, a: 1}
     - _Color1: {r: 0.8679245, g: 0.60484946, b: 0.3725525, a: 1}
     - _Color2: {r: 0.8039216, g: 0.6392157, b: 0.3568628, a: 1}
     - _Color3: {r: 0.2901961, g: 0.1490196, b: 0.09019608, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _HeightColor: {r: 0.3584906, g: 0.19089434, b: 0.10709622, a: 1}
+    - _Meteor_Tiling: {r: 23.41, g: 1.79, b: 0, a: 0}
+    - _MeteoriteSpeed: {r: 0.03, g: 0, b: 0, a: 0}
+    - _Meteorites: {r: 0.5377358, g: 0.37032747, b: 0.17501779, a: 0}
     - _RockColor0: {r: 0.4245283, g: 0.22397347, b: 0.06608224, a: 1}
     - _RockColor1: {r: 0.20754719, g: 0.07218274, b: 0.010768958, a: 1}
     - _Sand: {r: 1, g: 0.74161714, b: 0.46855342, a: 0}
@@ -133,4 +154,3 @@ Material:
     - _cloud2: {r: 0.2901961, g: 0.1490196, b: 0.09019608, a: 1}
     - _colorhue: {r: 0, g: 0, b: 0, a: 0}
     - _tiling: {r: 4, g: 10, b: 0, a: 0}
-  m_BuildTextureStacks: []
