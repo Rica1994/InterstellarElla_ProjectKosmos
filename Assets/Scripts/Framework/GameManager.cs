@@ -1,3 +1,4 @@
+using DG.Tweening.Core.Easing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,8 +10,23 @@ public class GameManager : Service
 {
     [SerializeField]
     private bool _simulateMobile = false;
-    
+
     private PlayerController _playerController;
+
+    public static bool IsShittyDevice = false;
+
+    public struct SaveData
+    {
+        public PlanetCompletionValues PlanetCompletionValues;
+        public float CurrentScore;
+        public int LastPlanet;
+        public bool IsShittyDevice;
+
+        public override string ToString()
+        {
+            return PlanetCompletionValues.ToString() + Helpers.FormatPercentageToString(CurrentScore) + LastPlanet.ToString() + (IsShittyDevice ? "1" : "0");
+        }
+    }
 
     public struct PlanetCompletionValues
     {
@@ -22,17 +38,11 @@ public class GameManager : Service
 
         public override string ToString()
         {
-            return FormatPlanetCompletion(MarsCompletion) +
-                   FormatPlanetCompletion(VenusCompletion) +
-                   FormatPlanetCompletion(SaturnCompletion) +
-                   FormatPlanetCompletion(PlutoCompletion) +
-                   FormatPlanetCompletion(MercuryCompletion);
-        }
-
-        private static string FormatPlanetCompletion(float completionValue)
-        {
-            int percentage = (int)Math.Round(completionValue);
-            return percentage.ToString("D3");
+            return Helpers.FormatPercentageToString(MarsCompletion) +
+                   Helpers.FormatPercentageToString(VenusCompletion) +
+                   Helpers.FormatPercentageToString(SaturnCompletion) +
+                   Helpers.FormatPercentageToString(PlutoCompletion) +
+                   Helpers.FormatPercentageToString(MercuryCompletion);
         }
     }
 
@@ -59,9 +69,11 @@ public class GameManager : Service
 
     public LayerMask PlayerLayermask;
 
-    public PlanetCompletionValues PlanetCompletions;
-    public int CurrentScore = 0;
-    public Planet CurrentPlanet = Planet.None;
+    // public PlanetCompletionValues PlanetCompletions;
+    // public int CurrentScore = 0;
+    // public Planet CurrentPlanet = Planet.None;
+
+    public static SaveData Data;
 
 #if !UNITY_EDITOR && UNITY_WEBGL
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -83,28 +95,32 @@ public class GameManager : Service
         _isMobile = IsMobile();
 
         string url = Application.absoluteURL;
-        ParseCurrentCompletionData(url);
+        ParseData(url);
 #endif
     }
 
     private void Awake()
     {
-#if !UNITY_EDITOR && UNITY_WEBGL
+#if UNITY_EDITOR
+        ParseData(Data.ToString());
+#elif !UNITY_EDITOR && UNITY_WEBGL
 
         string url = Application.absoluteURL;
-        ParseCurrentCompletionData(url);
+        ParseData(url);
 #endif
     }
 
-    private void ParseCurrentCompletionData(string url)
+    private void ParseData(string url)
     {
+        string planetCompletionsCompiled = url;
+
+        // Step 2: Unescape the URL
+#if UNITY_WEBGL && !UNITY_EDITOR
         // Step 1: Parse the URL for the data parameter
         int dataIndex = url.IndexOf("?data=") + 6; // 6 is the length of "?data="
         string encodedData = url.Substring(dataIndex);
-
-        // Step 2: Unescape the URL
-        string planetCompletionsCompiled = UnityEngine.Networking.UnityWebRequest.UnEscapeURL(encodedData);
-
+        planetCompletionsCompiled = UnityEngine.Networking.UnityWebRequest.UnEscapeURL(encodedData);
+#endif
         // Step 3: Extract each planet's completion
         int mars = int.Parse(planetCompletionsCompiled.Substring(0, 3));
         int venus = int.Parse(planetCompletionsCompiled.Substring(3, 3));
@@ -113,26 +129,23 @@ public class GameManager : Service
         int mercury = int.Parse(planetCompletionsCompiled.Substring(12, 3));
 
         // Step 4: Extract current score
-        CurrentScore = int.Parse(planetCompletionsCompiled.Substring(15, 3));
+        var currentScore = int.Parse(planetCompletionsCompiled.Substring(15, 3));
 
         // Step 5: Extract current level
+        var lastPlanet = Planet.None;
+        int isShittyDevice = 0;
+        
         int planetValue;
         if (int.TryParse(planetCompletionsCompiled.Substring(18, 1), out planetValue))
         {
             if (Enum.IsDefined(typeof(Planet), planetValue))
             {
-                CurrentPlanet = (Planet)planetValue;
-            }
-            else
-            {
-                CurrentPlanet = Planet.None; // or handle the error as you see fit
+                lastPlanet = (Planet)planetValue;
             }
         }
-        else
-        {
-            // Handle the error: the substring isn't a valid integer
-            CurrentPlanet = Planet.None; // or handle the error as you see fit
-        }
+
+
+        int.TryParse(planetCompletionsCompiled.Substring(19,1), out isShittyDevice);
 
         // Step 6: Assign to the struct
         PlanetCompletionValues values = new PlanetCompletionValues
@@ -144,55 +157,62 @@ public class GameManager : Service
             MercuryCompletion = mercury
         };
 
-        PlanetCompletions = values;
+        var data = new SaveData();
+        data.LastPlanet = (int)lastPlanet;
+        data.CurrentScore = currentScore;
+        data.PlanetCompletionValues = values;
+        data.IsShittyDevice = (isShittyDevice == 1) ? true : false;
+
+        Data = data;
     }
 
     public void EndGame()
     {
-     //  Debug.Log("Game Over");
-     //  var pickUpManager = ServiceLocator.Instance.GetService<PickUpManager>();
-     //  var pickUpsCollected = pickUpManager.PickUpsPickedUp;
-     //  Debug.Log($"You collected {pickUpsCollected} / {pickUpManager.PickUps.Count}");
-     //
-     //  var completionPercentage = pickUpsCollected / pickUpManager.PickUps.Count;
+        Debug.Log("Game Over");
+        var pickUpManager = ServiceLocator.Instance.GetService<PickUpManager>();
+        var pickUpsCollected = pickUpManager.PickUpsPickedUp;
+        Debug.Log($"You collected {pickUpsCollected} / {pickUpManager.PickUps.Count}");
+        //
+        Data.CurrentScore = (int)Mathf.Round(((float)pickUpsCollected / pickUpManager.PickUps.Count) * 100.0f);
 
         var currentPlanet = GetCurrentPlanet();
-        Debug.Log("End Game called, with current planet: " + currentPlanet.ToString());
+        Data.LastPlanet = (int)currentPlanet;
+        Debug.Log("End Game called, with current planet: " + currentPlanet.ToString() + " and current score: " + Data.CurrentScore);
         switch (currentPlanet)
         {
             case Planet.Mars:
-                if (CurrentScore > PlanetCompletions.MarsCompletion) PlanetCompletions.MarsCompletion = CurrentScore;
-                break;
-            case Planet.Venus:
-                if (CurrentScore > PlanetCompletions.VenusCompletion) PlanetCompletions.VenusCompletion = CurrentScore;
-                break;
-            case Planet.Saturn:
-                if (CurrentScore > PlanetCompletions.SaturnCompletion) PlanetCompletions.SaturnCompletion = CurrentScore;
-                break;
-            case Planet.Pluto:
-                if (CurrentScore > PlanetCompletions.PlutoCompletion) PlanetCompletions.PlutoCompletion = CurrentScore;
-                break;
-            case Planet.Mercury:
-                if (CurrentScore > PlanetCompletions.MercuryCompletion) PlanetCompletions.MercuryCompletion = CurrentScore;
+                if (Data.CurrentScore > Data.PlanetCompletionValues.MarsCompletion) Data.PlanetCompletionValues.MarsCompletion = Data.CurrentScore;
+                break;                 
+            case Planet.Venus:         
+                if (Data.CurrentScore > Data.PlanetCompletionValues.VenusCompletion) Data.PlanetCompletionValues.VenusCompletion = Data.CurrentScore;
+                break;                 
+            case Planet.Saturn:         
+                if (Data.CurrentScore > Data.PlanetCompletionValues.SaturnCompletion) Data.PlanetCompletionValues.SaturnCompletion = Data.CurrentScore;
+                break;                 
+            case Planet.Pluto:          
+                if (Data.CurrentScore > Data.PlanetCompletionValues.PlutoCompletion) Data.PlanetCompletionValues.PlutoCompletion = Data.CurrentScore;
+                break;                  
+            case Planet.Mercury:        
+                if (Data.CurrentScore > Data.PlanetCompletionValues.MercuryCompletion) Data.PlanetCompletionValues.MercuryCompletion = Data.CurrentScore;
                 break;
         }
 
-   //     var ellaPickUpsCollected = pickUpManager.FoundEllaPickUps;
-   //
-   //     foreach (var pickupElla in ellaPickUpsCollected)
-   //     {
-   //         Debug.Log($"You collected Ella's letters: {pickupElla.ToString()}");
-   //
-   //         // get corresponding slot in endscreen -> pop-in the found letter(s)
-   //
-   //         // yield return a delay -> repeat
-   //     }
-        
+        //     var ellaPickUpsCollected = pickUpManager.FoundEllaPickUps;
+        //
+        //     foreach (var pickupElla in ellaPickUpsCollected)
+        //     {
+        //         Debug.Log($"You collected Ella's letters: {pickupElla.ToString()}");
+        //
+        //         // get corresponding slot in endscreen -> pop-in the found letter(s)
+        //
+        //         // yield return a delay -> repeat
+        //     }
+
     }
 
     public Planet GetCurrentPlanet()
     {
-        var sceneTypeString = SceneManager.GetActiveScene().ToString();
+        var sceneTypeString = SceneManager.GetActiveScene().name;
 
         if (sceneTypeString.Contains("Level_1") || sceneTypeString.Contains("Mars"))
             return Planet.Mars;
@@ -221,7 +241,7 @@ public class GameManager : Service
         if (_playerController != null)
         {
             _playerController.UpdateController();
-        }       
+        }
     }
     private void FixedUpdate()
     {

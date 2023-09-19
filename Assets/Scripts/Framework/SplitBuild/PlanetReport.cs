@@ -18,27 +18,29 @@ public class PlanetReport : MonoBehaviour
 
     private string ParseScoreFromScoreValues()
     {
-        var planetValues =  ServiceLocator.Instance.GetService<GameManager>().PlanetCompletions;
+        var planetValues = GameManager.Data.PlanetCompletionValues;
+        float planetValue = 0.0f;
         if (_planet == "Mars")
         {
-            return planetValues.MarsCompletion.ToString();
+            planetValue = planetValues.MarsCompletion;
         }
         else if (_planet == "Venus")
         {
-            return planetValues.VenusCompletion.ToString();
+            planetValue = planetValues.VenusCompletion;
         }
         else if (_planet == "Pluto")
         {
-            return planetValues.PlutoCompletion.ToString();
+            planetValue = planetValues.PlutoCompletion;
         }
         else if (_planet == "Mercury")
         {
-            return planetValues.MercuryCompletion.ToString();
+            planetValue = planetValues.MercuryCompletion;
         }
         else
         {
-            return planetValues.SaturnCompletion.ToString();
+            planetValue = planetValues.SaturnCompletion;
         }
 
+        return Helpers.FormatPercentageToString(planetValue);
     }
 }

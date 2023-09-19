@@ -103,46 +103,27 @@ namespace UnityCore
             public void LoadIntermissionLoading(SceneType scene, SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
                 PageType loadingPage = PageType.None, float timeDelayToStartFirstLoad = 1)
             {
-
-
 #if UNITY_EDITOR
-                // load the loading scene first, then the actual scene for gameplay
                 StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading));
-#elif UNITY_WEBGL
+#elif UNITY_WEBGL && !UNITY_EDITOR
                 string currentSceneName = SceneManager.GetActiveScene().name;
                 string relativePath = GetRelativePath(currentSceneName, scene);
 
-                // int levelsToGoUp = GetLevelsToGoUp(currentSceneName);
-                //
-                // string relativePath = "";
-                //
-                // if (levelsToGoUp == 0)
-                // {
-                //     relativePath = "./";
-                // }
-                //
-                // for (int i = 0; i < levelsToGoUp; i++)
-                // {
-                //     relativePath += "../";
-                // }
-                //
-                // string mainFolder = $"{GetPlanetNameFromEnum(scene)}";
-                // string buildString = $"{scene}";
-
-                var gameManager = ServiceLocator.Instance.GetService<GameManager>();
-                gameManager.EndGame();
-                string planetCompletionsCompiled = gameManager.PlanetCompletions.ToString();
-                string currentScore = gameManager.CurrentScore.ToString("D3");
-                string currentIndex = GetLevelIndexFromTargetScene(currentSceneName);
-
-                string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(planetCompletionsCompiled + currentScore + currentIndex)}";
+                string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(GameManager.Data.ToString())}";
 
                 Application.ExternalEval($"window.location.href = '{relativePath + "?data=" + data}';");
 #endif
-
             }
             #endregion
 
+            private IEnumerator WebGLLoadingDelay(SceneType scene, SceneLoadDelegate sceneLoadDelegate, bool reload,
+    PageType loadingPage, float timeDelay)
+            {
+                // Pause for the specified timeDelay
+                yield return new WaitForSeconds(timeDelay);
+
+                
+            }
 
             #region Private Functions
 
@@ -385,7 +366,7 @@ namespace UnityCore
 
 
                 // If we are leaving from a planet scene
-                
+
                 // If our target scene is a planet
                 if (targetPlanetName.Length != 0)
                 {

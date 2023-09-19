@@ -81,7 +81,9 @@ public class Helpers
          timeFlickering += timeBetweenEachFlicker;
       }
    }
-   
-   
-   
+    public static string FormatPercentageToString(float value)
+    {
+        int percentage = (int)Math.Round(value);
+        return percentage.ToString("D3");
+    }
 }

@@ -117,43 +117,21 @@ public class MainMenuManager : Service
             // zoom camera (needs to be animation
             _menuAnimator.CameraAnimation.Play(_camZoom);
 
-            SceneType sceneToLoad = SceneType.None;
-            switch (ScenesToLoad)
-            {
-                case SceneChoice.Work:
-                    sceneToLoad = ChooseCorrectSceneWork();
-                    break;
-                case SceneChoice.Build:
-                    sceneToLoad = ChooseCorrectSceneBuild();
-                    break;
-            }
+            SceneType sceneToLoad = ChooseCorrectSceneWork();
+           // switch (ScenesToLoad)
+           // {
+           //     case SceneChoice.Work:
+           //         sceneToLoad = ChooseCorrectSceneWork();
+           //         break;
+           //     case SceneChoice.Build:
+           //         sceneToLoad = ChooseCorrectSceneBuild();
+           //         break;
+           // }
 #if UNITY_EDITOR
             // load the loading scene first, then the actual scene for gameplay
             _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);
-#elif UNITY_WEBGL
-            string currentSceneName = SceneManager.GetActiveScene().name;
-            int levelsToGoUp = GetLevelsToGoUp(currentSceneName);
-
-            string relativePath = "";
-
-            if (levelsToGoUp == 0)
-            {
-                relativePath = "./";
-            }
-
-            for (int i = 0; i < levelsToGoUp; i++)
-            {
-                relativePath += "../";
-            }
-
-            string mainFolder = $"{GetPlanetNameFromEnum(sceneToLoad)}";
-            string buildString = $"{sceneToLoad}";
-
-            string planetCompletionsCompiled = ServiceLocator.Instance.GetService<GameManager>().PlanetCompletions.ToString();
-
-            string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(planetCompletionsCompiled)}";
-
-            Application.ExternalEval($"window.location.href = '{relativePath + mainFolder + buildString + "?data=" + data}';");
+#elif UNITY_WEBGL && !UNITY_EDITOR
+            _sceneController.Load(sceneToLoad);
 #endif
         }
     }

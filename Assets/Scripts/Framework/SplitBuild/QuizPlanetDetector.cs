@@ -10,6 +10,6 @@ public class QuizPlanetDetector : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _planetText.text = ServiceLocator.Instance.GetService<GameManager>().CurrentPlanet.ToString();
+        _planetText.text = ((GameManager.Planet)GameManager.Data.LastPlanet).ToString();
     }
 }
