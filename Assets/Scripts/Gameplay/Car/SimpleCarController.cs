@@ -94,6 +94,8 @@ public class SimpleCarController : PlayerController
     private float _gravityValue = -9.81f;
     public float GravityValue => _gravityValue;
 
+    public bool IsInPerfectJump;
+
     public Coroutine ToggleFakeGravityRoutine;
     //private GravityComponent _gravityComponent;
     private bool _isPerfectJumping;
@@ -325,6 +327,12 @@ public class SimpleCarController : PlayerController
     }
     private void LimitSpeed()
     {
+        if (IsInPerfectJump == true)
+        {
+            // disable limiting speed on perfect jumps
+            return;
+        }
+
         // checks for wether boost was used recently, and whether the car should slow down again (dont want it to go too fast)
         if (_hasBoostedRecently == true)
         {
@@ -428,6 +436,7 @@ public class SimpleCarController : PlayerController
     {
         _useCustomGravity = true;
         _rigidbody.useGravity = false;
+        IsInPerfectJump = true;
 
         float originalPlayerGravity = _gravityValue;
 
@@ -444,6 +453,7 @@ public class SimpleCarController : PlayerController
 
         _useCustomGravity = false;
         _rigidbody.useGravity = true;
+        IsInPerfectJump = false;
     }
     private IEnumerator DecreaseMaxSpeed()
     {
