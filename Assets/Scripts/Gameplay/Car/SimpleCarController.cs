@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -83,7 +84,13 @@ public class SimpleCarController : PlayerController
     private Vector2 _input;
 
 
+    [Header("Audio stuff")]
+    [SerializeField]
+    private AudioSource _sourceBoost;
+    [SerializeField]
+    private AudioElement _soundHop, _soundHopBig;
 
+    private AudioController _audioController;
 
 
     [Header("custom gravity")]
@@ -168,6 +175,8 @@ public class SimpleCarController : PlayerController
         {
             _rigidbody.useGravity = true;
         }
+
+        _audioController = ServiceLocator.Instance.GetService<AudioController>();
     }
     private void OnEnable()
     {
@@ -469,10 +478,14 @@ public class SimpleCarController : PlayerController
         IsBoosting = true;
         OnBoost?.Invoke();
 
+        _sourceBoost.Play();
+
         _particleLeftPipe.SetActive(true);
         _particleRightPipe.SetActive(true);
 
         yield return new WaitForSeconds(1);
+
+        _sourceBoost.Stop();
 
         _particleLeftPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
         _particleLeftPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
@@ -616,6 +629,7 @@ public class SimpleCarController : PlayerController
             StartCoroutine(ParticleJetsRoutine());
 
             Debug.Log("hopped");
+            _audioController.PlayAudio(_soundHop);
         }
     }
     public void AutoJumpToggleFakeGravity(float timeOfFlight, float fakeGravity)
@@ -633,7 +647,7 @@ public class SimpleCarController : PlayerController
         StartCoroutine(ParticleJetsRoutine(timeOfFlight / 2f));
 
         // play sound
-        //_audioController.PlayAudio(_soundJump);
+        _audioController.PlayAudio(_soundHopBig);
     }
     public void ChangeCamera(GameObject targetSwapCam)
     {
