@@ -28,39 +28,31 @@ Shader "SH_MasterPlanet_Titan"
 		_Noise63("Noise63", 2D) = "white" {}
 		_Noise37("Noise37", 2D) = "white" {}
 		_Cloud_Movement("Cloud_Movement", Vector) = (0.05,0.02,0,0)
+		_Fresnel_Color("Fresnel_Color", Color) = (1,0,0.7536311,0)
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
 		[HideInInspector] __dirty( "", Int ) = 1
 	}
 
 	SubShader
 	{
-		Tags{ "RenderType" = "Opaque"  "Queue" = "Geometry+0" }
+		Tags{ "RenderType" = "Opaque"  "Queue" = "Geometry+0" "IsEmissive" = "true"  }
 		Cull Back
 		CGINCLUDE
 		#include "UnityShaderVariables.cginc"
 		#include "UnityPBSLighting.cginc"
 		#include "Lighting.cginc"
 		#pragma target 3.0
-		#ifdef UNITY_PASS_SHADOWCASTER
-			#undef INTERNAL_DATA
-			#undef WorldReflectionVector
-			#undef WorldNormalVector
-			#define INTERNAL_DATA half3 internalSurfaceTtoW0; half3 internalSurfaceTtoW1; half3 internalSurfaceTtoW2;
-			#define WorldReflectionVector(data,normal) reflect (data.worldRefl, half3(dot(data.internalSurfaceTtoW0,normal), dot(data.internalSurfaceTtoW1,normal), dot(data.internalSurfaceTtoW2,normal)))
-			#define WorldNormalVector(data,normal) half3(dot(data.internalSurfaceTtoW0,normal), dot(data.internalSurfaceTtoW1,normal), dot(data.internalSurfaceTtoW2,normal))
-		#endif
 		struct Input
 		{
+			float2 uv_texcoord;
 			float3 worldPos;
 			float3 worldNormal;
-			INTERNAL_DATA
-			float2 uv_texcoord;
 		};
 
-		uniform sampler2D _Noise76;
-		uniform float2 _Tiling_Sand;
 		uniform float4 _Color_Sand;
 		uniform float4 _Color_Sand1;
+		uniform sampler2D _Noise76;
+		uniform float2 _Tiling_Sand;
 		uniform float _power_Sand;
 		uniform float _Multiply_Sand;
 		uniform sampler2D _Noise78;
@@ -82,56 +74,34 @@ Shader "SH_MasterPlanet_Titan"
 		uniform sampler2D _Noise63;
 		uniform float2 _Cloud_Movement;
 		uniform float2 _Tiling_Clouds_Moving;
-
-
-		float3 PerturbNormal107_g1( float3 surf_pos, float3 surf_norm, float height, float scale )
-		{
-			// "Bump Mapping Unparametrized Surfaces on the GPU" by Morten S. Mikkelsen
-			float3 vSigmaS = ddx( surf_pos );
-			float3 vSigmaT = ddy( surf_pos );
-			float3 vN = surf_norm;
-			float3 vR1 = cross( vSigmaT , vN );
-			float3 vR2 = cross( vN , vSigmaS );
-			float fDet = dot( vSigmaS , vR1 );
-			float dBs = ddx( height );
-			float dBt = ddy( height );
-			float3 vSurfGrad = scale * 0.05 * sign( fDet ) * ( dBs * vR1 + dBt * vR2 );
-			return normalize ( abs( fDet ) * vN - vSurfGrad );
-		}
-
+		uniform float4 _Fresnel_Color;
 
 		void surf( Input i , inout SurfaceOutputStandard o )
 		{
-			float3 ase_worldPos = i.worldPos;
-			float3 surf_pos107_g1 = ase_worldPos;
-			float3 ase_worldNormal = WorldNormalVector( i, float3( 0, 0, 1 ) );
-			float3 surf_norm107_g1 = ase_worldNormal;
 			float2 uv_TexCoord285 = i.uv_texcoord * _Tiling_Sand;
 			float4 tex2DNode225 = tex2D( _Noise76, uv_TexCoord285 );
-			float height107_g1 = tex2DNode225.r;
-			float scale107_g1 = 10.0;
-			float3 localPerturbNormal107_g1 = PerturbNormal107_g1( surf_pos107_g1 , surf_norm107_g1 , height107_g1 , scale107_g1 );
-			float3 ase_worldTangent = WorldNormalVector( i, float3( 1, 0, 0 ) );
-			float3 ase_worldBitangent = WorldNormalVector( i, float3( 0, 1, 0 ) );
-			float3x3 ase_worldToTangent = float3x3( ase_worldTangent, ase_worldBitangent, ase_worldNormal );
-			float3 worldToTangentDir42_g1 = mul( ase_worldToTangent, localPerturbNormal107_g1);
-			o.Normal = worldToTangentDir42_g1;
-			float4 temp_cast_1 = (_power_Sand).xxxx;
+			float4 temp_cast_0 = (_power_Sand).xxxx;
 			float2 uv_Noise78 = i.uv_texcoord * _Noise78_ST.xy + _Noise78_ST.zw;
-			float4 lerpResult288 = lerp( _Color_Sand , _Color_Sand1 , ( ( pow( tex2DNode225 , temp_cast_1 ) * _Multiply_Sand ) * saturate( ( tex2D( _Noise78, uv_Noise78 ) * _Sand_Cloud_intensity ) ) ));
+			float4 lerpResult288 = lerp( _Color_Sand , _Color_Sand1 , ( ( pow( tex2DNode225 , temp_cast_0 ) * _Multiply_Sand ) * saturate( ( tex2D( _Noise78, uv_Noise78 ) * _Sand_Cloud_intensity ) ) ));
 			float2 uv_TexCoord307 = i.uv_texcoord * _Tiling_Water;
 			float clampResult351 = clamp( ( _SinTime.w + 1.0 ) , 0.0 , 1.0 );
-			float4 temp_cast_2 = (_power_Water).xxxx;
-			float4 lerpResult302 = lerp( _Color_Water , _Color_Water1 , ( pow( ( tex2D( _Noise77, uv_TexCoord307 ) * saturate( ( 1.0 * clampResult351 ) ) ) , temp_cast_2 ) * _Multiply_Water ));
+			float4 temp_cast_1 = (_power_Water).xxxx;
+			float4 lerpResult302 = lerp( _Color_Water , _Color_Water1 , ( pow( ( tex2D( _Noise77, uv_TexCoord307 ) * saturate( ( 1.0 * clampResult351 ) ) ) , temp_cast_1 ) * _Multiply_Water ));
 			float2 uv_TexCoord229 = i.uv_texcoord * _Tiling_Planet;
 			float4 lerpResult228 = lerp( lerpResult288 , lerpResult302 , tex2D( _T_Titan_Alpha, uv_TexCoord229 ));
 			float2 uv_TexCoord339 = i.uv_texcoord * _Tiling_Clouds;
-			float4 temp_cast_3 = (_power_clouds).xxxx;
+			float4 temp_cast_2 = (_power_clouds).xxxx;
 			float2 uv_TexCoord327 = i.uv_texcoord * _Tiling_Clouds_Moving;
 			float2 panner341 = ( 1.0 * _Time.y * _Cloud_Movement + uv_TexCoord327);
 			float4 tex2DNode322 = tex2D( _Noise63, panner341 );
-			float4 lerpResult320 = lerp( lerpResult228 , _Cloud_Color , saturate( ( ( pow( tex2D( _Noise37, uv_TexCoord339 ) , temp_cast_3 ) * _Multiply_clouds ) * tex2DNode322 ) ));
+			float4 lerpResult320 = lerp( lerpResult228 , _Cloud_Color , saturate( ( ( pow( tex2D( _Noise37, uv_TexCoord339 ) , temp_cast_2 ) * _Multiply_clouds ) * tex2DNode322 ) ));
 			o.Albedo = lerpResult320.rgb;
+			float3 ase_worldPos = i.worldPos;
+			float3 ase_worldViewDir = normalize( UnityWorldSpaceViewDir( ase_worldPos ) );
+			float3 ase_worldNormal = i.worldNormal;
+			float fresnelNdotV354 = dot( ase_worldNormal, ase_worldViewDir );
+			float fresnelNode354 = ( 0.0 + 1.0 * pow( 1.0 - fresnelNdotV354, 5.0 ) );
+			o.Emission = ( _Fresnel_Color * fresnelNode354 ).rgb;
 			o.Alpha = 1;
 		}
 
@@ -163,9 +133,8 @@ Shader "SH_MasterPlanet_Titan"
 			{
 				V2F_SHADOW_CASTER;
 				float2 customPack1 : TEXCOORD1;
-				float4 tSpace0 : TEXCOORD2;
-				float4 tSpace1 : TEXCOORD3;
-				float4 tSpace2 : TEXCOORD4;
+				float3 worldPos : TEXCOORD2;
+				float3 worldNormal : TEXCOORD3;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -179,14 +148,10 @@ Shader "SH_MasterPlanet_Titan"
 				Input customInputData;
 				float3 worldPos = mul( unity_ObjectToWorld, v.vertex ).xyz;
 				half3 worldNormal = UnityObjectToWorldNormal( v.normal );
-				half3 worldTangent = UnityObjectToWorldDir( v.tangent.xyz );
-				half tangentSign = v.tangent.w * unity_WorldTransformParams.w;
-				half3 worldBinormal = cross( worldNormal, worldTangent ) * tangentSign;
-				o.tSpace0 = float4( worldTangent.x, worldBinormal.x, worldNormal.x, worldPos.x );
-				o.tSpace1 = float4( worldTangent.y, worldBinormal.y, worldNormal.y, worldPos.y );
-				o.tSpace2 = float4( worldTangent.z, worldBinormal.z, worldNormal.z, worldPos.z );
+				o.worldNormal = worldNormal;
 				o.customPack1.xy = customInputData.uv_texcoord;
 				o.customPack1.xy = v.texcoord;
+				o.worldPos = worldPos;
 				TRANSFER_SHADOW_CASTER_NORMALOFFSET( o )
 				return o;
 			}
@@ -200,13 +165,10 @@ Shader "SH_MasterPlanet_Titan"
 				Input surfIN;
 				UNITY_INITIALIZE_OUTPUT( Input, surfIN );
 				surfIN.uv_texcoord = IN.customPack1.xy;
-				float3 worldPos = float3( IN.tSpace0.w, IN.tSpace1.w, IN.tSpace2.w );
+				float3 worldPos = IN.worldPos;
 				half3 worldViewDir = normalize( UnityWorldSpaceViewDir( worldPos ) );
 				surfIN.worldPos = worldPos;
-				surfIN.worldNormal = float3( IN.tSpace0.z, IN.tSpace1.z, IN.tSpace2.z );
-				surfIN.internalSurfaceTtoW0 = IN.tSpace0.xyz;
-				surfIN.internalSurfaceTtoW1 = IN.tSpace1.xyz;
-				surfIN.internalSurfaceTtoW2 = IN.tSpace2.xyz;
+				surfIN.worldNormal = IN.worldNormal;
 				SurfaceOutputStandard o;
 				UNITY_INITIALIZE_OUTPUT( SurfaceOutputStandard, o )
 				surf( surfIN, o );
@@ -223,7 +185,6 @@ Shader "SH_MasterPlanet_Titan"
 }
 /*ASEBEGIN
 Version=19108
-Node;AmplifyShaderEditor.StandardSurfaceOutputNode;167;6372.225,-483.8236;Float;False;True;-1;2;ASEMaterialInspector;0;0;Standard;SH_MasterPlanet_Titan;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;Back;0;False;;0;False;;False;0;False;;0;False;;False;0;Opaque;0.5;True;True;0;False;Opaque;;Geometry;All;12;all;True;True;True;True;0;False;;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;2;15;10;25;False;0.5;True;0;0;False;;0;False;;0;0;False;;0;False;;0;False;;0;False;;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;True;Relative;0;;-1;-1;-1;-1;0;False;0;0;False;;-1;0;False;;0;0;0;False;0.1;False;;0;False;;False;16;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
 Node;AmplifyShaderEditor.LerpOp;228;5173.79,-1137.294;Inherit;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.LerpOp;288;4934.732,-1781.215;Inherit;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.ColorNode;227;3448.591,-1067.771;Inherit;False;Property;_Color_Water;Color_Water;4;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.6156863,0.2705882,0.6784314,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
@@ -235,7 +196,7 @@ Node;AmplifyShaderEditor.RangedFloatNode;300;4897.441,-489.7085;Inherit;False;Co
 Node;AmplifyShaderEditor.ColorNode;298;3458.219,-882.1747;Inherit;False;Property;_Color_Water1;Color_Water;5;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.4905774,0.1780883,0.5471698,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.LerpOp;302;4153.408,-945.8852;Inherit;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;304;3887.354,-786.789;Inherit;True;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RangedFloatNode;305;3663.355,-626.789;Inherit;False;Property;_Multiply_Water;Multiply_Water;16;0;Create;True;0;0;0;False;0;False;3.36;-4.41;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;305;3663.355,-626.789;Inherit;False;Property;_Multiply_Water;Multiply_Water;16;0;Create;True;0;0;0;False;0;False;3.36;-1.8;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.PowerNode;303;3567.354,-466.7889;Inherit;True;False;2;0;COLOR;0,0,0,0;False;1;FLOAT;1;False;1;COLOR;0
 Node;AmplifyShaderEditor.ColorNode;296;3544.754,-2402.415;Inherit;False;Property;_Color_Sand1;Color_Sand;7;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.8196079,0.3376071,0.2117647,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.ColorNode;283;3523.053,-2607.239;Inherit;False;Property;_Color_Sand;Color_Sand;6;0;Create;True;0;0;0;False;0;False;0,0,0,0;1,0.5354179,0.1764706,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
@@ -287,8 +248,11 @@ Node;AmplifyShaderEditor.ClampOpNode;351;2470.423,-108.5108;Inherit;False;3;0;FL
 Node;AmplifyShaderEditor.SinTimeNode;346;2049.23,-220.0457;Inherit;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SimpleAddOpNode;352;2220.069,-124.8377;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;353;2070.569,9.062378;Inherit;False;Constant;_Float4;Float 4;24;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
-WireConnection;167;0;320;0
-WireConnection;167;1;231;40
+Node;AmplifyShaderEditor.FresnelNode;354;5534.304,-317.0855;Inherit;False;Standard;WorldNormal;ViewDir;False;False;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;5;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StandardSurfaceOutputNode;167;6496.215,-539.819;Float;False;True;-1;2;ASEMaterialInspector;0;0;Standard;SH_MasterPlanet_Titan;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;Back;0;False;;0;False;;False;0;False;;0;False;;False;0;Opaque;0.5;True;True;0;False;Opaque;;Geometry;All;12;all;True;True;True;True;0;False;;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;2;15;10;25;False;0.5;True;0;0;False;;0;False;;0;0;False;;0;False;;0;False;;0;False;;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;True;Relative;0;;-1;-1;-1;-1;0;False;0;0;False;;-1;0;False;;0;0;0;False;0.1;False;;0;False;;False;16;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
+Node;AmplifyShaderEditor.LerpOp;358;6171.034,-605.8547;Inherit;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.ColorNode;356;5476.324,-560.6055;Inherit;False;Property;_Fresnel_Color;Fresnel_Color;24;0;Create;True;0;0;0;False;0;False;1,0,0.7536311,0;1,0.3221053,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;359;5825.009,-386.2624;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
 WireConnection;228;0;288;0
 WireConnection;228;1;302;0
 WireConnection;228;2;224;0
@@ -351,5 +315,12 @@ WireConnection;349;0;345;0
 WireConnection;351;0;352;0
 WireConnection;352;0;346;4
 WireConnection;352;1;353;0
+WireConnection;167;0;320;0
+WireConnection;167;2;359;0
+WireConnection;358;0;320;0
+WireConnection;358;1;356;0
+WireConnection;358;2;354;0
+WireConnection;359;0;356;0
+WireConnection;359;1;354;0
 ASEEND*/
-//CHKSM=706E19D8E8B6C5FCEFE0C25747F42C14D5ECBE18
+//CHKSM=79035B199EF890D215C4348C687B37BFED9975D3

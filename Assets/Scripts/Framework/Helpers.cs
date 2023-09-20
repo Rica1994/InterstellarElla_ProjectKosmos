@@ -54,7 +54,7 @@ public class Helpers
    }
 
    /// <summary>
-   /// Flickers children meshes on and off
+   /// Flickers a certain mesh on and off
    /// </summary>
    /// <param name="go">object that should flicker</param>
    /// <param name="flickerTimes">amount of time it should flicker</param>
@@ -81,61 +81,9 @@ public class Helpers
          timeFlickering += timeBetweenEachFlicker;
       }
    }
-
-    /// <summary>
-    /// Flickers specified meshes on and off
-    /// </summary>
-    /// <param name="go">object that should flicker</param>
-    /// <param name="flickerTimes">amount of time it should flicker</param>
-    /// <param name="flickerSpeed">amount of times it should flicker per second</param>
-    public static IEnumerator Flicker(List<MeshRenderer> meshRenderers, float flickerTime, int flickerSpeed = 10)
+    public static string FormatPercentageToString(float value)
     {
-        if (meshRenderers.Count <= 0) yield break;
-
-        float timeFlickering = 0.0f;
-        float timeBetweenEachFlicker = 1.0f / flickerSpeed;
-
-        while (timeFlickering < flickerTime)
-        {
-            for (int i = 0; i < meshRenderers.Count; i++)
-            {
-                meshRenderers[i].enabled = !meshRenderers[i].enabled;
-            }
-
-            yield return new WaitForSeconds(timeBetweenEachFlicker);
-
-            timeFlickering += timeBetweenEachFlicker;
-        }
+        int percentage = (int)Math.Round(value);
+        return percentage.ToString("D3");
     }
-
-    /// <summary>
-    /// Flickers specified gameobject on and off
-    /// </summary>
-    /// <param name="go">object that should flicker</param>
-    /// <param name="flickerTimes">amount of time it should flicker</param>
-    /// <param name="flickerSpeed">amount of times it should flicker per second</param>
-    public static IEnumerator FlickerGo(GameObject go, float flickerTime, int flickerSpeed = 10)
-    {
-        if (go == null) yield break;
-
-        float timeFlickering = 0.0f;
-        float timeBetweenEachFlicker = 1.0f / flickerSpeed;
-
-        while (timeFlickering < flickerTime)
-        {
-            if (go == null)
-            {
-                break;
-            }
-
-            go.SetActive(!go.activeSelf);
-
-            yield return new WaitForSeconds(timeBetweenEachFlicker);
-
-            timeFlickering += timeBetweenEachFlicker;
-        }
-    }
-
-
-
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityCore.Menus;
 using UnityCore.Scene;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuManager : Service
 {
@@ -116,26 +117,31 @@ public class MainMenuManager : Service
             // zoom camera (needs to be animation
             _menuAnimator.CameraAnimation.Play(_camZoom);
 
-            SceneType sceneToLoad = SceneType.None;
-            switch (ScenesToLoad)
-            {
-                case SceneChoice.Work:
-                    sceneToLoad = ChooseCorrectSceneWork();
-                    break;
-                case SceneChoice.Build:
-                    sceneToLoad = ChooseCorrectSceneBuild();
-                    break;
-            }
+            SceneType sceneToLoad = ChooseCorrectSceneWork();
+           // switch (ScenesToLoad)
+           // {
+           //     case SceneChoice.Work:
+           //         sceneToLoad = ChooseCorrectSceneWork();
+           //         break;
+           //     case SceneChoice.Build:
+           //         sceneToLoad = ChooseCorrectSceneBuild();
+           //         break;
+           // }
 #if UNITY_EDITOR
             // load the loading scene first, then the actual scene for gameplay
             _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);
-#elif UNITY_WEBGL
-                    string mainFolder = $"../{GetPlanetNameFromEnum(sceneToLoad)}";
-        string buildString = $"{sceneToLoad}";
-        
-        Application.ExternalEval($"window.location.href = '{mainFolder + buildString + ".html"}';");
+#elif UNITY_WEBGL && !UNITY_EDITOR
+            _sceneController.Load(sceneToLoad);
 #endif
         }
+    }
+
+    private int GetLevelsToGoUp(string sceneName)
+    {
+        if (sceneName.Contains("Level") || sceneName.Contains("Quiz"))
+            return 2; // For scenes like S_Level_1_0_Introscene, go two levels up
+        else
+            return 0; // Default case, stay in the current directory
     }
 
     public string GetPlanetNameFromEnum(SceneType sceneType)
@@ -152,7 +158,7 @@ public class MainMenuManager : Service
         else if (sceneTypeString.Contains("Level_5"))
             return "Mercury/";
         else if (sceneTypeString.Contains("Quiz"))
-            return "";
+            return "Quiz/";
         else return "";
     }
 
