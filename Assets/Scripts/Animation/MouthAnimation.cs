@@ -55,7 +55,7 @@ public class MouthAnimation : MonoBehaviour
     {
         samples = new float[_sampleDataLength];
 
-        _voiceSource = ServiceLocator.Instance.GetService<AudioController>().TracksMaggie[0].Source as AudioSource;
+        //_voiceSource = ServiceLocator.Instance.GetService<AudioController>().TracksMaggie[0].Source as AudioSource;
 
     }
 

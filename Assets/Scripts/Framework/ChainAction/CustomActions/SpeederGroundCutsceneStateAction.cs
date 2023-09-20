@@ -23,6 +23,13 @@ public class SpeederGroundCutsceneStateAction : ChainAction
     private bool _speederGroundSwitch = true;
     [SerializeField]
     private bool _characterControllerSwitch = true;
+    [SerializeField]
+    private bool _speederParticleSwitch = true;
+
+    [SerializeField]
+    private bool _switchDirection = false;
+    [SerializeField]
+    private Transform _transform;
 
     private Autopilot _autopilot;
     private FollowWithDamping _followWithDamping;
@@ -58,8 +65,20 @@ public class SpeederGroundCutsceneStateAction : ChainAction
                 _speederGround.speedForward = _speederSpeed;
                 _speederGround.enabled = _speederGroundSwitch;
                 _characterController.enabled = _characterControllerSwitch;
+                if (!_speederParticleSwitch)
+                {
+                    _speederGround.GetComponent<CollisionParticle>().activate = _speederParticleSwitch;
+                }
                 break;
             case State.Gameplay:
+                if (_switchDirection)
+                {
+                    _speederGround.moveDirection = new Vector3(0, 0, -1);
+                    _speederGround.gameObject.transform.position = _transform.position;
+                    _speederGround.gameObject.transform.rotation = _transform.rotation;
+                    _speederGround.speedForward = _speederSpeed;
+                    _speederGround.Initialize();
+                }
                 _autopilot.enabled = false;
                 _followWithDamping.updateMethod = FollowWithDamping.UpdateMethod.FixedUpdate;
                 _followWithDamping.smoothTime = 0.05f;
@@ -70,6 +89,12 @@ public class SpeederGroundCutsceneStateAction : ChainAction
                 _speederGround.speedForward = _speederSpeed;
                 _speederGround.enabled = true;
                 _characterController.enabled = true;
+
+                if (!_speederParticleSwitch)
+                {
+                    _speederGround.GetComponent<CollisionParticle>().activate = true;
+                }
+
                 break;
         }
     }
