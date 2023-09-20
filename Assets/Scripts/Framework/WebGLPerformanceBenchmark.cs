@@ -31,11 +31,12 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
             if (_averageFPS > _lowerEndFPSThreshold && Graphics.activeTier != GraphicsTier.Tier2)
             {
                 // Adjust graphics settings for high-end devices
+                GameManager.Data.IsShittyDevice = false;
                 QualitySettings.SetQualityLevel(1); // Set the highest quality level or adjust as needed
             }
             else
             {
-
+                GameManager.Data.IsShittyDevice = true;
             }
 
             // Disable the benchmark script after measuring the performance

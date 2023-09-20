@@ -58,7 +58,10 @@ MonoBehaviour:
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
+    ModeOverride: 0
     LensShift: {x: 0, y: 0}
+    GateFit: 2
+    m_SensorSize: {x: 1, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -206,9 +209,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e5f0969b8ebc6042897c9cb1c56ca0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _target: {fileID: 0}
   _virtualCamera: {fileID: 5315386463498563298}
   _blendSpeed: 3
   _isStatic: 0
+  _meshRendererTrigger: {fileID: 5315386464461854926}
+  _targetVisuals: {fileID: 0}
 --- !u!1 &5315386464461854927
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,7 +272,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -291,7 +296,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &5315386464461854922
 BoxCollider:
   m_ObjectHideFlags: 0
