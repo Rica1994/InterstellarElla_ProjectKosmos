@@ -64,6 +64,10 @@ public class AutoJumpMaster : MonoBehaviour
     [SerializeField]
     private float _currentTimeOfFlight;
 
+    [Header("Trigger Visualisations")]
+    [SerializeField]
+    private List<MeshRenderer> _allMeshrenderers = new List<MeshRenderer>();
+
 
     private void Start()
     {
@@ -119,6 +123,11 @@ public class AutoJumpMaster : MonoBehaviour
     {
         _entryTrigger.CreateJumpCurve(player);
     }
+    // we use this to draw a curve when not playing 
+    public void CreatePerfectJumpCurveDefault()
+    {
+        _entryTrigger.CreateJumpCurveDefault();
+    }
 
 
 
@@ -159,11 +168,6 @@ public class AutoJumpMaster : MonoBehaviour
             StartCoroutine(ToggleSwapCamera());
         }
     }
-    private void HideArcVisuals()
-    {
-        _lineRenderer.gameObject.SetActive(false);
-    }
-
     private IEnumerator ToggleSwapCamera()
     {
         _swapCamera.gameObject.SetActive(true);
@@ -307,6 +311,17 @@ public class AutoJumpMaster : MonoBehaviour
 
         // calculates time it would take for the launched object to reach the target
         _currentTimeOfFlight = ArcMath.TimeOfFlight(LaunchSpeed, _currentAngle, -yOffset, playerGravity);
+    }
+    public void ToggleAutoJumpVisuals(bool showThem = true)
+    {
+        // hide/show all meshrenderers regarding the jump
+        for (int i = 0; i < _allMeshrenderers.Count; i++)
+        {
+            _allMeshrenderers[i].enabled = showThem;
+        }
+
+        // hide/show the arc
+        _lineRenderer.gameObject.SetActive(showThem);
     }
 
 

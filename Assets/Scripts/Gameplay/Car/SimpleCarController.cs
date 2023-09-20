@@ -124,6 +124,9 @@ public class SimpleCarController : PlayerController
     [SerializeField]
     private GameObject _particleRightJet;
 
+    [Header("Other")]
+    public bool BlockMove;
+
 
     #region Unity Functions
 
@@ -225,7 +228,7 @@ public class SimpleCarController : PlayerController
     private void GetInput()
     {
         // if no input is detected...
-        if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0)
+        if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0 || BlockMove == true)
         {
             _motorTorque = 0.0f;
             _brakeTorque = motorForce;
@@ -251,6 +254,11 @@ public class SimpleCarController : PlayerController
     }
     private void Steer()
     {
+        if (BlockMove == true)
+        {
+            return;
+        }
+
         // Slight rotation towards the target of this transform
         if (_input.magnitude > 0.1f)
         {
@@ -524,6 +532,14 @@ public class SimpleCarController : PlayerController
             yield return null;
         }
     }
+    private IEnumerator ToggleMove(float durationBlocked)
+    {
+        BlockMove = true;
+
+        yield return new WaitForSeconds(durationBlocked);
+
+        BlockMove = false;
+    }
 
     /*private void RemoveBarriers()
     {
@@ -622,6 +638,10 @@ public class SimpleCarController : PlayerController
     public void ChangeCamera(GameObject targetSwapCam)
     {
         _followPlayerObject.ChangeObjectToFollow(targetSwapCam);
+    }
+    public void ToggleMoveInput(float durationBlocked)
+    {
+        StartCoroutine(ToggleMove(durationBlocked));
     }
 
     //public void ReverseLogic()
