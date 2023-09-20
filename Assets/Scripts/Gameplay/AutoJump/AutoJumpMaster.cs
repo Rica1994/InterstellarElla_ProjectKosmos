@@ -100,7 +100,7 @@ public class AutoJumpMaster : MonoBehaviour
                 // set the playier in proper direction and animation
                 exploring.JumpPadAnimater(_transformDirectionXZ);
                 // add zoom
-                ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>().ZoomOutCamera(_zoomDuration, _zoomFactor, _zoomLimit);
+                ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>().ZoomOutCameraDistance(_zoomDuration, _zoomFactor, _zoomLimit);
             }
             else if (player.TryGetComponent(out SimpleCarController car)) // Glitch
             {

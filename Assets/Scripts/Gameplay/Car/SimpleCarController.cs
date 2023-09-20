@@ -119,6 +119,8 @@ public class SimpleCarController : PlayerController
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
     public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
 
+    private VirtualCameraManagerExploring _virtualCamManager;
+
     public GameObject CamerasParent;
 
     [Header("Particles")]
@@ -177,6 +179,7 @@ public class SimpleCarController : PlayerController
         }
 
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
+        _virtualCamManager = ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>();
     }
     private void OnEnable()
     {
@@ -377,7 +380,10 @@ public class SimpleCarController : PlayerController
         _rigidbody.AddForce(transform.forward * _boostStrength, ForceMode.VelocityChange);
 
         //      Camera.main.GetComponentInParent<FollowCam>().ZoomOut();
-        StartCoroutine(ZoomOut());
+        //StartCoroutine(ZoomOut());
+        _virtualCamManager.ZoomOutCameraDistance(1.6f, 0.05f, 2);
+        _virtualCamManager.ZoomOutCameraFOV();
+        
 
         StartCoroutine(ActivateBoostCooldown()); // cooldown period
         StartCoroutine(DecreaseMaxSpeed()); // sets booleans regarding speed / activates particles        
