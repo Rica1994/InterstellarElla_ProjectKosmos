@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class MouthAnimation : MonoBehaviour
 {
-    [SerializeField]
-    private AudioSource _voiceSource;
+    public AudioSource VoiceSource;
     // Mouth references
     [SerializeField]
     private SkinnedMeshRenderer _halfOpenMouth;
@@ -61,7 +60,7 @@ public class MouthAnimation : MonoBehaviour
 
     private void Update()
     {
-        if (_voiceSource.isPlaying)
+        if (VoiceSource.isPlaying)
         {
             _timePassedWithCurrentMouth += Time.deltaTime;
 
@@ -205,7 +204,7 @@ public class MouthAnimation : MonoBehaviour
 
     float RMSValue()
     {
-        _voiceSource.GetOutputData(samples, 0);
+        VoiceSource.GetOutputData(samples, 0);
 
         float sum = 0;
         for (int i = 0; i < samples.Length; i++)

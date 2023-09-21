@@ -8,13 +8,13 @@ public class SwapCameraSpeederGround : SwapCameraBase
 {
     public override void Start()
     {
-        base.Start();
+        //base.Start();
 
-        //    // disable the camera in the start
-        //    _virtualCamera.gameObject.SetActive(false);
+        // disable the camera in the start
+        _virtualCamera.gameObject.SetActive(false);
 
-        //    // parent camera to manager
-        //    _virtualCamera.transform.SetParent(ServiceLocator.Instance.GetService<VirtualCameraManagerSpeederGround>().transform);
+        // parent camera to manager
+        _virtualCamera.transform.SetParent(ServiceLocator.Instance.GetService<VirtualCameraManagerSpeederGround>().transform);
     }
 
 

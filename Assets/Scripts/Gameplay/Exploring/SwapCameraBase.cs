@@ -31,11 +31,15 @@ public class SwapCameraBase : MonoBehaviour
         // disable the camera in the start
         _virtualCamera.gameObject.SetActive(false);
 
+
         // parent camera to manager
         _virtualCamera.transform.SetParent(ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>().transform);
 
         // unparent the visuals (keep arrow in place)
-        _target.transform.GetChild(0).transform.SetParent(this.transform);
+        if (_target != null)
+        {
+            _target.transform.GetChild(0).transform.SetParent(this.transform);
+        }
     }
 
 
