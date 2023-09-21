@@ -24,7 +24,15 @@ public class SwapCameraGlitch : SwapCameraBase
                 _target.transform.localPosition = new Vector3(0, 0, 0);
             }
 
-            glitch.ChangeCamera(_target);
+            if (_virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>() != null)
+            {
+                GameObject transposerTarget = this.GetComponent<SwapCameraTransposerRef>().TargetLookAt;
+                glitch.ChangeCameraTransposer(_target, transposerTarget);
+            }
+            else
+            {
+                glitch.ChangeCamera(_target);
+            }       
 
             // access manager for swapCamera logic
             ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>().SwapCamera(_virtualCamera, _blendSpeed);

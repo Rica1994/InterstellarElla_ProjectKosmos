@@ -13,10 +13,38 @@ public class GlitchAnimatedEventBoulder : GlitchAnimatedEvent
     [SerializeField]
     private RockWallNew _rockWallNew;
 
+    [Header("Swap Cameras")]
+    [SerializeField]
+    private List<SwapCameraGlitch> _swapCamerasToDisableOnEvent = new List<SwapCameraGlitch>();
+    [SerializeField]
+    private List<SwapCameraGlitch> _swapCamerasToEnableOnEvent = new List<SwapCameraGlitch>();
+
+    protected override void Start()
+    {
+        base.Start();
+
+        for (int i = 0; i < _swapCamerasToDisableOnEvent.Count; i++)
+        {
+            _swapCamerasToDisableOnEvent[i].gameObject.SetActive(true);
+        }
+        for (int i = 0; i < _swapCamerasToEnableOnEvent.Count; i++)
+        {
+            _swapCamerasToEnableOnEvent[i].gameObject.SetActive(false);
+        }
+    }
 
     public override void ActivateCameraCutscene(SimpleCarController glitch)
     {
         base.ActivateCameraCutscene(glitch);
+
+        for (int i = 0; i < _swapCamerasToDisableOnEvent.Count; i++)
+        {
+            _swapCamerasToDisableOnEvent[i].gameObject.SetActive(false);
+        }
+        for (int i = 0; i < _swapCamerasToEnableOnEvent.Count; i++)
+        {
+            _swapCamerasToEnableOnEvent[i].gameObject.SetActive(true);
+        }
     }
 
 

@@ -20,7 +20,7 @@ public class GlitchAnimatedEvent : MonoBehaviour
 
     private bool _isActive = false;
 
-    private void Start()
+    protected virtual void Start()
     {
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
     }

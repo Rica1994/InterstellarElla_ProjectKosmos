@@ -25,6 +25,7 @@ public class AutoJumpMaster : MonoBehaviour
     [Header("values for Glitch")]
     public bool AddHop = true;
     public float HopStrength = 10;
+    public bool RequiresSpeedCheck = false;
 
     [HideInInspector]
     public float LaunchSpeed = 1f; 

@@ -14,6 +14,11 @@ public class FollowCamera : MonoBehaviour
     private Vector3 _offset;
 
 
+    private bool _isTransposer;
+    private GameObject _transposerLookAtTarget;
+    private Vector3 _lookDirectionVector;
+
+
     void Start()
     {
         if (ObjectToFollowPlayer == null)
@@ -26,9 +31,27 @@ public class FollowCamera : MonoBehaviour
     {
         //ObjectToFollowPlayer.transform.position = _target.position + _offset;
         ObjectToFollowPlayer.transform.position = _target.position;
+
+        // if im a transposer, also rotate it to look at the target
+        if (_isTransposer == true)
+        {
+            _lookDirectionVector = (_transposerLookAtTarget.transform.position - ObjectToFollowPlayer.transform.position).normalized;
+            //ObjectToFollowPlayer.transform.rotation = Quaternion.LookRotation(_transposerLookAtTarget.transform.position);
+            ObjectToFollowPlayer.transform.rotation = Quaternion.LookRotation(_lookDirectionVector, Vector3.up);
+        }
     }
     public void ChangeObjectToFollow(GameObject objToFollowPlayer)
     {
+        _isTransposer = false;
+        _transposerLookAtTarget = null;
+
+        ObjectToFollowPlayer = objToFollowPlayer;    
+    }
+    public void ChangeObjectToFollowTransposer(GameObject objToFollowPlayer, GameObject transposerTarget)
+    {
+        _isTransposer = true;
+        _transposerLookAtTarget = transposerTarget;
+
         ObjectToFollowPlayer = objToFollowPlayer;
     }
 }

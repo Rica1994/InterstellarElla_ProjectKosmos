@@ -659,6 +659,10 @@ public class SimpleCarController : PlayerController
     {
         _followPlayerObject.ChangeObjectToFollow(targetSwapCam);
     }
+    public void ChangeCameraTransposer(GameObject targetSwapCam, GameObject transposerTarget)
+    {
+        _followPlayerObject.ChangeObjectToFollowTransposer(targetSwapCam, transposerTarget);
+    }
     public void ToggleMoveInput(float durationBlocked)
     {
         StartCoroutine(ToggleMove(durationBlocked));
