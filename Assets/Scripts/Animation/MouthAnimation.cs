@@ -64,8 +64,8 @@ public class MouthAnimation : MonoBehaviour
     [DllImport("__Internal")]
     private static extern bool GetSamples(string name, float[] freqData, int size);
 
-    [SerializeField]
-    private Text _text;
+    //[SerializeField]
+    //private Text _text;
 
     private bool _clipStopped = false;
 
@@ -99,7 +99,7 @@ public class MouthAnimation : MonoBehaviour
         }
         else
         {
-            _text.text = VoiceSource.name + ":no values";
+            //_text.text = VoiceSource.name + ":no values";
             _clipStopped = true;
         }
     }
