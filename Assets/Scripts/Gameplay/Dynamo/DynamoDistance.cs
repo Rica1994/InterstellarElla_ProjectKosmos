@@ -17,8 +17,7 @@ public class DynamoDistance : MonoBehaviour
     [SerializeField]
     private Transform _ellaSpeederGround;
 
-    [SerializeField]
-    private bool _inverseDistance = false;
+    public bool InverseDistance = false;
 
     private void Awake()
     {
@@ -27,7 +26,7 @@ public class DynamoDistance : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_inverseDistance)
+        if (InverseDistance)
         {
             _distance = _ellaSpeederGround.position.z - transform.position.z;
 
