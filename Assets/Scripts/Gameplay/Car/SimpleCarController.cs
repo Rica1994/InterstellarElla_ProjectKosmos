@@ -231,7 +231,7 @@ public class SimpleCarController : PlayerController
     }
     private void OnBoostInput()
     {
-        if (BoostCoolingDown == false)
+        if (BoostCoolingDown == false && IsInPerfectJump == false)
         {
             //  RemoveBarriers();
             Boost();
