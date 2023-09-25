@@ -9,6 +9,9 @@ public class MaggieChainAction : ChainAction
     [SerializeField]
     private AudioElement _maggieVoiceClip;
 
+    [SerializeField]
+    private AudioClip _maggieAudioClip;
+
     private Maggie _maggie;
     private AudioSource _maggieAudioSource;
     private MouthAnimation _maggieMouthAnimation;
@@ -32,11 +35,12 @@ public class MaggieChainAction : ChainAction
     {
         base.Execute();
         _maggie.PopUp();
-        _maggieMouthAnimation.VoiceSource = ServiceLocator.Instance.GetService<AudioController>().TracksMaggie[0].Source;
+        //_maggieMouthAnimation.VoiceSource = ServiceLocator.Instance.GetService<AudioController>().TracksMaggie[0].Source;
         StartCoroutine(Helpers.DoAfter(_maggie.PopUpLength, () =>
         {
-            ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieVoiceClip);
-            StartCoroutine(Helpers.DoAfter(_maggieVoiceClip.Clip.length, () => _maggie.PopDown()));
+            _maggieMouthAnimation.PlayAudioClip(_maggieAudioClip);
+            //ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieVoiceClip);
+            StartCoroutine(Helpers.DoAfter(_maggieAudioClip.length, () => _maggie.PopDown()));
         }));
     }
 }
