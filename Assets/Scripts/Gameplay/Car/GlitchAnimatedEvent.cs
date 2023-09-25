@@ -16,6 +16,10 @@ public class GlitchAnimatedEvent : MonoBehaviour
     [Header("Sounds")]
     [SerializeField] protected AudioElement _soundToPlay;
 
+    [Header("Particles")]
+    [SerializeField]
+    private GameObject _particleIndication;
+
     protected AudioController _audioController;
 
     private bool _isActive = false;
@@ -29,6 +33,12 @@ public class GlitchAnimatedEvent : MonoBehaviour
     public virtual void ActivateCameraCutscene(SimpleCarController glitch)
     {
         float animationLength = _animationCamera.clip.length;
+
+        // stop particle
+        if (_particleIndication != null)
+        {
+            _particleIndication.SetActive(false);
+        }
 
         // freeze gameplay
         glitch.ToggleMoveInput(animationLength);

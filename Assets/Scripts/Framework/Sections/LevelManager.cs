@@ -200,10 +200,15 @@ public class LevelManager : Service
     {
         if (hasEntered && _hasEndedLevel == false)
         {
-            _hasEndedLevel = true;
-            ServiceLocator.Instance.GetService<GameManager>().EndGame();
+            EndLevel();
         }
     }
+    public void EndLevel()
+    {
+        _hasEndedLevel = true;
+        ServiceLocator.Instance.GetService<GameManager>().EndGame();
+    }
+
     private void OnDeathTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
     {
         if (other.tag == "Player") // fix this with correct layer matrix !!!!

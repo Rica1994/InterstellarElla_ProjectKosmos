@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityCore.Audio;
+using UnityCore.Scene;
 using UnityEngine;
 
 public class GlitchAnimatedEventBoulder : GlitchAnimatedEvent
@@ -18,6 +19,12 @@ public class GlitchAnimatedEventBoulder : GlitchAnimatedEvent
     private List<SwapCameraGlitch> _swapCamerasToDisableOnEvent = new List<SwapCameraGlitch>();
     [SerializeField]
     private List<SwapCameraGlitch> _swapCamerasToEnableOnEvent = new List<SwapCameraGlitch>();
+
+    [Header("Ends level ?")]
+    [SerializeField]
+    private bool _endsLevel;
+    [SerializeField]
+    private float _waitTimeToEndLevel = 12f;
 
     protected override void Start()
     {
@@ -45,6 +52,8 @@ public class GlitchAnimatedEventBoulder : GlitchAnimatedEvent
         {
             _swapCamerasToEnableOnEvent[i].gameObject.SetActive(true);
         }
+
+        StartCoroutine(EndLevelRoutine());
     }
 
 
@@ -55,5 +64,15 @@ public class GlitchAnimatedEventBoulder : GlitchAnimatedEvent
 
         // plays sound
         _audioController.PlayAudio(_soundSmash);
+    }
+
+
+    private IEnumerator EndLevelRoutine()
+    {
+        yield return new WaitForSeconds(_waitTimeToEndLevel);
+
+        var levelManager = ServiceLocator.Instance.GetService<LevelManager>();
+        levelManager.EndLevel();
+        ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(levelManager.NextScene, null, false, UnityCore.Menus.PageType.Loading);
     }
 }
