@@ -35,11 +35,11 @@ public class MaggieChainAction : ChainAction
     {
         base.Execute();
         _maggie.PopUp();
-        //_maggieMouthAnimation.VoiceSource = ServiceLocator.Instance.GetService<AudioController>().TracksMaggie[0].Source;
+        _maggieMouthAnimation.VoiceSource = ServiceLocator.Instance.GetService<AudioController>().TracksMaggie[0].Source;
         StartCoroutine(Helpers.DoAfter(_maggie.PopUpLength, () =>
         {
-            _maggieMouthAnimation.PlayAudioClip(_maggieAudioClip);
-            //ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieVoiceClip);
+            //_maggieMouthAnimation.PlayAudioClip(_maggieAudioClip);
+            ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieVoiceClip);
             StartCoroutine(Helpers.DoAfter(_maggieAudioClip.length, () => _maggie.PopDown()));
         }));
     }

@@ -92,7 +92,7 @@ public class MouthAnimation : MonoBehaviour
             #if UNITY_WEBGL && !UNITY_EDITOR
                 StartSampling(name, VoiceSource.clip.length, 512);
                 bool gotSamples = GetSamples(name, sample, sample.Length);
-                _text.text = "Got Samples: " + gotSamples + "\n" + "Sample Data: " + string.Join(", ", sample);
+                //_text.text = "Got Samples: " + gotSamples + "\n" + "Sample Data: " + string.Join(", ", sample);
             #endif
                 UpdateMouth();
             });
