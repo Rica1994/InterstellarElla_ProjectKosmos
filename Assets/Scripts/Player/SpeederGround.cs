@@ -125,6 +125,9 @@ public class SpeederGround : PlayerController
     [SerializeField]
     private Transform _ellaRyderTransform;
 
+    [SerializeField]
+    private SpeederGroundButton _speederGroundButton;
+
     private Vector3 _previousMoonscooterPosition;
     private Vector3 _previousEllaRyderPosition;
 
@@ -139,6 +142,11 @@ public class SpeederGround : PlayerController
 
     public void Initialize()
     {
+        if (_speederGroundButton != null) 
+        {
+            _speederGroundButton.Pressed += OnPressed;
+        }
+
         _characterController = GetComponent<CharacterController>();
         // Fixes character controller not grounded bug
         _characterController.minMoveDistance = 0f;
@@ -159,6 +167,7 @@ public class SpeederGround : PlayerController
         _ellaRyderTransform.localPosition = _previousEllaRyderPosition;
     }
 
+  
     private void Start()
     {
         _lastPosition = transform.position;
@@ -500,6 +509,15 @@ public class SpeederGround : PlayerController
     }
     private void OnJumpInput(InputAction.CallbackContext obj)
     {
+        JumpInput();
+    }
+    private void OnPressed()
+    {
+        JumpInput();
+    }
+
+    private void JumpInput()
+    {
         // if I'm in a trigger of an auto jump...
         if (CurrentAutoJumpMaster != null && CurrentAutoJumpMaster.PlayerIsInTrigger == true)
         {
@@ -524,6 +542,7 @@ public class SpeederGround : PlayerController
             _isJumping = true;
         }
     }
+
     private Vector3 AdjustVelocityToSlope(Vector3 velocity)
     {
         var ray = new Ray(transform.position, Vector3.down);
