@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>%UNITY_WEB_NAME%</title>
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <script src="%UNITY_WEBGL_LOADER_URL%"></script>
+    <script>
+      createUnityInstance(document.querySelector("#unityContainer"), {
+        dataUrl: "%UNITY_WEBGL_DATA_URL%",
+        frameworkUrl: "%UNITY_WEBGL_FRAMEWORK_URL%",
+        codeUrl: "%UNITY_WEBGL_CODE_URL%",
+        streamingAssetsUrl: "%UNITY_WEBGL_STREAMING_ASSETS_URL%",
+        companyName: "%UNITY_COMPANY_NAME%",
+        productName: "%UNITY_PRODUCT_NAME%",
+        productVersion: "%UNITY_PRODUCT_VERSION%",
+      });
+    </script>
+    <div id="unityContainer" style="margin: 0"></div>
+  </body>
+</html>
