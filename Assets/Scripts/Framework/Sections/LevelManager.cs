@@ -90,10 +90,13 @@ public class LevelManager : Service
         if (_firstCheckPoint == null)
         {
             var newSpawnPoint = new GameObject("Place Holder CheckPoint");
-            var player = FindObjectOfType<PlayerController>().gameObject;
-            newSpawnPoint.transform.SetPositionAndRotation(player.transform.position, player.transform.rotation);
-            _currentCheckpoint = newSpawnPoint;
-            Debug.LogWarning("First checkPoint not attached! Using Players transform instead");
+            if (FindObjectOfType<PlayerController>())
+            {
+                var player = FindObjectOfType<PlayerController>().gameObject;
+                newSpawnPoint.transform.SetPositionAndRotation(player.transform.position, player.transform.rotation);
+                _currentCheckpoint = newSpawnPoint;
+                Debug.LogWarning("First checkPoint not attached! Using Players transform instead");
+            }
         }
         else _currentCheckpoint = _firstCheckPoint;
     }
