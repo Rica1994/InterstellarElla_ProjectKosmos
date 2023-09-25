@@ -9,15 +9,15 @@ public class MainMenuManager : Service
 {
     [Header("Included Levels")]
     [SerializeField]
-    private bool _1 = true;
+    private bool _1_Mars = true;
     [SerializeField]
-    private bool _2 = true;
+    private bool _2_Pluto = true;
     [SerializeField]
-    private bool _3 = true;
+    private bool _3_Venus = true;
     [SerializeField]
-    private bool _4 = true;
+    private bool _4_Saturn = true;
     [SerializeField]
-    private bool _5 = true;
+    private bool _5_Mercury = true;
 
     private bool[] _levelsIncluded = new bool[5];
 
@@ -70,11 +70,11 @@ public class MainMenuManager : Service
 
     private void Awake()
     {
-        _levelsIncluded[0] = _1;
-        _levelsIncluded[1] = _2;
-        _levelsIncluded[2] = _3;
-        _levelsIncluded[3] = _4;
-        _levelsIncluded[4] = _5;
+        _levelsIncluded[0] = _1_Mars;
+        _levelsIncluded[1] = _2_Pluto;
+        _levelsIncluded[2] = _3_Venus;
+        _levelsIncluded[3] = _4_Saturn;
+        _levelsIncluded[4] = _5_Mercury;
     }
 
     private void Start()

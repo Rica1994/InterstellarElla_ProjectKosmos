@@ -284,6 +284,7 @@ namespace UnityCore
                     case "S_Level_2_1": return SceneType.S_Level_2_1;
                     case "S_Level_2_2": return SceneType.S_Level_2_2;
                     case "S_Quiz": return SceneType.S_Quiz;
+                    case "S_Mars_1_99_OutroCutscene": return SceneType.S_Mars_1_99_OutroCutscene;
 
                     default:
                         Debug.Log("Scene [" + scene + "] does not contain a type for a valid scene. ");
