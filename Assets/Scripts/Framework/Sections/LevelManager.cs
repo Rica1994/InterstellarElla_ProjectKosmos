@@ -75,7 +75,7 @@ public class LevelManager : Service
     private void Awake()
     {
         // subscribe endgame triggers
-        _endGameTrigger.OnTriggered += OnEndGameTriggered;
+        if (_endGameTrigger != null) _endGameTrigger.OnTriggered += OnEndGameTriggered;
 
         // subscribe death triggers
         List<DeathTrigger> deathTriggers = GetComponentsInChildren<DeathTrigger>().ToList();

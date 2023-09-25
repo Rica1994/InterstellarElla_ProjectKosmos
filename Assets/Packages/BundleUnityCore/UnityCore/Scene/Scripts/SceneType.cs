@@ -48,6 +48,14 @@ namespace UnityCore
 
             S_Mars_1_0_IntroCutscene = 19,
             S_GameStartUpScene = 34,
+
+            S_Level_1_0 = 100,
+            S_Level_1_1 = 101,
+            S_Level_2_0 = 102,
+            S_Level_2_1 = 103,
+            S_Level_2_2 = 104,
+            S_Quiz = 105,
+            S_Mars_1_99_OutroCutscene = 106,
         }
     }
 }

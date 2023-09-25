@@ -10,7 +10,6 @@ public class NextLevelChainAction : ChainAction
     [SerializeField]
     private SceneType _sceneToLoad;
 
-
     public override void Execute()
     {
         base.Execute();

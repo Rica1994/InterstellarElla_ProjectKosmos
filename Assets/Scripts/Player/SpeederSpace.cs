@@ -179,6 +179,13 @@ public class SpeederSpace : PlayerController
             _leftBottomBounds = cam.ViewportToWorldPoint(new Vector3(0f, 0f, distance));
             _rightTopBounds = cam.ViewportToWorldPoint(new Vector3(1f, 1f, distance));
 
+            Debug.Log(_leftBottomBounds + "Left bottom vector");
+            Debug.Log(_rightTopBounds + "Right Top vector");
+            // adding extra distance for 2019 Unity (it shrank when changing versions...)
+            _leftBottomBounds += new Vector3(-1.5f,0,0);
+            _rightTopBounds += new Vector3(1.5f, 0, 0);
+
+
             // Destroy camera used for local bound calculation
             Destroy(obj);
         }
