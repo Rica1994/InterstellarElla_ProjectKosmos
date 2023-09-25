@@ -95,7 +95,14 @@ public class GameManager : Service
         _isMobile = IsMobile();
 
         string url = Application.absoluteURL;
-        ParseData(url);
+        if (url.IndexOf("?data=") != -1)
+        {
+            ParseData(url);
+        }
+        else
+        {
+            Debug.Log("?data= not found in URL");
+        }
 #endif
     }
 
@@ -106,7 +113,14 @@ public class GameManager : Service
 #elif !UNITY_EDITOR && UNITY_WEBGL
 
         string url = Application.absoluteURL;
-        ParseData(url);
+        if (url.IndexOf("?data=") != -1)
+        {
+            ParseData(url);
+        }
+        else
+        {
+            Debug.Log("?data= not found in URL");
+        }
 #endif
     }
 

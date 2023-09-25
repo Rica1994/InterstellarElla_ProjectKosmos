@@ -1,10 +1,12 @@
+using Assets.Scripts;
+using System.Runtime.InteropServices;
 using UnityCore.Audio;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MouthAnimation : MonoBehaviour
 {
-    [SerializeField]
-    private AudioSource _voiceSource;
+    public AudioSource VoiceSource;
     // Mouth references
     [SerializeField]
     private SkinnedMeshRenderer _halfOpenMouth;
@@ -51,167 +53,220 @@ public class MouthAnimation : MonoBehaviour
     private int _sampleDataLength = 1024;
     private float[] samples;
 
+    public static AudioBand AudioFrequencyBand8 { get; private set; }
+
+    [DllImport("__Internal")]
+    private static extern bool StartSampling(string name, float duration, int bufferSize);
+
+    [DllImport("__Internal")]
+    private static extern bool CloseSampling(string name);
+
+    [DllImport("__Internal")]
+    private static extern bool GetSamples(string name, float[] freqData, int size);
+
+    //[SerializeField]
+    //private Text _text;
+
+    private bool _clipStopped = false;
+
     private void Start()
     {
+        InitializeVariables();
+    }
+
+    private void InitializeVariables()
+    {
         samples = new float[_sampleDataLength];
-
-        _voiceSource = ServiceLocator.Instance.GetService<AudioController>().TracksMaggie[0].Source as AudioSource;
-
+        AudioFrequencyBand8 = new AudioBand(BandCount.Eight);
     }
 
     private void Update()
     {
-        if (_voiceSource.isPlaying)
+        if (VoiceSource.isPlaying)
         {
-            _timePassedWithCurrentMouth += Time.deltaTime;
-
-            if (_timePassedWithCurrentMouth > _timeTillNextMouthChange)
+            AudioFrequencyBand8.Update((sample) =>
             {
-                _timePassedWithCurrentMouth = 0.0f;
-                float volume = RMSValue();
+            #if UNITY_EDITOR
+                VoiceSource.GetSpectrumData(sample, 0, FFTWindow.Blackman);
+            #endif
+            #if UNITY_WEBGL && !UNITY_EDITOR
+                StartSampling(name, VoiceSource.clip.length, 512);
+                bool gotSamples = GetSamples(name, sample, sample.Length);
+                //_text.text = "Got Samples: " + gotSamples + "\n" + "Sample Data: " + string.Join(", ", sample);
+            #endif
+                UpdateMouth();
+            });
+        }
+        else
+        {
+            //_text.text = VoiceSource.name + ":no values";
+            _clipStopped = true;
+        }
+    }
 
-                if (volume < _thresholdHalfOpen)
+    private void UpdateMouth()
+    {
+        _timePassedWithCurrentMouth += Time.deltaTime;
+
+        if (_timePassedWithCurrentMouth > _timeTillNextMouthChange)
+        {
+            _timePassedWithCurrentMouth = 0.0f;
+            float volume = AudioFrequencyBand8.GetAmplitude();
+
+            if (volume < _thresholdHalfOpen)
+            {
+                //Debug.Log("Closed Mouth Activated");
+                switch (MaggieMood)
                 {
-                    //Debug.Log("Closed Mouth Activated");
-                    switch (MaggieMood)
-                    {
-                        case Mood.Happy:
-                            _halfOpenMouth.enabled = false;
-                            _wavyMouth.enabled = false;
-                            _lineMouth.enabled = false;
-                            _closedMouthHappy.enabled = true;
-                            _openMouthHappy.enabled = false;
-                            _closedMouthSad.enabled = false;
-                            _openMouthSad.enabled = false;
-                            break;
-                        case Mood.Sad:
-                            _halfOpenMouth.enabled = false;
-                            _wavyMouth.enabled = false;
-                            _lineMouth.enabled = false;
-                            _closedMouthHappy.enabled = false;
-                            _openMouthHappy.enabled = false;
-                            _closedMouthSad.enabled = true;
-                            _openMouthSad.enabled = false;
-                            break;
-                        case Mood.Confused:
-                            _halfOpenMouth.enabled = false;
-                            _wavyMouth.enabled = true;
-                            _lineMouth.enabled = false;
-                            _closedMouthHappy.enabled = false;
-                            _openMouthHappy.enabled = false;
-                            _closedMouthSad.enabled = false;
-                            _openMouthSad.enabled = false;
-                            break;
-                        case Mood.Thinking:
-                            _halfOpenMouth.enabled = false;
-                            _wavyMouth.enabled = false;
-                            _lineMouth.enabled = true;
-                            _closedMouthHappy.enabled = false;
-                            _openMouthHappy.enabled = false;
-                            _closedMouthSad.enabled = false;
-                            _openMouthSad.enabled = false;
-                            break;
-                    }
+                    case Mood.Happy:
+                        _halfOpenMouth.enabled = false;
+                        _wavyMouth.enabled = false;
+                        _lineMouth.enabled = false;
+                        _closedMouthHappy.enabled = true;
+                        _openMouthHappy.enabled = false;
+                        _closedMouthSad.enabled = false;
+                        _openMouthSad.enabled = false;
+                        break;
+                    case Mood.Sad:
+                        _halfOpenMouth.enabled = false;
+                        _wavyMouth.enabled = false;
+                        _lineMouth.enabled = false;
+                        _closedMouthHappy.enabled = false;
+                        _openMouthHappy.enabled = false;
+                        _closedMouthSad.enabled = true;
+                        _openMouthSad.enabled = false;
+                        break;
+                    case Mood.Confused:
+                        _halfOpenMouth.enabled = false;
+                        _wavyMouth.enabled = true;
+                        _lineMouth.enabled = false;
+                        _closedMouthHappy.enabled = false;
+                        _openMouthHappy.enabled = false;
+                        _closedMouthSad.enabled = false;
+                        _openMouthSad.enabled = false;
+                        break;
+                    case Mood.Thinking:
+                        _halfOpenMouth.enabled = false;
+                        _wavyMouth.enabled = false;
+                        _lineMouth.enabled = true;
+                        _closedMouthHappy.enabled = false;
+                        _openMouthHappy.enabled = false;
+                        _closedMouthSad.enabled = false;
+                        _openMouthSad.enabled = false;
+                        break;
                 }
-                else if (volume >= _thresholdHalfOpen && volume < _thresholdOpen)
+            }
+            else if (volume >= _thresholdHalfOpen && volume < _thresholdOpen)
+            {
+                //Debug.Log("Half Open Mouth Activated");
+                switch (MaggieMood)
                 {
-                    //Debug.Log("Half Open Mouth Activated");
-                    switch (MaggieMood)
-                    {
-                        case Mood.Happy:
-                            _halfOpenMouth.enabled = true;
-                            _wavyMouth.enabled = false;
-                            _lineMouth.enabled = false;
-                            _closedMouthHappy.enabled = false;
-                            _openMouthHappy.enabled = false;
-                            _closedMouthSad.enabled = false;
-                            _openMouthSad.enabled = false;
-                            break;
-                        case Mood.Sad:
-                            _halfOpenMouth.enabled = true;
-                            _wavyMouth.enabled = false;
-                            _lineMouth.enabled = false;
-                            _closedMouthHappy.enabled = false;
-                            _openMouthHappy.enabled = false;
-                            _closedMouthSad.enabled = false;
-                            _openMouthSad.enabled = false;
-                            break;
-                        case Mood.Confused:
-                            _halfOpenMouth.enabled = false;
-                            _wavyMouth.enabled = true;
-                            _lineMouth.enabled = false;
-                            _closedMouthHappy.enabled = false;
-                            _openMouthHappy.enabled = false;
-                            _closedMouthSad.enabled = false;
-                            _openMouthSad.enabled = false;
-                            break;
-                        case Mood.Thinking:
-                            _halfOpenMouth.enabled = false;
-                            _wavyMouth.enabled = false;
-                            _lineMouth.enabled = true;
-                            _closedMouthHappy.enabled = false;
-                            _openMouthHappy.enabled = false;
-                            _closedMouthSad.enabled = false;
-                            _openMouthSad.enabled = false;
-                            break;
-                    }
+                    case Mood.Happy:
+                        _halfOpenMouth.enabled = true;
+                        _wavyMouth.enabled = false;
+                        _lineMouth.enabled = false;
+                        _closedMouthHappy.enabled = false;
+                        _openMouthHappy.enabled = false;
+                        _closedMouthSad.enabled = false;
+                        _openMouthSad.enabled = false;
+                        break;
+                    case Mood.Sad:
+                        _halfOpenMouth.enabled = true;
+                        _wavyMouth.enabled = false;
+                        _lineMouth.enabled = false;
+                        _closedMouthHappy.enabled = false;
+                        _openMouthHappy.enabled = false;
+                        _closedMouthSad.enabled = false;
+                        _openMouthSad.enabled = false;
+                        break;
+                    case Mood.Confused:
+                        _halfOpenMouth.enabled = false;
+                        _wavyMouth.enabled = true;
+                        _lineMouth.enabled = false;
+                        _closedMouthHappy.enabled = false;
+                        _openMouthHappy.enabled = false;
+                        _closedMouthSad.enabled = false;
+                        _openMouthSad.enabled = false;
+                        break;
+                    case Mood.Thinking:
+                        _halfOpenMouth.enabled = false;
+                        _wavyMouth.enabled = false;
+                        _lineMouth.enabled = true;
+                        _closedMouthHappy.enabled = false;
+                        _openMouthHappy.enabled = false;
+                        _closedMouthSad.enabled = false;
+                        _openMouthSad.enabled = false;
+                        break;
                 }
-                else
+            }
+            else
+            {
+                //Debug.Log("Open Mouth Activated");
+                switch (MaggieMood)
                 {
-                    //Debug.Log("Open Mouth Activated");
-                    switch (MaggieMood)
-                    {
-                        case Mood.Happy:
-                            _halfOpenMouth.enabled = false;
-                            _wavyMouth.enabled = false;
-                            _lineMouth.enabled = false;
-                            _closedMouthHappy.enabled = false;
-                            _openMouthHappy.enabled = true;
-                            _closedMouthSad.enabled = false;
-                            _openMouthSad.enabled = false;
-                            break;
-                        case Mood.Sad:
-                            _halfOpenMouth.enabled = false;
-                            _wavyMouth.enabled = false;
-                            _lineMouth.enabled = false;
-                            _closedMouthHappy.enabled = false;
-                            _openMouthHappy.enabled = false;
-                            _closedMouthSad.enabled = false;
-                            _openMouthSad.enabled = true;
-                            break;
-                        case Mood.Confused:
-                            _halfOpenMouth.enabled = false;
-                            _wavyMouth.enabled = true;
-                            _lineMouth.enabled = false;
-                            _closedMouthHappy.enabled = false;
-                            _openMouthHappy.enabled = false;
-                            _closedMouthSad.enabled = false;
-                            _openMouthSad.enabled = false;
-                            break;
-                        case Mood.Thinking:
-                            _halfOpenMouth.enabled = false;
-                            _wavyMouth.enabled = false;
-                            _lineMouth.enabled = true;
-                            _closedMouthHappy.enabled = false;
-                            _openMouthHappy.enabled = false;
-                            _closedMouthSad.enabled = false;
-                            _openMouthSad.enabled = false;
-                            break;
-                    }
+                    case Mood.Happy:
+                        _halfOpenMouth.enabled = false;
+                        _wavyMouth.enabled = false;
+                        _lineMouth.enabled = false;
+                        _closedMouthHappy.enabled = false;
+                        _openMouthHappy.enabled = true;
+                        _closedMouthSad.enabled = false;
+                        _openMouthSad.enabled = false;
+                        break;
+                    case Mood.Sad:
+                        _halfOpenMouth.enabled = false;
+                        _wavyMouth.enabled = false;
+                        _lineMouth.enabled = false;
+                        _closedMouthHappy.enabled = false;
+                        _openMouthHappy.enabled = false;
+                        _closedMouthSad.enabled = false;
+                        _openMouthSad.enabled = true;
+                        break;
+                    case Mood.Confused:
+                        _halfOpenMouth.enabled = false;
+                        _wavyMouth.enabled = true;
+                        _lineMouth.enabled = false;
+                        _closedMouthHappy.enabled = false;
+                        _openMouthHappy.enabled = false;
+                        _closedMouthSad.enabled = false;
+                        _openMouthSad.enabled = false;
+                        break;
+                    case Mood.Thinking:
+                        _halfOpenMouth.enabled = false;
+                        _wavyMouth.enabled = false;
+                        _lineMouth.enabled = true;
+                        _closedMouthHappy.enabled = false;
+                        _openMouthHappy.enabled = false;
+                        _closedMouthSad.enabled = false;
+                        _openMouthSad.enabled = false;
+                        break;
                 }
             }
         }
     }
 
-    float RMSValue()
+    void RefreshAudioSource()
     {
-        _voiceSource.GetOutputData(samples, 0);
+        // Store the AudioClip for later
+        AudioClip clip = VoiceSource.clip;
 
-        float sum = 0;
-        for (int i = 0; i < samples.Length; i++)
-        {
-            sum += samples[i] * samples[i];
-        }
-        return Mathf.Sqrt(sum / samples.Length);
+        // Remove the AudioSource component
+        Destroy(VoiceSource);
+
+        // Add a new AudioSource component
+        VoiceSource = gameObject.AddComponent<AudioSource>();
+
+        // Reassign the AudioClip
+        VoiceSource.clip = clip;
+    }
+
+
+    public void PlayAudioClip(AudioClip clip)
+    {
+        VoiceSource.clip = clip;
+        RefreshAudioSource();
+        InitializeVariables();
+        AudioFrequencyBand8.Reset();
+        VoiceSource.Play();
     }
 }

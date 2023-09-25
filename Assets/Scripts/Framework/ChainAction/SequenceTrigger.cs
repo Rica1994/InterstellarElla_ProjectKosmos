@@ -8,6 +8,8 @@ public class SequenceTrigger : MonoBehaviour
     private TriggerHandler _trigger;
     [SerializeField]
     private Sequence _sequence;
+    [SerializeField]
+    private bool _disableTriggerAfterwards = true;
 
     private void Awake()
     {
@@ -19,6 +21,10 @@ public class SequenceTrigger : MonoBehaviour
         if (hasEntered && other.tag == "Player")
         {
             ChainManager.Instance.StartChain(_sequence);
+            if (_disableTriggerAfterwards)
+            {
+                _trigger.gameObject.SetActive(false);
+            }
         }
     }
 }

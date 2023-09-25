@@ -9,16 +9,19 @@ public class MaggieChainAction : ChainAction
     [SerializeField]
     private AudioElement _maggieVoiceClip;
 
+    [SerializeField]
+    private AudioClip _maggieAudioClip;
+
     private Maggie _maggie;
+    private AudioSource _maggieAudioSource;
+    private MouthAnimation _maggieMouthAnimation;
 
     private void Awake()
     {
-        foreach (var maggie in Resources.FindObjectsOfTypeAll<Maggie>())
-        {
+        _maggie = FindObjectOfType<Maggie>();
+        _maggieAudioSource = _maggie.GetComponent<AudioSource>();
+        _maggieMouthAnimation = _maggie.GetComponent<MouthAnimation>();
 
-            _maggie = maggie;
-
-        }
 
         if (_maggie == null)
         {
@@ -31,18 +34,13 @@ public class MaggieChainAction : ChainAction
     public override void Execute()
     {
         base.Execute();
-        _maggie.gameObject.SetActive(true);
-        //  StartCoroutine(PlayAudioAfter(_maggie.PopUpLength));
+        _maggie.PopUp();
+        _maggieMouthAnimation.VoiceSource = ServiceLocator.Instance.GetService<AudioController>().TracksMaggie[0].Source;
         StartCoroutine(Helpers.DoAfter(_maggie.PopUpLength, () =>
         {
+            //_maggieMouthAnimation.PlayAudioClip(_maggieAudioClip);
             ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieVoiceClip);
-            StartCoroutine(Helpers.DoAfter(_maggieVoiceClip.Clip.length, () => _maggie.PopDown()));
+            StartCoroutine(Helpers.DoAfter(_maggieAudioClip.length, () => _maggie.PopDown()));
         }));
-    }
-
-    public override void OnExit()
-    {
-        base.OnExit();
-        _maggie.gameObject.SetActive(false);
     }
 }
