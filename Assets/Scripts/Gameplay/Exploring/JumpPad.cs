@@ -103,7 +103,7 @@ public class JumpPad : MonoBehaviour
                 exploringScript.JumpPadAnimater(_transformDirectionXZ);
 
                 // add zoom
-                ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>().ZoomOutCamera(_zoomDuration, _zoomFactor, _zoomLimit);
+                ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>().ZoomOutCameraDistance(_zoomDuration, _zoomFactor, _zoomLimit);
 
                 // play sound effect
                 ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEntered);

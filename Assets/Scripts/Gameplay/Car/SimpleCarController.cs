@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -83,7 +84,13 @@ public class SimpleCarController : PlayerController
     private Vector2 _input;
 
 
+    [Header("Audio stuff")]
+    [SerializeField]
+    private AudioSource _sourceBoost;
+    [SerializeField]
+    private AudioElement _soundHop, _soundHopBig;
 
+    private AudioController _audioController;
 
 
     [Header("custom gravity")]
@@ -112,6 +119,8 @@ public class SimpleCarController : PlayerController
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
     public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
 
+    private VirtualCameraManagerExploring _virtualCamManager;
+
     public GameObject CamerasParent;
 
     [Header("Particles")]
@@ -123,6 +132,9 @@ public class SimpleCarController : PlayerController
     private GameObject _particleLeftJet;
     [SerializeField]
     private GameObject _particleRightJet;
+
+    [Header("Other")]
+    public bool BlockMove;
 
 
     #region Unity Functions
@@ -165,6 +177,9 @@ public class SimpleCarController : PlayerController
         {
             _rigidbody.useGravity = true;
         }
+
+        _audioController = ServiceLocator.Instance.GetService<AudioController>();
+        _virtualCamManager = ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>();
     }
     private void OnEnable()
     {
@@ -216,7 +231,7 @@ public class SimpleCarController : PlayerController
     }
     private void OnBoostInput()
     {
-        if (BoostCoolingDown == false)
+        if (BoostCoolingDown == false && IsInPerfectJump == false)
         {
             //  RemoveBarriers();
             Boost();
@@ -225,7 +240,7 @@ public class SimpleCarController : PlayerController
     private void GetInput()
     {
         // if no input is detected...
-        if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0)
+        if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0 || BlockMove == true)
         {
             _motorTorque = 0.0f;
             _brakeTorque = motorForce;
@@ -251,6 +266,11 @@ public class SimpleCarController : PlayerController
     }
     private void Steer()
     {
+        if (BlockMove == true)
+        {
+            return;
+        }
+
         // Slight rotation towards the target of this transform
         if (_input.magnitude > 0.1f)
         {
@@ -360,7 +380,10 @@ public class SimpleCarController : PlayerController
         _rigidbody.AddForce(transform.forward * _boostStrength, ForceMode.VelocityChange);
 
         //      Camera.main.GetComponentInParent<FollowCam>().ZoomOut();
-        StartCoroutine(ZoomOut());
+        //StartCoroutine(ZoomOut());
+        _virtualCamManager.ZoomOutCameraDistance(1.6f, 0.05f, 2);
+        _virtualCamManager.ZoomOutCameraFOV();
+        
 
         StartCoroutine(ActivateBoostCooldown()); // cooldown period
         StartCoroutine(DecreaseMaxSpeed()); // sets booleans regarding speed / activates particles        
@@ -461,10 +484,14 @@ public class SimpleCarController : PlayerController
         IsBoosting = true;
         OnBoost?.Invoke();
 
+        _sourceBoost.Play();
+
         _particleLeftPipe.SetActive(true);
         _particleRightPipe.SetActive(true);
 
         yield return new WaitForSeconds(1);
+
+        _sourceBoost.Stop();
 
         _particleLeftPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
         _particleLeftPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
@@ -523,6 +550,14 @@ public class SimpleCarController : PlayerController
 
             yield return null;
         }
+    }
+    private IEnumerator ToggleMove(float durationBlocked)
+    {
+        BlockMove = true;
+
+        yield return new WaitForSeconds(durationBlocked);
+
+        BlockMove = false;
     }
 
     /*private void RemoveBarriers()
@@ -600,6 +635,7 @@ public class SimpleCarController : PlayerController
             StartCoroutine(ParticleJetsRoutine());
 
             Debug.Log("hopped");
+            _audioController.PlayAudio(_soundHop);
         }
     }
     public void AutoJumpToggleFakeGravity(float timeOfFlight, float fakeGravity)
@@ -617,11 +653,19 @@ public class SimpleCarController : PlayerController
         StartCoroutine(ParticleJetsRoutine(timeOfFlight / 2f));
 
         // play sound
-        //_audioController.PlayAudio(_soundJump);
+        _audioController.PlayAudio(_soundHopBig);
     }
     public void ChangeCamera(GameObject targetSwapCam)
     {
         _followPlayerObject.ChangeObjectToFollow(targetSwapCam);
+    }
+    public void ChangeCameraTransposer(GameObject targetSwapCam, GameObject transposerTarget)
+    {
+        _followPlayerObject.ChangeObjectToFollowTransposer(targetSwapCam, transposerTarget);
+    }
+    public void ToggleMoveInput(float durationBlocked)
+    {
+        StartCoroutine(ToggleMove(durationBlocked));
     }
 
     //public void ReverseLogic()
