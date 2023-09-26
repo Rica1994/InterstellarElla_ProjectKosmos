@@ -14,13 +14,10 @@ public class DynamoPathSwitchChainAction : ChainAction
     private bool _reverseDirection = false;
 
     private CinemachineDollyCart _dynamoCart;
-    private DynamoDistance _dynamoDisctance;
 
     private void Awake()
     {
         _dynamoCart = FindObjectOfType<CinemachineDollyCart>();
-        _dynamoDisctance = _dynamoCart.gameObject.GetComponent<DynamoDistance>();
-
     }
 
     public override void Execute()
@@ -29,7 +26,5 @@ public class DynamoPathSwitchChainAction : ChainAction
         _dynamoCart.m_Path = _dynamoPath;
 
         _dynamoCart.m_Position = _startPosition;
-
-        _dynamoDisctance.InverseDistance = _reverseDirection;
     }
 }
