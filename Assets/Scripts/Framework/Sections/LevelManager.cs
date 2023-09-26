@@ -47,7 +47,9 @@ public class LevelManager : Service
 
     private int _currentSectionIndex;
 
+    // store a new checkpoint gameobject on here when entering trigger
     private GameObject _currentCheckpoint;
+    public GameObject CurrentCheckpoint => _currentCheckpoint;
     
     private string[] _sceneStringArrray;
 
@@ -103,19 +105,27 @@ public class LevelManager : Service
 
     private void Start()
     {
-  //     _sceneStringArrray = SceneManager.GetActiveScene().name.Split("_"[0]);
-  //     _levelIndexString = DecodeSceneString()[0].ToString();
-  //     _levelSceneIndexString = DecodeSceneString()[1].ToString();
+        //_sceneStringArrray = SceneManager.GetActiveScene().name.Split("_"[0]);
+        //_levelIndexString = DecodeSceneString()[0].ToString();
+        //_levelSceneIndexString = DecodeSceneString()[1].ToString();
 
-  //     _sectionIndex = 0;
-  //     _sectionIndexString = _sectionIndex.ToString();
+        //_sectionIndex = 0;
+        //_sectionIndexString = _sectionIndex.ToString();
 
-  //     _sectionNameBase = _sectionNamePrefix + "_" + _levelIndexString + "_" + _levelSceneIndexString;
-  //     _sectionNameToLoad = _sectionNameBase + "_" + _sectionIndexString;
+        //_sectionNameBase = _sectionNamePrefix + "_" + _levelIndexString + "_" + _levelSceneIndexString;
+        //_sectionNameToLoad = _sectionNameBase + "_" + _sectionIndexString;
 
-  //     //Debug.Log(_sectionNameToLoad + " first section im trying to load");
+        ////Debug.Log(_sectionNameToLoad + " first section im trying to load");
 
-  //     LoadSection();
+        //LoadSection();
+
+
+        // subscribe all checkpoint triggers
+        List<CheckpointTrigger> checkpointTriggers = this.GetComponentsInChildren<CheckpointTrigger>().ToList();
+        for (int i = 0; i < checkpointTriggers.Count; i++)
+        {
+            checkpointTriggers[i].OnTriggered += OnCheckpointTriggered;
+        }
     }
 
     private void Update()
@@ -163,7 +173,7 @@ public class LevelManager : Service
             }
         }
 
-        // subscribe checkpoints 
+        // subscribe checkpoints of loaded section 
         List<CheckpointTrigger> checkpointTriggers = newSection.GetComponentsInChildren<CheckpointTrigger>().ToList();
         CheckpointTrigger currentCheckpointTrigger = null;
         for (int i = 0; i < checkpointTriggers.Count; i++)
