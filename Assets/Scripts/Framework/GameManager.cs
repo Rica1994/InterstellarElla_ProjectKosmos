@@ -20,7 +20,7 @@ public class GameManager : Service
         public PlanetCompletionValues PlanetCompletionValues;
         public float CurrentScore;
         public int LastPlanet;
-        public bool IsShittyDevice;
+     //   public bool IsShittyDevice;
 
         public override string ToString()
         {
@@ -147,7 +147,7 @@ public class GameManager : Service
 
         // Step 5: Extract current level
         var lastPlanet = Planet.None;
-        int isShittyDevice = 0;
+       // int isShittyDevice = 0;
         
         int planetValue;
         if (int.TryParse(planetCompletionsCompiled.Substring(18, 1), out planetValue))
@@ -159,7 +159,7 @@ public class GameManager : Service
         }
 
 
-        int.TryParse(planetCompletionsCompiled.Substring(19,1), out isShittyDevice);
+     //   int.TryParse(planetCompletionsCompiled.Substring(19,1), out isShittyDevice);
 
         // Step 6: Assign to the struct
         PlanetCompletionValues values = new PlanetCompletionValues
@@ -175,7 +175,7 @@ public class GameManager : Service
         data.LastPlanet = (int)lastPlanet;
         data.CurrentScore = currentScore;
         data.PlanetCompletionValues = values;
-        data.IsShittyDevice = (isShittyDevice == 1) ? true : false;
+     //   data.IsShittyDevice = (isShittyDevice == 1) ? true : false;
 
         Data = data;
     }
