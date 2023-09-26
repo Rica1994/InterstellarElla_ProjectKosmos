@@ -71,7 +71,7 @@ public class MouthAnimation : MonoBehaviour
 
     private void Start()
     {
-        InitializeVariables();
+        //InitializeVariables();
     }
 
     private void InitializeVariables()
@@ -82,26 +82,27 @@ public class MouthAnimation : MonoBehaviour
 
     private void Update()
     {
-        if (VoiceSource.isPlaying)
-        {
-            AudioFrequencyBand8.Update((sample) =>
-            {
-            #if UNITY_EDITOR
-                VoiceSource.GetSpectrumData(sample, 0, FFTWindow.Blackman);
-            #endif
-            #if UNITY_WEBGL && !UNITY_EDITOR
-                StartSampling(name, VoiceSource.clip.length, 512);
-                bool gotSamples = GetSamples(name, sample, sample.Length);
-                //_text.text = "Got Samples: " + gotSamples + "\n" + "Sample Data: " + string.Join(", ", sample);
-            #endif
-                UpdateMouth();
-            });
-        }
-        else
-        {
-            //_text.text = VoiceSource.name + ":no values";
-            _clipStopped = true;
-        }
+        UpdateMouth();
+        //if (VoiceSource.isPlaying)
+        //{
+        //    AudioFrequencyBand8.Update((sample) =>
+        //    {
+        //    #if UNITY_EDITOR
+        //        VoiceSource.GetSpectrumData(sample, 0, FFTWindow.Blackman);
+        //    #endif
+        //    #if UNITY_WEBGL && !UNITY_EDITOR
+        //        StartSampling(name, VoiceSource.clip.length, 512);
+        //        bool gotSamples = GetSamples(name, sample, sample.Length);
+        //        //_text.text = "Got Samples: " + gotSamples + "\n" + "Sample Data: " + string.Join(", ", sample);
+        //    #endif
+        //        UpdateMouth();
+        //    });
+        //}
+        //else
+        //{
+        //    //_text.text = VoiceSource.name + ":no values";
+        //    _clipStopped = true;
+        //}
     }
 
     private void UpdateMouth()

@@ -55,6 +55,7 @@ namespace UnityCore
             S_Level_2_1 = 103,
             S_Level_2_2 = 104,
             S_Quiz = 105,
+            S_Mars_1_99_OutroCutscene = 106,
         }
     }
 }
