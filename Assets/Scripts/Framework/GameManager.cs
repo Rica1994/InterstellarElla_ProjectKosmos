@@ -15,6 +15,8 @@ public class GameManager : Service
 
     public static bool IsShittyDevice = false;
 
+    public static bool IsInCutscene;
+
     public struct SaveData
     {
         public PlanetCompletionValues PlanetCompletionValues;

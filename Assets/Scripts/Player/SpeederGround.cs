@@ -284,7 +284,10 @@ public class SpeederGround : PlayerController
         }
 
         // timer for respawning if stuck
-        PlayerStuckLogic();
+        if (GameManager.IsInCutscene == false)
+        {
+            PlayerStuckLogic();
+        }
     }
 
     private void PlayerStuckLogic()
