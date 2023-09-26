@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1735636363}
   - component: {fileID: 1735636362}
-  - component: {fileID: 1735636361}
+  - component: {fileID: 6665129449958310991}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
---- !u!114 &1735636361
+--- !u!114 &6665129449958310991
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,26 +56,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1735636360}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MoveRepeatDelay: 0.5
-  m_MoveRepeatRate: 0.1
-  m_XRTrackingOrigin: {fileID: 0}
-  m_ActionsAsset: {fileID: -944628639613478452, guid: 161f2ce565ae14943ad23ef8270421d6, type: 3}
-  m_PointAction: {fileID: 6808229273799829475, guid: 161f2ce565ae14943ad23ef8270421d6, type: 3}
-  m_MoveAction: {fileID: -1975899700893909796, guid: 161f2ce565ae14943ad23ef8270421d6, type: 3}
-  m_SubmitAction: {fileID: -3185306539050707925, guid: 161f2ce565ae14943ad23ef8270421d6, type: 3}
-  m_CancelAction: {fileID: 6395371103569660194, guid: 161f2ce565ae14943ad23ef8270421d6, type: 3}
-  m_LeftClickAction: {fileID: -8359366817295375584, guid: 161f2ce565ae14943ad23ef8270421d6, type: 3}
-  m_MiddleClickAction: {fileID: 8798958233505238, guid: 161f2ce565ae14943ad23ef8270421d6, type: 3}
-  m_RightClickAction: {fileID: 8516856187702301628, guid: 161f2ce565ae14943ad23ef8270421d6, type: 3}
-  m_ScrollWheelAction: {fileID: -7425001359788311281, guid: 161f2ce565ae14943ad23ef8270421d6, type: 3}
-  m_TrackedDevicePositionAction: {fileID: 2501341915445775655, guid: 161f2ce565ae14943ad23ef8270421d6, type: 3}
-  m_TrackedDeviceOrientationAction: {fileID: -5004257263730505162, guid: 161f2ce565ae14943ad23ef8270421d6, type: 3}
-  m_DeselectOnBackgroundClick: 1
-  m_PointerBehavior: 0
-  m_CursorLockBehavior: 0
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
 --- !u!1 &7232568967734854466
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,7 +127,6 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -165,28 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MovementRange: 50
-  m_DynamicOriginRange: 100
   m_ControlPath: <Gamepad>/leftStick
-  m_Behaviour: 0
-  m_UseIsolatedInputActions: 0
-  m_PointerDownAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  m_PointerMoveAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
 --- !u!1 &7232568968963587239
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,7 +240,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
 --- !u!114 &7232568968963587236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -303,7 +270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _joystick: {fileID: 7232568967734854466}
-  _action: {fileID: 7232568969726845512}
+  _touchButton: {fileID: 5110637728763988145}
 --- !u!1 &7232568969726845512
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,8 +282,8 @@ GameObject:
   - component: {fileID: 7232568969726845513}
   - component: {fileID: 7232568969726845509}
   - component: {fileID: 7232568969726845508}
-  - component: {fileID: 7232568969726845511}
-  - component: {fileID: 7232568969726845510}
+  - component: {fileID: 5110637728763988145}
+  - component: {fileID: 5567872306670872203}
   m_Layer: 5
   m_Name: Action
   m_TagString: Untagged
@@ -366,7 +333,6 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -381,7 +347,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7232568969726845511
+--- !u!114 &5110637728763988145
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -390,51 +356,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 7232568969726845512}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 7302c86cef0020440a5c9125f28e71da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 7232568969726845508}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &7232568969726845510
-MonoBehaviour:
+  isPressed: 0
+  _fingerId: 1000
+  _fingerIndex: 1000
+  _cooldownLength: 0.5
+--- !u!61 &5567872306670872203
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7232568969726845512}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d54531977ecb194c95e2d3aa7a5d72a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ControlPath: <Keyboard>/space
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.12357712, y: 0.2314148}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 99.30045, y: 99.01512}
+  m_EdgeRadius: 0

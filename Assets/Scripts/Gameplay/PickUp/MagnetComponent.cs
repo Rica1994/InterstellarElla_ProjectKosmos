@@ -49,7 +49,7 @@ public class MagnetComponent : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (_magnetismEnabled)
         {

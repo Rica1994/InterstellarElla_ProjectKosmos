@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CollisionParticle : MonoBehaviour
@@ -11,16 +9,21 @@ public class CollisionParticle : MonoBehaviour
     [SerializeField]
     private float _yThreshold = 1.0f;
 
+    public bool activate = true;
+
     private void OnCollisionEnter(Collision collision)
     {
-        foreach (ContactPoint contact in collision.contacts)
+        if (activate)
         {
-            Vector3 collisionPoint = contact.point;
-
-            // Spawn impact particles at the collision point
-            if (collisionPoint.y > gameObject.transform.position.y - _yThreshold)
+            foreach (ContactPoint contact in collision.contacts)
             {
-                SpawnImpactParticles(_impactParticle, collisionPoint);
+                Vector3 collisionPoint = contact.point;
+
+                // Spawn impact particles at the collision point
+                if (collisionPoint.y > gameObject.transform.position.y - _yThreshold)
+                {
+                    SpawnImpactParticles(_impactParticle, collisionPoint);
+                }
             }
         }
     }

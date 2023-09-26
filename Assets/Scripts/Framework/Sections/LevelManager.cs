@@ -75,7 +75,7 @@ public class LevelManager : Service
     private void Awake()
     {
         // subscribe endgame triggers
-        _endGameTrigger.OnTriggered += OnEndGameTriggered;
+        if (_endGameTrigger != null) _endGameTrigger.OnTriggered += OnEndGameTriggered;
 
         // subscribe death triggers
         List<DeathTrigger> deathTriggers = GetComponentsInChildren<DeathTrigger>().ToList();
@@ -90,10 +90,13 @@ public class LevelManager : Service
         if (_firstCheckPoint == null)
         {
             var newSpawnPoint = new GameObject("Place Holder CheckPoint");
-            var player = FindAnyObjectByType<PlayerController>().gameObject;
-            newSpawnPoint.transform.SetPositionAndRotation(player.transform.position, player.transform.rotation);
-            _currentCheckpoint = newSpawnPoint;
-            Debug.LogWarning("First checkPoint not attached! Using Players transform instead");
+            if (FindObjectOfType<PlayerController>())
+            {
+                var player = FindObjectOfType<PlayerController>().gameObject;
+                newSpawnPoint.transform.SetPositionAndRotation(player.transform.position, player.transform.rotation);
+                _currentCheckpoint = newSpawnPoint;
+                Debug.LogWarning("First checkPoint not attached! Using Players transform instead");
+            }
         }
         else _currentCheckpoint = _firstCheckPoint;
     }
@@ -200,17 +203,22 @@ public class LevelManager : Service
     {
         if (hasEntered && _hasEndedLevel == false)
         {
-            _hasEndedLevel = true;
-            ServiceLocator.Instance.GetService<GameManager>().EndGame();
+            EndLevel();
         }
     }
+    public void EndLevel()
+    {
+        _hasEndedLevel = true;
+        ServiceLocator.Instance.GetService<GameManager>().EndGame();
+    }
+
     private void OnDeathTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
     {
         if (other.tag == "Player") // fix this with correct layer matrix !!!!
         {
             if (hasEntered)
             {
-                var tempPlayer = FindAnyObjectByType<PlayerController>().gameObject;
+                var tempPlayer = FindObjectOfType<PlayerController>().gameObject;
                 ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint);
             }
         }
@@ -277,8 +285,21 @@ public class LevelManager : Service
         if (_amountTimesHit >= _maxAmountHitsForRespawn)
         {
             Debug.Log("Player Hit more than " + _maxAmountHitsForRespawn + " times!");
-            var tempPlayer = FindAnyObjectByType<PlayerController>().gameObject;
+            var tempPlayer = FindObjectOfType<PlayerController>().gameObject;
             ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint, true);
         }
+    }
+    public void PlayerHitObstacleSpace(SpeederSpace speederSpace)
+    {
+        _timeSinceLastHit = 0.0f;
+
+        // play sound
+        speederSpace.PlayCollisionSound();
+
+        // play animation
+        speederSpace.PlayCollisionAnimation();
+
+        // lose pickups
+        speederSpace.LosePickups();
     }
 }

@@ -8,14 +8,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_ColliderTail
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 5c7bf4bd34997e04aad8cb1dfb7b7592, type: 3}
   m_ShaderKeywords: _ALPHAPREMULTIPLY_ON _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
-  stringTagMap:
-    RenderType: Transparent
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses:
   - SHADOWCASTER
   m_SavedProperties:
@@ -53,6 +52,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Noise63:
+        m_Texture: {fileID: 2800000, guid: ff023cd47bb523a4cbc64a19883de5d9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Noise64:
+        m_Texture: {fileID: 2800000, guid: ff023cd47bb523a4cbc64a19883de5d9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -62,6 +69,22 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _T_Saturnus_Rings_Alpha:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _T_Saturnus_Rings_color:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _T_Saturnus_color:
+        m_Texture: {fileID: 2800000, guid: 927af5e12706a0343917dce48dc26247, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -83,12 +106,16 @@ Material:
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
+    - _Cloudopacity: 1
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
     - _EnvironmentReflections: 1
+    - _Float4: 0
+    - _Float5: 1.07
+    - _Float6: 2.47
     - _GlossMapScale: 0
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -106,11 +133,16 @@ Material:
     - _UVSec: 0
     - _WorkflowMode: 1
     - _ZWrite: 0
+    - __dirty: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 0, b: 0.7741265, a: 0.41960785}
     - _Color: {r: 1, g: 0, b: 0.7741265, a: 0.41960785}
+    - _Color0: {r: 1, g: 1, b: 1, a: 0}
+    - _Color1: {r: 0.3726415, g: 0.6517627, b: 1, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _colorhue: {r: 0.3726415, g: 0.6517627, b: 1, a: 0}
+    - _tiling: {r: 4, g: 8, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &366219744687164211
 MonoBehaviour:

@@ -10,7 +10,7 @@ using UnityEngine.Serialization;
 public class SpeederGround : PlayerController
 {
     [Header("Speed")]
-    [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f);
+    public Vector3 moveDirection = new Vector3(0f, 0f, 1f);
 
     public float speedForward = 50f;
     [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
@@ -119,14 +119,34 @@ public class SpeederGround : PlayerController
     [SerializeField]
     private bool _isExploringVersion;
 
+    [Header("Visual Transforms")]
+    [SerializeField]
+    private Transform _moonscooterTransform;
+    [SerializeField]
+    private Transform _ellaRyderTransform;
 
+    [SerializeField]
+    private TouchButton _speederGroundButton;
 
-
+    private Vector3 _previousMoonscooterPosition;
+    private Vector3 _previousEllaRyderPosition;
 
     #region Unity Functions
 
     private void Awake()
     {
+        _previousMoonscooterPosition = _moonscooterTransform.localPosition;
+        _previousEllaRyderPosition = _ellaRyderTransform.localPosition;
+        Initialize();
+    }
+
+    public void Initialize()
+    {
+        if (_speederGroundButton != null) 
+        {
+            _speederGroundButton.Pressed += OnPressed;
+        }
+
         _characterController = GetComponent<CharacterController>();
         // Fixes character controller not grounded bug
         _characterController.minMoveDistance = 0f;
@@ -140,10 +160,14 @@ public class SpeederGround : PlayerController
         _speedBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostSpeedMultiplier, true, 2f, true, 1f);
         _jumpBoostComponent = new MultiplierTimerComponent(_boostDuration, _boostJumpMultiplier, true, 2f, true, 1f);
 
-        _moveDirection.Normalize();
-        transform.forward = _moveDirection;
-        _rightVector = Vector3.Cross(_moveDirection, Vector3.up);
+        moveDirection.Normalize();
+        transform.forward = moveDirection;
+        _rightVector = Vector3.Cross(moveDirection, Vector3.up);
+        _moonscooterTransform.localPosition = _previousMoonscooterPosition;
+        _ellaRyderTransform.localPosition = _previousEllaRyderPosition;
     }
+
+  
     private void Start()
     {
         _lastPosition = transform.position;
@@ -318,7 +342,7 @@ public class SpeederGround : PlayerController
             inputX = Mathf.Sign(_input.x);
         }*/
 
-        var direction = _moveDirection * 1f + _rightVector * -_input.x;
+        var direction = moveDirection * 1f + _rightVector * -_input.x;
         Vector3 slopeVelocity = AdjustVelocityToSlope(direction);
 
         if (_xVelocity <= _startSidewaySpeed - 0.1f)
@@ -485,6 +509,15 @@ public class SpeederGround : PlayerController
     }
     private void OnJumpInput(InputAction.CallbackContext obj)
     {
+        JumpInput();
+    }
+    private void OnPressed()
+    {
+        JumpInput();
+    }
+
+    private void JumpInput()
+    {
         // if I'm in a trigger of an auto jump...
         if (CurrentAutoJumpMaster != null && CurrentAutoJumpMaster.PlayerIsInTrigger == true)
         {
@@ -509,6 +542,7 @@ public class SpeederGround : PlayerController
             _isJumping = true;
         }
     }
+
     private Vector3 AdjustVelocityToSlope(Vector3 velocity)
     {
         var ray = new Ray(transform.position, Vector3.down);

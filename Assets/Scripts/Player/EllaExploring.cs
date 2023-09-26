@@ -110,6 +110,11 @@ public class EllaExploring : PlayerController
         _particleBootRight = ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleLocalSpacePermanent
             (ParticleType.PS_BoostBoots, _bootParticleRight);
         _particleBootRight.Stop();
+
+        var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
+        touchButton.CooldownLength = -1.0f;
+        touchButton.Pressed += OnTouchButtonPressed;
+        touchButton.Unpressed += OnTouchButtonUnPressed;
     }
 
     private void OnEnable()
@@ -246,10 +251,29 @@ public class EllaExploring : PlayerController
     }
     private void OnHoverInput(InputAction.CallbackContext obj)
     {
+        HoverInput();
+    }
+    private void OnHoverCanceled(InputAction.CallbackContext obj)
+    {
+        HoverCanceled();
+    }
+
+    private void OnTouchButtonPressed()
+    {
+        HoverInput();
+    }
+    private void OnTouchButtonUnPressed()
+    {
+        HoverCanceled();
+    }
+
+    private void HoverInput()
+    {
         // make sure I'm not in a jump pad bounce when trying to do this
         _isTryingHover = true;
     }
-    private void OnHoverCanceled(InputAction.CallbackContext obj)
+
+    private void HoverCanceled()
     {
         // make sure I'm not in a jump pad bounce when trying to do this
         _isTryingHover = false;
@@ -266,8 +290,9 @@ public class EllaExploring : PlayerController
         if (_yVelocity > 0)
         {
             _yVelocity = 0;
-        }      
+        }
     }
+
     private void Move()
     {
         if (BlockMove == true)
