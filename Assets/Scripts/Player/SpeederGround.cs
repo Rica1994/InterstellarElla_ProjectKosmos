@@ -126,7 +126,7 @@ public class SpeederGround : PlayerController
     private Transform _ellaRyderTransform;
 
     [SerializeField]
-    private SpeederGroundButton _speederGroundButton;
+    private TouchButton _speederGroundButton;
 
     private Vector3 _previousMoonscooterPosition;
     private Vector3 _previousEllaRyderPosition;
