@@ -19,10 +19,21 @@ public class DynamoDistance : MonoBehaviour
 
     public bool InverseDistance = false;
 
+    [Header("Particles and Audio")]
+    [SerializeField]
+    private ParticleSystem _particleDigging;
+    [SerializeField]
+    private ParticleSystem _particleFire;
+
+    [SerializeField]
+    private bool _isTogglingParticles;
+
+
     private void Awake()
     {
         _dynamo = GetComponent<CinemachineDollyCart>();
     }
+
 
     private void FixedUpdate()
     {
@@ -71,5 +82,46 @@ public class DynamoDistance : MonoBehaviour
             float t = Mathf.Clamp01(elapsedTime / _speedChangeDuration);
             _dynamo.m_Speed = Mathf.Lerp(_dynamo.m_Speed, _targetSpeed, Time.deltaTime * t); 
         }
+    }
+
+    // call thesee from triggers Dynamo passes
+    public void DynamoGoesDigging()
+    {
+        if (_isTogglingParticles == false)
+        {
+            _particleDigging.gameObject.SetActive(true);
+            StartCoroutine(ParticleDisablingRoutine(_particleFire, 1.5f));
+        }
+        else
+        {
+            Debug.LogWarning(" Dynamo was still toggling another particle ! wait longer or adjust wai time in code !");
+        }     
+    }
+    public void DynamoStopsDigging()
+    {
+        if (_isTogglingParticles == false)
+        {
+            _particleFire.gameObject.SetActive(true);
+            StartCoroutine(ParticleDisablingRoutine(_particleDigging, 3f));
+        }
+        else
+        {
+            Debug.LogWarning(" Dynamo was still toggling another particle ! wait longer or adjust wai time in code !");
+        }
+    }
+
+
+
+    private IEnumerator ParticleDisablingRoutine(ParticleSystem particleSystemToStop, float waitTimeDisable)
+    {
+        _isTogglingParticles = true;
+
+        particleSystemToStop.Stop();
+
+        yield return new WaitForSeconds(waitTimeDisable);
+
+        particleSystemToStop.gameObject.SetActive(false);
+
+        _isTogglingParticles = false;
     }
 }
