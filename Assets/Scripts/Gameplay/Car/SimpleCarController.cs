@@ -125,13 +125,11 @@ public class SimpleCarController : PlayerController
 
     [Header("Particles")]
     [SerializeField]
-    private GameObject _particleLeftPipe;
+    private ParticleSystem _particleStraight;
     [SerializeField]
-    private GameObject _particleRightPipe;
+    private ParticleSystem _particleLeftJet;
     [SerializeField]
-    private GameObject _particleLeftJet;
-    [SerializeField]
-    private GameObject _particleRightJet;
+    private ParticleSystem _particleRightJet;
 
     [Header("Other")]
     public bool BlockMove;
@@ -438,21 +436,18 @@ public class SimpleCarController : PlayerController
     }
     private IEnumerator ParticleJetsRoutine(float duration = 0.5f)
     {
-        _particleLeftJet.SetActive(true);
-        _particleRightJet.SetActive(true);
+        _particleLeftJet.gameObject.SetActive(true);
+        _particleRightJet.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(duration);
 
-        _particleLeftJet.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-        _particleLeftJet.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
-
-        _particleRightJet.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-        _particleRightJet.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+        _particleLeftJet.Stop();
+        _particleLeftJet.Stop();
 
         yield return new WaitForSeconds(1f);
 
-        _particleLeftJet.SetActive(false);
-        _particleRightJet.SetActive(false);
+        _particleLeftJet.gameObject.SetActive(false);
+        _particleRightJet.gameObject.SetActive(false);
 
     }
     private IEnumerator ToggleFakeGravity(float timeOfFlight, float fakeGravity)
@@ -486,23 +481,17 @@ public class SimpleCarController : PlayerController
 
         _sourceBoost.Play();
 
-        _particleLeftPipe.SetActive(true);
-        _particleRightPipe.SetActive(true);
+        _particleStraight.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(1);
 
         _sourceBoost.Stop();
 
-        _particleLeftPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-        _particleLeftPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
-
-        _particleRightPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-        _particleRightPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+        _particleStraight.Stop();
 
         yield return new WaitForSeconds(1);
 
-        _particleLeftPipe.SetActive(false);
-        _particleRightPipe.SetActive(false);
+        _particleStraight.gameObject.SetActive(false);
 
         IsBoosting = false;
         OnNormalize?.Invoke();
