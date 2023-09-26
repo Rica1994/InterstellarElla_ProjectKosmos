@@ -376,7 +376,7 @@ public class SpeederSpace : PlayerController
     }
     public void LosePickups()
     {
-        _particleManager.CreateParticleLocalSpace(ParticleType.PS_PickupTrigger, this.transform);
+        _particleManager.CreateParticleLocalSpace(ParticleType.PS_Collision, this.transform);
     }
 
 
