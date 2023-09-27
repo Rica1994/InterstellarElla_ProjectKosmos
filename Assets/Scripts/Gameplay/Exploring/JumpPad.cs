@@ -58,6 +58,10 @@ public class JumpPad : MonoBehaviour
     [SerializeField] private List<MeshRenderer> _meshRenderersVisuals = new List<MeshRenderer>();
     [SerializeField] private LineRenderer _lineRendererJump;
 
+    [Header("Toggles invisi-wall")]
+    [SerializeField]
+    private List<InvisibleWall> _invisibleWallsToInfluence = new List<InvisibleWall>();
+
 
     private void Start()
     {
@@ -78,6 +82,15 @@ public class JumpPad : MonoBehaviour
         {
             _swapCamera.gameObject.SetActive(false);
         }
+
+        // turn on invisible walls
+        if (_invisibleWallsToInfluence.Count > 0)
+        {
+            for (int i =0; i < _invisibleWallsToInfluence.Count; i++)
+            {
+                _invisibleWallsToInfluence[i].gameObject.SetActive(true);
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -95,6 +108,12 @@ public class JumpPad : MonoBehaviour
 
                 // disable the character component // store this coroutine, so i could destroy it if i enter new jump pad (should be stored in player)
                 exploringScript.JumpPadCCToggle(_currentTimeOfFlight);
+
+                // toggle invisible wall
+                if (_invisibleWallsToInfluence.Count > 0)
+                {
+                    StartCoroutine(ToggleInvisibleWall());
+                }      
 
                 // set player on centre of the jumpad
                 Vector3 centrePad = new Vector3(this.transform.position.x, exploringScript.transform.position.y, this.transform.position.z);
@@ -127,7 +146,20 @@ public class JumpPad : MonoBehaviour
         _lineRenderer.gameObject.SetActive(false);
     }
 
+    private IEnumerator ToggleInvisibleWall()
+    {
+        for (int i = 0; i < _invisibleWallsToInfluence.Count; i++)
+        {
+            _invisibleWallsToInfluence[i].gameObject.SetActive(false);
+        }
 
+        yield return new WaitForSeconds(_currentTimeOfFlight);
+
+        for (int i = 0; i < _invisibleWallsToInfluence.Count; i++)
+        {
+            _invisibleWallsToInfluence[i].gameObject.SetActive(true);
+        }
+    }
     private IEnumerator ToggleSwapCamera()
     {
         _swapCamera.gameObject.SetActive(true);
