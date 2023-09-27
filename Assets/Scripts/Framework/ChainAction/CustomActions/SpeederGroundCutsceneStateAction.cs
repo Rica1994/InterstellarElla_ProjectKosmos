@@ -87,6 +87,7 @@ public class SpeederGroundCutsceneStateAction : ChainAction
                 }
                 _dynamoCart.enabled = _dynamoSwitch; 
                 _dynamoDistance.enabled = _dynamoSwitch;
+                _dynamoDistance.SpeedFactor = 7;
                 break;
             case State.Gameplay:
                 if (_switchDirection)
@@ -120,6 +121,7 @@ public class SpeederGroundCutsceneStateAction : ChainAction
                 }
                 _dynamoCart.enabled = true;
                 _dynamoDistance.enabled = true;
+                _dynamoDistance.SpeedFactor = 2;
                 break;
         }
     }

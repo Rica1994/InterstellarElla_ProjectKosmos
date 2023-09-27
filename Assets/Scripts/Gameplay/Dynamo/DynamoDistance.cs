@@ -47,6 +47,8 @@ public class DynamoDistance : MonoBehaviour
     private float _dynamoDefaultSpeed;
     private float _startDynamoLerpingSpeed;
 
+    public float SpeedFactor = 1;
+
     private void Awake()
     {
         _dynamo = GetComponent<CinemachineDollyCart>();
@@ -57,55 +59,55 @@ public class DynamoDistance : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _currentDistanceToElla = Mathf.Abs(_ellaSpeederGround.position.z - transform.position.z);
+        MaintainDistance();
 
+        // BELOW: BEN HIS CODE
 
-        if (_currentDistanceToElla < _minMaxDistance.x)
-        {
-            // too close clip play
-            _voiceAudioSource.clip = _tooCloseClip;
-            if (_voiceAudioSource.isPlaying == false) _voiceAudioSource.Play();
+        //_currentDistanceToElla = Mathf.Abs(_ellaSpeederGround.position.z - transform.position.z);
 
-            // Set new target speed
-            _targetSpeed = 80;
-        }
-        else if (_currentDistanceToElla > (_minMaxDistance.y + _minMaxDistance.x) / 2.0f)
-        {
-            _targetSpeed = _dynamoDefaultSpeed;
-        }
-        else if (_currentDistanceToElla > _minMaxDistance.y)
-        {
-            // laughable distance
-            _voiceAudioSource.clip = _laughClip;
-            if (_voiceAudioSource.isPlaying == false) _voiceAudioSource.Play();
+        //if (_currentDistanceToElla < _minMaxDistance.x)
+        //{
+        //    // too close clip play
+        //    _voiceAudioSource.clip = _tooCloseClip;
+        //    if (_voiceAudioSource.isPlaying == false) _voiceAudioSource.Play();
 
-            _targetSpeed = 10;
-        }
+        //    // Set new target speed
+        //    _targetSpeed = 80;
+        //}
+        //else if (_currentDistanceToElla > (_minMaxDistance.y + _minMaxDistance.x) / 2.0f)
+        //{
+        //    _targetSpeed = _dynamoDefaultSpeed;
+        //}
+        //else if (_currentDistanceToElla > _minMaxDistance.y)
+        //{
+        //    // laughable distance
+        //    _voiceAudioSource.clip = _laughClip;
+        //    if (_voiceAudioSource.isPlaying == false) _voiceAudioSource.Play();
 
-        if (Mathf.Abs(_targetSpeed - _dynamo.m_Speed) > 0.1f)
-        {
-            // Calculate the difference between the current speed and the target speed
-            float speedDifference = Mathf.Abs(_dynamo.m_Speed - _targetSpeed);
+        //    _targetSpeed = 10;
+        //}
 
-            // Normalize the difference to get a value between 0 and 1
-            float normalizedDifference = speedDifference / (_targetSpeed - _dynamo.m_Speed + Mathf.Epsilon);
+        //if (Mathf.Abs(_targetSpeed - _dynamo.m_Speed) > 0.1f)
+        //{
+        //    // Calculate the difference between the current speed and the target speed
+        //    float speedDifference = Mathf.Abs(_dynamo.m_Speed - _targetSpeed);
 
-            // Use the normalized difference as the lerp factor
-            float lerpFactor = Time.deltaTime * _speedChangeDuration * normalizedDifference;
+        //    // Normalize the difference to get a value between 0 and 1
+        //    float normalizedDifference = speedDifference / (_targetSpeed - _dynamo.m_Speed + Mathf.Epsilon);
 
-            // Perform the lerp
-            _dynamo.m_Speed = Mathf.Lerp(_dynamo.m_Speed, _targetSpeed, lerpFactor);
-        }
+        //    // Use the normalized difference as the lerp factor
+        //    float lerpFactor = Time.deltaTime * _speedChangeDuration * normalizedDifference;
 
-        var dif = Mathf.Abs(_lastDynamoSpeed - _dynamo.m_Speed);
-        if (dif > 2.0f)
-        {
-            _lastDynamoSpeed = _dynamo.m_Speed;
-            _engineAudioSource.pitch = _defaultEnginePitch * (_dynamo.m_Speed / _dynamoDefaultSpeed);
-        }
+        //    // Perform the lerp
+        //    _dynamo.m_Speed = Mathf.Lerp(_dynamo.m_Speed, _targetSpeed, lerpFactor);
+        //}
 
-
-
+        //var dif = Mathf.Abs(_lastDynamoSpeed - _dynamo.m_Speed);
+        //if (dif > 2.0f)
+        //{
+        //    _lastDynamoSpeed = _dynamo.m_Speed;
+        //    _engineAudioSource.pitch = _defaultEnginePitch * (_dynamo.m_Speed / _dynamoDefaultSpeed);
+        //}
     }
 
     // call thesee from triggers Dynamo passes
@@ -147,5 +149,20 @@ public class DynamoDistance : MonoBehaviour
         particleSystemToStop.gameObject.SetActive(false);
 
         _isTogglingParticles = false;
+    }
+
+    private void MaintainDistance()
+    {
+        _currentDistanceToElla = Mathf.Abs(_ellaSpeederGround.position.z - transform.position.z);
+        if (_currentDistanceToElla < 5)
+        {
+            _dynamo.m_Speed = 50;
+
+        }
+        else
+        {
+            float distanceDifference = _minMaxDistance.x - _currentDistanceToElla;
+            _dynamo.m_Speed = distanceDifference * SpeedFactor;
+        }
     }
 }
