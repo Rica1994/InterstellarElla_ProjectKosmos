@@ -14,6 +14,7 @@ public class TriggerVisualizingTool : EditorWindow
     private List<RockWallNew> _rockWallNews = new List<RockWallNew>();
     private List<AnimatedEventTrigger> _animatedEventTriggers = new List<AnimatedEventTrigger>();
     private List<AutoJumpMaster> _autoJumpMasters = new List<AutoJumpMaster>();
+    private List<CheckpointTrigger> _checkpointTriggers = new List<CheckpointTrigger>();
 
 
     [MenuItem("Window/Trigger visualizer")]
@@ -121,6 +122,29 @@ public class TriggerVisualizingTool : EditorWindow
             for (int i = 0; i < _autoJumpMasters.Count; i++)
             {
                 _autoJumpMasters[i].ToggleAutoJumpVisuals(false);
+            }
+
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+
+        if (GUILayout.Button("SHOW Visuals --- CheckpointTriggers"))
+        {
+            _checkpointTriggers = FindObjectsOfType<CheckpointTrigger>().ToList();
+
+            for (int i = 0; i < _checkpointTriggers.Count; i++)
+            {
+                _checkpointTriggers[i].ToggleVisuals(true);
+            }
+
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+        if (GUILayout.Button("HIDE Visuals --- CheckpointTriggers"))
+        {
+            _checkpointTriggers = FindObjectsOfType<CheckpointTrigger>().ToList();
+
+            for (int i = 0; i < _checkpointTriggers.Count; i++)
+            {
+                _checkpointTriggers[i].ToggleVisuals(false);
             }
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());

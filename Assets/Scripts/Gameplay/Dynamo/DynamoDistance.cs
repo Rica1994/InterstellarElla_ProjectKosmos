@@ -6,8 +6,8 @@ using UnityEngine;
 public class DynamoDistance : MonoBehaviour
 {
     [SerializeField]
-    private float _distanceScale = 1;
-    private float _distance;
+    private Vector2 _minMaxDistance = new Vector2(5.0f, 70.0f);
+
     private CinemachineDollyCart _dynamo;
     private float _targetSpeed = 41;
     private float _speedChangeStartTime;
@@ -16,8 +16,6 @@ public class DynamoDistance : MonoBehaviour
 
     [SerializeField]
     private Transform _ellaSpeederGround;
-
-    public bool InverseDistance = false;
 
     [Header("Particles and Audio")]
     [SerializeField]
@@ -28,60 +26,86 @@ public class DynamoDistance : MonoBehaviour
     [SerializeField]
     private bool _isTogglingParticles;
 
+    [SerializeField]
+    private AudioSource _engineAudioSource;
+
+    [SerializeField]
+    private AudioSource _voiceAudioSource;
+
+    [SerializeField]
+    private AudioClip _laughClip;
+
+    [SerializeField]
+    private AudioClip _scaredClip;
+
+    [SerializeField]
+    private AudioClip _tooCloseClip;
+
+    private float _currentDistanceToElla;
+    private float _defaultEnginePitch;
+    private float _lastDynamoSpeed;
+    private float _dynamoDefaultSpeed;
+    private float _startDynamoLerpingSpeed;
 
     private void Awake()
     {
         _dynamo = GetComponent<CinemachineDollyCart>();
+        _dynamoDefaultSpeed = _dynamo.m_Speed;
+        _defaultEnginePitch = _engineAudioSource.pitch;
     }
 
 
     private void FixedUpdate()
     {
-        if (InverseDistance)
-        {
-            _distance = _ellaSpeederGround.position.z - transform.position.z;
+        _currentDistanceToElla = Mathf.Abs(_ellaSpeederGround.position.z - transform.position.z);
 
-        }
-        else
-        {
-            _distance = transform.position.z - _ellaSpeederGround.position.z;
-        }
 
-        if (_distance < 5 * _distanceScale)
+        if (_currentDistanceToElla < _minMaxDistance.x)
         {
+            // too close clip play
+            _voiceAudioSource.clip = _tooCloseClip;
+            if (_voiceAudioSource.isPlaying == false) _voiceAudioSource.Play();
+
+            // Set new target speed
             _targetSpeed = 80;
         }
-        else if (_distance < 10 * _distanceScale)
+        else if (_currentDistanceToElla > (_minMaxDistance.y + _minMaxDistance.x) / 2.0f)
         {
-            _targetSpeed = 70;
+            _targetSpeed = _dynamoDefaultSpeed;
         }
-        else if (_distance < 20 * _distanceScale)
+        else if (_currentDistanceToElla > _minMaxDistance.y)
         {
-            _targetSpeed = 50;
-        }
-        else if (_distance <= 35 * _distanceScale) // added this condition for clarity, though it's optional
-        {
-            _targetSpeed = 41; // default speed if distance is between 20 and 50
-        }
-        else if (_distance <= 50 * _distanceScale) // distance is between 51 and 65
-        {
-            _targetSpeed = 25;
-        }
-        else if (_distance <= 70 * _distanceScale) // distance is between 66 and 90
-        {
+            // laughable distance
+            _voiceAudioSource.clip = _laughClip;
+            if (_voiceAudioSource.isPlaying == false) _voiceAudioSource.Play();
+
             _targetSpeed = 10;
         }
-        else // distance is greater than 90
+
+        if (Mathf.Abs(_targetSpeed - _dynamo.m_Speed) > 0.1f)
         {
-            _targetSpeed = 0;
+            // Calculate the difference between the current speed and the target speed
+            float speedDifference = Mathf.Abs(_dynamo.m_Speed - _targetSpeed);
+
+            // Normalize the difference to get a value between 0 and 1
+            float normalizedDifference = speedDifference / (_targetSpeed - _dynamo.m_Speed + Mathf.Epsilon);
+
+            // Use the normalized difference as the lerp factor
+            float lerpFactor = Time.deltaTime * _speedChangeDuration * normalizedDifference;
+
+            // Perform the lerp
+            _dynamo.m_Speed = Mathf.Lerp(_dynamo.m_Speed, _targetSpeed, lerpFactor);
         }
 
-        if (_dynamo.m_Speed != _targetSpeed)
+        var dif = Mathf.Abs(_lastDynamoSpeed - _dynamo.m_Speed);
+        if (dif > 2.0f)
         {
-            float elapsedTime = Time.time;
-            float t = Mathf.Clamp01(elapsedTime / _speedChangeDuration);
-            _dynamo.m_Speed = Mathf.Lerp(_dynamo.m_Speed, _targetSpeed, Time.deltaTime * t); 
+            _lastDynamoSpeed = _dynamo.m_Speed;
+            _engineAudioSource.pitch = _defaultEnginePitch * (_dynamo.m_Speed / _dynamoDefaultSpeed);
         }
+
+
+
     }
 
     // call thesee from triggers Dynamo passes
@@ -95,7 +119,7 @@ public class DynamoDistance : MonoBehaviour
         else
         {
             Debug.LogWarning(" Dynamo was still toggling another particle ! wait longer or adjust wai time in code !");
-        }     
+        }
     }
     public void DynamoStopsDigging()
     {
