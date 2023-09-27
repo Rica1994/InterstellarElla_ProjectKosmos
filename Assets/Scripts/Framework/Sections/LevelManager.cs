@@ -47,7 +47,9 @@ public class LevelManager : Service
 
     private int _currentSectionIndex;
 
+    // store a new checkpoint gameobject on here when entering trigger
     private GameObject _currentCheckpoint;
+    public GameObject CurrentCheckpoint => _currentCheckpoint;
     
     private string[] _sceneStringArrray;
 
@@ -75,7 +77,7 @@ public class LevelManager : Service
     private void Awake()
     {
         // subscribe endgame triggers
-        _endGameTrigger.OnTriggered += OnEndGameTriggered;
+        if (_endGameTrigger != null) _endGameTrigger.OnTriggered += OnEndGameTriggered;
 
         // subscribe death triggers
         List<DeathTrigger> deathTriggers = GetComponentsInChildren<DeathTrigger>().ToList();
@@ -90,29 +92,40 @@ public class LevelManager : Service
         if (_firstCheckPoint == null)
         {
             var newSpawnPoint = new GameObject("Place Holder CheckPoint");
-            var player = FindAnyObjectByType<PlayerController>().gameObject;
-            newSpawnPoint.transform.SetPositionAndRotation(player.transform.position, player.transform.rotation);
-            _currentCheckpoint = newSpawnPoint;
-            Debug.LogWarning("First checkPoint not attached! Using Players transform instead");
+            if (FindObjectOfType<PlayerController>())
+            {
+                var player = FindObjectOfType<PlayerController>().gameObject;
+                newSpawnPoint.transform.SetPositionAndRotation(player.transform.position, player.transform.rotation);
+                _currentCheckpoint = newSpawnPoint;
+                Debug.LogWarning("First checkPoint not attached! Using Players transform instead");
+            }
         }
         else _currentCheckpoint = _firstCheckPoint;
     }
 
     private void Start()
     {
-  //     _sceneStringArrray = SceneManager.GetActiveScene().name.Split("_"[0]);
-  //     _levelIndexString = DecodeSceneString()[0].ToString();
-  //     _levelSceneIndexString = DecodeSceneString()[1].ToString();
+        //_sceneStringArrray = SceneManager.GetActiveScene().name.Split("_"[0]);
+        //_levelIndexString = DecodeSceneString()[0].ToString();
+        //_levelSceneIndexString = DecodeSceneString()[1].ToString();
 
-  //     _sectionIndex = 0;
-  //     _sectionIndexString = _sectionIndex.ToString();
+        //_sectionIndex = 0;
+        //_sectionIndexString = _sectionIndex.ToString();
 
-  //     _sectionNameBase = _sectionNamePrefix + "_" + _levelIndexString + "_" + _levelSceneIndexString;
-  //     _sectionNameToLoad = _sectionNameBase + "_" + _sectionIndexString;
+        //_sectionNameBase = _sectionNamePrefix + "_" + _levelIndexString + "_" + _levelSceneIndexString;
+        //_sectionNameToLoad = _sectionNameBase + "_" + _sectionIndexString;
 
-  //     //Debug.Log(_sectionNameToLoad + " first section im trying to load");
+        ////Debug.Log(_sectionNameToLoad + " first section im trying to load");
 
-  //     LoadSection();
+        //LoadSection();
+
+
+        // subscribe all checkpoint triggers
+        List<CheckpointTrigger> checkpointTriggers = this.GetComponentsInChildren<CheckpointTrigger>().ToList();
+        for (int i = 0; i < checkpointTriggers.Count; i++)
+        {
+            checkpointTriggers[i].OnTriggered += OnCheckpointTriggered;
+        }
     }
 
     private void Update()
@@ -160,7 +173,7 @@ public class LevelManager : Service
             }
         }
 
-        // subscribe checkpoints 
+        // subscribe checkpoints of loaded section 
         List<CheckpointTrigger> checkpointTriggers = newSection.GetComponentsInChildren<CheckpointTrigger>().ToList();
         CheckpointTrigger currentCheckpointTrigger = null;
         for (int i = 0; i < checkpointTriggers.Count; i++)
@@ -200,17 +213,22 @@ public class LevelManager : Service
     {
         if (hasEntered && _hasEndedLevel == false)
         {
-            _hasEndedLevel = true;
-            ServiceLocator.Instance.GetService<GameManager>().EndGame();
+            EndLevel();
         }
     }
+    public void EndLevel()
+    {
+        _hasEndedLevel = true;
+        ServiceLocator.Instance.GetService<GameManager>().EndGame();
+    }
+
     private void OnDeathTriggered(TriggerHandler trigger, Collider other, bool hasEntered)
     {
         if (other.tag == "Player") // fix this with correct layer matrix !!!!
         {
             if (hasEntered)
             {
-                var tempPlayer = FindAnyObjectByType<PlayerController>().gameObject;
+                var tempPlayer = FindObjectOfType<PlayerController>().gameObject;
                 ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint);
             }
         }
@@ -277,8 +295,21 @@ public class LevelManager : Service
         if (_amountTimesHit >= _maxAmountHitsForRespawn)
         {
             Debug.Log("Player Hit more than " + _maxAmountHitsForRespawn + " times!");
-            var tempPlayer = FindAnyObjectByType<PlayerController>().gameObject;
+            var tempPlayer = FindObjectOfType<PlayerController>().gameObject;
             ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint, true);
         }
+    }
+    public void PlayerHitObstacleSpace(SpeederSpace speederSpace)
+    {
+        _timeSinceLastHit = 0.0f;
+
+        // play sound
+        speederSpace.PlayCollisionSound();
+
+        // play animation
+        speederSpace.PlayCollisionAnimation();
+
+        // lose pickups
+        speederSpace.LosePickups();
     }
 }

@@ -23,6 +23,7 @@ public class TimelineChainAction : ChainAction
 
         if (_skipButton != null)
         {
+            _skipButton.playableDirector = _playableDirector;
             _skipButton.transform.GetChild(0).gameObject.SetActive(true);
         }
     }

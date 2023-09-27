@@ -14,9 +14,10 @@ public class Maggie : MonoBehaviour
     [SerializeField]
     private AnimationClip _popDownClip;
     
-    private const string popDownTrigger = "PopDown";
-    private const string _happyTrigger = "Happy";
-    private const string _sadTrigger = "Sad";
+    private const string POP_UP_TRIGGER = "PopUp";
+    private const string POP_DOWN_TRIGGER = "PopDown";
+    private const string HAPPY_TRIGGER = "Happy";
+    private const string SAD_TRIGGER = "Sad";
     
     private float _popUpLength = 2.0f;
     private float _popDownLength = 2.0f;
@@ -25,26 +26,32 @@ public class Maggie : MonoBehaviour
     public float PopUpLength => _popUpLength;
     public float PopDownLength => _popDownLength;
 
-
     private void Awake()
     {
         _popUpLength = _popUpClip.length;
         _popDownLength = _popDownClip.length;
     }
 
+    public void PopUp()
+    {
+        Debug.Log(" Gone into pop-up ");
+        Debug.Log(_animator.GetBool(POP_UP_TRIGGER) + " <---- should be false , found it ?");
+        _animator.SetTrigger(POP_UP_TRIGGER);
+        Debug.Log(_animator.GetBool(POP_UP_TRIGGER) + " <---- should be TRUE , found it ?");
+    }
+
     public void PopDown()
     {
-     //   _animator.GetCurrentAnimatorClipInfo()
-        _animator.SetTrigger(popDownTrigger);
+        _animator.SetTrigger(POP_DOWN_TRIGGER);
     }
 
     public void MakeHappy()
     {
-        _animator.SetTrigger(_happyTrigger);
+        _animator.SetTrigger(HAPPY_TRIGGER);
     }
 
     public void MakeSad()
     {
-        _animator.SetTrigger(_sadTrigger);
+        _animator.SetTrigger(SAD_TRIGGER);
     }
 }

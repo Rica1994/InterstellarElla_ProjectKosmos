@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using UnityCore.Menus;
 using UnityCore.Scene;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuManager : Service
 {
     [Header("Included Levels")]
     [SerializeField]
-    private bool _1 = true;
+    private bool _1_Mars = true;
     [SerializeField]
-    private bool _2 = true;
+    private bool _2_Pluto = true;
     [SerializeField]
-    private bool _3 = true;
+    private bool _3_Venus = true;
     [SerializeField]
-    private bool _4 = true;
+    private bool _4_Saturn = true;
     [SerializeField]
-    private bool _5 = true;
+    private bool _5_Mercury = true;
 
     private bool[] _levelsIncluded = new bool[5];
 
@@ -69,11 +70,11 @@ public class MainMenuManager : Service
 
     private void Awake()
     {
-        _levelsIncluded[0] = _1;
-        _levelsIncluded[1] = _2;
-        _levelsIncluded[2] = _3;
-        _levelsIncluded[3] = _4;
-        _levelsIncluded[4] = _5;
+        _levelsIncluded[0] = _1_Mars;
+        _levelsIncluded[1] = _2_Pluto;
+        _levelsIncluded[2] = _3_Venus;
+        _levelsIncluded[3] = _4_Saturn;
+        _levelsIncluded[4] = _5_Mercury;
     }
 
     private void Start()
@@ -116,26 +117,31 @@ public class MainMenuManager : Service
             // zoom camera (needs to be animation
             _menuAnimator.CameraAnimation.Play(_camZoom);
 
-            SceneType sceneToLoad = SceneType.None;
-            switch (ScenesToLoad)
-            {
-                case SceneChoice.Work:
-                    sceneToLoad = ChooseCorrectSceneWork();
-                    break;
-                case SceneChoice.Build:
-                    sceneToLoad = ChooseCorrectSceneBuild();
-                    break;
-            }
+            SceneType sceneToLoad = ChooseCorrectSceneWork();
+           // switch (ScenesToLoad)
+           // {
+           //     case SceneChoice.Work:
+           //         sceneToLoad = ChooseCorrectSceneWork();
+           //         break;
+           //     case SceneChoice.Build:
+           //         sceneToLoad = ChooseCorrectSceneBuild();
+           //         break;
+           // }
 #if UNITY_EDITOR
             // load the loading scene first, then the actual scene for gameplay
             _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);
-#elif UNITY_WEBGL
-                    string mainFolder = $"../{GetPlanetNameFromEnum(sceneToLoad)}";
-        string buildString = $"{sceneToLoad}";
-        
-        Application.ExternalEval($"window.location.href = '{mainFolder + buildString + ".html"}';");
+#elif UNITY_WEBGL && !UNITY_EDITOR
+            _sceneController.Load(sceneToLoad);
 #endif
         }
+    }
+
+    private int GetLevelsToGoUp(string sceneName)
+    {
+        if (sceneName.Contains("Level") || sceneName.Contains("Quiz"))
+            return 2; // For scenes like S_Level_1_0_Introscene, go two levels up
+        else
+            return 0; // Default case, stay in the current directory
     }
 
     public string GetPlanetNameFromEnum(SceneType sceneType)
@@ -152,7 +158,7 @@ public class MainMenuManager : Service
         else if (sceneTypeString.Contains("Level_5"))
             return "Mercury/";
         else if (sceneTypeString.Contains("Quiz"))
-            return "";
+            return "Quiz/";
         else return "";
     }
 
@@ -260,15 +266,15 @@ public class MainMenuManager : Service
         switch (_levelIndex)
         {
             case 0:
-                return SceneType.S_Mars_1_0_IntroCutscene;
+                return SceneType.S_Level_1_Intro;
             case 1:
-                return SceneType.S_Level_2_0_Work;
+                return SceneType.S_Level_2_Intro;
             case 2:
-                return SceneType.S_Level_3_0_Work;
+                return SceneType.S_Level_3_Intro;
             case 3:
-                return SceneType.S_Level_4_0_Work;
+                return SceneType.S_Level_4_Intro;
             case 4:
-                return SceneType.S_Level_5_0_Work;
+                return SceneType.S_Level_5_Intro;
             default:
                 return SceneType.None;
         }
@@ -278,15 +284,15 @@ public class MainMenuManager : Service
         switch (_levelIndex)
         {
             case 0:
-                return SceneType.S_Mars_1_0_IntroCutscene;
+                return SceneType.S_Level_1_Intro;
             case 1:
-                return SceneType.S_Level_2_0_Build;
+                return SceneType.S_Level_2_Intro;
             case 2:
-                return SceneType.S_Level_3_0_Build;
+                return SceneType.S_Level_3_Intro;
             case 3:
-                return SceneType.S_Level_4_0_Build;
+                return SceneType.S_Level_4_Intro;
             case 4:
-                return SceneType.S_Level_4_0_Build;
+                return SceneType.S_Level_5_Intro;
             default:
                 return SceneType.None;
         }

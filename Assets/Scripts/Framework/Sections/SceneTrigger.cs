@@ -7,6 +7,9 @@ public class SceneTrigger : MonoBehaviour
 {
     private LevelManager _levelManager;
 
+    [SerializeField]
+    private GameObject _visual;
+
     private void OnEnable()
     {
         _levelManager = ServiceLocator.Instance.GetService<LevelManager>();
@@ -16,5 +19,10 @@ public class SceneTrigger : MonoBehaviour
     {
         _levelManager = ServiceLocator.Instance.GetService<LevelManager>();
         ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(_levelManager.NextScene, null, false, UnityCore.Menus.PageType.Loading);
-    }   
+    }
+
+    public void ToggleVisuals(bool showThem = true)
+    {
+        _visual.SetActive(showThem);
+    }
 }

@@ -37,7 +37,7 @@ public class ChainAction : MonoBehaviour
         public virtual bool IsCompleted()
         {
             if (_useUserBasedAction) return _userBasedActionCompleted;
-            return _elapsedTime >= _maxTime;
+            return _elapsedTime >= _maxTime + Time.deltaTime;
         }
         
         public virtual void OnEnter()

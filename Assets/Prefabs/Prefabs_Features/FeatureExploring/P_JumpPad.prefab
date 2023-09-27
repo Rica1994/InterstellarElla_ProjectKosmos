@@ -148,7 +148,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -173,7 +172,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2714208971113297225
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +227,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -254,7 +251,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2714208971152359479
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,7 +360,6 @@ LineRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -502,7 +497,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -527,7 +521,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2714208971452470532
 GameObject:
   m_ObjectHideFlags: 0
@@ -621,6 +614,11 @@ MonoBehaviour:
     PitchLowerLimitAddition: 0.2
     PitchUpperLimitAddition: 0.2
   _mySoundIdleSource: {fileID: 1464813778677879919}
+  _meshRenderersVisuals:
+  - {fileID: 8040067469198582789}
+  - {fileID: 2714208970312801572}
+  - {fileID: 2714208971443587247}
+  _lineRendererJump: {fileID: 2714208971218197210}
 --- !u!82 &1464813778677879919
 AudioSource:
   m_ObjectHideFlags: 0
@@ -630,7 +628,8 @@ AudioSource:
   m_GameObject: {fileID: 2714208971452470532}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 4276249108516460269, guid: a4c1ceea24bc10643a26cad843440403, type: 2}
+  OutputAudioMixerGroup: {fileID: 4276249108516460269, guid: a4c1ceea24bc10643a26cad843440403,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: f195ccc772472364ca58654eccc375cc, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.1
@@ -817,7 +816,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -842,4 +840,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}

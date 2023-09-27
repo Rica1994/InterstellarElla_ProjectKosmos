@@ -126,7 +126,7 @@ public class AutoJumpEntryTrigger : MonoBehaviour
                 if (_autoJumpMaster.IsAutomatic == true)
                 {                   
                     // if( (SPEED >= threshHold) && (looking in the right angle))   ====>   activate jump
-                    if (car.Rigid.velocity.magnitude >= 4f)
+                    if (_autoJumpMaster.RequiresSpeedCheck == true && car.Rigid.velocity.magnitude >= 4f || _autoJumpMaster.RequiresSpeedCheck == false)
                     {
                         if (_autoJumpMaster.IsNormalPlayerJump == false)
                         {
@@ -223,10 +223,29 @@ public class AutoJumpEntryTrigger : MonoBehaviour
         //Instantiate(_spawnRight, _entryPositionPlayer, Quaternion.identity);
     }
 
+    private void SetExitPositionDefault()
+    {
+        _entryPositionPlayer = _entryCollider.transform.position;
+        _exitPositionPlayer = _exitCollider.transform.position;
+    }
+
+
     public void CreateJumpCurve(PlayerController player)
     {
         // find and set the exit position
         SetExitPosition(player);
+        // create the arc for a perfect jump
+        _autoJumpMaster.CalculateJumpWithFakeGravity(_entryPositionPlayer, _exitPositionPlayer);
+    }
+
+
+
+
+    // for drawing one when not playing
+    public void CreateJumpCurveDefault()
+    {
+        // find and set the exit position
+        SetExitPositionDefault();
         // create the arc for a perfect jump
         _autoJumpMaster.CalculateJumpWithFakeGravity(_entryPositionPlayer, _exitPositionPlayer);
     }

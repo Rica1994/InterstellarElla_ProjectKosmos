@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -9,28 +10,28 @@ using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
 public class SimpleCarController : PlayerController
-{
-    [SerializeField] private Transform _transformFollower;
-
-    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
-
-    private float m_steeringAngle;
-
-    public WheelCollider frontDriverW, frontPassengerW;
-    public WheelCollider rearDriverW, rearPassengerW;
-    public Transform frontDriverT, frontPassengerT;
-    public Transform rearDriverT, rearPassengerT;
+{  
+    [Header("Wheel collider references")]
+    public WheelCollider frontDriverW;
+    public WheelCollider frontPassengerW;
+    public WheelCollider rearDriverW;
+    public WheelCollider rearPassengerW;
+    public Transform frontDriverT;
+    public Transform frontPassengerT;
+    public Transform rearDriverT;
+    public Transform rearPassengerT;
 
     [SerializeField]
     private Transform _centerOfMass;
 
+    [Header("Car values")]
     // how fast can we do a uturn?
     public float maxSteerAngle = 30;
-
     // how fast we can go. (motor torque)
     public float motorForce = 50;
-
     public float brakeForce = 300.0f;
+
+    private float m_steeringAngle;
 
     /// <summary>
     /// Calculates the path for the car.
@@ -41,31 +42,29 @@ public class SimpleCarController : PlayerController
     private LayerMask _ignoreMe;
 
     private float _brakeTorque = 0.0f;
-
     private float _motorTorque = 0.0f;
 
     private Vector3 _resetPosition;
     private Quaternion _resetRotation;
 
     [SerializeField]
-    private float _boostStrength = 4f, _boostCooldownDuration;
-
-    private float _maxSpeedBoosted;
-    private float _speed;
+    private float _rotationSpeed = 0.5f;
+    [SerializeField]
+    private float _boostStrength = 4f;
+    [SerializeField]
+    private float _boostCooldownDuration = 3f;
     [SerializeField]
     private float _maxSpeed = 8; // top 2 max speeds get assigned to this value when needed
 
-    private bool _hasBoostedRecently, _boostIsDeclining;
+    private float _maxSpeedBoosted;
+    private float _speed;
+
     public bool BoostCoolingDown;
     public bool IsBoosting; // bool used for checking collisions with rock walls
-
+    private bool _hasBoostedRecently, _boostIsDeclining;
+      
     private Rigidbody _rigidbody;
     public Rigidbody Rigid => _rigidbody;
-
-    [SerializeField]
-    private GameObject _particleLeftPipe, _particleRightPipe;
-    [SerializeField]
-    private GameObject _particleLeftJet, _particleRightJet;
 
     //   private RockWall[] _rockWallScripts;
     private Collider[] _rockWallColliders;
@@ -77,22 +76,23 @@ public class SimpleCarController : PlayerController
     private bool _movingReverse;
 
     public delegate void BoostActive();
-
     public static event BoostActive OnBoost;
 
     public delegate void NormalSpeed();
-
     public static event NormalSpeed OnNormalize;
 
     private Vector2 _input;
-    public Transform TransformFollower => _transformFollower;
-
-    public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
 
 
-    public Coroutine ToggleFakeGravityRoutine;
-    //private GravityComponent _gravityComponent;
-    private bool _isPerfectJumping;
+    [Header("Audio stuff")]
+    [SerializeField]
+    private AudioSource _sourceBoost;
+    [SerializeField]
+    private AudioElement _soundHop, _soundHopBig;
+
+    private AudioController _audioController;
+
+
     [Header("custom gravity")]
     [SerializeField]
     private bool _useCustomGravity;
@@ -101,6 +101,38 @@ public class SimpleCarController : PlayerController
     private float _gravityValue = -9.81f;
     public float GravityValue => _gravityValue;
 
+    public bool IsInPerfectJump;
+
+    public Coroutine ToggleFakeGravityRoutine;
+    //private GravityComponent _gravityComponent;
+    private bool _isPerfectJumping;
+
+    [Header("Camera managing stuff")]
+    [SerializeField] private Camera CameraMainBrain;
+    [SerializeField] private Transform _transformFollower;
+    public Transform TransformFollower => _transformFollower;
+    [SerializeField]
+    private FollowCamera _followPlayerObject;
+    [SerializeField]
+    private FixInputOrientation _fixInputOrient;
+
+    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
+    public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
+
+    private VirtualCameraManagerExploring _virtualCamManager;
+
+    public GameObject CamerasParent;
+
+    [Header("Particles")]
+    [SerializeField]
+    private ParticleSystem _particleStraight;
+    [SerializeField]
+    private ParticleSystem _particleLeftJet;
+    [SerializeField]
+    private ParticleSystem _particleRightJet;
+
+    [Header("Other")]
+    public bool BlockMove;
 
 
     #region Unity Functions
@@ -143,6 +175,9 @@ public class SimpleCarController : PlayerController
         {
             _rigidbody.useGravity = true;
         }
+
+        _audioController = ServiceLocator.Instance.GetService<AudioController>();
+        _virtualCamManager = ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>();
     }
     private void OnEnable()
     {
@@ -194,7 +229,7 @@ public class SimpleCarController : PlayerController
     }
     private void OnBoostInput()
     {
-        if (BoostCoolingDown == false)
+        if (BoostCoolingDown == false && IsInPerfectJump == false)
         {
             //  RemoveBarriers();
             Boost();
@@ -202,7 +237,8 @@ public class SimpleCarController : PlayerController
     }
     private void GetInput()
     {
-        if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0)
+        // if no input is detected...
+        if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0 || BlockMove == true)
         {
             _motorTorque = 0.0f;
             _brakeTorque = motorForce;
@@ -211,12 +247,14 @@ public class SimpleCarController : PlayerController
             _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
             _rigidbody.angularVelocity = Vector3.zero;  //new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
         }
-        else if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) <= 0.18f && IsBoosting == false) // if slight input is being made...
+        // else if slight input is being made...
+        else if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) <= 0.18f && IsBoosting == false) 
         {
             _motorTorque = motorForce / 2;
             _brakeTorque = motorForce / 2;
         }
-        else // if major input...
+        // else if major input...
+        else
         {
             _rigidbody.constraints = RigidbodyConstraints.None;
 
@@ -226,19 +264,25 @@ public class SimpleCarController : PlayerController
     }
     private void Steer()
     {
+        if (BlockMove == true)
+        {
+            return;
+        }
+
         // Slight rotation towards the target of this transform
         if (_input.magnitude > 0.1f)
         {
             // Calculate the target rotation based on the input values.
             Quaternion rotation;
             var rotationAngle = Mathf.Atan2(_input.x, _input.y) * Mathf.Rad2Deg;
-            rotation = Quaternion.Euler(0.0f, rotationAngle, 0.0f);
+            rotation = Quaternion.Euler(0.0f, rotationAngle, 0.0f);  // - should x also not rotate depending on ground plane?
 
             // Create the target rotation for smooth rotation
-            var targetRot = rotation * _transformFollower.rotation;
-
+            //var targetRot = rotation * _followPlayerObject.ObjectToFollowPlayer.transform.rotation;  // NOT working properly on angles
+            var targetRot = rotation * _fixInputOrient.transform.rotation;
             // Calculate the difference in angle between the current and target forward vectors
-            var newForward = rotation * _transformFollower.forward;
+            //var newForward = rotation * _followPlayerObject.ObjectToFollowPlayer.transform.forward;  // NOT working properly on angles
+            var newForward = rotation * _fixInputOrient.transform.forward;
 
             // Project the forward vectors onto the horizontal plane
             var flatForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
@@ -249,7 +293,9 @@ public class SimpleCarController : PlayerController
             m_steeringAngle = Mathf.Clamp(currentAngleDiffTarget, -maxSteerAngle, maxSteerAngle) * 0.8f;
 
             // Apply the target rotation smoothly
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 0.1f);
+            //transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 0.1f);
+            var step = (360) * Time.deltaTime * _rotationSpeed;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, step);
         }
 
         // Apply steering angles to the wheels if not moving in reverse
@@ -299,6 +345,12 @@ public class SimpleCarController : PlayerController
     }
     private void LimitSpeed()
     {
+        if (IsInPerfectJump == true)
+        {
+            // disable limiting speed on perfect jumps
+            return;
+        }
+
         // checks for wether boost was used recently, and whether the car should slow down again (dont want it to go too fast)
         if (_hasBoostedRecently == true)
         {
@@ -326,7 +378,10 @@ public class SimpleCarController : PlayerController
         _rigidbody.AddForce(transform.forward * _boostStrength, ForceMode.VelocityChange);
 
         //      Camera.main.GetComponentInParent<FollowCam>().ZoomOut();
-        StartCoroutine(ZoomOut());
+        //StartCoroutine(ZoomOut());
+        _virtualCamManager.ZoomOutCameraDistance(1.6f, 0.05f, 2);
+        _virtualCamManager.ZoomOutCameraFOV();
+        
 
         StartCoroutine(ActivateBoostCooldown()); // cooldown period
         StartCoroutine(DecreaseMaxSpeed()); // sets booleans regarding speed / activates particles        
@@ -361,29 +416,45 @@ public class SimpleCarController : PlayerController
             transform.rotation = Quaternion.Slerp(transform.rotation, RunnerRotation, Time.deltaTime * 10);
         }
     }
+    private Vector3 AdjustVelocityToSlope(Vector3 velocity)
+    {
+        var ray = new Ray(transform.position, Vector3.down);
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 1.1f))
+        {
+            var slopeDirection = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
+            var adjustedVelocity = slopeDirection * velocity;
+
+            if (adjustedVelocity.y < 0)
+            {
+                //Debug.Log("returning slope vel");
+                return adjustedVelocity;
+            }
+        }
+
+        return velocity;
+    }
     private IEnumerator ParticleJetsRoutine(float duration = 0.5f)
     {
-        _particleLeftJet.SetActive(true);
-        _particleRightJet.SetActive(true);
+        _particleLeftJet.gameObject.SetActive(true);
+        _particleRightJet.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(duration);
 
-        _particleLeftJet.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-        _particleLeftJet.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
-
-        _particleRightJet.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-        _particleRightJet.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+        _particleLeftJet.Stop();
+        _particleLeftJet.Stop();
 
         yield return new WaitForSeconds(1f);
 
-        _particleLeftJet.SetActive(false);
-        _particleRightJet.SetActive(false);
+        _particleLeftJet.gameObject.SetActive(false);
+        _particleRightJet.gameObject.SetActive(false);
 
     }
     private IEnumerator ToggleFakeGravity(float timeOfFlight, float fakeGravity)
     {
         _useCustomGravity = true;
         _rigidbody.useGravity = false;
+        IsInPerfectJump = true;
 
         float originalPlayerGravity = _gravityValue;
 
@@ -400,6 +471,7 @@ public class SimpleCarController : PlayerController
 
         _useCustomGravity = false;
         _rigidbody.useGravity = true;
+        IsInPerfectJump = false;
     }
     private IEnumerator DecreaseMaxSpeed()
     {
@@ -407,21 +479,19 @@ public class SimpleCarController : PlayerController
         IsBoosting = true;
         OnBoost?.Invoke();
 
-        _particleLeftPipe.SetActive(true);
-        _particleRightPipe.SetActive(true);
+        _sourceBoost.Play();
+
+        _particleStraight.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(1);
 
-        _particleLeftPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-        _particleLeftPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+        _sourceBoost.Stop();
 
-        _particleRightPipe.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
-        _particleRightPipe.transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+        _particleStraight.Stop();
 
         yield return new WaitForSeconds(1);
 
-        _particleLeftPipe.SetActive(false);
-        _particleRightPipe.SetActive(false);
+        _particleStraight.gameObject.SetActive(false);
 
         IsBoosting = false;
         OnNormalize?.Invoke();
@@ -469,6 +539,14 @@ public class SimpleCarController : PlayerController
 
             yield return null;
         }
+    }
+    private IEnumerator ToggleMove(float durationBlocked)
+    {
+        BlockMove = true;
+
+        yield return new WaitForSeconds(durationBlocked);
+
+        BlockMove = false;
     }
 
     /*private void RemoveBarriers()
@@ -546,6 +624,7 @@ public class SimpleCarController : PlayerController
             StartCoroutine(ParticleJetsRoutine());
 
             Debug.Log("hopped");
+            _audioController.PlayAudio(_soundHop);
         }
     }
     public void AutoJumpToggleFakeGravity(float timeOfFlight, float fakeGravity)
@@ -563,7 +642,19 @@ public class SimpleCarController : PlayerController
         StartCoroutine(ParticleJetsRoutine(timeOfFlight / 2f));
 
         // play sound
-        //_audioController.PlayAudio(_soundJump);
+        _audioController.PlayAudio(_soundHopBig);
+    }
+    public void ChangeCamera(GameObject targetSwapCam)
+    {
+        _followPlayerObject.ChangeObjectToFollow(targetSwapCam);
+    }
+    public void ChangeCameraTransposer(GameObject targetSwapCam, GameObject transposerTarget)
+    {
+        _followPlayerObject.ChangeObjectToFollowTransposer(targetSwapCam, transposerTarget);
+    }
+    public void ToggleMoveInput(float durationBlocked)
+    {
+        StartCoroutine(ToggleMove(durationBlocked));
     }
 
     //public void ReverseLogic()
