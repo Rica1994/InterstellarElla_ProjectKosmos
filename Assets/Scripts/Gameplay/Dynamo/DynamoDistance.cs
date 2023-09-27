@@ -44,11 +44,13 @@ public class DynamoDistance : MonoBehaviour
     private float _currentDistanceToElla;
     private float _defaultEnginePitch;
     private float _lastDynamoSpeed;
+    private float _dynamoDefaultSpeed;
     private float _startDynamoLerpingSpeed;
 
     private void Awake()
     {
         _dynamo = GetComponent<CinemachineDollyCart>();
+        _dynamoDefaultSpeed = _dynamo.m_Speed;
         _defaultEnginePitch = _engineAudioSource.pitch;
     }
 
@@ -67,6 +69,10 @@ public class DynamoDistance : MonoBehaviour
             // Set new target speed
             _targetSpeed = 80;
         }
+        else if (_currentDistanceToElla > (_minMaxDistance.y + _minMaxDistance.x) / 2.0f)
+        {
+            _targetSpeed = _dynamoDefaultSpeed;
+        }
         else if (_currentDistanceToElla > _minMaxDistance.y)
         {
             // laughable distance
@@ -76,18 +82,29 @@ public class DynamoDistance : MonoBehaviour
             _targetSpeed = 10;
         }
 
-        if (_dynamo.m_Speed != _targetSpeed)
+        if (Mathf.Abs(_targetSpeed - _dynamo.m_Speed) > 0.1f)
         {
-            float elapsedTime = Time.time;
-            _dynamo.m_Speed = Mathf.Lerp(_dynamo.m_Speed, _targetSpeed, Time.deltaTime * _speedChangeDuration);
+            // Calculate the difference between the current speed and the target speed
+            float speedDifference = Mathf.Abs(_dynamo.m_Speed - _targetSpeed);
+
+            // Normalize the difference to get a value between 0 and 1
+            float normalizedDifference = speedDifference / (_targetSpeed - _dynamo.m_Speed + Mathf.Epsilon);
+
+            // Use the normalized difference as the lerp factor
+            float lerpFactor = Time.deltaTime * _speedChangeDuration * normalizedDifference;
+
+            // Perform the lerp
+            _dynamo.m_Speed = Mathf.Lerp(_dynamo.m_Speed, _targetSpeed, lerpFactor);
         }
 
         var dif = Mathf.Abs(_lastDynamoSpeed - _dynamo.m_Speed);
         if (dif > 2.0f)
         {
             _lastDynamoSpeed = _dynamo.m_Speed;
-            _engineAudioSource.pitch = _defaultEnginePitch * (_dynamo.m_Speed / _targetSpeed);
+            _engineAudioSource.pitch = _defaultEnginePitch * (_dynamo.m_Speed / _dynamoDefaultSpeed);
         }
+
+
 
     }
 
