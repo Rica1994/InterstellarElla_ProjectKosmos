@@ -96,7 +96,7 @@ public class ParticleManager : Service
         }
 
         // after possible additional wait time, fully destroy the particle
-        if (particleToDestroy.gameObject != null)
+        if (particleToDestroy != null && particleToDestroy.gameObject != null)
         {
             _createdParticles.Remove(particleToDestroy);
             Destroy(particleToDestroy.gameObject);

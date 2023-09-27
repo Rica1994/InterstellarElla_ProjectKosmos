@@ -18,6 +18,10 @@ public class ButtonExecuteLevelSkip : ButtonExecuteBase
         {
 
         }
+        else if (FindObjectOfType<SkipCutscene>() != null)
+        {
+            
+        }
         else
         {
             _levelManager = ServiceLocator.Instance.GetService<LevelManager>();
