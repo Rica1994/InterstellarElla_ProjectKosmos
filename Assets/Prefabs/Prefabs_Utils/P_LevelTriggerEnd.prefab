@@ -55,7 +55,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -80,7 +79,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8084792560381640788
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,6 +90,7 @@ GameObject:
   - component: {fileID: 8084792560381640789}
   - component: {fileID: 4799900040506720635}
   - component: {fileID: 2383976780518649222}
+  - component: {fileID: 6388813505897024614}
   m_Layer: 0
   m_Name: P_LevelTriggerEnd
   m_TagString: Untagged
@@ -108,7 +107,7 @@ Transform:
   m_GameObject: {fileID: 8084792560381640788}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 50, y: 40, z: 1}
   m_Children:
   - {fileID: 1628256177297581037}
   m_Father: {fileID: 0}
@@ -139,3 +138,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94d422f9387c08440b8b6d1a819ffe35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6388813505897024614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8084792560381640788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1a4fa9ab88290b48a53c3e6b323b433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _visual: {fileID: 7290904335739086843}

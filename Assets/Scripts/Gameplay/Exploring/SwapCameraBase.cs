@@ -58,6 +58,25 @@ public class SwapCameraBase : MonoBehaviour
         if (_targetVisuals != null)
         {
             _targetVisuals.SetActive(showThem);
-        }            
+        }
+
+        // get additional children with SwapCameraTriggers, access their meshrenderer, disable/enable
+        var triggerChildrenNormal = GetComponentsInChildren<SwapCameraTrigger>();
+        for (int i = 0; i < triggerChildrenNormal.Length; i++)
+        {
+            triggerChildrenNormal[i].GetComponent<MeshRenderer>().enabled = showThem;
+        }
+
+        var triggerChildrenExploring = GetComponentsInChildren<SwapCameraTriggerExploring>();
+        for (int i = 0; i < triggerChildrenExploring.Length; i++)
+        {
+            triggerChildrenExploring[i].GetComponent<MeshRenderer>().enabled = showThem;
+        }
+
+        var triggerChildrenGlitch = GetComponentsInChildren<SwapCameraTriggerGlitch>();
+        for (int i = 0; i < triggerChildrenGlitch.Length; i++)
+        {
+            triggerChildrenGlitch[i].GetComponent<MeshRenderer>().enabled = showThem;
+        }
     }
 }

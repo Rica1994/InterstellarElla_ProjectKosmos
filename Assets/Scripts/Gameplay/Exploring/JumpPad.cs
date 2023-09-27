@@ -54,6 +54,10 @@ public class JumpPad : MonoBehaviour
 
     [SerializeField] private AudioSource _mySoundIdleSource;
 
+    [Header("Visuals")]
+    [SerializeField] private List<MeshRenderer> _meshRenderersVisuals = new List<MeshRenderer>();
+    [SerializeField] private LineRenderer _lineRendererJump;
+
 
     private void Start()
     {
@@ -279,5 +283,16 @@ public class JumpPad : MonoBehaviour
         _lineRenderer.transform.rotation = Quaternion.LookRotation(-direction);
 
         //_lineRenderer.sharedMaterial.color = valid ? _initialColor : _errorColor;
+    }
+
+
+    public void ToggleVisuals(bool showThem = true)
+    {
+        for (int i = 0; i < _meshRenderersVisuals.Count; i++)
+        {
+            _meshRenderersVisuals[i].enabled = showThem;
+        }
+
+        _lineRendererJump.enabled = showThem;
     }
 }
