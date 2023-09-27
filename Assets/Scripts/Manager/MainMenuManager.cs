@@ -129,7 +129,7 @@ public class MainMenuManager : Service
            // }
 #if UNITY_EDITOR
             // load the loading scene first, then the actual scene for gameplay
-            _sceneController.LoadIntermissionLoading(sceneToLoad, null, false, PageType.Loading, 0.8f);
+            _sceneController.LoadIntermissionLoading(sceneToLoad, false, null, false, PageType.Loading, 0.8f);
 #elif UNITY_WEBGL && !UNITY_EDITOR
             _sceneController.Load(sceneToLoad);
 #endif

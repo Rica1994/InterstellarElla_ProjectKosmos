@@ -8,9 +8,6 @@ public class ButtonExecuteLevelSkip : ButtonExecuteBase
 {
     private LevelManager _levelManager;
 
-
-
-
     private void OnEnable()
     {
         // do not do this if we're in the main menu
@@ -37,10 +34,14 @@ public class ButtonExecuteLevelSkip : ButtonExecuteBase
             // we're in the main menu
             Debug.LogWarning("this is the main menu !!! loading nothing");
         }
+        else if (FindObjectOfType<SkipCutscene>() != null)
+        {
+            // we're in a cutscene
+            Debug.LogWarning("this is a cutscene !!! loading nothing");
+        }
         else
         {
             _levelManager = ServiceLocator.Instance.GetService<LevelManager>();
-
             if (_levelManager == null)
             {
                 Debug.LogWarning("no level manager present in this scene !!! loading nothing");
@@ -51,7 +52,9 @@ public class ButtonExecuteLevelSkip : ButtonExecuteBase
                 Debug.LogWarning("no scene-type chosen as the next scene on the levelmanager !!! loading nothing");
                 return;
             }
-            ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(_levelManager.NextScene, null, false, UnityCore.Menus.PageType.Loading);
+
+            ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(_levelManager.NextScene, _levelManager.IsSameBuildNextScene, 
+                null, false, UnityCore.Menus.PageType.Loading);
         }
     }
 }

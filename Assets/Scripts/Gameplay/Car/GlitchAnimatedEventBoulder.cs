@@ -73,6 +73,7 @@ public class GlitchAnimatedEventBoulder : GlitchAnimatedEvent
 
         var levelManager = ServiceLocator.Instance.GetService<LevelManager>();
         levelManager.EndLevel();
-        ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(levelManager.NextScene, null, false, UnityCore.Menus.PageType.Loading);
+        ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(levelManager.NextScene, levelManager.IsSameBuildNextScene, 
+            null, false, UnityCore.Menus.PageType.Loading);
     }
 }

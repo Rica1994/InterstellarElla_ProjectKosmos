@@ -56,7 +56,7 @@ namespace UnityCore
 
             public void Load(SceneType sceneType)
             {
-                LoadIntermissionLoading(sceneType, null, false, PageType.None, 1);
+                LoadIntermissionLoading(sceneType, false, null, false, PageType.None, 1);
             }
 
             public void Load(SceneType scene, SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
@@ -100,9 +100,18 @@ namespace UnityCore
                 StartCoroutine(LoadScene());
             }
 
-            public void LoadIntermissionLoading(SceneType scene, SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
+            public void LoadIntermissionLoading(SceneType scene, bool isSameBuild = false, SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
                 PageType loadingPage = PageType.None, float timeDelayToStartFirstLoad = 1)
             {
+                // we still need to add a delay on the webgl loading (so we still have our fancy main menu effect)
+
+                // in the second option, set a bool on the levelManager "IsSameBuildNextScene"..
+                // => if true, do the usual loading, else the webgl loading
+                if (isSameBuild == true)
+                {
+                    StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading));
+                    return;
+                }
 #if UNITY_EDITOR
                 StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading));
 #elif UNITY_WEBGL && !UNITY_EDITOR
@@ -114,6 +123,8 @@ namespace UnityCore
                 Application.ExternalEval($"window.location.href = '{relativePath + "?data=" + data}';");
 #endif
             }
+
+
             #endregion
 
             private IEnumerator WebGLLoadingDelay(SceneType scene, SceneLoadDelegate sceneLoadDelegate, bool reload,

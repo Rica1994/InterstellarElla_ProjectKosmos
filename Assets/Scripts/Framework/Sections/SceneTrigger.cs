@@ -18,7 +18,7 @@ public class SceneTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         _levelManager = ServiceLocator.Instance.GetService<LevelManager>();
-        ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(_levelManager.NextScene, null, false, UnityCore.Menus.PageType.Loading);
+        ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(_levelManager.NextScene, _levelManager.IsSameBuildNextScene, null, false, UnityCore.Menus.PageType.Loading);
     }
 
     public void ToggleVisuals(bool showThem = true)

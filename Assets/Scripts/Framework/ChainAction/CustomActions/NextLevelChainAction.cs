@@ -13,6 +13,6 @@ public class NextLevelChainAction : ChainAction
     public override void Execute()
     {
         base.Execute();
-        ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(_sceneToLoad, null, false, UnityCore.Menus.PageType.Loading);
+        ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(_sceneToLoad, false, null, false, UnityCore.Menus.PageType.Loading);
     }
 }

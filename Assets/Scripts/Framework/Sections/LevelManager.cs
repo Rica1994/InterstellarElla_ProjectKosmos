@@ -30,6 +30,7 @@ public class LevelManager : Service
     [SerializeField]
     private SceneType _nextScene;
     public SceneType NextScene => _nextScene;
+    public bool IsSameBuildNextScene;
 
     [Header("Respawn Logic")]
     [SerializeField]
