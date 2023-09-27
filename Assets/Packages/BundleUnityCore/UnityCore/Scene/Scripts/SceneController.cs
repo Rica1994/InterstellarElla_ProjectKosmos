@@ -241,49 +241,53 @@ namespace UnityCore
             {
                 switch (scene)
                 {
+                    case "S_GameStartUpScene": return SceneType.S_GameStartUpScene;
+
                     case "S_MainMenu": return SceneType.S_MainMenu;
                     case "S_Loading": return SceneType.S_Loading;
 
+                    case "S_Level_1_Intro": return SceneType.S_Level_1_Intro;
                     case "S_Level_1_0_Work": return SceneType.S_Level_1_0_Work;
-                    case "S_Level_1_0_Build": return SceneType.S_Level_1_0_Build;
+                    case "S_Level_1_1_Work": return SceneType.S_Level_1_1_Work;
+                    case "S_Level_1_Outro": return SceneType.S_Level_1_Outro;
 
-                    case "S_Mars_1_1_Work": return SceneType.S_Mars_1_1_Work;
-                    case "S_Mars_1_1_Build": return SceneType.S_Mars_1_1_Build;
+                    case "S_Level_2_Intro": return SceneType.S_Level_2_Intro;
+                    case "S_Level_2_3_Work": return SceneType.S_Level_2_3_Work;
+                    case "S_Level_2_4_Work": return SceneType.S_Level_2_4_Work;
+                    case "S_Level_2_Outro": return SceneType.S_Level_2_Outro;
 
-                    case "S_Level_2_0_Work": return SceneType.S_Level_2_0_Work;
-                    case "S_Level_2_0_Build": return SceneType.S_Level_2_0_Build;
-
+                    case "S_Level_3_Intro": return SceneType.S_Level_3_Intro;
                     case "S_Level_3_0_Work": return SceneType.S_Level_3_0_Work;
-                    case "S_Level_3_0_Build": return SceneType.S_Level_3_0_Build;
                     case "S_Level_3_1_Work": return SceneType.S_Level_3_1_Work;
-                    case "S_Level_3_1_Build": return SceneType.S_Level_3_1_Build;
                     case "S_Level_3_2_Work": return SceneType.S_Level_3_2_Work;
-                    case "S_Level_3_2_Build": return SceneType.S_Level_3_2_Build;
                     case "S_Level_3_3_Work": return SceneType.S_Level_3_3_Work;
-                    case "S_Level_3_3_Build": return SceneType.S_Level_3_3_Build;
                     case "S_Level_3_4_Work": return SceneType.S_Level_3_4_Work;
-                    case "S_Level_3_4_Build": return SceneType.S_Level_3_4_Build;
+                    case "S_Level_3_5_Work": return SceneType.S_Level_3_5_Work;
+                    case "S_Level_3_Outro": return SceneType.S_Level_3_Outro;
 
+                    case "S_Level_4_Intro": return SceneType.S_Level_4_Intro;
                     case "S_Level_4_0_Work": return SceneType.S_Level_4_0_Work;
-                    case "S_Level_4_0_Build": return SceneType.S_Level_4_0_Build;
                     case "S_Level_4_1_Work": return SceneType.S_Level_4_1_Work;
-                    case "S_Level_4_1_Build": return SceneType.S_Level_4_1_Build;
                     case "S_Level_4_2_Work": return SceneType.S_Level_4_2_Work;
-                    case "S_Level_4_2_Build": return SceneType.S_Level_4_2_Build;
                     case "S_Level_4_3_Work": return SceneType.S_Level_4_3_Work;
-                    case "S_Level_4_3_Build": return SceneType.S_Level_4_3_Build;
+                    case "S_Level_4_4_Work": return SceneType.S_Level_4_4_Work;
+                    case "S_Level_4_5_Work": return SceneType.S_Level_4_5_Work;
+                    case "S_Level_4_Outro": return SceneType.S_Level_4_Outro;
 
+                    case "S_Level_5_Intro": return SceneType.S_Level_5_Intro;
                     case "S_Level_5_0_Work": return SceneType.S_Level_5_0_Work;
-                    case "S_Level_5_0_Build": return SceneType.S_Level_5_0_Build;
+                    case "S_Level_5_1_Work": return SceneType.S_Level_5_1_Work;
+                    case "S_Level_5_2_Work": return SceneType.S_Level_5_2_Work;
+                    case "S_Level_5_3_Work": return SceneType.S_Level_5_3_Work;
+                    case "S_Level_5_Outro": return SceneType.S_Level_5_Outro;
 
-                    case "S_Mars_1_0_IntroCutscene": return SceneType.S_Mars_1_0_IntroCutscene;
-                    case "S_GameStartUpScene": return SceneType.S_GameStartUpScene;
+                    case "S_Quiz": return SceneType.S_Quiz;
+
                     case "S_Level_1_0": return SceneType.S_Level_1_0;
                     case "S_Level_1_1": return SceneType.S_Level_1_1;
                     case "S_Level_2_0": return SceneType.S_Level_2_0;
                     case "S_Level_2_1": return SceneType.S_Level_2_1;
                     case "S_Level_2_2": return SceneType.S_Level_2_2;
-                    case "S_Quiz": return SceneType.S_Quiz;
                     case "S_Mars_1_99_OutroCutscene": return SceneType.S_Mars_1_99_OutroCutscene;
 
                     default:

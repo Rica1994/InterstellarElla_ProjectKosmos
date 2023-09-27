@@ -147,8 +147,12 @@ public class SpeederGround : PlayerController
 
     private void Awake()
     {
-        _previousMoonscooterPosition = _moonscooterTransform.localPosition;
-        _previousEllaRyderPosition = _ellaRyderTransform.localPosition;
+        if (_moonscooterTransform != null && _ellaRyderTransform != null)
+        {
+            _previousMoonscooterPosition = _moonscooterTransform.localPosition;
+            _previousEllaRyderPosition = _ellaRyderTransform.localPosition;
+        }
+
         Initialize();
     }
 
@@ -175,8 +179,12 @@ public class SpeederGround : PlayerController
         moveDirection.Normalize();
         transform.forward = moveDirection;
         _rightVector = Vector3.Cross(moveDirection, Vector3.up);
-        _moonscooterTransform.localPosition = _previousMoonscooterPosition;
-        _ellaRyderTransform.localPosition = _previousEllaRyderPosition;
+
+        if (_moonscooterTransform != null && _ellaRyderTransform != null)
+        {
+            _moonscooterTransform.localPosition = _previousMoonscooterPosition;
+            _ellaRyderTransform.localPosition = _previousEllaRyderPosition;
+        }
     }
 
   
