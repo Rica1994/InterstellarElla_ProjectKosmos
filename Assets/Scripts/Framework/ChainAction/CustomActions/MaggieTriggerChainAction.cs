@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class MaggieTriggerChainAction : ChainAction
 {
+    [SerializeField]
+    private GameObject _visual;
+
     void Start()
     {
         _useUserBasedAction = true;
+
+        if (_visual == null)
+        {
+            _visual = this.transform.GetChild(0).gameObject;
+        }
     }
 
     private void OnValidate()
@@ -22,5 +30,11 @@ public class MaggieTriggerChainAction : ChainAction
             Debug.Log("Completing action");
             _userBasedActionCompleted = true;
         }
+    }
+
+
+    public void ToggleVisuals(bool showThem)
+    {
+        _visual.SetActive(showThem);
     }
 }

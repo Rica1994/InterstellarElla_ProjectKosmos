@@ -13,6 +13,7 @@ namespace UnityCore
             SFX_Player = 3,
             SFX_World = 4,
             SFX_Maggie = 5,
+            SFX_Ella = 6,
         }
     }
 }

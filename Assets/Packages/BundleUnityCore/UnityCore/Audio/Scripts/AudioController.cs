@@ -16,6 +16,7 @@ namespace UnityCore
             public List<AudioTrack> TracksPlayer;
             public List<AudioTrack> TracksWorld;
             public List<AudioTrack> TracksMaggie;
+            public List<AudioTrack> TracksElla;
 
             [Header("Mixer snapshots")]
             [SerializeField]
@@ -169,6 +170,7 @@ namespace UnityCore
                 RemoveNullAudioTrack(TracksPlayer, tracksToRemove);
                 RemoveNullAudioTrack(TracksWorld, tracksToRemove);
                 RemoveNullAudioTrack(TracksMaggie, tracksToRemove);
+                RemoveNullAudioTrack(TracksElla, tracksToRemove);
             }
 
             // called when wanting to change OST
@@ -368,6 +370,17 @@ namespace UnityCore
                             }
                         }
                         trackToUse = TracksMaggie[0];
+                        return trackToUse;
+                    case AudioType.SFX_Ella:
+                        for (int i = 0; i < TracksElla.Count; i++)
+                        {
+                            if (TracksElla[i].Source.isPlaying == false)
+                            {
+                                trackToUse = TracksElla[i];
+                                return trackToUse;
+                            }
+                        }
+                        trackToUse = TracksElla[0];
                         return trackToUse;
                     default:
                         Debug.Log("you forgot to add an AudioType to an AudioElement");

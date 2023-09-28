@@ -22,6 +22,8 @@ public class TriggerVisualizingTool : EditorWindow
     private List<DeathTrigger> _deathTriggers = new List<DeathTrigger>();
     private List<InvisibleWall> _invisibleWalls = new List<InvisibleWall>();
 
+    private List<MaggieTriggerChainAction> _chainActionTrigger = new List<MaggieTriggerChainAction>();
+
 
     [MenuItem("Window/Trigger visualizer")]
     public static void ShowWindow()
@@ -83,6 +85,11 @@ public class TriggerVisualizingTool : EditorWindow
             {
                 _deathTriggers[i].ToggleVisuals(true);
             }
+            _chainActionTrigger = FindObjectsOfType<MaggieTriggerChainAction>().ToList();
+            for (int i = 0; i < _chainActionTrigger.Count; i++)
+            {
+                _chainActionTrigger[i].ToggleVisuals(true);
+            }
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
@@ -133,7 +140,11 @@ public class TriggerVisualizingTool : EditorWindow
             {
                 _deathTriggers[i].ToggleVisuals(false);
             }
-
+            _chainActionTrigger = FindObjectsOfType<MaggieTriggerChainAction>().ToList();
+            for (int i = 0; i < _chainActionTrigger.Count; i++)
+            {
+                _chainActionTrigger[i].ToggleVisuals(false);
+            }
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
@@ -349,6 +360,29 @@ public class TriggerVisualizingTool : EditorWindow
             for (int i = 0; i < _invisibleWalls.Count; i++)
             {
                 _invisibleWalls[i].ToggleVisuals(false);
+            }
+
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+
+
+
+        if (GUILayout.Button("SHOW Visuals --- Chain Action Triggers"))
+        {
+            _chainActionTrigger = FindObjectsOfType<MaggieTriggerChainAction>().ToList();
+            for (int i = 0; i < _chainActionTrigger.Count; i++)
+            {
+                _chainActionTrigger[i].ToggleVisuals(true);
+            }
+
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+        if (GUILayout.Button("HIDE Visuals --- Chain Action Triggers"))
+        {
+            _chainActionTrigger = FindObjectsOfType<MaggieTriggerChainAction>().ToList();
+            for (int i = 0; i < _chainActionTrigger.Count; i++)
+            {
+                _chainActionTrigger[i].ToggleVisuals(false);
             }
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
