@@ -18,6 +18,8 @@ public class SpeederGroundCutsceneStateAction : ChainAction
     [SerializeField]
     private float _speederSpeed = 26;
     [SerializeField]
+    private float _dynamoSpeedScale = 7;
+    [SerializeField]
     private bool _autopilotSwitch = true;
     [SerializeField]
     private bool _speederGroundSwitch = true;
@@ -87,7 +89,7 @@ public class SpeederGroundCutsceneStateAction : ChainAction
                 }
                 _dynamoCart.enabled = _dynamoSwitch; 
                 _dynamoDistance.enabled = _dynamoSwitch;
-                _dynamoDistance.SpeedFactor = 7;
+                _dynamoDistance.SpeedFactor = _dynamoSpeedScale;
                 break;
             case State.Gameplay:
                 if (_switchDirection)
@@ -121,7 +123,7 @@ public class SpeederGroundCutsceneStateAction : ChainAction
                 }
                 _dynamoCart.enabled = true;
                 _dynamoDistance.enabled = true;
-                _dynamoDistance.SpeedFactor = 2;
+                _dynamoDistance.SpeedFactor = _dynamoSpeedScale;
                 break;
         }
     }

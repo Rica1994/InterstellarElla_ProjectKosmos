@@ -5,6 +5,8 @@ using UnityEngine;
 public class DynamoDiggingTrigger : MonoBehaviour
 {
     public bool StartDigging = true;
+    [SerializeField]
+    private bool _destroyAfter = true;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -17,7 +19,12 @@ public class DynamoDiggingTrigger : MonoBehaviour
             else
             {
                 dynamoDist.DynamoStopsDigging();
-            }        
+            }
+
+            if (_destroyAfter == true)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

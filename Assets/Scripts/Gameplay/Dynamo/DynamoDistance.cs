@@ -41,13 +41,20 @@ public class DynamoDistance : MonoBehaviour
     [SerializeField]
     private AudioClip _tooCloseClip;
 
-    private float _currentDistanceToElla;
     private float _defaultEnginePitch;
     private float _lastDynamoSpeed;
     private float _dynamoDefaultSpeed;
     private float _startDynamoLerpingSpeed;
 
-    public float SpeedFactor = 1;
+    public float SpeedFactor = 3;
+
+    private float _currentDistanceToElla;
+    private float _currentYDifferenceToElla;
+
+    [SerializeField]
+    private Animator _animator;
+
+    private const string DIGGING_BOOL = "Digging";
 
     private void Awake()
     {
@@ -56,7 +63,7 @@ public class DynamoDistance : MonoBehaviour
         _defaultEnginePitch = _engineAudioSource.pitch;
     }
 
-
+    
     private void FixedUpdate()
     {
         MaintainDistance();
@@ -113,6 +120,8 @@ public class DynamoDistance : MonoBehaviour
     // call thesee from triggers Dynamo passes
     public void DynamoGoesDigging()
     {
+        _animator.SetBool(DIGGING_BOOL, true);
+
         if (_isTogglingParticles == false)
         {
             _particleDigging.gameObject.SetActive(true);
@@ -125,6 +134,8 @@ public class DynamoDistance : MonoBehaviour
     }
     public void DynamoStopsDigging()
     {
+        _animator.SetBool(DIGGING_BOOL, false);
+
         if (_isTogglingParticles == false)
         {
             _particleFire.gameObject.SetActive(true);
@@ -154,10 +165,20 @@ public class DynamoDistance : MonoBehaviour
     private void MaintainDistance()
     {
         _currentDistanceToElla = Mathf.Abs(_ellaSpeederGround.position.z - transform.position.z);
-        if (_currentDistanceToElla < 5)
-        {
-            _dynamo.m_Speed = 50;
+        _currentYDifferenceToElla = transform.position.z - _ellaSpeederGround.position.z;
 
+        if (_currentYDifferenceToElla < 5)
+        {
+            // Calculate the difference between the current speed and the target speed
+            float speedDifference = Mathf.Abs(_dynamo.m_Speed - _targetSpeed);
+
+            // Normalize the difference to get a value between 0 and 1
+            float normalizedDifference = speedDifference / (_targetSpeed - _dynamo.m_Speed + Mathf.Epsilon);
+
+            // Use the normalized difference as the lerp factor
+            float lerpFactor = Time.deltaTime * _speedChangeDuration * normalizedDifference;
+
+            _dynamo.m_Speed = Mathf.Lerp(_dynamo.m_Speed, 80, lerpFactor);
         }
         else
         {
