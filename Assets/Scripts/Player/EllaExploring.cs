@@ -77,7 +77,7 @@ public class EllaExploring : PlayerController
     private Vector3 _slopeMovement;
 
     [Header("Sounds")]
-    [SerializeField] private AudioElement _soundBoostLooping;
+    [SerializeField] private AudioSource _sourceBoostBoots;
 
 
 
@@ -449,12 +449,8 @@ public class EllaExploring : PlayerController
                 _hoverStrength = timePercent * _hoverStrengthMax;
             }
 
-            
-
             _hoverComponent.HoverNew(_characterController, ref _yVelocity, _hoverStrength);
             
-
-
             // play particle
             if (_playingBoostParticle == false)
             {
@@ -463,6 +459,12 @@ public class EllaExploring : PlayerController
 
                 _playingBoostParticle = true;
             }
+
+            // play sound
+            if (_sourceBoostBoots.isActiveAndEnabled == false)
+            {
+                _sourceBoostBoots.enabled = true;
+            }              
 
             _isHovering = true;
         }
@@ -476,8 +478,16 @@ public class EllaExploring : PlayerController
             _particleBootRight.Stop();
 
             _playingBoostParticle = false;
+
+            // stop sound
+            if (_sourceBoostBoots.isActiveAndEnabled == true)
+            {
+                _sourceBoostBoots.enabled = false;
+            }
         }
     }
+
+
 
     // Source -> https://gizma.com/easing/
     //private double EaseOutCirc()
