@@ -186,9 +186,19 @@ public class SpeederGround : PlayerController
         {
             _moonscooterTransform.localPosition = _previousMoonscooterPosition;
             _ellaRyderTransform.localPosition = _previousEllaRyderPosition;
+
+            if (moveDirection.z < 0f)
+            {
+                _visual.Rotate(0.0f, 180.0f, 0.0f);
+                _moonscooterTransform.rotation = Quaternion.identity;
+                _ellaRyderTransform.rotation = Quaternion.identity;
+                //_moonscooterTransform.Rotate(0.0f, 180.0f, 0.0f);
+            }
         }
 
-        _standardRotation = _visual.rotation;
+        
+
+        _standardRotation = transform.rotation;
     }
 
 
