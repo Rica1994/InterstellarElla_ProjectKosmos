@@ -10,8 +10,6 @@ public class DynamoPathSwitchChainAction : ChainAction
     private CinemachinePath _dynamoPath;
     [SerializeField]
     private float _startPosition;
-    [SerializeField]
-    private bool _reverseDirection = false;
 
     private CinemachineDollyCart _dynamoCart;
 
