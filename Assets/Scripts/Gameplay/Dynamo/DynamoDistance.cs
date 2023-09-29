@@ -73,6 +73,17 @@ public class DynamoDistance : MonoBehaviour
 
     private float _timePassedSinceLastVO = 0.0f;
 
+    enum State
+    {
+        Default,
+        Digging,
+        Scared
+    }
+
+    private State _currentState = State.Default;
+    private State _initialState;
+
+
     private void Awake()
     {
         _dynamo = GetComponent<CinemachineDollyCart>();
@@ -115,6 +126,7 @@ public class DynamoDistance : MonoBehaviour
     // call thesee from triggers Dynamo passes
     public void DynamoGoesDigging()
     {
+        _initialState = _currentState;
         _animator.SetBool(DIGGING_BOOL, true);
         DiggingState();
 
@@ -130,8 +142,17 @@ public class DynamoDistance : MonoBehaviour
     }
     public void DynamoStopsDigging()
     {
+        switch (_initialState)
+        {
+            case State.Default:
+                DefaultState();
+                break;
+            case State.Scared:
+                ScaredState();
+                break;
+        }
+
         _animator.SetBool(DIGGING_BOOL, false);
-        DefaultState();
 
         if (_isTogglingParticles == false)
         {
@@ -212,11 +233,13 @@ public class DynamoDistance : MonoBehaviour
     public void DefaultState()
     {
         _dynamoLightsMat.color = _defaultColor;
+        _currentState = State.Default;
     }
 
     public void ScaredState()
     {
         _dynamoLightsMat.color = _scaredColor;
+        _currentState = State.Scared;
     }
 
     public void DiggingState()
