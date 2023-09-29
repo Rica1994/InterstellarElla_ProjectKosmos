@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class DynamoDistance : MonoBehaviour
 {
-    [SerializeField]
-    private Vector2 _minMaxDistance = new Vector2(5.0f, 70.0f);
+    public float TargetDistance = 35;
 
     private CinemachineDollyCart _dynamo;
     private float _targetSpeed = 41;
@@ -49,18 +48,21 @@ public class DynamoDistance : MonoBehaviour
     public float SpeedFactor = 3;
 
     private float _currentDistanceToElla;
-    private float _currentYDifferenceToElla;
 
     [SerializeField]
     private Animator _animator;
 
     private const string DIGGING_BOOL = "Digging";
 
+    [SerializeField]
+    private Material _dynamoLightsMat;
+
     private void Awake()
     {
         _dynamo = GetComponent<CinemachineDollyCart>();
         _dynamoDefaultSpeed = _dynamo.m_Speed;
         _defaultEnginePitch = _engineAudioSource.pitch;
+        ScaredDynamo();
     }
 
     
@@ -164,11 +166,13 @@ public class DynamoDistance : MonoBehaviour
 
     private void MaintainDistance()
     {
-        _currentDistanceToElla = Mathf.Abs(_ellaSpeederGround.position.z - transform.position.z);
-        _currentYDifferenceToElla = transform.position.z - _ellaSpeederGround.position.z;
+        Vector3 displacement = _dynamo.transform.position - _ellaSpeederGround.transform.position; 
+        _currentDistanceToElla = Mathf.Abs(displacement.z);
+        float dot = Vector3.Dot(displacement, _ellaSpeederGround.transform.forward);
 
-        if (_currentYDifferenceToElla < 5)
+        if (dot < 0)
         {
+            Debug.Log("Dynamo is behind");
             // Calculate the difference between the current speed and the target speed
             float speedDifference = Mathf.Abs(_dynamo.m_Speed - _targetSpeed);
 
@@ -182,8 +186,13 @@ public class DynamoDistance : MonoBehaviour
         }
         else
         {
-            float distanceDifference = _minMaxDistance.x - _currentDistanceToElla;
+            float distanceDifference = TargetDistance - _currentDistanceToElla;
             _dynamo.m_Speed = distanceDifference * SpeedFactor;
         }
+    }
+
+    private void ScaredDynamo()
+    {
+        _dynamoLightsMat.color = Color.blue;
     }
 }

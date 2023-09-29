@@ -323,7 +323,7 @@ public class SpeederGround : PlayerController
                 _playerPositionWorldForward = this.transform.position.z;
             }
         }
-        else if (_playerMightBeStuck == true)
+        else
         {
             _playerStuckMaybeTimer += Time.deltaTime;
 
