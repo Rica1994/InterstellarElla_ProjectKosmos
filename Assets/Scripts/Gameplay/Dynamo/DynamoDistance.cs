@@ -75,6 +75,7 @@ public class DynamoDistance : MonoBehaviour
         _dynamo = GetComponent<CinemachineDollyCart>();
         _dynamoDefaultSpeed = _dynamo.m_Speed;
         _defaultEnginePitch = _engineAudioSource.pitch;
+        DefaultState();
     }
 
 
