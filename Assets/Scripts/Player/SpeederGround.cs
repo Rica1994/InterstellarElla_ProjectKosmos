@@ -39,7 +39,8 @@ public class SpeederGround : PlayerController
     [SerializeField] private float _gravityValue = -9.81f;
 
 
-    [FormerlySerializedAs("_landingBounceValueFactor")] [SerializeField]
+    [FormerlySerializedAs("_landingBounceValueFactor")]
+    [SerializeField]
     private float _bounceFactor = 0.5f;
 
     [SerializeField] private float _minimumSpeedToBounce = 30.0f;
@@ -58,6 +59,7 @@ public class SpeederGround : PlayerController
     private float _xVelocity = 0f;
     private float _zVelocity = 0f;
 
+    private Quaternion _standardRotation;
     private float _fakeGroundedTimer;
 
     [Header("Other")]
@@ -158,7 +160,7 @@ public class SpeederGround : PlayerController
 
     public void Initialize()
     {
-        if (_speederGroundButton != null) 
+        if (_speederGroundButton != null)
         {
             _speederGroundButton.Pressed += OnPressed;
         }
@@ -185,9 +187,11 @@ public class SpeederGround : PlayerController
             _moonscooterTransform.localPosition = _previousMoonscooterPosition;
             _ellaRyderTransform.localPosition = _previousEllaRyderPosition;
         }
+
+        _standardRotation = _visual.rotation;
     }
 
-  
+
     private void Start()
     {
         _lastPosition = transform.position;
@@ -231,7 +235,7 @@ public class SpeederGround : PlayerController
     }
 
     #endregion
-    
+
 
 
     #region Public Functions
@@ -508,11 +512,12 @@ public class SpeederGround : PlayerController
         // Calculate normalized velocity
         _velocity = (transform.position - _lastPosition) / Time.deltaTime;
         _velocityNormalized = _velocity.normalized;
-        _lastPosition = transform.position;
+        //      _lastPosition = transform.position;
+        //
 
-        _target.transform.localPosition = new Vector3(_velocityNormalized.x * 2, 0, 5.14f);
-
-        // Rotate towards Target
+        _target.transform.localPosition = new Vector3(_input.x * 3, 0, 5.14f);
+        //
+        //      // Rotate towards Target
         var rot = Quaternion.FromToRotation(_visual.transform.forward,
             _target.transform.position - _visual.transform.position) * _visual.transform.rotation;
         _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.2f);
@@ -534,13 +539,14 @@ public class SpeederGround : PlayerController
         }
 
         // Rotates along the the forward axis according to the left of right velocity
-        var rotationalFactor = Mathf.Clamp(_velocityNormalized.x, -1.0f, 1.0f);
-        rot = Quaternion.Euler(0.0f, 0.0f, -rotationalFactor * 80.0f);
+        var rotationalFactor = Mathf.Clamp(_input.x, -1.0f, 1.0f);
+        var visualRot = Quaternion.Euler(_visual.transform.rotation.eulerAngles);
+        rot = Quaternion.Euler(0.0f, 0.0f, -moveDirection.z * rotationalFactor * 80.0f) * _standardRotation;
         _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, _visualLerpSpeed * Time.deltaTime);
 
         // Rotate along x axis according to the vertical input
         rotationalFactor = Mathf.Clamp(_input.y, -1.0f, 1.0f);
-        rot = Quaternion.Euler(rotationalFactor * 90.0f, 0.0f, 0.0f);
+        rot = Quaternion.Euler(moveDirection.z * rotationalFactor * 90.0f, 0.0f, 0.0f) * _standardRotation;
         _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, _visualLerpSpeed * Time.deltaTime);
     }
     private void FakeGroundedTimer()
