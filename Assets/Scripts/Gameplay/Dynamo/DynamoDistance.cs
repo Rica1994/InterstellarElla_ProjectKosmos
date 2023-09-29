@@ -68,6 +68,9 @@ public class DynamoDistance : MonoBehaviour
     [SerializeField]
     private Material _dynamoLightsMat;
 
+    [SerializeField]
+    private Vector2 _minMaxDistance = new Vector2(10.0f, 30.0f);
+
     private float _timePassedSinceLastVO = 0.0f;
 
     private void Awake()
@@ -182,12 +185,17 @@ public class DynamoDistance : MonoBehaviour
         }
         else
         {
-            if (_currentDistanceToElla > 30.0f)
+            if (_currentDistanceToElla > _minMaxDistance.y)
             {
-                // laughable distance
-                shouldPlayerVo |= true;
+                shouldPlayerVo = true;
                 _voiceAudioSource.clip = _laughClip;
             }
+            else if (_currentDistanceToElla < _minMaxDistance.x)
+            {
+                shouldPlayerVo = true;
+                _voiceAudioSource.clip = _tooCloseClip;
+            }
+
             float distanceDifference = TargetDistance - _currentDistanceToElla;
             _dynamo.m_Speed = distanceDifference * SpeedFactor;
         }
