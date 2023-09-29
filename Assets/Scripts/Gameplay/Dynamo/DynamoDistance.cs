@@ -54,6 +54,14 @@ public class DynamoDistance : MonoBehaviour
 
     private const string DIGGING_BOOL = "Digging";
 
+    [Header("State colors")]
+    [SerializeField]
+    private Color _defaultColor = Color.blue;
+    [SerializeField]
+    private Color _diggingColor = Color.yellow;
+    [SerializeField]
+    private Color _scaredColor = Color.red;
+
     [SerializeField]
     private Material _dynamoLightsMat;
 
@@ -62,7 +70,6 @@ public class DynamoDistance : MonoBehaviour
         _dynamo = GetComponent<CinemachineDollyCart>();
         _dynamoDefaultSpeed = _dynamo.m_Speed;
         _defaultEnginePitch = _engineAudioSource.pitch;
-        ScaredDynamo();
     }
 
     
@@ -123,6 +130,7 @@ public class DynamoDistance : MonoBehaviour
     public void DynamoGoesDigging()
     {
         _animator.SetBool(DIGGING_BOOL, true);
+        DiggingState();
 
         if (_isTogglingParticles == false)
         {
@@ -137,6 +145,7 @@ public class DynamoDistance : MonoBehaviour
     public void DynamoStopsDigging()
     {
         _animator.SetBool(DIGGING_BOOL, false);
+        DefaultState();
 
         if (_isTogglingParticles == false)
         {
@@ -191,8 +200,19 @@ public class DynamoDistance : MonoBehaviour
         }
     }
 
-    private void ScaredDynamo()
+
+    public void DefaultState()
     {
-        _dynamoLightsMat.color = Color.blue;
+        _dynamoLightsMat.color = _defaultColor;
+    }
+
+    public void ScaredState()
+    {
+        _dynamoLightsMat.color = _scaredColor;
+    }
+
+    public void DiggingState()
+    {
+        _dynamoLightsMat.color = _diggingColor;
     }
 }
