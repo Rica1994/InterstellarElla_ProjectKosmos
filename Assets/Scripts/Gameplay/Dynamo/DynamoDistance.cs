@@ -26,6 +26,9 @@ public class DynamoDistance : MonoBehaviour
     private bool _isTogglingParticles;
 
     [SerializeField]
+    private float _timeBetweenVO = 15.0f;
+
+    [SerializeField]
     private AudioSource _engineAudioSource;
 
     [SerializeField]
@@ -57,6 +60,8 @@ public class DynamoDistance : MonoBehaviour
     [SerializeField]
     private Material _dynamoLightsMat;
 
+    private float _timePassedSinceLastVO = 0.0f;
+
     private void Awake()
     {
         _dynamo = GetComponent<CinemachineDollyCart>();
@@ -65,36 +70,13 @@ public class DynamoDistance : MonoBehaviour
         ScaredDynamo();
     }
 
-    
+
     private void FixedUpdate()
     {
+        _timePassedSinceLastVO += Time.deltaTime;
         MaintainDistance();
 
         // BELOW: BEN HIS CODE
-
-        //_currentDistanceToElla = Mathf.Abs(_ellaSpeederGround.position.z - transform.position.z);
-
-        //if (_currentDistanceToElla < _minMaxDistance.x)
-        //{
-        //    // too close clip play
-        //    _voiceAudioSource.clip = _tooCloseClip;
-        //    if (_voiceAudioSource.isPlaying == false) _voiceAudioSource.Play();
-
-        //    // Set new target speed
-        //    _targetSpeed = 80;
-        //}
-        //else if (_currentDistanceToElla > (_minMaxDistance.y + _minMaxDistance.x) / 2.0f)
-        //{
-        //    _targetSpeed = _dynamoDefaultSpeed;
-        //}
-        //else if (_currentDistanceToElla > _minMaxDistance.y)
-        //{
-        //    // laughable distance
-        //    _voiceAudioSource.clip = _laughClip;
-        //    if (_voiceAudioSource.isPlaying == false) _voiceAudioSource.Play();
-
-        //    _targetSpeed = 10;
-        //}
 
         //if (Mathf.Abs(_targetSpeed - _dynamo.m_Speed) > 0.1f)
         //{
@@ -111,12 +93,12 @@ public class DynamoDistance : MonoBehaviour
         //    _dynamo.m_Speed = Mathf.Lerp(_dynamo.m_Speed, _targetSpeed, lerpFactor);
         //}
 
-        //var dif = Mathf.Abs(_lastDynamoSpeed - _dynamo.m_Speed);
-        //if (dif > 2.0f)
-        //{
-        //    _lastDynamoSpeed = _dynamo.m_Speed;
-        //    _engineAudioSource.pitch = _defaultEnginePitch * (_dynamo.m_Speed / _dynamoDefaultSpeed);
-        //}
+        var dif = Mathf.Abs(_lastDynamoSpeed - _dynamo.m_Speed);
+        if (dif > 2.0f)
+        {
+            _lastDynamoSpeed = _dynamo.m_Speed;
+            _engineAudioSource.pitch = _defaultEnginePitch * (_dynamo.m_Speed / _dynamoDefaultSpeed);
+        }
     }
 
     // call thesee from triggers Dynamo passes
@@ -166,13 +148,18 @@ public class DynamoDistance : MonoBehaviour
 
     private void MaintainDistance()
     {
-        Vector3 displacement = _dynamo.transform.position - _ellaSpeederGround.transform.position; 
+        Vector3 displacement = _dynamo.transform.position - _ellaSpeederGround.transform.position;
         _currentDistanceToElla = Mathf.Abs(displacement.z);
         float dot = Vector3.Dot(displacement, _ellaSpeederGround.transform.forward);
 
+        bool shouldPlayerVo = false;
+
         if (dot < 0)
         {
-            Debug.Log("Dynamo is behind");
+            shouldPlayerVo = true;
+            // too close clip play
+            _voiceAudioSource.clip = _tooCloseClip;
+            
             // Calculate the difference between the current speed and the target speed
             float speedDifference = Mathf.Abs(_dynamo.m_Speed - _targetSpeed);
 
@@ -186,8 +173,20 @@ public class DynamoDistance : MonoBehaviour
         }
         else
         {
+            if (_currentDistanceToElla > 30.0f)
+            {
+                // laughable distance
+                shouldPlayerVo |= true;
+                _voiceAudioSource.clip = _laughClip;
+            }
             float distanceDifference = TargetDistance - _currentDistanceToElla;
             _dynamo.m_Speed = distanceDifference * SpeedFactor;
+        }
+
+        if (shouldPlayerVo && _voiceAudioSource.isPlaying == false && _voiceAudioSource.clip != null && _timePassedSinceLastVO >= _timeBetweenVO)
+        {
+            _timePassedSinceLastVO = 0.0f - _voiceAudioSource.clip.length;
+            _voiceAudioSource.Play();
         }
     }
 
