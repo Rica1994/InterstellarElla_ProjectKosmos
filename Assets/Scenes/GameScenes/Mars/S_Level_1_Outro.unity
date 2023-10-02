@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -336,6 +336,12 @@ PrefabInstance:
 --- !u!4 &566651272 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7926606816940189294, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+    type: 3}
+  m_PrefabInstance: {fileID: 566651271}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &594947476 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2141996673678635621, guid: 1b3ad37f3b38f694fb268141fa5866d0,
     type: 3}
   m_PrefabInstance: {fileID: 566651271}
   m_PrefabAsset: {fileID: 0}
@@ -788,10 +794,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 456535373}
     m_Modifications:
+    - target: {fileID: 583931927662659846, guid: 1a589313bd67f544c9ca8ce733bca4b0,
+        type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -6567636663814714201, guid: a4c1ceea24bc10643a26cad843440403,
+        type: 2}
+    - target: {fileID: 583931928037805445, guid: 1a589313bd67f544c9ca8ce733bca4b0,
+        type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -6567636663814714201, guid: a4c1ceea24bc10643a26cad843440403,
+        type: 2}
     - target: {fileID: 583931929249937305, guid: 1a589313bd67f544c9ca8ce733bca4b0,
         type: 3}
       propertyPath: m_SceneBindings.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 583931929249937305, guid: 1a589313bd67f544c9ca8ce733bca4b0,
         type: 3}
@@ -813,6 +831,12 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 583931929249937305, guid: 1a589313bd67f544c9ca8ce733bca4b0,
         type: 3}
+      propertyPath: m_SceneBindings.Array.data[6].key
+      value: 
+      objectReference: {fileID: 4300550356858449736, guid: bbc50511804fc6e45b487151ce7aa5e5,
+        type: 2}
+    - target: {fileID: 583931929249937305, guid: 1a589313bd67f544c9ca8ce733bca4b0,
+        type: 3}
       propertyPath: m_SceneBindings.Array.data[3].value
       value: 
       objectReference: {fileID: 583931927437597143}
@@ -826,6 +850,11 @@ PrefabInstance:
       propertyPath: m_SceneBindings.Array.data[5].value
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 583931929249937305, guid: 1a589313bd67f544c9ca8ce733bca4b0,
+        type: 3}
+      propertyPath: m_SceneBindings.Array.data[6].value
+      value: 
+      objectReference: {fileID: 594947476}
     - target: {fileID: 3416893279348668669, guid: 1a589313bd67f544c9ca8ce733bca4b0,
         type: 3}
       propertyPath: m_RootOrder
