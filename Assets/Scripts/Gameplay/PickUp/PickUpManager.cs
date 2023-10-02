@@ -98,6 +98,7 @@ public class PickUpManager : Service
                 _pickupCurrentCombo = 0;
                 _pickupComboTimer = 0;
                 _soundEffectPickup1.Pitch = 1;
+                _soundEffectPickup2.Pitch = 1;
             }
         }
     }
@@ -152,37 +153,44 @@ public class PickUpManager : Service
 
     private void OnPickUpPickedUp(PickUp pickup)
     {
+        _pickUpsPickedUp++;
+
         if (pickup as EllaPickUp)
         {
             _foundEllaPickups.Add(((EllaPickUp)pickup).Type);
-        } 
+           ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEffectPickup2);
+           AdjustPitch(_pickupCurrentCombo, true);
+        }
         else
         {
-            _pickUpsPickedUp++;
 
             // play sound with specified pitch
             ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEffectPickup1);
-
-            // adjust the combo-pitch           
             AdjustPitch(_pickupCurrentCombo);
+            // adjust the combo-pitch           
         }
+
 
         //// spawn particle
         //ServiceLocator.Instance.GetService<ParticleManager>().
-          //CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
+        //CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
 
-          PickUpPickedUpEvent?.Invoke(_pickUpsPickedUp);
+        PickUpPickedUpEvent?.Invoke(_pickUpsPickedUp);
     }
 
 
-    private void AdjustPitch(int currentCombo)
+    private void AdjustPitch(int currentCombo, bool specialPickup = false)
     {
         _pickupCurrentCombo += 1;
 
         // only increase pitch 5 times
         if (currentCombo <= 10)
         {
-            _soundEffectPickup1.Pitch += 0.05f;
+            if (specialPickup)
+            {
+                _soundEffectPickup2.Pitch += 0.05f;
+            }
+            else _soundEffectPickup1.Pitch += 0.05f;
         }
 
         _pickupComboTimer = 0;

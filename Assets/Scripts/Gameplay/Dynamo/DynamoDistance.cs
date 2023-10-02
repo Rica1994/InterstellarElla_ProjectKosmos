@@ -222,7 +222,7 @@ public class DynamoDistance : MonoBehaviour
             _dynamo.m_Speed = distanceDifference * SpeedFactor;
         }
 
-        if (shouldPlayerVo && _voiceAudioSource.isPlaying == false && _voiceAudioSource.clip != null && _timePassedSinceLastVO >= _timeBetweenVO)
+        if (GameManager.IsInCutscene == false && shouldPlayerVo && _voiceAudioSource.isPlaying == false && _voiceAudioSource.clip != null && _timePassedSinceLastVO >= _timeBetweenVO)
         {
             _timePassedSinceLastVO = 0.0f - _voiceAudioSource.clip.length;
             _voiceAudioSource.Play();

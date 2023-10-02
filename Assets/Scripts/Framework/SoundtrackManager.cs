@@ -25,6 +25,11 @@ public class SoundtrackManager : Service
         nextSource = gameObject.AddComponent<AudioSource>();
     }
 
+    public void PlayClip(AudioClip clip)
+    {
+        PlayClip(clip, false);
+    }
+
     public void PlayClip(AudioClip clip, bool fadeIn = false, bool fadeOutCurrent = false, bool loop = false, float targetVolume = 1f)
     {
         if (fadeOutCurrent)
