@@ -1,9 +1,106 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+public enum LevelType
+{
+    Venus = 0,
+    Mars = 1,
+    Saturn = 2,
+    Pluto = 3,
+    Mercury = 4
+}
 
 public class MenuLevel : MonoBehaviour
 {
+    [Header("My Planet is")]
+    [SerializeField]
+    private LevelType _myLevelType;
+    public LevelType MyLevelType => _myLevelType;
+
+    [Header("Animation components children")]
     public Animation AnimationScaler;
     public Animation AnimationRotater;
+
+    [Header("Animation components UI")]
+    [SerializeField] private Animation _animationPlanet;
+    [SerializeField] private Animation _animationScore;
+    [SerializeField] private Animation _animationValue;
+
+    [Header("Text components score")]
+    [SerializeField]
+    private Text _textPlanet;
+    [SerializeField]
+    private Text _textScore;
+    [SerializeField]
+    private Text _textValue;
+    [SerializeField]
+    private Text _textPercentage;
+
+    private const string _animationPlanetPop = "A_MenuLevel_Text_Planet_Popup";
+    private const string _animationPlanetPoof = "A_MenuLevel_Text_Planet_Poof";
+
+    private const string _animationScorePop = "A_MenuLevel_Text_Score_Popup";
+    private const string _animationScorePoof = "A_MenuLevel_Text_Score_Poof";
+
+    private const string _animationValuePop = "A_MenuLevel_Text_Value_Popup";
+    private const string _animationValuePoof = "A_MenuLevel_Text_Value_Poof";
+
+
+    public void SetLevelScore(string scoreString)
+    {
+        _textValue.text = scoreString;
+    }
+
+
+    public void PopupAnimationsText()
+    {
+        ServiceLocator.Instance.GetService<MainMenuManager>().StartCoroutine(PopupAnimationRoutine());     
+    }
+    public void PoofAnimationsText()
+    {
+        ServiceLocator.Instance.GetService<MainMenuManager>().StartCoroutine(PoofAnimationRoutine());
+    }
+
+    public void HideAllText()
+    {
+        _textPlanet.gameObject.SetActive(false);
+        _textScore.gameObject.SetActive(false);
+        _textValue.gameObject.SetActive(false);
+        _textPercentage.gameObject.SetActive(false);
+    }
+
+
+    private IEnumerator PopupAnimationRoutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        _animationPlanet.Play(_animationPlanetPop);
+
+        yield return new WaitForSeconds(0.1f);
+
+        _animationScore.Play(_animationScorePop);
+
+        yield return new WaitForSeconds(0.1f);
+
+        _animationValue.Play(_animationValuePop);
+    }
+    private IEnumerator PoofAnimationRoutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        _animationPlanet.Play(_animationPlanetPoof);
+
+        yield return new WaitForSeconds(0.1f);
+
+        _animationScore.Play(_animationScorePoof);
+
+        yield return new WaitForSeconds(0.1f);
+
+        _animationValue.Play(_animationValuePoof);
+    }
+
 }
+
+

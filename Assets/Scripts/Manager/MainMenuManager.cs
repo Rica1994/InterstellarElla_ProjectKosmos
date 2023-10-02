@@ -9,13 +9,13 @@ public class MainMenuManager : Service
 {
     [Header("Included Levels")]
     [SerializeField]
-    private bool _1_Mars = true;
-    [SerializeField]
-    private bool _2_Pluto = true;
-    [SerializeField]
     private bool _3_Venus = true;
     [SerializeField]
+    private bool _1_Mars = true;
+    [SerializeField]
     private bool _4_Saturn = true;
+    [SerializeField]
+    private bool _2_Pluto = true;
     [SerializeField]
     private bool _5_Mercury = true;
 
@@ -44,6 +44,7 @@ public class MainMenuManager : Service
 
     private SceneController _sceneController;
 
+    #region Animation / Animator strings
     // animation strings
     private const string _levelScaleUp = "A_MenuLevelScaleUp";
     private const string _levelScaleDown = "A_MenuLevelScaleDown";
@@ -67,38 +68,52 @@ public class MainMenuManager : Service
 
     private const string _camZoom = "A_CameraLevelZoom";
 
+    #endregion
+
 
     private void Awake()
     {
-        _levelsIncluded[0] = _1_Mars;
-        _levelsIncluded[1] = _2_Pluto;
-        _levelsIncluded[2] = _3_Venus;
-        _levelsIncluded[3] = _4_Saturn;
+        _levelsIncluded[0] = _3_Venus;
+        _levelsIncluded[1] = _1_Mars;
+        _levelsIncluded[2] = _4_Saturn;
+        _levelsIncluded[3] = _2_Pluto;
         _levelsIncluded[4] = _5_Mercury;
     }
 
     private void Start()
     {
         _sceneController = ServiceLocator.Instance.GetService<SceneController>();
-
         _levels = _menuAnimator.MenuLevels;
-
         _levelIndex = 0;
         _currentLevel = _levels[0];
 
+        // hide text on planets
+        for (int i = 0; i < _levels.Count; i++)
+        {
+            _levels[i].HideAllText();
+        }
         // shrink all planets first
         for (int i = 0; i < _levels.Count; i++)
         {
             _levels[i].AnimationScaler.Play();
         }
-
         // size up level 1
-        _levels[0].AnimationScaler.Play(_levelScaleUp);
+        ScaleLevelUp();
 
         // show buttons after delay
         StartCoroutine(EnableButtonsDelay(0));
+        // set scores
+        SetPlanetScores();
     }
 
+
+    private void SetPlanetScores()
+    {
+        for (int i = 0; i < _levels.Count; i++)
+        {
+            _levels[i].SetLevelScore(ParseScoreFromScoreValues(_levels[i].MyLevelType));
+        }
+    }
 
 
     public void LoadLevel()
@@ -142,6 +157,32 @@ public class MainMenuManager : Service
             return 2; // For scenes like S_Level_1_0_Introscene, go two levels up
         else
             return 0; // Default case, stay in the current directory
+    }
+    private string ParseScoreFromScoreValues(LevelType levelType)
+    {
+        var planetValues = GameManager.Data.PlanetCompletionValues;
+
+        float planetValue = 0.0f;
+        switch (levelType)
+        {
+            case LevelType.Venus:
+                planetValue = planetValues.VenusCompletion;
+                break;
+            case LevelType.Mars:
+                planetValue = planetValues.MarsCompletion;
+                break;
+            case LevelType.Saturn:
+                planetValue = planetValues.SaturnCompletion;
+                break;
+            case LevelType.Pluto:
+                planetValue = planetValues.PlutoCompletion;
+                break;
+            case LevelType.Mercury:
+                planetValue = planetValues.MercuryCompletion;
+                break;
+        }
+
+        return Helpers.FormatPercentageToString(planetValue);
     }
 
     public string GetPlanetNameFromEnum(SceneType sceneType)
@@ -255,10 +296,14 @@ public class MainMenuManager : Service
     private void ScaleLevelUp()
     {
         _currentLevel.AnimationScaler.Play(_levelScaleUp);
+
+        _currentLevel.PopupAnimationsText();
     }
     private void ScaleLevelDown()
     {
         _currentLevel.AnimationScaler.Play(_levelScaleDown);
+
+        _currentLevel.PoofAnimationsText();
     }
 
     private SceneType ChooseCorrectSceneWork()
