@@ -16,6 +16,35 @@ public class FollowWithDamping : MonoBehaviour
 
     private Vector3 velocity = Vector3.zero; // This value is modified by the SmoothDamp function each frame.
 
+    [Header("If in space")]
+    [SerializeField]
+    private Transform _transformParent;
+
+
+    private void Start()
+    {
+        if (_target != null && _transformParent != null)
+        {
+            // disable target follow if both have value
+            _target = null;
+        }
+
+        if (_target == null)
+        {
+            this.enabled = false;
+        }
+
+        if (_transformParent != null)
+        {
+            this.transform.SetParent(_transformParent);
+            this.transform.localPosition = Vector3.zero;
+        }
+        else
+        {
+            Debug.LogWarning("Maggie not set-up correctly");
+        }
+    }
+
     void FixedUpdate()
     {
         if (_target && updateMethod == UpdateMethod.FixedUpdate)

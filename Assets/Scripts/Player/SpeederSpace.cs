@@ -354,6 +354,12 @@ public class SpeederSpace : PlayerController
 
         Move();
     }
+    //public override void FixedUpdateController()
+    //{
+    //    base.FixedUpdateController();
+
+    //    Move();
+    //}
     public override void Collide(MultiplierTimerComponent knockbackComponent)
     {
         base.Collide(knockbackComponent);
