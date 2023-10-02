@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1787166959912855251}
-  - component: {fileID: 1787166959912855254}
   - component: {fileID: 1787166959912855255}
+  - component: {fileID: 1787166959912855254}
   m_Layer: 0
-  m_Name: 01_MaggieTriggerChainAction
+  m_Name: 01_MaggieTCA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,19 +33,6 @@ Transform:
   m_Father: {fileID: 1787166961441543570}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1787166959912855254
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1787166959912855256}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1787166959912855255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,6 +47,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _useUserBasedAction: 1
   _visual: {fileID: 1866704259158764956}
+--- !u!65 &1787166959912855254
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787166959912855256}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1787166960565224096
 GameObject:
   m_ObjectHideFlags: 0
@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 1787166960565224158}
   - component: {fileID: 1787166960565224159}
   m_Layer: 0
-  m_Name: 02_MaggieChainAction
+  m_Name: 02_MaggieCA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -113,6 +113,7 @@ MonoBehaviour:
     PitchLowerLimitAddition: 0.2
     PitchUpperLimitAddition: 0.2
   _maggieAudioClip: {fileID: 8300000, guid: 937814e739dfb9e41914537e30f4e3eb, type: 3}
+  _lowerMusic: 0
 --- !u!1 &1787166961441543572
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,7 +255,7 @@ GameObject:
   - component: {fileID: 1156171283087205034}
   - component: {fileID: 2351333383528339723}
   m_Layer: 0
-  m_Name: 03_EllaChainAction
+  m_Name: 03_EllaCA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
