@@ -752,22 +752,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!111 &856820445
-Animation:
+--- !u!114 &856820445
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 856820444}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: b3844f4f03750db48a4db500c95ddbea, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: b3844f4f03750db48a4db500c95ddbea, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 137c96369c75d5d489c3f616ff5b0405, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 1
 --- !u!4 &856820446
 Transform:
   m_ObjectHideFlags: 0
@@ -782,7 +779,7 @@ Transform:
   - {fileID: 1463738352}
   m_Father: {fileID: 0}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 360, z: 0}
 --- !u!1 &914790662
 GameObject:
   m_ObjectHideFlags: 0
@@ -1688,10 +1685,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2055b6cc3f7a0b4f93dd9e889f3706d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _3_Venus: 1
   _1_Mars: 1
-  _2_Pluto: 0
-  _3_Venus: 0
-  _4_Saturn: 0
+  _4_Saturn: 1
+  _2_Pluto: 1
   _5_Mercury: 0
   ScenesToLoad: 0
   _menuAnimator: {fileID: 1753006869}
