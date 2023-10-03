@@ -404,7 +404,7 @@ namespace UnityCore
             }
 
             // when toggling audio settings
-            private void MixerAdjustment(MixerType mixerType)
+            public void MixerAdjustment(MixerType mixerType)
             {
                 switch (mixerType)
                 {
