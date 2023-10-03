@@ -10,7 +10,9 @@ namespace UnityCore
 
             Loading = 1,
 
-            Pause = 2
+            Pause = 2,
+
+            Fiche = 3,
         }
     }
 }
