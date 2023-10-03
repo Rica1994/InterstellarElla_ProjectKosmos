@@ -2,6 +2,7 @@ using DG.Tweening.Core.Easing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityCore.Audio;
 using UnityCore.Scene;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,14 +16,27 @@ public class GameManager : Service
 
     public static bool IsShittyDevice = false;
 
-    public static bool IsInCutscene;
+    private static bool _isInCutScene = false;
+    public static bool IsInCutscene
+    {
+        get => _isInCutScene;
+        set
+        {
+            _isInCutScene = value;
+            var audioController = ServiceLocator.Instance.GetService<AudioController>();
+            if (audioController != null)
+            {
+                audioController.MixerAdjustment(value ? MixerType.MixerFXMuted : MixerType.MixerNormal);
+            }
+        }
+    }
 
     public struct SaveData
     {
         public PlanetCompletionValues PlanetCompletionValues;
         public float CurrentScore;
         public int LastPlanet;
-     //   public bool IsShittyDevice;
+        //   public bool IsShittyDevice;
 
         public override string ToString()
         {
@@ -149,8 +163,8 @@ public class GameManager : Service
 
         // Step 5: Extract current level
         var lastPlanet = Planet.None;
-       // int isShittyDevice = 0;
-        
+        // int isShittyDevice = 0;
+
         int planetValue;
         if (int.TryParse(planetCompletionsCompiled.Substring(18, 1), out planetValue))
         {
@@ -161,7 +175,7 @@ public class GameManager : Service
         }
 
 
-     //   int.TryParse(planetCompletionsCompiled.Substring(19,1), out isShittyDevice);
+        //   int.TryParse(planetCompletionsCompiled.Substring(19,1), out isShittyDevice);
 
         // Step 6: Assign to the struct
         PlanetCompletionValues values = new PlanetCompletionValues
@@ -177,7 +191,7 @@ public class GameManager : Service
         data.LastPlanet = (int)lastPlanet;
         data.CurrentScore = currentScore;
         data.PlanetCompletionValues = values;
-     //   data.IsShittyDevice = (isShittyDevice == 1) ? true : false;
+        //   data.IsShittyDevice = (isShittyDevice == 1) ? true : false;
 
         Data = data;
     }
@@ -198,17 +212,17 @@ public class GameManager : Service
         {
             case Planet.Mars:
                 if (Data.CurrentScore > Data.PlanetCompletionValues.MarsCompletion) Data.PlanetCompletionValues.MarsCompletion = Data.CurrentScore;
-                break;                 
-            case Planet.Venus:         
+                break;
+            case Planet.Venus:
                 if (Data.CurrentScore > Data.PlanetCompletionValues.VenusCompletion) Data.PlanetCompletionValues.VenusCompletion = Data.CurrentScore;
-                break;                 
-            case Planet.Saturn:         
+                break;
+            case Planet.Saturn:
                 if (Data.CurrentScore > Data.PlanetCompletionValues.SaturnCompletion) Data.PlanetCompletionValues.SaturnCompletion = Data.CurrentScore;
-                break;                 
-            case Planet.Pluto:          
+                break;
+            case Planet.Pluto:
                 if (Data.CurrentScore > Data.PlanetCompletionValues.PlutoCompletion) Data.PlanetCompletionValues.PlutoCompletion = Data.CurrentScore;
-                break;                  
-            case Planet.Mercury:        
+                break;
+            case Planet.Mercury:
                 if (Data.CurrentScore > Data.PlanetCompletionValues.MercuryCompletion) Data.PlanetCompletionValues.MercuryCompletion = Data.CurrentScore;
                 break;
         }

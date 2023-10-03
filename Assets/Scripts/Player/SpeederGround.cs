@@ -7,7 +7,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-public class SpeederGround : PlayerController
+
+interface IVehicle
+{
+    float GetSpeed();
+}
+public class SpeederGround : PlayerController, IVehicle
 {
     [Header("Speed")]
     public Vector3 moveDirection = new Vector3(0f, 0f, 1f);
@@ -679,6 +684,11 @@ public class SpeederGround : PlayerController
         //Collider.enabled = false;
 
         _gravityValue = originalPlayerGravity;
+    }
+
+    public float GetSpeed()
+    {
+        return _zVelocity;
     }
 
     #endregion
