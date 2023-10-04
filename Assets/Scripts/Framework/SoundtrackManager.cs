@@ -18,7 +18,7 @@ public class SoundtrackManager : Service
 
     public AudioMixer AudioMixer => _audioMixer;
 
-    void Start()
+    void Awake()
     {
         // Initialize Audio Sources
         currentSource = gameObject.GetComponent<AudioSource>();
