@@ -61,7 +61,8 @@ public class SpeederGroundCutsceneStateAction : ChainAction
         _followWithDamping = FindObjectOfType<FollowWithDamping>();
         _brain = FindObjectOfType<CinemachineBrain>();
         _levelManager = FindObjectOfType<LevelManager>();
-        _skipCutscene = FindObjectOfType<SkipCutscene>().gameObject;
+        var button = FindObjectOfType<SkipCutscene>();
+        if (button != null) _skipCutscene = button.gameObject;
         _speederGround = FindObjectOfType<SpeederGround>();
         _characterController = FindObjectOfType<CharacterController>();
         _dynamoCart = FindObjectOfType<CinemachineDollyCart>();
@@ -88,7 +89,7 @@ public class SpeederGroundCutsceneStateAction : ChainAction
                     _brain.m_DefaultBlend.m_Time = _cameraBlendTime;
                 }
                 _levelManager.cutsceneCameras.gameObject.SetActive(_cutsceneCameras);
-                _skipCutscene.SetActive(true);
+                if (_skipCutscene != null) _skipCutscene.SetActive(true);
                 if (_smoothSpeedTransition)
                 {
                     StartCoroutine(SmoothSpeedTransition());
@@ -131,7 +132,7 @@ public class SpeederGroundCutsceneStateAction : ChainAction
                     _brain.m_DefaultBlend.m_Time = _cameraBlendTime;
                 }
                 _levelManager.cutsceneCameras.gameObject.SetActive(false);
-                _skipCutscene.SetActive(false);
+                if (_skipCutscene != null) _skipCutscene.SetActive(false);
                 _speederGround.speedForward = _speederSpeed;
                 _speederGround.enabled = true;
                 _characterController.enabled = true;
