@@ -311,13 +311,13 @@ public class MainMenuManager : Service
         switch (_levelIndex)
         {
             case 0:
-                return SceneType.S_Level_3_Intro;
-            case 1:
                 return SceneType.S_Level_1_Intro;
-            case 2:
-                return SceneType.S_Level_4_Intro;
-            case 3:
+            case 1:
                 return SceneType.S_Level_2_Intro;
+            case 2:
+                return SceneType.S_Level_3_Intro;
+            case 3:
+                return SceneType.S_Level_4_Intro;
             case 4:
                 return SceneType.S_Level_5_Intro;
             default:
