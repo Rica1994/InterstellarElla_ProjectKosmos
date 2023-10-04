@@ -53,7 +53,10 @@ public class GlitchAnimatedEventBoulder : GlitchAnimatedEvent
             _swapCamerasToEnableOnEvent[i].gameObject.SetActive(true);
         }
 
-        StartCoroutine(EndLevelRoutine());
+        if (_endsLevel == true)
+        {
+            StartCoroutine(EndLevelRoutine());
+        }      
     }
 
 
