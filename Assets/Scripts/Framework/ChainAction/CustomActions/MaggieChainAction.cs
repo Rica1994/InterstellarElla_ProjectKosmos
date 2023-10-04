@@ -32,18 +32,20 @@ public class MaggieChainAction : ChainAction
             Debug.LogError("No Maggie found! Please add maggie in the scene");
             return;
         }
-        _maxTime = _maggie.PopUpLength + _maggie.PopDownLength + _maggieVoiceClip.Clip.length;
+        _maxTime = _maggie.PopUpLength + _maggie.PopDownLength + _maggieAudioClip.length;
     }
 
     public override void Execute()
     {
         base.Execute();
         _maggie.PopUp();
-        _maggieMouthAnimation.VoiceSource = ServiceLocator.Instance.GetService<AudioController>().TracksMaggie[0].Source;
+        _maggieMouthAnimation.VoiceSource = _maggieAudioSource;
         StartCoroutine(Helpers.DoAfter(_maggie.PopUpLength, () =>
         {
             //_maggieMouthAnimation.PlayAudioClip(_maggieAudioClip);
-            ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieVoiceClip);
+            _maggieAudioSource.clip = _maggieAudioClip;
+            _maggieAudioSource.Play();
+            //ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieVoiceClip);
             StartCoroutine(Helpers.DoAfter(_maggieAudioClip.length, () => _maggie.PopDown()));
         }));
 

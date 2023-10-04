@@ -120,7 +120,7 @@ namespace UnityCore
 
                 string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(GameManager.Data.ToString())}";
 
-                Application.ExternalEval($"window.location.href = '{relativePath + "?data=" + data}';");
+                Application.ExternalEval($"window.location.href = '{relativePath + "/index.html" + "?data=" + data}';");
 #endif
             }
 
