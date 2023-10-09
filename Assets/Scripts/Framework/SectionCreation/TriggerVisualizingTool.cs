@@ -21,6 +21,7 @@ public class TriggerVisualizingTool : EditorWindow
     private List<SceneTrigger> _sceneTriggers = new List<SceneTrigger>();
     private List<DeathTrigger> _deathTriggers = new List<DeathTrigger>();
     private List<InvisibleWall> _invisibleWalls = new List<InvisibleWall>();
+    private List<SequenceTrigger> _sequenceTriggers = new List<SequenceTrigger>();
 
     private List<MaggieTriggerChainAction> _chainActionTrigger = new List<MaggieTriggerChainAction>();
 
@@ -91,6 +92,12 @@ public class TriggerVisualizingTool : EditorWindow
                 _chainActionTrigger[i].ToggleVisuals(true);
             }
 
+            _sequenceTriggers = FindObjectsOfType<SequenceTrigger>().ToList();
+            for (int i = 0; i < _sequenceTriggers.Count; i++)
+            {
+                _sequenceTriggers[i].ToggleVisuals(true);
+            }
+
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
         if (GUILayout.Button("Hide all triggers"))
@@ -144,6 +151,12 @@ public class TriggerVisualizingTool : EditorWindow
             for (int i = 0; i < _chainActionTrigger.Count; i++)
             {
                 _chainActionTrigger[i].ToggleVisuals(false);
+            }
+
+            _sequenceTriggers = FindObjectsOfType<SequenceTrigger>().ToList();
+            for (int i = 0; i < _sequenceTriggers.Count; i++)
+            {
+                _sequenceTriggers[i].ToggleVisuals(false);
             }
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
@@ -383,6 +396,28 @@ public class TriggerVisualizingTool : EditorWindow
             for (int i = 0; i < _chainActionTrigger.Count; i++)
             {
                 _chainActionTrigger[i].ToggleVisuals(false);
+            }
+
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+
+
+        if (GUILayout.Button("SHOW Visuals --- Sequence Triggers"))
+        {
+            _sequenceTriggers = FindObjectsOfType<SequenceTrigger>().ToList();
+            for (int i = 0; i < _sequenceTriggers.Count; i++)
+            {
+                _sequenceTriggers[i].ToggleVisuals(true);
+            }
+
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+        if (GUILayout.Button("HIDE Visuals --- Sequence Triggers"))
+        {
+            _sequenceTriggers = FindObjectsOfType<SequenceTrigger>().ToList();
+            for (int i = 0; i < _sequenceTriggers.Count; i++)
+            {
+                _sequenceTriggers[i].ToggleVisuals(false);
             }
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
