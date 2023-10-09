@@ -39,7 +39,7 @@ public class FollowWithDamping : MonoBehaviour
             this.transform.SetParent(_transformParent);
             this.transform.localPosition = Vector3.zero;
         }
-        else
+        else if (_target == null & _transformParent == null)
         {
             Debug.LogWarning("Maggie not set-up correctly");
         }
