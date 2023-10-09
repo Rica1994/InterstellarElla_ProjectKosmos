@@ -27,4 +27,9 @@ public class SequenceTrigger : MonoBehaviour
             }
         }
     }
+
+    public void ToggleVisuals(bool showThem = true)
+    {
+        _trigger.GetComponent<MeshRenderer>().enabled = showThem;
+    }
 }
