@@ -13,6 +13,9 @@ public class Maggie : MonoBehaviour
     
     [SerializeField]
     private AnimationClip _popDownClip;
+
+    [SerializeField]
+    private AudioSource _sfxMaggieSource;
     
     private const string POP_UP_TRIGGER = "PopUp";
     private const string POP_DOWN_TRIGGER = "PopDown";
@@ -34,6 +37,7 @@ public class Maggie : MonoBehaviour
 
     public void PopUp()
     {
+        _sfxMaggieSource.Play();
         Debug.Log(" Gone into pop-up ");
         Debug.Log(_animator.GetBool(POP_UP_TRIGGER) + " <---- should be false , found it ?");
         _animator.SetTrigger(POP_UP_TRIGGER);
