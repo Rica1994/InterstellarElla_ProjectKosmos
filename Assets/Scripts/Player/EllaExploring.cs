@@ -79,6 +79,7 @@ public class EllaExploring : PlayerController
     [Header("Sounds")]
     [SerializeField] private AudioSource _sourceBoostBoots;
 
+    [SerializeField] private AudioSource _sourceLandingBoots;
 
 
     private void Awake()
@@ -187,8 +188,15 @@ public class EllaExploring : PlayerController
             // animate the character
             AnimateRig();
 
+            bool wasGrounded = _isGrounded;
+            
             // !! Keep this execution order !!
             _isGrounded = _characterController.isGrounded;
+
+            if (wasGrounded == false && _isGrounded)
+            {
+                Land();
+            }
         }
     }
 
@@ -291,6 +299,11 @@ public class EllaExploring : PlayerController
         {
             _yVelocity = 0;
         }
+    }
+
+    private void Land()
+    {
+        if (_sourceLandingBoots.isPlaying == false) _sourceLandingBoots.Play();
     }
 
     private void Move()
