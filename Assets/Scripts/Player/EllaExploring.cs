@@ -224,6 +224,12 @@ public class EllaExploring : PlayerController
         _animatorComponent.SetAnimatorBool(_animator, _boolMoving, true);
         _animatorComponent.SetAnimatorBool(_animator, _boolGrounded, false);
         _animatorComponent.SetAnimatorBool(_animator, _boolBoosting, true);
+
+        // Activate jetboots sound
+        if (_sourceBoostBoots.isActiveAndEnabled == false)
+        {
+            _sourceBoostBoots.enabled = true;
+        }
     }
     public void JumpPadCCToggle(float timeOfFlight)
     {
