@@ -66,6 +66,7 @@ public class EllaExploring : PlayerController
 
     private bool _isGrounded = false;
     private bool _isApplicationQuitting = false;
+    private float _timeNotGrounded = 0f;
 
     private MoveComponent _moveComponent;
     private HoverComponent _hoverComponent;
@@ -193,10 +194,7 @@ public class EllaExploring : PlayerController
             // !! Keep this execution order !!
             _isGrounded = _characterController.isGrounded;
 
-            if (wasGrounded == false && _isGrounded)
-            {
-                Land();
-            }
+            Land(wasGrounded);
         }
     }
 
@@ -301,9 +299,22 @@ public class EllaExploring : PlayerController
         }
     }
 
-    private void Land()
-    {
-        if (_sourceLandingBoots.isPlaying == false) _sourceLandingBoots.Play();
+    private void Land(bool wasGrounded)
+    {                        
+        if (wasGrounded == false && _isGrounded && _timeNotGrounded > 0.5f)
+        {
+            _timeNotGrounded = 0;
+            if (_sourceLandingBoots.isPlaying == false) _sourceLandingBoots.Play();
+        }
+
+        if (_isGrounded == false)
+        {
+            _timeNotGrounded += Time.deltaTime;
+        }
+        else
+        {
+            _timeNotGrounded = 0;
+        }
     }
 
     private void Move()
