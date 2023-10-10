@@ -10,7 +10,7 @@ public class EllaExploring : PlayerController
     [Header("Speed")]
     [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f);
     [SerializeField] private float _moveSpeed= 5f;
-    private float _rotationSpeed = 1.5f;
+    [SerializeField] private float _rotationSpeed = 1.5f;
 
     [Header("Boost")]
     [SerializeField] private float _hoverStrengthMax = 7f;

@@ -25,6 +25,9 @@ public class TriggerVisualizingTool : EditorWindow
 
     private List<MaggieTriggerChainAction> _chainActionTrigger = new List<MaggieTriggerChainAction>();
 
+    private MarsPickupReference _marsPickupRef;
+    private List<PickUp> _pickups = new List<PickUp>();
+
 
     [MenuItem("Window/Trigger visualizer")]
     public static void ShowWindow()
@@ -422,6 +425,22 @@ public class TriggerVisualizingTool : EditorWindow
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
+
+
+        //if (GUILayout.Button("Spawn mars pickups on OG pickup locations"))
+        //{
+        //    _marsPickupRef = FindObjectOfType<MarsPickupReference>();
+        //    _pickups = FindObjectsOfType<PickUp>().ToList();
+
+        //    for (int i = 0; i < _pickups.Count; i++)
+        //    {
+        //        GameObject newPickup = PrefabUtility.InstantiatePrefab(_marsPickupRef.MarsPickupPrefab) as GameObject;
+
+        //        newPickup.transform.position = _pickups[i].transform.position;
+        //    }
+
+        //    EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        //}
     }
 }
 

@@ -29,7 +29,7 @@ public class MagnetComponent : MonoBehaviour
 
     private void Start()
     {
-        if (FindObjectOfType<SpeederGround>() == null) 
+        if (FindObjectOfType<PlayerController>() == null) 
         {
             this.enabled = false;
         }
@@ -42,7 +42,7 @@ public class MagnetComponent : MonoBehaviour
 
     private void OnTriggered(TriggerHandler me, Collider other, bool hasEntered)
     {
-        if (hasEntered && other.GetComponent<SpeederGround>())
+        if (hasEntered && other.GetComponent<PlayerController>())
         {
             _target = other.transform;
             StartMagnetism();
