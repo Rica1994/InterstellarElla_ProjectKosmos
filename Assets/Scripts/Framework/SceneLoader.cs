@@ -41,9 +41,10 @@ public class SceneLoader : MonoBehaviour
 
     private void Awake()
     {
-            _speederGround.speedForward = 0;
-            _dynamoDollyCart.m_Speed = 0;
-            _Sequence.SetActive(false);
+        GameManager.IsInCutscene = true;
+        _speederGround.speedForward = 0;
+        _dynamoDollyCart.m_Speed = 0;
+        _Sequence.SetActive(false);
         if (!SystemInfo.deviceModel.StartsWith("Safari"))
         {
         }
@@ -83,7 +84,7 @@ public class SceneLoader : MonoBehaviour
             {
                 _elapsedTime = (_lastFramerate / _targetFPS) * _duration;
             }
-        
+
             if (_averageFPS > _targetFPS)
             {
                 StartGameplay();
@@ -101,7 +102,7 @@ public class SceneLoader : MonoBehaviour
         if (_timer >= 5.0f)
         {
             _averageFPS = _frameCount / _timer;
-            
+
 
 
             if (_averageFPS / _targetFPS > _currentTimer)
