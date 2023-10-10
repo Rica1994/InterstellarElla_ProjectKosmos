@@ -66,6 +66,7 @@ public class EllaExploring : PlayerController
 
     private bool _isGrounded = false;
     private bool _isApplicationQuitting = false;
+    private float _timeNotGrounded = 0f;
 
     private MoveComponent _moveComponent;
     private HoverComponent _hoverComponent;
@@ -79,6 +80,9 @@ public class EllaExploring : PlayerController
     [Header("Sounds")]
     [SerializeField] private AudioSource _sourceBoostBoots;
 
+    [SerializeField] private AudioSource _sourceLandingBoots;
+
+    [SerializeField] private AudioSource _sourceIgnitionBoots;
 
 
     private void Awake()
@@ -187,8 +191,12 @@ public class EllaExploring : PlayerController
             // animate the character
             AnimateRig();
 
+            bool wasGrounded = _isGrounded;
+            
             // !! Keep this execution order !!
             _isGrounded = _characterController.isGrounded;
+
+            Land(wasGrounded);
         }
     }
 
@@ -290,6 +298,24 @@ public class EllaExploring : PlayerController
         if (_yVelocity > 0)
         {
             _yVelocity = 0;
+        }
+    }
+
+    private void Land(bool wasGrounded)
+    {                        
+        if (wasGrounded == false && _isGrounded && _timeNotGrounded > 0.5f)
+        {
+            _timeNotGrounded = 0;
+            if (_sourceLandingBoots.isPlaying == false) _sourceLandingBoots.Play();
+        }
+
+        if (_isGrounded == false)
+        {
+            _timeNotGrounded += Time.deltaTime;
+        }
+        else
+        {
+            _timeNotGrounded = 0;
         }
     }
 
@@ -439,6 +465,7 @@ public class EllaExploring : PlayerController
                 _hoverStrength = _hoverStrengthMax;
 
                 _startedHoverFromGround = true;
+                _sourceIgnitionBoots.Play();
             }
             else
             {
