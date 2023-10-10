@@ -82,6 +82,8 @@ public class EllaExploring : PlayerController
 
     [SerializeField] private AudioSource _sourceLandingBoots;
 
+    [SerializeField] private AudioSource _sourceIgnitionBoots;
+
 
     private void Awake()
     {
@@ -463,6 +465,7 @@ public class EllaExploring : PlayerController
                 _hoverStrength = _hoverStrengthMax;
 
                 _startedHoverFromGround = true;
+                _sourceIgnitionBoots.Play();
             }
             else
             {
