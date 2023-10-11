@@ -35,7 +35,7 @@ public class SpeederSpace : PlayerController
     // Movement
     private Vector2 _input;
 
-    private float _baseSpeed;
+    public float _baseSpeed;
 
     // Movement visuals
     private Vector3 TargetRotation;
