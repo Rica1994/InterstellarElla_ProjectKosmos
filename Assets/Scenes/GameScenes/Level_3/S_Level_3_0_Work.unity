@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
+  m_Fog: 1
   m_FogColor: {r: 0.752, g: 0.46552756, b: 0.18649602, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.04
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 369254367}
-  m_IndirectSpecularColor: {r: 0.7280259, g: 0.6283761, b: 0.5299723, a: 1}
+  m_IndirectSpecularColor: {r: 0.7854715, g: 0.6364033, b: 0.44956553, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: b354bc0ab0da03746a30421bb9cfc88e,
+  m_LightingDataAsset: {fileID: 112000000, guid: c2c7f53effaa88a428de968ea7f3e644,
     type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -4345,7 +4345,7 @@ PrefabInstance:
     - target: {fileID: 5387424818983408643, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.1539307
+      value: 2.1539268
       objectReference: {fileID: 0}
     - target: {fileID: 5387424818983408643, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
@@ -4355,17 +4355,17 @@ PrefabInstance:
     - target: {fileID: 5387424818983408643, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.18468326
+      value: 0.18468343
       objectReference: {fileID: 0}
     - target: {fileID: 5387424818983408643, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.05081557
+      value: 0.05081546
       objectReference: {fileID: 0}
     - target: {fileID: 5387424818983408643, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.009562289
+      value: -0.009562278
       objectReference: {fileID: 0}
     - target: {fileID: 5387424819014693459, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
@@ -4485,7 +4485,7 @@ PrefabInstance:
     - target: {fileID: 5387424819468885091, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.5842857
+      value: -3.5842867
       objectReference: {fileID: 0}
     - target: {fileID: 5387424819468885091, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
@@ -4495,17 +4495,17 @@ PrefabInstance:
     - target: {fileID: 5387424819468885091, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.16502191
+      value: 0.16502193
       objectReference: {fileID: 0}
     - target: {fileID: 5387424819468885091, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.15726392
+      value: 0.15726383
       objectReference: {fileID: 0}
     - target: {fileID: 5387424819468885091, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.026663747
+      value: -0.026663737
       objectReference: {fileID: 0}
     - target: {fileID: 5387424819511367939, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
@@ -29980,7 +29980,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -39503,57 +39503,57 @@ PrefabInstance:
     - target: {fileID: 3091133272302618596, guid: 9e7874142ee4f7a4faa8ffbb3f6bb475,
         type: 3}
       propertyPath: field of view
-      value: 44.2
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 3091133272302618596, guid: 9e7874142ee4f7a4faa8ffbb3f6bb475,
         type: 3}
       propertyPath: far clip plane
-      value: 1000
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3091133272302618596, guid: 9e7874142ee4f7a4faa8ffbb3f6bb475,
         type: 3}
       propertyPath: near clip plane
-      value: 0.3
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 3091133272302618596, guid: 9e7874142ee4f7a4faa8ffbb3f6bb475,
         type: 3}
       propertyPath: orthographic size
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3091133272302618597, guid: 9e7874142ee4f7a4faa8ffbb3f6bb475,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 50.812515
+      value: 0.546
       objectReference: {fileID: 0}
     - target: {fileID: 3091133272302618597, guid: 9e7874142ee4f7a4faa8ffbb3f6bb475,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -44.679188
+      value: 3.8899994
       objectReference: {fileID: 0}
     - target: {fileID: 3091133272302618597, guid: 9e7874142ee4f7a4faa8ffbb3f6bb475,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.606445
+      value: -1.2400002
       objectReference: {fileID: 0}
     - target: {fileID: 3091133272302618597, guid: 9e7874142ee4f7a4faa8ffbb3f6bb475,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.22832805
+      value: 0.9719649
       objectReference: {fileID: 0}
     - target: {fileID: 3091133272302618597, guid: 9e7874142ee4f7a4faa8ffbb3f6bb475,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.05706633
+      value: 0.23512606
       objectReference: {fileID: 0}
     - target: {fileID: 3091133272302618597, guid: 9e7874142ee4f7a4faa8ffbb3f6bb475,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9427941
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3091133272302618597, guid: 9e7874142ee4f7a4faa8ffbb3f6bb475,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.23611245
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3703649312188364218, guid: 9e7874142ee4f7a4faa8ffbb3f6bb475,
         type: 3}
