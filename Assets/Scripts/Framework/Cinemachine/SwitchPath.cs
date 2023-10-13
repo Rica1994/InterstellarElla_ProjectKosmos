@@ -8,6 +8,10 @@ public class SwitchPath : MonoBehaviour
 {
     [SerializeField] private CinemachineSmoothPath _fromSmoothPath;
     [SerializeField] private CinemachineSmoothPath _toSmoothPath;
+
+    [SerializeField]
+    private AudioSource _soundEffectSource;
+
     private int _closestWaypointIndex = -1;
 
     private bool _hitTrigger = false;
@@ -50,6 +54,8 @@ public class SwitchPath : MonoBehaviour
         {
             return;
         }
+
+        if (_soundEffectSource != null) _soundEffectSource.Play();
 
         // Find closest waypoint from current location on this path
         if (_closestWaypointIndex == -1)

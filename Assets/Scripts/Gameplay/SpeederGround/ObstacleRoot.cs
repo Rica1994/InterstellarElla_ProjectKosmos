@@ -101,7 +101,7 @@ public class ObstacleRoot : MonoBehaviour
             SpeederSpace speederSpace = player.GetComponent<SpeederSpace>();
             if (speederSpace != null)
             {
-                ServiceLocator.Instance.GetService<LevelManager>().PlayerHitObstacleSpace(speederSpace);
+                ServiceLocator.Instance.GetService<LevelManager>().PlayerHitObstacleSpace(speederSpace, obCol.ObstacleKind);
             }
 
             if (_disableColliderOnHit)

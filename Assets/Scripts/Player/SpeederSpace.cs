@@ -70,9 +70,18 @@ public class SpeederSpace : PlayerController, IVehicle
     [SerializeField]
     private float _magnetCooldownTime = 3;
 
+    [SerializeField]
+    private AudioSource _magnetAudioSource;
+
     [Header("Audio")]
     [SerializeField]
-    private AudioElement _soundCollision;
+    private AudioElement _rockCollisionSound;
+
+    [SerializeField]
+    private AudioElement _metalCollisionSound;
+
+    [SerializeField]
+    private AudioClip[] _magnetSounds;
 
     private AudioController _audioController;
     private ParticleManager _particleManager;
@@ -314,17 +323,33 @@ public class SpeederSpace : PlayerController, IVehicle
     }
     private IEnumerator ActivateMagnet()
     {
-        _magnetIsActive = true;
         _magnetOnCooldown = true;
+
+        _magnetAudioSource.clip = _magnetSounds[0];
+        _magnetAudioSource.Play();
+
+        yield return new WaitForSeconds(_magnetSounds[0].length);
+
+        _magnetIsActive = true;
 
         // anable object and particles
         _magnetSpace.EnableFullObject(true);
         _magnetSpace.StartParticleSystem(true);
 
+        _magnetAudioSource.Stop();
+        _magnetAudioSource.clip = _magnetSounds[1];
+        _magnetAudioSource.loop = true;
+        _magnetAudioSource.Play();
+
         yield return new WaitForSeconds(_magnetDuration);
 
         // disbale particles
         _magnetSpace.StartParticleSystem(false);
+
+        _magnetAudioSource.Stop();
+        _magnetAudioSource.clip = _magnetSounds[2];
+        _magnetAudioSource.loop = false;
+        _magnetAudioSource.Play();
 
         yield return new WaitForSeconds(1f);
 
@@ -372,9 +397,20 @@ public class SpeederSpace : PlayerController, IVehicle
         _boostComponent.OnTimerEnded += BoostEnded;
         ServiceLocator.Instance.GetService<VirtualCameraManager>().ZoomOut();
     }
-    public void PlayCollisionSound()
+    public void PlayCollisionSound(ObstacleCollision.ObstacleType obstacleType)
     {
-        _audioController.PlayAudio(_soundCollision);
+        switch (obstacleType)
+        {
+            case ObstacleCollision.ObstacleType.Default:
+                _audioController.PlayAudio(_rockCollisionSound);
+                break;
+            case ObstacleCollision.ObstacleType.Metal:
+                _audioController.PlayAudio(_metalCollisionSound);
+                break;
+            case ObstacleCollision.ObstacleType.Rock:
+                _audioController.PlayAudio(_rockCollisionSound);
+                break;
+        }
     }
     public void PlayCollisionAnimation()
     {

@@ -6,9 +6,20 @@ using UnityEngine.Assertions;
 
 public class ObstacleCollision : MonoBehaviour
 {
+    public enum ObstacleType
+    {
+        Default = -1,
+        Metal,
+        Rock,
+    }
     public delegate void ObstacleCollisionDelegate(PlayerController player, ObstacleCollision obstacle);
 
     public event ObstacleCollisionDelegate CollidedEvent;
+
+    [SerializeField]
+    private ObstacleType _obstacleType = ObstacleType.Default;
+
+    public ObstacleType ObstacleKind => _obstacleType;
 
     private Collider _collider;
 
