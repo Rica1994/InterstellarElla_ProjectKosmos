@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 
-public class SpeederSpace : PlayerController
+public class SpeederSpace : PlayerController, IVehicle
 {
     // Parameters
     [SerializeField] private float _moveSpeed = 20f;
@@ -383,6 +383,11 @@ public class SpeederSpace : PlayerController
     public void LosePickups()
     {
         _particleManager.CreateParticleLocalSpace(ParticleType.PS_Collision, this.transform);
+    }
+
+    public float GetSpeed()
+    {
+        return _dollyCart.m_Speed;
     }
 
 
