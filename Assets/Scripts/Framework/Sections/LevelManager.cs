@@ -300,12 +300,12 @@ public class LevelManager : Service
             ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(tempPlayer, _currentCheckpoint, true);
         }
     }
-    public void PlayerHitObstacleSpace(SpeederSpace speederSpace)
+    public void PlayerHitObstacleSpace(SpeederSpace speederSpace, ObstacleCollision.ObstacleType obstacleType)
     {
         _timeSinceLastHit = 0.0f;
 
         // play sound
-        speederSpace.PlayCollisionSound();
+        speederSpace.PlayCollisionSound(obstacleType);
 
         // play animation
         speederSpace.PlayCollisionAnimation();
