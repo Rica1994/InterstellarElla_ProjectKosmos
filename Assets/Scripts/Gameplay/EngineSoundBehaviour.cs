@@ -18,6 +18,8 @@ public class EngineSoundBehaviour : MonoBehaviour
 
     private IVehicle _vehicle;
 
+    [SerializeField]
+    private float _differenceBetweenSpeeds = 2.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -32,12 +34,12 @@ public class EngineSoundBehaviour : MonoBehaviour
     void Update()
     {
         if (_vehicle == null) return;
-        float currentVehicleSpeed = _vehicle.GetSpeed();
+        float currentVehicleSpeed = Mathf.Clamp(_vehicle.GetSpeed(), 1.0f, _vehicle.GetSpeed());
         var dif = Mathf.Abs(_lastVehicleSpeed - _vehicle.GetSpeed());
-        if (dif > 2.0f)
+        if (dif > _differenceBetweenSpeeds)
         {
             _lastVehicleSpeed = currentVehicleSpeed;
-            _engineAudioSource.pitch = _defaultEnginePitch * (currentVehicleSpeed / _defaultVehicleSpeed);
+            _engineAudioSource.pitch = Mathf.Clamp(_defaultEnginePitch * (currentVehicleSpeed / _defaultVehicleSpeed), 0.6f, 2);
         }
     }
 }

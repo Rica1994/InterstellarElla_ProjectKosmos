@@ -106,6 +106,7 @@ public class EllaExploring : PlayerController
     }
     private void Start()
     {
+        base.Start();
         // create needed particle systems for boost
         _particleBootLeft = ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleLocalSpacePermanent
             (ParticleType.PS_BoostBoots, _bootParticleLeft);

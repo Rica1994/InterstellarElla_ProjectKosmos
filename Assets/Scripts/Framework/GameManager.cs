@@ -90,6 +90,7 @@ public class GameManager : Service
     // public Planet CurrentPlanet = Planet.None;
 
     public static SaveData Data;
+    public PlayerController PlayerController => _playerController;
 
 #if !UNITY_EDITOR && UNITY_WEBGL
     [System.Runtime.InteropServices.DllImport("__Internal")]

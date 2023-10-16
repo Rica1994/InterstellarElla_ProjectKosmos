@@ -91,8 +91,6 @@ public class SpeederGround : PlayerController, IVehicle
     private Vector3 _lastPosition;
     private Vector3 _velocity;
 
-    private LayerMask _playerLayerMask;
-
     private float _hoverMovement = 1.0f;
 
     [SerializeField]
@@ -209,8 +207,8 @@ public class SpeederGround : PlayerController, IVehicle
 
     private void Start()
     {
+        base.Start();
         _lastPosition = transform.position;
-        _playerLayerMask = ServiceLocator.Instance.GetService<GameManager>().PlayerLayermask;
 
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
 

@@ -10,6 +10,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected MultiplierTimerComponent _knockbackComponent;
     protected float KnockbackMultiplier => _knockbackComponent == null ? 1.0f : _knockbackComponent.Multiplier;
+    protected LayerMask _playerLayerMask;
 
     public float CollisionAngle => _collisionAngle;
 
@@ -18,6 +19,8 @@ public abstract class PlayerController : MonoBehaviour
     {
         _knockbackComponent =
             new MultiplierTimerComponent(0.0f, 1.0f, 0.0f, true, 1f, true, 1f);
+
+        _playerLayerMask = ServiceLocator.Instance.GetService<GameManager>().PlayerLayermask;
     }
 
     public virtual void UpdateController()
