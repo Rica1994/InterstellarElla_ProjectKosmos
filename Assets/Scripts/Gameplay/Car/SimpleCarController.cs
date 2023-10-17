@@ -9,8 +9,26 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-public class SimpleCarController : PlayerController
-{  
+public class SimpleCarController : PlayerController, IVehicle
+{
+    #region Events
+
+    public delegate void CarDelegate();
+    public event CarDelegate BoostEvent;
+    public event CarDelegate BoostEndedEvent;
+    public event CarDelegate IdleEvent;
+    public event CarDelegate LandedEvent;
+    public event CarDelegate BumpEvent;
+
+    // clean this up
+    public delegate void BoostActive();
+    public static event BoostActive OnBoost;
+
+    public delegate void NormalSpeed();
+    public static event NormalSpeed OnNormalize;
+
+    #endregion
+
     [Header("Wheel collider references")]
     public WheelCollider frontDriverW;
     public WheelCollider frontPassengerW;
@@ -31,7 +49,8 @@ public class SimpleCarController : PlayerController
     public float motorForce = 50;
     public float brakeForce = 300.0f;
 
-    private float m_steeringAngle;
+    private float _steeringAngle;
+    public float SteeringAngle => _steeringAngle;
 
     /// <summary>
     /// Calculates the path for the car.
@@ -74,12 +93,7 @@ public class SimpleCarController : PlayerController
     //    private MovingDirections _currentMovingDirection;
     private Vector2 _currentMoveDirectionVector;
     private bool _movingReverse;
-
-    public delegate void BoostActive();
-    public static event BoostActive OnBoost;
-
-    public delegate void NormalSpeed();
-    public static event NormalSpeed OnNormalize;
+    private bool _isGrounded = false;
 
     private Vector2 _input;
 
@@ -134,6 +148,7 @@ public class SimpleCarController : PlayerController
     [Header("Other")]
     public bool BlockMove;
 
+    private float _timeIdle = 0.0f;
 
     #region Unity Functions
 
@@ -143,6 +158,7 @@ public class SimpleCarController : PlayerController
     }
     private void Start()
     {
+        base.Start();
         _ignoreMe = LayerMask.GetMask("UI", "Ignore Raycast");
         GetComponent<Rigidbody>().centerOfMass = transform.InverseTransformPoint(_centerOfMass.position);
 
@@ -189,6 +205,17 @@ public class SimpleCarController : PlayerController
     {
         //  CalculateArrowDirection();
         GetInput();
+
+        // Determine isGrounded
+        bool wasGrounded = _isGrounded;
+        _isGrounded = Physics.Raycast(transform.position + new Vector3(0.0f, 0.5f, 0.0f), Vector3.down, 0.6f, _playerLayerMask);
+        if (_isGrounded) Debug.Log(" Is Grounded");
+
+        if (_isGrounded && wasGrounded == false)
+        {
+            Debug.Log("Has Landed");
+            LandedEvent?.Invoke();
+        }
 
         // if car is on slope... (should ideally also check for if it's grounded)  ->  slide of
         if (Mathf.Abs(transform.rotation.x) >= 0.3f)
@@ -246,12 +273,20 @@ public class SimpleCarController : PlayerController
             // freeze y rot, set angular vel.y to 0
             _rigidbody.constraints = RigidbodyConstraints.FreezeRotationY;
             _rigidbody.angularVelocity = Vector3.zero;  //new Vector3(_rigidbody.angularVelocity.x, 0, _rigidbody.angularVelocity.z);
+
+            _timeIdle += Time.deltaTime;
+            if (_timeIdle > 10.0f)
+            {
+                _timeIdle = 0.0f;
+                IdleEvent?.Invoke();
+            }
         }
         // else if slight input is being made...
         else if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) <= 0.18f && IsBoosting == false) 
         {
             _motorTorque = motorForce / 2;
             _brakeTorque = motorForce / 2;
+            _timeIdle = 0.0f;
         }
         // else if major input...
         else
@@ -260,6 +295,7 @@ public class SimpleCarController : PlayerController
 
             _motorTorque = motorForce;
             _brakeTorque = 0.0f;
+            _timeIdle = 0.0f;
         }
     }
     private void Steer()
@@ -290,7 +326,7 @@ public class SimpleCarController : PlayerController
             // Calculate the steering angle based on the angle difference
             float currentAngleDiffTarget;
             currentAngleDiffTarget = Vector2.SignedAngle(new Vector2(flatForward.x, flatForward.z), new Vector2(newForward.x, newForward.z));
-            m_steeringAngle = Mathf.Clamp(currentAngleDiffTarget, -maxSteerAngle, maxSteerAngle) * 0.8f;
+            _steeringAngle = Mathf.Clamp(currentAngleDiffTarget, -maxSteerAngle, maxSteerAngle) * 0.8f;
 
             // Apply the target rotation smoothly
             //transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 0.1f);
@@ -301,10 +337,10 @@ public class SimpleCarController : PlayerController
         // Apply steering angles to the wheels if not moving in reverse
         if (!_movingReverse)
         {
-            frontDriverW.steerAngle = -m_steeringAngle;
-            frontPassengerW.steerAngle = -m_steeringAngle;
-            rearDriverW.steerAngle = -m_steeringAngle / 5.0f;
-            rearPassengerW.steerAngle = -m_steeringAngle / 5.0f;
+            frontDriverW.steerAngle = -_steeringAngle;
+            frontPassengerW.steerAngle = -_steeringAngle;
+            rearDriverW.steerAngle = -_steeringAngle / 5.0f;
+            rearPassengerW.steerAngle = -_steeringAngle / 5.0f;
         }
     }
     private void Accelerate()
@@ -385,6 +421,8 @@ public class SimpleCarController : PlayerController
 
         StartCoroutine(ActivateBoostCooldown()); // cooldown period
         StartCoroutine(DecreaseMaxSpeed()); // sets booleans regarding speed / activates particles        
+
+        BoostEvent?.Invoke();
     }
     private void BoostWheelColliderSpin()
     {
@@ -479,13 +517,13 @@ public class SimpleCarController : PlayerController
         IsBoosting = true;
         OnBoost?.Invoke();
 
-        _sourceBoost.Play();
+     //   _sourceBoost.Play();
 
         _particleStraight.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(1);
 
-        _sourceBoost.Stop();
+     //   _sourceBoost.Stop();
 
         _particleStraight.Stop();
 
@@ -495,6 +533,7 @@ public class SimpleCarController : PlayerController
 
         IsBoosting = false;
         OnNormalize?.Invoke();
+        BoostEndedEvent?.Invoke();
         _hasBoostedRecently = false;
         _boostIsDeclining = true;
     }
@@ -548,57 +587,6 @@ public class SimpleCarController : PlayerController
 
         BlockMove = false;
     }
-
-    /*private void RemoveBarriers()
-    {
-        for (int i = 0; i < _rockWallColliders.Length; i++)
-        {
-            _rockWallColliders[i].enabled = false;
-        }
-    }
-
-    private void ApplyBarriers()
-    {
-        for (int i = 0; i < _rockWallColliders.Length; i++)
-        {
-            _rockWallColliders[i].enabled = false;
-        }
-    }*/
-
-    /*private void CalculateArrowDirection()
-    {
-        float horizontal = 0;
-        float vertical = 0;
-
-        if (Input.GetKey("up"))
-        {
-            vertical = 1;
-        }
-        else if (Input.GetKey("down"))
-        {
-            vertical = -1;
-        }
-        else
-        {
-            vertical = 0;
-        }
-
-        if (Input.GetKey("right"))
-        {
-            horizontal = 1;
-        }
-        else if (Input.GetKey("left"))
-        {
-            horizontal = -1;
-        }
-        else
-        {
-            horizontal = 0;
-        }
-
-  //      _arrowKeyDirection = new Vector2(horizontal, vertical);
-    }*/
-
     #endregion
 
 
@@ -657,75 +645,23 @@ public class SimpleCarController : PlayerController
         StartCoroutine(ToggleMove(durationBlocked));
     }
 
-    //public void ReverseLogic()
-    //{
-    //    //if (_inputBeingGiven == true && _motorTorque > 0)
+    public float GetSpeed()
+    {
+        return _rigidbody.velocity.magnitude;
+    }
 
-    //    Debug.Log(transform.eulerAngles.y);
+    public float GetVerticalSpeed()
+    {
+        return _rigidbody.velocity.y;
+    }
 
-    //    if (_motorTorque > 0)
-    //    {
-    //        if (transform.eulerAngles.y >= 315 || transform.eulerAngles.y <= 45) // north looking
-    //        {
-    //            Debug.Log("looking up");
-    //            if (_currentMovingDirection == MovingDirections.Down)
-    //            {
-    //                _motorTorque = -_motorTorque;
-    //                _movingReverse = true;
-    //            }
-    //            else
-    //            {
-    //                _motorTorque = Mathf.Abs(_motorTorque);
-    //                _movingReverse = false;
-    //            }
-    //        }
-    //        else if (transform.eulerAngles.y > 45 && transform.eulerAngles.y <= 135) // east looking
-    //        {
-    //            Debug.Log("looking east");
-    //            if (_currentMovingDirection == MovingDirections.Left)
-    //            {
-    //                _motorTorque = -_motorTorque;
-    //                _movingReverse = true;
-    //            }
-    //            else
-    //            {
-    //                _motorTorque = Mathf.Abs(_motorTorque);
-    //                _movingReverse = false;
-    //            }
-    //        }
-    //        else if (transform.eulerAngles.y > 135 && transform.eulerAngles.y <= 225) // south looking
-    //        {
-    //            Debug.Log("looking south");
-    //            if (_currentMovingDirection == MovingDirections.Up)
-    //            {
-    //                _motorTorque = -_motorTorque;
-    //                _movingReverse = true;
-    //            }
-    //            else
-    //            {
-    //                _motorTorque = Mathf.Abs(_motorTorque);
-    //                _movingReverse = false;
-    //            }
-    //        }
-    //        else
-    //        {
-    //            Debug.Log("looking west");
-    //            if (_currentMovingDirection == MovingDirections.Right)
-    //            {
-    //                _motorTorque = -_motorTorque;
-    //                _movingReverse = true;
-    //            }
-    //            else
-    //            {
-    //                _motorTorque = Mathf.Abs(_motorTorque);
-    //                _movingReverse = false;
-    //            }
-    //        }
-    //    }
-
-    //  }
-
-    // perhaps also implement this for rear wheel drive? 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.relativeVelocity.magnitude > 2.0f)  // Threshold can be adjusted
+        {
+            BumpEvent?.Invoke();
+        }
+    }
 
     #endregion
 }
