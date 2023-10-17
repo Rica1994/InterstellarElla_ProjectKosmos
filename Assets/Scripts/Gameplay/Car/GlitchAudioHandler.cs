@@ -14,7 +14,7 @@ public class GlitchAudioHandler : MonoBehaviour
     private AudioSource _engineIgnitionAudioSource;
 
     [SerializeField]
-    private AudioSource _suspensionAudioSource;
+    private AudioSource _slippingAudioSource;
 
     [SerializeField]
     private AudioSource _wheelsAudioSource;
@@ -46,11 +46,15 @@ public class GlitchAudioHandler : MonoBehaviour
     [SerializeField]
     private AudioClip[] _bumpClips;
 
+    [SerializeField]
+    private float _thresholdSlippingSpeed = 6.0f;
+
     private SimpleCarController _carController;
 
     private float _previousSteeringAngle;
     private int _lastSqueakyClipIndex = -1;
     private int _lastBumpClipIndex = -1;
+
 
     // Start is called before the first frame update
     void Start()
@@ -76,7 +80,7 @@ public class GlitchAudioHandler : MonoBehaviour
         _lastBumpClipIndex = rand;
 
         _bumpAudioSource.clip = _bumpClips[rand];
-        _bumpAudioSource.pitch = Random.Range(0.9f, 1.1f);  // Adjust pitch slightly for variance
+        _bumpAudioSource.pitch = Random.Range(0.7f, 1.3f);  // Adjust pitch slightly for variance
 
         _bumpAudioSource.Play();
     }
@@ -174,6 +178,16 @@ public class GlitchAudioHandler : MonoBehaviour
 
             _squeakyAudioSource.Play();
             _previousSteeringAngle = currentSteeringAngle;
+        }
+
+        if (_carController.IsSlipping && _slippingAudioSource.isPlaying == false && _carController.GetSpeed() > _thresholdSlippingSpeed)
+        {
+           // _slippingAudioSource.pitch = Random.Range(0.9f, 1.1f);
+            _slippingAudioSource.Play();
+        }
+        else if (_carController.IsSlipping == false)
+        {
+            _slippingAudioSource.Stop();
         }
 
       // var speed = _carController.GetSpeed();
