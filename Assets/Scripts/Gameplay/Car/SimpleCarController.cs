@@ -81,7 +81,7 @@ public class SimpleCarController : PlayerController, IVehicle
     public bool BoostCoolingDown;
     public bool IsBoosting; // bool used for checking collisions with rock walls
     private bool _hasBoostedRecently, _boostIsDeclining;
-      
+
     private Rigidbody _rigidbody;
     public Rigidbody Rigid => _rigidbody;
 
@@ -149,6 +149,8 @@ public class SimpleCarController : PlayerController, IVehicle
     public bool BlockMove;
 
     private float _timeIdle = 0.0f;
+    private bool _isSlipping = false;
+    public bool IsSlipping => _isSlipping;
 
     #region Unity Functions
 
@@ -282,7 +284,7 @@ public class SimpleCarController : PlayerController, IVehicle
             }
         }
         // else if slight input is being made...
-        else if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) <= 0.18f && IsBoosting == false) 
+        else if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) <= 0.18f && IsBoosting == false)
         {
             _motorTorque = motorForce / 2;
             _brakeTorque = motorForce / 2;
@@ -332,6 +334,11 @@ public class SimpleCarController : PlayerController, IVehicle
             //transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 0.1f);
             var step = (360) * Time.deltaTime * _rotationSpeed;
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, step);
+
+
+            // Detecting slipping based on alignment of car's forward direction and target direction
+            float alignment = Vector3.Dot(flatForward.normalized, newForward.normalized);
+            _isSlipping = alignment < 0.95f;
         }
 
         // Apply steering angles to the wheels if not moving in reverse
@@ -417,7 +424,7 @@ public class SimpleCarController : PlayerController, IVehicle
         //StartCoroutine(ZoomOut());
         _virtualCamManager.ZoomOutCameraDistance(1.6f, 0.05f, 2);
         _virtualCamManager.ZoomOutCameraFOV();
-        
+
 
         StartCoroutine(ActivateBoostCooldown()); // cooldown period
         StartCoroutine(DecreaseMaxSpeed()); // sets booleans regarding speed / activates particles        
@@ -517,13 +524,13 @@ public class SimpleCarController : PlayerController, IVehicle
         IsBoosting = true;
         OnBoost?.Invoke();
 
-     //   _sourceBoost.Play();
+        //   _sourceBoost.Play();
 
         _particleStraight.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(1);
 
-     //   _sourceBoost.Stop();
+        //   _sourceBoost.Stop();
 
         _particleStraight.Stop();
 
@@ -657,9 +664,17 @@ public class SimpleCarController : PlayerController, IVehicle
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.relativeVelocity.magnitude > 2.0f)  // Threshold can be adjusted
+        foreach (ContactPoint contact in collision.contacts)
         {
-            BumpEvent?.Invoke();
+            // If the contact point is not significantly below the car's center, treat it as an obstacle collision
+            if (contact.point.y >= transform.position.y + 0.1f)  // The threshold (0.5f) can be adjusted
+            {
+                if (collision.relativeVelocity.magnitude > 5.0f)  // Threshold for bump intensity
+                {
+                    BumpEvent?.Invoke();
+                    break;  // Exit after triggering the event once for the collision
+                }
+            }
         }
     }
 
