@@ -12,9 +12,4 @@ public class SkipCutscene : MonoBehaviour
     {
         ChainManager.Instance.GetChain().EndCurrentChainAction(playableDirector);
     }
-
-    //public void SkipTheCutscene(PlayableDirector playableDirector)
-    //{
-    //    ChainManager.Instance.GetChain().EndCurrentChainAction(playableDirector);
-    //}
 }

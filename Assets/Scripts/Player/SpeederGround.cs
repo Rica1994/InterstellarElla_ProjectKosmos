@@ -14,6 +14,11 @@ interface IVehicle
 }
 public class SpeederGround : PlayerController, IVehicle
 {
+    
+
+
+
+
     [Header("Speed")]
     public Vector3 moveDirection = new Vector3(0f, 0f, 1f);
 
@@ -216,14 +221,18 @@ public class SpeederGround : PlayerController, IVehicle
 
         _playerPositionWorldForward = this.transform.position.z;
     }
-    private void OnEnable()
+
+    protected override void OnEnable()
     {
+        base.OnEnable();
         // Subscribe to events
-        var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
-        playerInput.Move.performed += OnMoveInput;
-        playerInput.Move.canceled += OnMoveInput;
-        playerInput.Action.started += OnJumpInput;
+            var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
+            playerInput.Move.performed += OnMoveInput;
+            playerInput.Move.canceled += OnMoveInput;
+            playerInput.Action.started += OnJumpInput;
+
     }
+
     private void OnDisable()
     {
         if (_isApplicationQuitting)

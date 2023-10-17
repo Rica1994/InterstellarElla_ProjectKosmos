@@ -5,6 +5,10 @@ using UnityEngine;
 
 public abstract class PlayerController : MonoBehaviour
 {
+    public delegate void PlayerControllerDelegate(PlayerController controller);
+
+    public static event PlayerControllerDelegate PlayerControllerEnabledEvent;
+
     [SerializeField, Tooltip("Maximum Angle that allows a KnockBack or Collision")]
     private float _collisionAngle = 60.0f;
 
@@ -18,6 +22,11 @@ public abstract class PlayerController : MonoBehaviour
     {
         _knockbackComponent =
             new MultiplierTimerComponent(0.0f, 1.0f, 0.0f, true, 1f, true, 1f);
+    }
+
+    protected virtual void OnEnable()
+    {
+        PlayerControllerEnabledEvent?.Invoke(this);
     }
 
     public virtual void UpdateController()

@@ -124,6 +124,7 @@ public class GameManager : Service
 
     private void Awake()
     {
+        PlayerController.PlayerControllerEnabledEvent += OnPlayerControllerEnabled;
 #if UNITY_EDITOR
         ParseData(Data.ToString());
 #elif !UNITY_EDITOR && UNITY_WEBGL
@@ -138,6 +139,11 @@ public class GameManager : Service
             Debug.Log("?data= not found in URL");
         }
 #endif
+    }
+
+    private void OnPlayerControllerEnabled(PlayerController controller)
+    {
+        _playerController = controller;
     }
 
     private void ParseData(string url)

@@ -32,4 +32,15 @@ public class TimelineChainAction : ChainAction
             _skipButton.transform.GetChild(0).gameObject.SetActive(true);
         }
     }
+
+    public override void OnExit()
+    {
+        base.OnExit();
+
+        if (_skipButton != null)
+        {
+            _skipButton.transform.GetChild(0).gameObject.SetActive(false);
+        }
+
+    }
 }
