@@ -8,7 +8,10 @@ using UnityEngine;
 public class GlitchAnimatedEventBoulder : GlitchAnimatedEvent
 {
     [SerializeField]
-    private AudioElement _soundSmash;
+    private AudioClip _soundRockSmash;
+
+    [SerializeField]
+    private AudioSource _rockAudioSource;
 
     [Header("Rock Wall New")]
     [SerializeField]
@@ -43,6 +46,7 @@ public class GlitchAnimatedEventBoulder : GlitchAnimatedEvent
     public override void ActivateCameraCutscene(SimpleCarController glitch)
     {
         base.ActivateCameraCutscene(glitch);
+        _rockAudioSource.Play();
 
         for (int i = 0; i < _swapCamerasToDisableOnEvent.Count; i++)
         {
@@ -65,8 +69,9 @@ public class GlitchAnimatedEventBoulder : GlitchAnimatedEvent
         // plays animation
         _rockWallNew.BoulderSmashRockWall();
 
-        // plays sound
-        _audioController.PlayAudio(_soundSmash);
+        _rockAudioSource.Stop();
+        _rockAudioSource.clip = _soundRockSmash;
+        _rockAudioSource.Play();
     }
 
 
