@@ -74,6 +74,7 @@ public class AmbientRandomSoundPlayer : MonoBehaviour
 
     public void StopPlaying()
     {
+        _ambientSoundSource.Stop();
         StopAllCoroutines();
     }
 
