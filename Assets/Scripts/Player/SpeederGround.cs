@@ -14,7 +14,7 @@ interface IVehicle
 }
 public class SpeederGround : PlayerController, IVehicle
 {
-    
+
 
 
 
@@ -67,7 +67,11 @@ public class SpeederGround : PlayerController, IVehicle
     private Vector2 _input;
     private float _yVelocity = 0f;
     private float _xVelocity = 0f;
+    private float _xTargetVelocity = 0f;
     private float _zVelocity = 0f;
+    private float _zTargetVelocity = 0f;
+
+    private Vector3 _direction;
 
     private Quaternion _standardRotation;
     private float _fakeGroundedTimer;
@@ -204,7 +208,7 @@ public class SpeederGround : PlayerController, IVehicle
             }
         }
 
-        
+
 
         _standardRotation = transform.rotation;
     }
@@ -224,10 +228,10 @@ public class SpeederGround : PlayerController, IVehicle
     {
         base.OnEnable();
         // Subscribe to events
-            var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
-            playerInput.Move.performed += OnMoveInput;
-            playerInput.Move.canceled += OnMoveInput;
-            playerInput.Action.started += OnJumpInput;
+        var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
+        playerInput.Move.performed += OnMoveInput;
+        playerInput.Move.canceled += OnMoveInput;
+        playerInput.Action.started += OnJumpInput;
 
     }
 
@@ -448,43 +452,36 @@ public class SpeederGround : PlayerController, IVehicle
             inputX = Mathf.Sign(_input.x);
         }*/
 
-        var direction = moveDirection * 1f + _rightVector * -_input.x;
-        Vector3 slopeVelocity = AdjustVelocityToSlope(direction);
 
-        if (_xVelocity <= _startSidewaySpeed - 0.1f)
+        var targetDirection = moveDirection * 1f + _rightVector * -_input.x;
+        _direction = Vector3.Lerp(_direction, targetDirection, Time.deltaTime * 8);
+        Vector3 slopeVelocity = AdjustVelocityToSlope(_direction);
+
+        //if (Mathf.Abs(_xVelocity) <= _startSidewaySpeed - 0.1f)
+        //{
+        //    _xTargetVelocity = _startSidewaySpeed * inputX;
+        //}
+        //else
+        //{
+            _xTargetVelocity = _speedSideways * inputX;
+     //   }
+
+
+        _zTargetVelocity = speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier));
+
+        if (_xVelocity < _xTargetVelocity)
         {
-            _xVelocity =
-                Mathf.Clamp(_xVelocity + (_startSidewaySpeed * _startSideWaySpeedAcceleration * Time.deltaTime), 0.0f,
-                    _startSidewaySpeed) *
-                Mathf.Abs(inputX);
+            _xVelocity = Mathf.Lerp(_xVelocity, _xTargetVelocity, Time.deltaTime * 4);
         }
         else
         {
-            _xVelocity =
-                Mathf.Clamp(_xVelocity + (_sidewaysAcceleration * Time.deltaTime), _startSidewaySpeed, _speedSideways) *
-                Mathf.Abs(inputX);
+            _xVelocity = Mathf.Lerp(_xTargetVelocity, _xVelocity, (1 - Time.deltaTime * 4));
         }
+        _zVelocity = Mathf.Lerp(_zVelocity, _zTargetVelocity, Time.deltaTime) * _speedBoostComponent.Multiplier * KnockbackMultiplier;
 
-        //       Debug.Log("2  X " + inputX + "\n XVelocity " + _xVelocity);
+        var xVelocity = Mathf.Abs(_xVelocity);
 
-        //   if (_knockbackComponent.IsTicking)
-        //   {
-        //       _zVelocity = -_speedForward * _knockbackComponent.Multiplier;
-        //   }
-        //   else
-        //   {
-        _zVelocity = (speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) * _speedBoostComponent.Multiplier) * KnockbackMultiplier;
-        //   }
-
-
-        Vector3 speed = new Vector3(_xVelocity, speedForward, _zVelocity);
-
-        // OG
-        //Vector3 speed = new Vector3(
-        //    _xVelocity, 
-        //    0, 
-        //    _speedForward * /*Mathf.Clamp((_input.y * _tiltMultiplier), 0.5f, _tiltMultiplier)*  */ _knockbackComponent.Multiplier)
-        //    * _speedBoostComponent.Multiplier;
+        Vector3 speed = new Vector3(xVelocity, speedForward, _zVelocity);
 
         _moveComponent.Move(_characterController, slopeVelocity, speed);
     }
