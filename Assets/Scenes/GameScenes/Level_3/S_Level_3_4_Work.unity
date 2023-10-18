@@ -11378,6 +11378,51 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1327725589}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1589067443
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1589067445}
+  - component: {fileID: 1589067444}
+  m_Layer: 0
+  m_Name: 01_EllaWohooo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1589067444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589067443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a51fc593421d88449ab527c668c91c63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _ellaClip: {fileID: 8300000, guid: 6d2909b54359a1846bfc686d9e8b5fd7, type: 3}
+--- !u!4 &1589067445
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589067443}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1787166959650056220}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1600487836 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5315386464336481902, guid: ad9f36488c707c4429e1a8ab1043e83f,
@@ -14882,6 +14927,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 8889843600042242838, guid: 25c69909454e9f142ad3da48c2224ad5,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25c69909454e9f142ad3da48c2224ad5, type: 3}
 --- !u!4 &1885172360 stripped
@@ -16648,6 +16698,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1156171285045419812}
+  - {fileID: 1589067445}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -16665,6 +16716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _chainActions:
   - {fileID: 9033049049956732058}
+  - {fileID: 1589067444}
   _startOnAwake: 1
 --- !u!4 &2850517274765126112
 Transform:
