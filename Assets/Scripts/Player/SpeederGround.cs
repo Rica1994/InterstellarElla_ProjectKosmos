@@ -12,13 +12,8 @@ interface IVehicle
 {
     float GetSpeed();
 }
-public class SpeederGround : PlayerController, IVehicle
+public class SpeederGround : PlayerController, IVehicle, IElla
 {
-
-
-
-
-
     [Header("Speed")]
     public Vector3 moveDirection = new Vector3(0f, 0f, 1f);
 
@@ -121,11 +116,15 @@ public class SpeederGround : PlayerController, IVehicle
     private Rigidbody _rigidbody;
     public Rigidbody Rigid => _rigidbody;
 
+    public AudioSource VoiceAudioSource => _sourceVoiceElla;
 
     [Header("Sounds")]
     [SerializeField] private AudioElement _soundJump;
     [SerializeField] private AudioElement _soundLand;
     [SerializeField] private AudioElement _soundBounce;
+
+    [SerializeField]
+    private AudioSource _sourceVoiceElla;
 
     private AudioController _audioController;
 

@@ -8,11 +8,25 @@ public class TriggerAction : MonoBehaviour
     [SerializeField]
     private ChainAction _action;
 
+//    [SerializeField]
+    private bool _destroyOnActionComplete = false;
+
+    [SerializeField]
+    private bool _onlyTriggerOnce = false;
+
+    private TriggerHandler _triggerHandler;
+
     // Start is called before the first frame update
     void Start()
     {
-        var trigger = GetComponent<TriggerHandler>();
-        trigger.OnTriggered += OnTriggered;
+        _triggerHandler = GetComponent<TriggerHandler>();
+        _triggerHandler.OnTriggered += OnTriggered;
+        _action.ChainActionDone += OnChainActionDone;
+    }
+
+    private void OnChainActionDone()
+    {
+        if (_destroyOnActionComplete) Destroy(gameObject);
     }
 
     private void OnTriggered(TriggerHandler me, Collider other, bool hasEntered)
@@ -20,6 +34,16 @@ public class TriggerAction : MonoBehaviour
         if (hasEntered && other.GetComponent<PlayerController>())
         {
             _action.Execute();
+
+            if (_onlyTriggerOnce)
+            {
+                _triggerHandler.OnTriggered -= OnTriggered;
+            }
         }
+    }
+    private void OnDestroy()
+    {
+        _action.ChainActionDone -= OnChainActionDone;
+        _triggerHandler.OnTriggered -= OnTriggered;
     }
 }
