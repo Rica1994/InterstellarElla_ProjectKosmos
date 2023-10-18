@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,9 +54,19 @@ public class Chain
     
     public void EndCurrentChainAction()
     {
-        _currentChainAction.OnExit();
+        if (_currentChainAction != null) _currentChainAction.OnExit();
+
         Debug.Log($"ChainAction {_currentChainAction.name} completed");
-        _chainActions.Dequeue();
+
+        try
+        {
+            _chainActions.Dequeue();
+        }
+        catch
+        {
+            
+        }
+
         if (_chainActions.Count > 0)
         {
             ChainAction nextChainAction = _chainActions.Peek();
@@ -89,6 +100,7 @@ public class Chain
     public void StopChain()
     {
         _chainActions.Clear();
+        EndCurrentChainAction();
     }
 }
 

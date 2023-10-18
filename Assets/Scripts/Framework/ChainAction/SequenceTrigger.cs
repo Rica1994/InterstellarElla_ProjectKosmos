@@ -11,6 +11,9 @@ public class SequenceTrigger : MonoBehaviour
     [SerializeField]
     private bool _disableTriggerAfterwards = true;
 
+    [SerializeField]
+    private bool _forceSequenceStart = false;
+
     private void Awake()
     {
         _trigger.OnTriggered += _trigger_OnTriggered;
@@ -20,7 +23,7 @@ public class SequenceTrigger : MonoBehaviour
     {
         if (hasEntered && other.tag == "Player")
         {
-            ChainManager.Instance.StartChain(_sequence);
+            ChainManager.Instance.StartChain(_sequence, _forceSequenceStart);
             if (_disableTriggerAfterwards)
             {
                 _trigger.gameObject.SetActive(false);
