@@ -49,12 +49,17 @@ public class GlitchAudioHandler : MonoBehaviour
     [SerializeField]
     private float _thresholdSlippingSpeed = 6.0f;
 
+    [SerializeField]
+    private float _fadeTimeSlippingSound = 0.5f;
+
     private SimpleCarController _carController;
 
     private float _previousSteeringAngle;
     private int _lastSqueakyClipIndex = -1;
     private int _lastBumpClipIndex = -1;
 
+    private float _slippySourceStartVolume = 1.0f;
+    private Coroutine _fadeCoroutine;
 
     // Start is called before the first frame update
     void Start()
@@ -67,6 +72,8 @@ public class GlitchAudioHandler : MonoBehaviour
         _carController.IdleEvent += OnGlitchIdle;
         _carController.LandedEvent += OnGlitchLanded;
         _carController.BumpEvent += OnGlitchBumped;
+
+        _slippySourceStartVolume = _slippingAudioSource.volume;
     }
 
     private void OnGlitchBumped()
@@ -182,12 +189,16 @@ public class GlitchAudioHandler : MonoBehaviour
 
         if (_carController.IsSlipping && _slippingAudioSource.isPlaying == false && _carController.GetSpeed() > _thresholdSlippingSpeed)
         {
-           // _slippingAudioSource.pitch = Random.Range(0.9f, 1.1f);
+            if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
+            // _slippingAudioSource.pitch = Random.Range(0.9f, 1.1f);
+            _slippingAudioSource.volume = _slippySourceStartVolume;
             _slippingAudioSource.Play();
+            _slippingAudioSource.loop = true;
         }
-        else if (_carController.IsSlipping == false)
+        else if ((_carController.IsSlipping == false || _carController.GetSpeed() < 1.0f) && _slippingAudioSource.isPlaying )
         {
-            _slippingAudioSource.Stop();
+            _slippingAudioSource.loop = false;
+            _fadeCoroutine = StartCoroutine(FadeAudio(_slippingAudioSource, _slippingAudioSource.clip.length / 2.0f));
         }
 
       // var speed = _carController.GetSpeed();
@@ -200,5 +211,20 @@ public class GlitchAudioHandler : MonoBehaviour
       // {
       //     _wheelsAudioSource.Stop();
       // }
+    }
+
+    private IEnumerator FadeAudio(AudioSource audioSource, float fadeTime)
+    {
+        float startVolume = audioSource.volume;
+
+        float startTime = Time.time;
+        while (Time.time < startTime + fadeTime)
+        {
+            float t = (Time.time - startTime) / fadeTime;
+            audioSource.volume = startVolume * (1f - t);
+            yield return null;
+        }
+
+        audioSource.Stop();
     }
 }
