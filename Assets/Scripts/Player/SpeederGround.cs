@@ -463,11 +463,11 @@ public class SpeederGround : PlayerController, IVehicle
         //}
         //else
         //{
-            _xTargetVelocity = _speedSideways * inputX;
-     //   }
+        _xTargetVelocity = _speedSideways * inputX;
+        //   }
 
 
-        _zTargetVelocity = speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier));
+        _zTargetVelocity = speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) * _speedBoostComponent.Multiplier * KnockbackMultiplier;
 
         if (_xVelocity < _xTargetVelocity)
         {
@@ -477,7 +477,9 @@ public class SpeederGround : PlayerController, IVehicle
         {
             _xVelocity = Mathf.Lerp(_xTargetVelocity, _xVelocity, (1 - Time.deltaTime * 4));
         }
-        _zVelocity = Mathf.Lerp(_zVelocity, _zTargetVelocity, Time.deltaTime) * _speedBoostComponent.Multiplier * KnockbackMultiplier;
+
+        if (KnockbackMultiplier < 0.0f) _zVelocity = _zTargetVelocity;
+        else _zVelocity = Mathf.Lerp(_zVelocity, _zTargetVelocity, Time.deltaTime);
 
         var xVelocity = Mathf.Abs(_xVelocity);
 
