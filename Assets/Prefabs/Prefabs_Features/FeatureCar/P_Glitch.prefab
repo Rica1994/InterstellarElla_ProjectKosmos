@@ -159,10 +159,10 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 4276249108516460269, guid: a4c1ceea24bc10643a26cad843440403,
     type: 2}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 3aa81a0fda885bb41bcd1a056aeecdbe, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.46
-  m_Pitch: 1
+  m_Volume: 0.135
+  m_Pitch: 1.0348842
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -15206,7 +15206,7 @@ GameObject:
   - component: {fileID: 169184266577438584}
   - component: {fileID: 7599539702960546554}
   m_Layer: 0
-  m_Name: CarWheels_AudioSource
+  m_Name: LandWheels_AudioSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40851,7 +40851,7 @@ GameObject:
   - component: {fileID: 7027529306619269978}
   - component: {fileID: 6102449013843834674}
   m_Layer: 0
-  m_Name: Engine_AudioSource (1)
+  m_Name: JetEngine_AudioSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41102,7 +41102,7 @@ GameObject:
   - component: {fileID: 5648346695735423267}
   - component: {fileID: 7250991658179446408}
   m_Layer: 0
-  m_Name: Source_Boost
+  m_Name: JetEngine_AudioSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41309,7 +41309,7 @@ GameObject:
   - component: {fileID: 87072555824261177}
   - component: {fileID: 1246463299420139870}
   m_Layer: 0
-  m_Name: EngineIgnition_AudioSource
+  m_Name: JetEngineIgnition_AudioSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46461,9 +46461,9 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: bbcebff397669704ba9ed4f58d059b59, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.478
+  m_Volume: 0.59
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -52308,6 +52308,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 59829e53028c7e64c8632446ba080d15, type: 3}
   - {fileID: 8300000, guid: f6336c168d3fe5b45bb8e63612d6b731, type: 3}
   _thresholdSlippingSpeed: 6
+  _fadeTimeSlippingSound: 0.22
 --- !u!114 &1498974143485160047
 MonoBehaviour:
   m_ObjectHideFlags: 0
