@@ -28,14 +28,19 @@ public class ChainManager : MonoBehaviourSingleton<ChainManager>
         }
     }
     
-    public void StartChain(Sequence sequence)
+    public void StartChain(Sequence sequence, bool forceStart = false)
     {
-        if (_chain != null)
+        if (_chain != null && forceStart == false)
         {
             Debug.Log("Chain was still playing. Aborting StartChain call.");
             return;
         }
         
+        if (forceStart && _chain != null)
+        {
+            _chain.StopChain();
+        }
+
         _chain = new Chain(sequence.ChainActions);
         _chain.OnChainCompleted += OnChainCompleted;
         _chain.Play();

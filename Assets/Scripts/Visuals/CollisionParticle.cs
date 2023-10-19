@@ -3,11 +3,20 @@ using UnityEngine;
 public class CollisionParticle : MonoBehaviour
 {
     [SerializeField]
+    private AudioSource _collisionAudioSource;
+
+    [SerializeField]
     private ParticleSystem _impactParticle; // Assign your impact particle prefab in the Inspector
     //[SerializeField]
     //private ParticleSystem _groundTrailParticle;
     [SerializeField]
     private float _yThreshold = 1.0f;
+
+    [SerializeField]
+    private Vector2 _pitchRangeCollisionSound = new Vector2(1.0f, 1.7f);
+
+    [SerializeField]
+    private Vector2 _differenceNextCollisionSound = new Vector2(-0.1f, 0.1f);
 
     public bool activate = true;
 
@@ -22,9 +31,20 @@ public class CollisionParticle : MonoBehaviour
                 // Spawn impact particles at the collision point
                 if (collisionPoint.y > gameObject.transform.position.y - _yThreshold)
                 {
+                    _collisionAudioSource.pitch = _collisionAudioSource.pitch + Random.Range(_differenceNextCollisionSound.x, _differenceNextCollisionSound.y);
+                    _collisionAudioSource.pitch = Mathf.Clamp(_collisionAudioSource.pitch, _pitchRangeCollisionSound.x, _pitchRangeCollisionSound.y);
+                    _collisionAudioSource.Play();
                     SpawnImpactParticles(_impactParticle, collisionPoint);
                 }
             }
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (_collisionAudioSource.time >= _collisionAudioSource.clip.length / 2.0f)
+        {
+            _collisionAudioSource.Stop();
         }
     }
 

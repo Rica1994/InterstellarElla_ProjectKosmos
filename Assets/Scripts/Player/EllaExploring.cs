@@ -5,7 +5,11 @@ using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class EllaExploring : PlayerController
+public interface IElla
+{
+    AudioSource VoiceAudioSource { get; }
+}
+public class EllaExploring : PlayerController, IElla
 {
     [Header("Speed")]
     [SerializeField] private Vector3 _moveDirection = new Vector3(0f, 0f, 1f);
@@ -47,6 +51,7 @@ public class EllaExploring : PlayerController
     private Rigidbody _rigidbody;
     public Rigidbody Rigid => _rigidbody;
 
+
     private Vector3 _rightVector;
     private Vector2 _input;
 
@@ -84,6 +89,8 @@ public class EllaExploring : PlayerController
 
     [SerializeField] private AudioSource _sourceIgnitionBoots;
 
+    [SerializeField] private AudioSource _sourceVoice;
+    AudioSource IElla.VoiceAudioSource { get { return _sourceVoice; } }
 
     private void Awake()
     {

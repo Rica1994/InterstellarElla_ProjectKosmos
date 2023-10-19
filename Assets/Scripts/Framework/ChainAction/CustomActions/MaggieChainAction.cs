@@ -8,13 +8,7 @@ using UnityEngine.Audio;
 public class MaggieChainAction : ChainAction
 {
     [SerializeField]
-    private AudioElement _maggieVoiceClip;
-
-    [SerializeField]
     private AudioClip _maggieAudioClip;
-
-    [SerializeField]
-    private bool _lowerMusic = false;
 
     private Maggie _maggie;
     private AudioSource _maggieAudioSource;
@@ -48,21 +42,5 @@ public class MaggieChainAction : ChainAction
             //ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieVoiceClip);
             StartCoroutine(Helpers.DoAfter(_maggieAudioClip.length, () => _maggie.PopDown()));
         }));
-
-        if (_lowerMusic)
-        {
-            StartCoroutine(LowerMusicDuringVO(_maggieAudioClip.length));
-        }
-    }
-
-    private IEnumerator LowerMusicDuringVO(float voLength)
-    {
-        // Lower the volume of the Soundtrack group
-        var audioMixer = ServiceLocator.Instance.GetService<SoundtrackManager>().AudioMixer;
-        bool paramSet = audioMixer.SetFloat("OSTVolume", -20f); // Example value, adjust as needed
-        yield return new WaitForSeconds(voLength);
-
-        // Reset the volume of the Soundtrack group
-        audioMixer.SetFloat("OSTVolume", 0f); // Assuming 0 is the normal volume
     }
 }

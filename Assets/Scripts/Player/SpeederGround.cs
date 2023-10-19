@@ -12,13 +12,8 @@ interface IVehicle
 {
     float GetSpeed();
 }
-public class SpeederGround : PlayerController, IVehicle
+public class SpeederGround : PlayerController, IVehicle, IElla
 {
-
-
-
-
-
     [Header("Speed")]
     public Vector3 moveDirection = new Vector3(0f, 0f, 1f);
 
@@ -121,11 +116,15 @@ public class SpeederGround : PlayerController, IVehicle
     private Rigidbody _rigidbody;
     public Rigidbody Rigid => _rigidbody;
 
+    public AudioSource VoiceAudioSource => _sourceVoiceElla;
 
     [Header("Sounds")]
     [SerializeField] private AudioElement _soundJump;
     [SerializeField] private AudioElement _soundLand;
     [SerializeField] private AudioElement _soundBounce;
+
+    [SerializeField]
+    private AudioSource _sourceVoiceElla;
 
     private AudioController _audioController;
 
@@ -463,11 +462,11 @@ public class SpeederGround : PlayerController, IVehicle
         //}
         //else
         //{
-            _xTargetVelocity = _speedSideways * inputX;
-     //   }
+        _xTargetVelocity = _speedSideways * inputX;
+        //   }
 
 
-        _zTargetVelocity = speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier));
+        _zTargetVelocity = speedForward * (1 + Mathf.Clamp(inputY, -_tiltSpeedUpMultiplier, _tiltSpeedUpMultiplier)) * _speedBoostComponent.Multiplier * KnockbackMultiplier;
 
         if (_xVelocity < _xTargetVelocity)
         {
@@ -477,7 +476,9 @@ public class SpeederGround : PlayerController, IVehicle
         {
             _xVelocity = Mathf.Lerp(_xTargetVelocity, _xVelocity, (1 - Time.deltaTime * 4));
         }
-        _zVelocity = Mathf.Lerp(_zVelocity, _zTargetVelocity, Time.deltaTime) * _speedBoostComponent.Multiplier * KnockbackMultiplier;
+
+        if (KnockbackMultiplier < 0.0f) _zVelocity = _zTargetVelocity;
+        else _zVelocity = Mathf.Lerp(_zVelocity, _zTargetVelocity, Time.deltaTime);
 
         var xVelocity = Mathf.Abs(_xVelocity);
 
