@@ -10,6 +10,9 @@ public class MaggieChainAction : ChainAction
     [SerializeField]
     private AudioClip _maggieAudioClip;
 
+    [SerializeField, Tooltip("If this is filled in, a check will be made whether we are on pc or not, if so this clip will play instead")]
+    private AudioClip _maggiePcAudioClip;
+
     private Maggie _maggie;
     private AudioSource _maggieAudioSource;
     private MouthAnimation _maggieMouthAnimation;
@@ -20,6 +23,11 @@ public class MaggieChainAction : ChainAction
         _maggieAudioSource = _maggie.GetComponent<AudioSource>();
         _maggieMouthAnimation = _maggie.GetComponent<MouthAnimation>();
 
+        // check whether we are on pc
+        if (_maggiePcAudioClip != null && ServiceLocator.Instance.GetService<GameManager>().IsMobileWebGl == false)
+        {
+            _maggieAudioClip = _maggiePcAudioClip;
+        }
 
         if (_maggie == null)
         {
