@@ -19,15 +19,7 @@ public class ChainManager : MonoBehaviourSingleton<ChainManager>
         if (_chain != null) _chain.StopChain();
         _chain = null;
     }
-
-    private void Update()
-    {
-        if (_chain != null)
-        {
-            _chain.UpdateChain(Time.deltaTime);
-        }
-    }
-    
+   
     public void StartChain(Sequence sequence, bool forceStart = false)
     {
         if (_chain != null && forceStart == false)

@@ -13,8 +13,9 @@ public class DynamoPathSwitchChainAction : ChainAction
 
     private CinemachineDollyCart _dynamoCart;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _dynamoCart = FindObjectOfType<CinemachineDollyCart>();
     }
 

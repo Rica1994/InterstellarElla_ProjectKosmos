@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityCore.Audio;
 using UnityEngine;
 
-public class RockWallNew : MonoBehaviour
+public class RockWallNew : MonoBehaviour, IRequisite
 {
     public bool INeedABoulder = false;
     public bool RequiresSpeedBoost = true;
@@ -93,5 +93,10 @@ public class RockWallNew : MonoBehaviour
         {
             _rockTriggerMeshrenderer.enabled = showThem;
         }
+    }
+
+    public bool IsRequisiteMet()
+    {
+        return IsActivated;
     }
 }

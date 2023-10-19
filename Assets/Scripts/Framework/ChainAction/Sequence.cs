@@ -17,4 +17,15 @@ public class Sequence : MonoBehaviour
     {
       if (_startOnAwake) ChainManager.Instance.StartChain(this);
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        var box = GetComponent<BoxCollider>();
+        if (box == null) return;
+        Gizmos.color = Color.yellow;
+        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.localScale);
+        Gizmos.DrawWireCube(box.center, box.size);
+    }
+#endif
 }

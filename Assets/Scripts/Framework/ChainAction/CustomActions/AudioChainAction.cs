@@ -9,8 +9,9 @@ public class AudioChainAction : ChainAction
     [SerializeField]
     private AudioElement _audioElement;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _maxTime = _audioElement.Clip.length;
     }
 

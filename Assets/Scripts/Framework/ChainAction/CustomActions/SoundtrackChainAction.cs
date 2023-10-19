@@ -26,8 +26,10 @@ public class SoundtrackChainAction : ChainAction
     [SerializeField]
     private bool _playAndCompleteAction = false;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (_playAndCompleteAction == false) _maxTime = _audioClip.length;
         else _maxTime = -1;
     }

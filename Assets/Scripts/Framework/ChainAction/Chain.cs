@@ -24,54 +24,39 @@ public class Chain
             _chainActions.Enqueue(chainAction);
         }
     }
-    
+
+    private void OnCurrentChainActionDone()
+    {
+        EndCurrentChainAction();
+    }
+
     public void AddAction(ChainAction chainAction)
     {
         _chainActions.Enqueue(chainAction);
     }
     
-    public void UpdateChain(float elapsedTime)
-    {
-        if (_chainActions.Count == 0) return;
-        
-        _currentChainAction = _chainActions.Peek();
-        _currentChainAction.UpdateAction(elapsedTime);
-        if (_currentChainAction.IsCompleted())
-        {
-            EndCurrentChainAction();
-        }
-    }
-
     public void Play()
     {
         Debug.Log("Chain Started");
         if (_chainActions.Count > 0)
         {
-            ChainAction nextChainAction = _chainActions.Peek();
-            nextChainAction.Execute();
+            PlayNextChainAction();
         }
     }
     
-    public void EndCurrentChainAction()
+    public void EndCurrentChainAction(bool force = false)
     {
-        if (_currentChainAction != null) _currentChainAction.OnExit();
+        if (_currentChainAction != null)
+        {
+            _currentChainAction.OnExit();
+            _currentChainAction.ChainActionDone -= OnCurrentChainActionDone;
+        }
 
         Debug.Log($"ChainAction {_currentChainAction.name} completed");
 
-        try
-        {
-            _chainActions.Dequeue();
-        }
-        catch
-        {
-            
-        }
-
         if (_chainActions.Count > 0)
         {
-            ChainAction nextChainAction = _chainActions.Peek();
-            nextChainAction.OnEnter();
-            nextChainAction.Execute();
+            PlayNextChainAction();
         }
         else
         {
@@ -81,19 +66,36 @@ public class Chain
 
     public void EndCurrentChainAction(PlayableDirector playableDirector)
     {
-        _currentChainAction.OnExit();
+        if (_currentChainAction != null)
+        {
+            _currentChainAction.OnExit();
+            _currentChainAction.ChainActionDone -= OnCurrentChainActionDone;
+        }
+
         Debug.Log($"ChainAction {_currentChainAction.name} completed");
         playableDirector.Stop();
-        _chainActions.Dequeue();
+
         if (_chainActions.Count > 0)
         {
-            ChainAction nextChainAction = _chainActions.Peek();
-            nextChainAction.OnEnter();
-            nextChainAction.Execute();
+            PlayNextChainAction();
         }
         else
         {
             OnChainCompleted?.Invoke(this);
+        }
+    }
+
+    private void PlayNextChainAction()
+    {
+        try
+        {
+            _currentChainAction = _chainActions.Dequeue();
+            _currentChainAction.ChainActionDone += OnCurrentChainActionDone;
+            _currentChainAction.Execute();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.Message);
         }
     }
 

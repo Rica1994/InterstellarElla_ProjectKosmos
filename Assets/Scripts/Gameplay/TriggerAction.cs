@@ -8,7 +8,7 @@ public class TriggerAction : MonoBehaviour
     [SerializeField]
     private ChainAction _action;
 
-//    [SerializeField]
+    //    [SerializeField]
     private bool _destroyOnActionComplete = false;
 
     [SerializeField]
@@ -46,4 +46,15 @@ public class TriggerAction : MonoBehaviour
         _action.ChainActionDone -= OnChainActionDone;
         _triggerHandler.OnTriggered -= OnTriggered;
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        var box = GetComponent<BoxCollider>();
+        if (box == null) return;
+        Gizmos.color = Color.blue;
+        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.localScale);
+        Gizmos.DrawWireCube(box.center, box.size);
+    }
+#endif
 }

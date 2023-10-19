@@ -4130,7 +4130,7 @@ Transform:
   m_Children:
   - {fileID: 915951441}
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &97723007
 PrefabInstance:
@@ -5125,7 +5125,7 @@ Transform:
   - {fileID: 1017143541}
   - {fileID: 714846994}
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &136577984
 PrefabInstance:
@@ -5484,6 +5484,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
   _unityEvent:
     m_PersistentCalls:
       m_Calls:
@@ -6231,22 +6235,22 @@ PrefabInstance:
     - target: {fileID: 3054168533803280212, guid: 198a4be55fd76b24db581366de8f8d76,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.64315337
+      value: 0.6509637
       objectReference: {fileID: 0}
     - target: {fileID: 3054168533803280212, guid: 198a4be55fd76b24db581366de8f8d76,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.035261653
+      value: 0.0015669051
       objectReference: {fileID: 0}
     - target: {fileID: 3054168533803280212, guid: 198a4be55fd76b24db581366de8f8d76,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.76377803
+      value: 0.75910497
       objectReference: {fileID: 0}
     - target: {fileID: 3054168533803280212, guid: 198a4be55fd76b24db581366de8f8d76,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.04187506
+      value: -0.0018272037
       objectReference: {fileID: 0}
     - target: {fileID: 3054168533803280212, guid: 198a4be55fd76b24db581366de8f8d76,
         type: 3}
@@ -6736,6 +6740,98 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 181150933}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &190657127
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 190657128}
+  - component: {fileID: 190657133}
+  - component: {fileID: 190657132}
+  - component: {fileID: 190657131}
+  - component: {fileID: 190657129}
+  m_Layer: 0
+  m_Name: Maggie-De-ijsvuikaan-is-
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &190657128
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190657127}
+  m_LocalRotation: {x: -0, y: -0.011088557, z: -0, w: 0.99993855}
+  m_LocalPosition: {x: 10.93, y: 84.9, z: 710.86}
+  m_LocalScale: {x: 14.530751, y: 11.951683, z: 8.205755}
+  m_Children: []
+  m_Father: {fileID: 796180787}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: -1.271, z: 0}
+--- !u!114 &190657129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190657127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0d3fac5842a74488d9ee5d764fb1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _action: {fileID: 190657131}
+  _onlyTriggerOnce: 1
+--- !u!114 &190657131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190657127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10f1523e2728226439a5aa78a22639fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 12.02
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _maggieAudioClip: {fileID: 8300000, guid: 704d42948ee9cb44e8f908f1f1d0ae5e, type: 3}
+  _maggiePcAudioClip: {fileID: 0}
+--- !u!114 &190657132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190657127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94d422f9387c08440b8b6d1a819ffe35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &190657133
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190657127}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &194461878
 GameObject:
   m_ObjectHideFlags: 0
@@ -10211,6 +10307,98 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 282352665}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &283141767
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 283141768}
+  - component: {fileID: 283141772}
+  - component: {fileID: 283141771}
+  - component: {fileID: 283141770}
+  - component: {fileID: 283141769}
+  m_Layer: 0
+  m_Name: Maggie-de-atmosfeer-varieert-hier
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &283141768
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283141767}
+  m_LocalRotation: {x: -0, y: 0.15247847, z: -0, w: 0.9883068}
+  m_LocalPosition: {x: -42.32, y: 79.32, z: 746.99}
+  m_LocalScale: {x: 8.985889, y: 8.985889, z: 8.985889}
+  m_Children: []
+  m_Father: {fileID: 796180787}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 17.541, z: 0}
+--- !u!114 &283141769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283141767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10f1523e2728226439a5aa78a22639fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _maggieAudioClip: {fileID: 8300000, guid: c13f9cd26a5b42e4fa47e3089523a21c, type: 3}
+  _maggiePcAudioClip: {fileID: 0}
+--- !u!114 &283141770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283141767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0d3fac5842a74488d9ee5d764fb1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _action: {fileID: 283141769}
+  _onlyTriggerOnce: 1
+--- !u!114 &283141771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283141767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94d422f9387c08440b8b6d1a819ffe35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &283141772
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283141767}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &285810219
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11670,7 +11858,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 327667835}
   m_LocalRotation: {x: -0, y: 0.03693966, z: -0, w: 0.9993175}
-  m_LocalPosition: {x: 4.76, y: 91.84, z: 680.28}
+  m_LocalPosition: {x: -45.86, y: 96.02, z: 387.98}
   m_LocalScale: {x: 31.175812, y: 25.22169, z: 3.4399}
   m_Children: []
   m_Father: {fileID: 796180787}
@@ -11689,6 +11877,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
   _maggieAudioClip: {fileID: 8300000, guid: 6d501af017b42354894871b9b883e38f, type: 3}
   _maggiePcAudioClip: {fileID: 0}
 --- !u!114 &327667838
@@ -12033,6 +12225,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
   _unityEvent:
     m_PersistentCalls:
       m_Calls:
@@ -13156,6 +13352,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
   _unityEvent:
     m_PersistentCalls:
       m_Calls:
@@ -14599,7 +14799,7 @@ PrefabInstance:
     - target: {fileID: 5242283992509016648, guid: 0fa8ceca698e9f54f9e2164253c26204,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5242283992509016648, guid: 0fa8ceca698e9f54f9e2164253c26204,
         type: 3}
@@ -17533,6 +17733,99 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 533637430}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &540859890
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 540859891}
+  - component: {fileID: 540859895}
+  - component: {fileID: 540859894}
+  - component: {fileID: 540859893}
+  - component: {fileID: 540859892}
+  m_Layer: 0
+  m_Name: Maggie-Verspert-een-rotsblok
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &540859891
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540859890}
+  m_LocalRotation: {x: -0, y: -0.057300057, z: -0, w: 0.99835706}
+  m_LocalPosition: {x: -36.65, y: 66.5, z: 96.87}
+  m_LocalScale: {x: 7.309393, y: 12.614014, z: 1.7203822}
+  m_Children: []
+  m_Father: {fileID: 796180787}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: -6.57, z: 0}
+--- !u!114 &540859892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540859890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10f1523e2728226439a5aa78a22639fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 1
+  _timeUntilNextRepeat: 6.08
+  _requisiteLogic: 1
+  _requisiteObjects:
+  - {fileID: 2065099125}
+  _maggieAudioClip: {fileID: 8300000, guid: a8669b804e0493c4eb5c7a0e252bf8a3, type: 3}
+  _maggiePcAudioClip: {fileID: 8300000, guid: 9a4b71725eae64d4987b808bbc499e44, type: 3}
+--- !u!114 &540859893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540859890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0d3fac5842a74488d9ee5d764fb1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _action: {fileID: 540859892}
+  _onlyTriggerOnce: 1
+--- !u!114 &540859894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540859890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94d422f9387c08440b8b6d1a819ffe35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &540859895
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540859890}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &547423173
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21949,7 +22242,7 @@ Transform:
   - {fileID: 1714048032}
   - {fileID: 68221332}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &707379797
 PrefabInstance:
@@ -22348,6 +22641,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
   _maggieAudioClip: {fileID: 8300000, guid: 82d19497d7fdf774a85af4fd2f548f71, type: 3}
   _maggiePcAudioClip: {fileID: 0}
 --- !u!114 &719590740
@@ -22639,7 +22936,7 @@ Transform:
   - {fileID: 1989699337}
   - {fileID: 1820045255}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &723687996
 PrefabInstance:
@@ -24451,6 +24748,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 796180787}
+  - component: {fileID: 796180788}
   m_Layer: 0
   m_Name: Audio
   m_TagString: Untagged
@@ -24473,10 +24771,27 @@ Transform:
   - {fileID: 719590738}
   - {fileID: 1726231487}
   - {fileID: 327667836}
+  - {fileID: 283141768}
+  - {fileID: 978681505}
   - {fileID: 1137694833690970724}
+  - {fileID: 190657128}
+  - {fileID: 540859891}
+  - {fileID: 987318973}
   m_Father: {fileID: 0}
-  m_RootOrder: 21
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &796180788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796180786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3419c5c7722f41c438c7519c82e2c3d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &801780305
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24985,7 +25300,7 @@ PrefabInstance:
     - target: {fileID: 6112130393461531790, guid: c004d733ca2b9e948a56c69b9e215cfa,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6112130393461531790, guid: c004d733ca2b9e948a56c69b9e215cfa,
         type: 3}
@@ -27313,7 +27628,7 @@ Transform:
   - {fileID: 464922195}
   - {fileID: 549406124}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &901842735
 GameObject:
@@ -29344,6 +29659,98 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 977600707}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &978681504
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 978681505}
+  - component: {fileID: 978681509}
+  - component: {fileID: 978681508}
+  - component: {fileID: 978681507}
+  - component: {fileID: 978681506}
+  m_Layer: 0
+  m_Name: Maggie-Scanning-data-aanvullen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &978681505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978681504}
+  m_LocalRotation: {x: -0, y: -0.16346131, z: -0, w: 0.98654974}
+  m_LocalPosition: {x: -51.13, y: 80.95, z: 771.04}
+  m_LocalScale: {x: 7.571981, y: 7.571981, z: 7.571981}
+  m_Children: []
+  m_Father: {fileID: 796180787}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: -18.816, z: 0}
+--- !u!114 &978681506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978681504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10f1523e2728226439a5aa78a22639fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _maggieAudioClip: {fileID: 8300000, guid: 1fa861901acec374ebcae3f134f6a02c, type: 3}
+  _maggiePcAudioClip: {fileID: 0}
+--- !u!114 &978681507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978681504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0d3fac5842a74488d9ee5d764fb1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _action: {fileID: 978681506}
+  _onlyTriggerOnce: 1
+--- !u!114 &978681508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978681504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94d422f9387c08440b8b6d1a819ffe35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &978681509
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978681504}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &983398809
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29707,6 +30114,98 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 986907509}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &987318972
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 987318973}
+  - component: {fileID: 987318977}
+  - component: {fileID: 987318976}
+  - component: {fileID: 987318975}
+  - component: {fileID: 987318974}
+  m_Layer: 0
+  m_Name: Maggie-methaanijs-is-er
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &987318973
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987318972}
+  m_LocalRotation: {x: -0, y: -0.16346131, z: -0, w: 0.98654974}
+  m_LocalPosition: {x: -67.41, y: 79.27, z: 827.2}
+  m_LocalScale: {x: 4.18322, y: 8.515938, z: 12.133847}
+  m_Children: []
+  m_Father: {fileID: 796180787}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: -18.816, z: 0}
+--- !u!114 &987318974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987318972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10f1523e2728226439a5aa78a22639fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _maggieAudioClip: {fileID: 8300000, guid: 4f0fb73bda706cc4c9eb3edd1c19da51, type: 3}
+  _maggiePcAudioClip: {fileID: 0}
+--- !u!114 &987318975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987318972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0d3fac5842a74488d9ee5d764fb1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _action: {fileID: 987318974}
+  _onlyTriggerOnce: 1
+--- !u!114 &987318976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987318972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94d422f9387c08440b8b6d1a819ffe35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &987318977
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987318972}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &991561644
 GameObject:
   m_ObjectHideFlags: 0
@@ -29735,7 +30234,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &993626003
 PrefabInstance:
@@ -33837,7 +34336,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 22
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1168809056
 PrefabInstance:
@@ -36772,7 +37271,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1287516184
 GameObject:
@@ -38949,7 +39448,7 @@ Transform:
   m_Children:
   - {fileID: 1867313774}
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1376959257
 PrefabInstance:
@@ -45697,7 +46196,7 @@ PrefabInstance:
     - target: {fileID: 8358264329770268595, guid: 6427852d3aad84644b907044156fd97e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.2242498
+      value: -3.2242508
       objectReference: {fileID: 0}
     - target: {fileID: 8358264329770268595, guid: 6427852d3aad84644b907044156fd97e,
         type: 3}
@@ -45737,7 +46236,7 @@ PrefabInstance:
     - target: {fileID: 8358264329780101033, guid: 6427852d3aad84644b907044156fd97e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.2242498
+      value: -3.2242508
       objectReference: {fileID: 0}
     - target: {fileID: 8358264329780101033, guid: 6427852d3aad84644b907044156fd97e,
         type: 3}
@@ -45772,17 +46271,17 @@ PrefabInstance:
     - target: {fileID: 8358264330310513798, guid: 6427852d3aad84644b907044156fd97e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.17
+      value: -2.09
       objectReference: {fileID: 0}
     - target: {fileID: 8358264330310513798, guid: 6427852d3aad84644b907044156fd97e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 68.9
+      value: 76.59
       objectReference: {fileID: 0}
     - target: {fileID: 8358264330310513798, guid: 6427852d3aad84644b907044156fd97e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.58
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 8358264330310513798, guid: 6427852d3aad84644b907044156fd97e,
         type: 3}
@@ -46052,6 +46551,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
   _unityEvent:
     m_PersistentCalls:
       m_Calls:
@@ -49757,7 +50260,7 @@ Transform:
   - {fileID: 918753250}
   - {fileID: 8157259054137274407}
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1693293733
 GameObject:
@@ -49891,7 +50394,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1698818644}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 363.91797, y: -6.2000046, z: 138.27217}
+  m_LocalPosition: {x: 365.0864, y: -2.3550034, z: 142.80214}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 166554488}
@@ -50789,6 +51292,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
   _maggieAudioClip: {fileID: 8300000, guid: 9d26d9cc19a87aa48ad65377e58686d8, type: 3}
   _maggiePcAudioClip: {fileID: 0}
 --- !u!114 &1726231489
@@ -51582,7 +52089,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1752066047
 PrefabInstance:
@@ -54424,85 +54931,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 136577984}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1847138162
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1787166961441543570, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1787166961441543570, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1787166961441543570, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1787166961441543570, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1787166961441543570, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1787166961441543570, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1787166961441543570, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1787166961441543570, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1787166961441543570, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1787166961441543570, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1787166961441543570, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1787166961441543572, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_Name
-      value: P_Maggie_Gameplay_Sequence
-      objectReference: {fileID: 0}
-    - target: {fileID: 1787166961441543572, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1866704259158764956, guid: e925bc28f9c358641b97ac6a3ace8fc6,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: e925bc28f9c358641b97ac6a3ace8fc6, type: 3}
 --- !u!1001 &1848612796
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54538,7 +54966,7 @@ PrefabInstance:
     - target: {fileID: 6112130393461531790, guid: c004d733ca2b9e948a56c69b9e215cfa,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6112130393461531790, guid: c004d733ca2b9e948a56c69b9e215cfa,
         type: 3}
@@ -61104,7 +61532,7 @@ Transform:
   - {fileID: 214764514}
   - {fileID: 94849819}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2063950224
 PrefabInstance:
@@ -61180,6 +61608,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5359284558446524544, guid: 7119c61af305270488e24ba15de89e3c,
     type: 3}
   m_PrefabInstance: {fileID: 2063950224}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2065099125 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 851442852518131904, guid: ac21875ac1615ba40a33f19cfe2cd756,
+    type: 3}
+  m_PrefabInstance: {fileID: 808954015}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2065166417
 PrefabInstance:
@@ -64910,7 +65344,7 @@ PrefabInstance:
     - target: {fileID: 2743257618344979772, guid: c6724574ff853df459ef582362a0252c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2743257618344979772, guid: c6724574ff853df459ef582362a0252c,
         type: 3}

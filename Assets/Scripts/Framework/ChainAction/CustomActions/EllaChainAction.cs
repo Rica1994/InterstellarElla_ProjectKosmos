@@ -12,8 +12,10 @@ public class EllaChainAction : ChainAction
 
     private AudioSource _ellaVoiceAudioSource;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         _maxTime = _ellaClip.length;
         IElla ellaObject = FindObjectsOfType<MonoBehaviour>().FirstOrDefault(obj => obj is IElla) as IElla;
         if (ellaObject == null)

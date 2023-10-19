@@ -17,8 +17,10 @@ public class MaggieChainAction : ChainAction
     private AudioSource _maggieAudioSource;
     private MouthAnimation _maggieMouthAnimation;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         _maggie = FindObjectOfType<Maggie>();
         _maggieAudioSource = _maggie.GetComponent<AudioSource>();
         _maggieMouthAnimation = _maggie.GetComponent<MouthAnimation>();

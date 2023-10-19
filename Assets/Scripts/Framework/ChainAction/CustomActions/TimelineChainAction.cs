@@ -14,8 +14,10 @@ public class TimelineChainAction : ChainAction
     [SerializeField]
     private bool _playAndCompleteAction = false;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (_playAndCompleteAction == false) _maxTime = _maxTime = (float)_playableDirector.duration;
         else _maxTime = -1;
         

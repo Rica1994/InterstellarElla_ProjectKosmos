@@ -9235,6 +9235,98 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshRenderer: {fileID: 574015918}
+--- !u!1 &579220203
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 579220204}
+  - component: {fileID: 579220208}
+  - component: {fileID: 579220207}
+  - component: {fileID: 579220206}
+  - component: {fileID: 579220205}
+  m_Layer: 0
+  m_Name: Maggie-Wanneer-een-ijsvulkaan
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &579220204
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579220203}
+  m_LocalRotation: {x: -0, y: -0.6141096, z: -0, w: 0.7892208}
+  m_LocalPosition: {x: -108.1, y: 114.78, z: 179.3}
+  m_LocalScale: {x: 26.360863, y: 26.360863, z: 26.360863}
+  m_Children: []
+  m_Father: {fileID: 1169090229}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: -75.774, z: 0}
+--- !u!114 &579220205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579220203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10f1523e2728226439a5aa78a22639fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _maggieAudioClip: {fileID: 8300000, guid: b706264a0234c3a42ac4b69359523364, type: 3}
+  _maggiePcAudioClip: {fileID: 0}
+--- !u!114 &579220206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579220203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0d3fac5842a74488d9ee5d764fb1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _action: {fileID: 579220205}
+  _onlyTriggerOnce: 1
+--- !u!114 &579220207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579220203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94d422f9387c08440b8b6d1a819ffe35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &579220208
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579220203}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &615558077
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11547,7 +11639,7 @@ GameObject:
   - component: {fileID: 784859294}
   - component: {fileID: 784859293}
   m_Layer: 0
-  m_Name: Maggie-de-atmosfeer-varieert-hier
+  m_Name: Maggie-een-ijsvulkaan-kan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11560,13 +11652,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 784859291}
-  m_LocalRotation: {x: -0, y: -0.16346131, z: -0, w: 0.98654974}
-  m_LocalPosition: {x: -203.8, y: 126.3, z: 143}
-  m_LocalScale: {x: 29.194866, y: 29.194866, z: 29.194866}
+  m_LocalRotation: {x: -0, y: -0.277313, z: -0, w: 0.9607796}
+  m_LocalPosition: {x: -32.1, y: 101.17, z: 105.1}
+  m_LocalScale: {x: 22.771996, y: 22.771996, z: 22.771996}
   m_Children: []
   m_Father: {fileID: 1169090229}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: -18.816, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -32.2, z: 0}
 --- !u!114 &784859293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11580,7 +11672,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _maggieAudioClip: {fileID: 8300000, guid: c13f9cd26a5b42e4fa47e3089523a21c, type: 3}
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _maggieAudioClip: {fileID: 8300000, guid: 517f74c5336b1dc42a414acd9e23f64c, type: 3}
   _maggiePcAudioClip: {fileID: 0}
 --- !u!114 &784859294
 MonoBehaviour:
@@ -17429,6 +17525,8 @@ Transform:
   - {fileID: 1177102519}
   - {fileID: 784859292}
   - {fileID: 673347156}
+  - {fileID: 579220204}
+  - {fileID: 1862896708}
   m_Father: {fileID: 0}
   m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -17539,7 +17637,7 @@ GameObject:
   - component: {fileID: 1177102521}
   - component: {fileID: 1177102520}
   m_Layer: 0
-  m_Name: Maggie-Scanning-data-aanvullen
+  m_Name: Maggie-Proficiat-je-bent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17552,13 +17650,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1177102518}
-  m_LocalRotation: {x: -0, y: -0.16346131, z: -0, w: 0.98654974}
-  m_LocalPosition: {x: -24.7, y: 90.31, z: 82.3}
-  m_LocalScale: {x: 29.194866, y: 29.194866, z: 29.194866}
+  m_LocalRotation: {x: -0, y: 0.0034837967, z: -0, w: 0.9999939}
+  m_LocalPosition: {x: 6.44, y: 90.31, z: 7.53}
+  m_LocalScale: {x: 10.54139, y: 12.337644, z: 23.806723}
   m_Children: []
   m_Father: {fileID: 1169090229}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -18.816, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0.39900002, z: 0}
 --- !u!114 &1177102520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17572,7 +17670,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _maggieAudioClip: {fileID: 8300000, guid: 1fa861901acec374ebcae3f134f6a02c, type: 3}
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _maggieAudioClip: {fileID: 8300000, guid: ce654434ff4194446a1367d37b562a5a, type: 3}
   _maggiePcAudioClip: {fileID: 0}
 --- !u!114 &1177102521
 MonoBehaviour:
@@ -26724,6 +26826,98 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1858571780}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1862896707
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1862896708}
+  - component: {fileID: 1862896712}
+  - component: {fileID: 1862896711}
+  - component: {fileID: 1862896710}
+  - component: {fileID: 1862896709}
+  m_Layer: 0
+  m_Name: Maggie-Wat-een-klimtocht
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1862896708
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862896707}
+  m_LocalRotation: {x: -0, y: -0.58117974, z: -0, w: 0.8137753}
+  m_LocalPosition: {x: -257.4, y: 141.2, z: 73.7}
+  m_LocalScale: {x: 26.360863, y: 26.360863, z: 26.360863}
+  m_Children: []
+  m_Father: {fileID: 1169090229}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: -71.067, z: 0}
+--- !u!114 &1862896709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862896707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10f1523e2728226439a5aa78a22639fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _maggieAudioClip: {fileID: 8300000, guid: 24840deb30c4479409e2ee832f829be9, type: 3}
+  _maggiePcAudioClip: {fileID: 0}
+--- !u!114 &1862896710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862896707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0d3fac5842a74488d9ee5d764fb1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _action: {fileID: 1862896709}
+  _onlyTriggerOnce: 1
+--- !u!114 &1862896711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862896707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94d422f9387c08440b8b6d1a819ffe35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &1862896712
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862896707}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1863437558
 GameObject:
   m_ObjectHideFlags: 0
