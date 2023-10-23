@@ -371,7 +371,7 @@ namespace UnityCore
 
                 if (currentSceneName.Contains("MainMenu"))
                 {
-                    return $"./Levels/{targetPlanetName}/{targetScene.ToString()}";
+                    return $"../Levels/{targetPlanetName}/{targetScene.ToString()}";
                 }
 
                 if (currentSceneName.Contains("Quiz"))
@@ -397,7 +397,7 @@ namespace UnityCore
                 switch (targetScene)
                 {
                     case SceneType.S_MainMenu:
-                        return "../../../";
+                        return "../../../MainMenu";
                     case SceneType.S_Quiz:
                         return "../../Quiz";
                 }
