@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Helpers
 {
@@ -114,5 +115,14 @@ public class Helpers
     {
         int percentage = (int)Math.Round(value);
         return percentage.ToString("D3");
+    }
+
+    public static void FadeImage(Image[] images, float targetAlpha ,float time)
+    {
+        for (int i = 0; i < images.Length; i++)
+        {
+            var imageColor = images[i].color;
+            images[i].DOColor(new Color(imageColor.r, imageColor.g, imageColor.b, targetAlpha), time);
+        }
     }
 }

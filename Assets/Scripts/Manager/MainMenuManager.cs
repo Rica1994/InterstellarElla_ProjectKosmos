@@ -54,9 +54,13 @@ public class MainMenuManager : Service
     [SerializeField]
     private ButtonBase _buttonLevelSelect;
 
+    [SerializeField]
+    private FactSheet _factSheet;
+
     private List<MenuLevel> _levels = new List<MenuLevel>();
 
     private SceneController _sceneController;
+
 
     #region Animation / Animator strings
     // animation strings
@@ -81,6 +85,7 @@ public class MainMenuManager : Service
     private const string _level_5_4 = "A_Rotate_L5-L4";
 
     private const string _camZoom = "A_CameraLevelZoom";
+    private const string _camLevelSelected = "A_CameraPlanetSelected";
 
     #endregion
 
@@ -162,6 +167,22 @@ public class MainMenuManager : Service
 #elif UNITY_WEBGL && !UNITY_EDITOR
             _sceneController.Load(sceneToLoad);
 #endif
+        }
+    }
+
+    public void ShowPlanetSheet(bool show)
+    {
+        if (show)
+        {
+            var length = 1.0f;
+            _menuAnimator.PlayCameraAnimation(_camLevelSelected, false);
+
+            StartCoroutine(Helpers.DoAfter(length, () => _factSheet.ShowSheet(true, true)));
+        }
+        else
+        {
+            _factSheet.ShowSheet(false, true);
+            StartCoroutine(Helpers.DoAfter(2.0f, () => _menuAnimator.PlayCameraAnimation(_camLevelSelected, true)));
         }
     }
 
