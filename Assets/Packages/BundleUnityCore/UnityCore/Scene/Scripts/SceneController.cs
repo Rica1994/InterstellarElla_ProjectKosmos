@@ -263,8 +263,9 @@ namespace UnityCore
                     case "S_Level_1_Outro": return SceneType.S_Level_1_Outro;
 
                     case "S_Level_2_Intro": return SceneType.S_Level_2_Intro;
-                    case "S_Level_2_3_Work": return SceneType.S_Level_2_3_Work;
-                    case "S_Level_2_4_Work": return SceneType.S_Level_2_4_Work;
+                    case "S_Level_2_0_Work": return SceneType.S_Level_2_0_Work;
+                    case "S_Level_2_1_Work": return SceneType.S_Level_2_1_Work;
+                    case "S_Level_2_2_Work": return SceneType.S_Level_2_2_Work;
                     case "S_Level_2_Outro": return SceneType.S_Level_2_Outro;
 
                     case "S_Level_3_Intro": return SceneType.S_Level_3_Intro;
@@ -299,7 +300,6 @@ namespace UnityCore
                     case "S_Level_2_0": return SceneType.S_Level_2_0;
                     case "S_Level_2_1": return SceneType.S_Level_2_1;
                     case "S_Level_2_2": return SceneType.S_Level_2_2;
-                    case "S_Mars_1_99_OutroCutscene": return SceneType.S_Mars_1_99_OutroCutscene;
 
                     default:
                         Debug.Log("Scene [" + scene + "] does not contain a type for a valid scene. ");

@@ -22,8 +22,9 @@ namespace UnityCore
             S_Level_1_Outro = 7,
 
             S_Level_2_Intro = 8,
-            S_Level_2_3_Work = 9,
-            S_Level_2_4_Work = 10,
+            S_Level_2_0_Work = 40,
+            S_Level_2_1_Work = 9,
+            S_Level_2_2_Work = 10,
             S_Level_2_Outro = 11,
 
             S_Level_3_Intro = 12,
@@ -58,8 +59,6 @@ namespace UnityCore
             S_Level_2_0 = 37,
             S_Level_2_1 = 38,
             S_Level_2_2 = 39,
-            
-            S_Mars_1_99_OutroCutscene = 40,
         }
     }
 }

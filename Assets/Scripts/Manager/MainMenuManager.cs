@@ -11,13 +11,27 @@ public class MainMenuManager : Service
     [SerializeField]
     private bool _3_Venus = true;
     [SerializeField]
+    private SceneType _venusStartScene;
+
+    [SerializeField]
     private bool _1_Mars = true;
+    [SerializeField]
+    private SceneType _marsStartScene;
+
     [SerializeField]
     private bool _4_Saturn = true;
     [SerializeField]
+    private SceneType _saturnStartScene;
+
+    [SerializeField]
     private bool _2_Pluto = true;
     [SerializeField]
+    private SceneType _plutoStartScene;
+
+    [SerializeField]
     private bool _5_Mercury = true;
+    [SerializeField]
+    private SceneType _mercuryStartScene;
 
     private bool[] _levelsIncluded = new bool[5];
 
@@ -311,15 +325,15 @@ public class MainMenuManager : Service
         switch (_levelIndex)
         {
             case 0:
-                return SceneType.S_Level_3_Intro;
+                return _venusStartScene;
             case 1:
-                return SceneType.S_Level_1_Intro;
+                return _marsStartScene;
             case 2:
-                return SceneType.S_Level_4_Intro;
+                return _saturnStartScene;
             case 3:
-                return SceneType.S_Level_2_Intro;
+                return _plutoStartScene;
             case 4:
-                return SceneType.S_Level_5_Intro;
+                return _mercuryStartScene;
             default:
                 return SceneType.None;
         }
