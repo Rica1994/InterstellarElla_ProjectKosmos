@@ -13,6 +13,7 @@ public class SoundtrackManager : Service
 
     [SerializeField]
     private AudioSource _passByAudioSource;
+    private float _passByAudioSourceStandardPitch;
 
     private AudioSource currentSource;
     private AudioSource nextSource;
@@ -21,8 +22,11 @@ public class SoundtrackManager : Service
 
     public AudioMixer AudioMixer => _audioMixer;
 
+
+
     void Awake()
     {
+        _passByAudioSourceStandardPitch = _passByAudioSource.pitch;
         // Initialize Audio Sources
         currentSource = gameObject.GetComponent<AudioSource>();
         nextSource = gameObject.AddComponent<AudioSource>();
@@ -138,6 +142,9 @@ public class SoundtrackManager : Service
         if (_passByAudioSource.isPlaying) return;
 
         _passByAudioSource.transform.position = pos;
+
+        float randomPitch = _passByAudioSourceStandardPitch + Random.Range(-0.15f, 0.15f);
+        _passByAudioSource.pitch = randomPitch;
         //_passByAudioSource.minDistance = setting.MinMaxDistance.x;
         //_passByAudioSource.maxDistance = setting.MinMaxDistance.y;
         //_passByAudioSource.loop = setting.IsLooping;
