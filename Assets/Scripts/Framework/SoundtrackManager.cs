@@ -11,6 +11,9 @@ public class SoundtrackManager : Service
     [SerializeField]
     private AudioSource _voAudioSource;
 
+    [SerializeField]
+    private AudioSource _passByAudioSource;
+
     private AudioSource currentSource;
     private AudioSource nextSource;
 
@@ -128,5 +131,17 @@ public class SoundtrackManager : Service
             source.volume = t * targetVolume;
             yield return null;
         }
+    }
+
+    public void PlayClipAt3DLocation(Vector3 pos, PassByAudioSource.AudioSourceSetting setting)
+    {
+        if (_passByAudioSource.isPlaying) return;
+
+        _passByAudioSource.transform.position = pos;
+        //_passByAudioSource.minDistance = setting.MinMaxDistance.x;
+        //_passByAudioSource.maxDistance = setting.MinMaxDistance.y;
+        //_passByAudioSource.loop = setting.IsLooping;
+
+        _passByAudioSource.Play();
     }
 }
