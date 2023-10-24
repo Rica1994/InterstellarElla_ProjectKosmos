@@ -51,7 +51,7 @@ LightmapSettings:
     m_IndirectOutputScale: 1
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 1
+    m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 12
@@ -97,7 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 2fe1369398601464f8e9c021d5e47218,
+    type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
@@ -23360,6 +23361,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
   _gameObjects:
   - {fileID: 964796485}
   - {fileID: 1125262677}
@@ -43391,6 +43396,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
   _playableDirector: {fileID: 1158610381}
   _skipButton: {fileID: 1840465284}
   _playAndCompleteAction: 0
@@ -82782,6 +82791,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
   _gameObjects:
   - {fileID: 2013098799}
   _delayTime: 1
@@ -99405,6 +99418,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3611885756584529764, guid: 2c43976f0d1ba2143be4891166db62e0,
+        type: 3}
+      propertyPath: _nextScene
+      value: 34
       objectReference: {fileID: 0}
     - target: {fileID: 3611885756584529764, guid: 2c43976f0d1ba2143be4891166db62e0,
         type: 3}
