@@ -371,13 +371,13 @@ namespace UnityCore
 
                 if (currentSceneName.Contains("MainMenu"))
                 {
-                    return $"../Levels/{targetPlanetName}/{targetScene.ToString()}";
+                    return $"../Levels/{targetPlanetName}/{targetScene}";
                 }
 
                 if (currentSceneName.Contains("Quiz"))
                 {
                     // From quiz we always go to Main Menu
-                    return $"../../";
+                    return $"../../MainMenu";
                 }
 
 
@@ -389,9 +389,9 @@ namespace UnityCore
                     // if our target planet is not the same planet as the current planet
                     if (targetPlanetName != currentPlanetName)
                     {
-                        return $"../../{targetPlanetName}/{targetScene.ToString()}";
+                        return $"../../{targetPlanetName}/{targetScene}";
                     }
-                    else return $"../{targetScene.ToString()}";
+                    else return $"../{targetScene}";
                 }
 
                 switch (targetScene)
@@ -402,7 +402,7 @@ namespace UnityCore
                         return "../../Quiz";
                 }
 
-                Debug.LogError($"{currentSceneName} to load {targetScene.ToString()} does not work.");
+                Debug.LogError($"{currentSceneName} to load {targetScene} does not work.");
                 return "";
             }
 

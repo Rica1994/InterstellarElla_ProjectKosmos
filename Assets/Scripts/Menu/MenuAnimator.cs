@@ -14,13 +14,22 @@ public class MenuAnimator : MonoBehaviour
 
 
 
-    public void PlayCameraAnimation(string cameraAnimation, bool reverse)
+    public void PlayPlanetSelectAnimation(bool reverse)
     {
-        CameraAnimator.SetTrigger("LevelSelected");
-     //   CameraAnimation.clip = CameraAnimation.GetClip(cameraAnimation);
-     //   
-     //   if (reverse) CameraAnimation.Rewind(cameraAnimation);
-     //   else CameraAnimation.Play();
+        if (reverse)
+        {
+            CameraAnimator.SetTrigger("PlanetDeselected");
+        }
+        else
+        {
+            CameraAnimator.SetTrigger("LevelSelected");
+        }
+
+
+        //   CameraAnimation.clip = CameraAnimation.GetClip(cameraAnimation);
+        //   
+        //   if (reverse) CameraAnimation.Rewind(cameraAnimation);
+        //   else CameraAnimation.Play();
     }
 
 }
