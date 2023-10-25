@@ -40,7 +40,7 @@ public class GameManager : Service
 
         public override string ToString()
         {
-            return PlanetCompletionValues.ToString() + Helpers.FormatPercentageToString(CurrentScore) + LastPlanet.ToString() + (IsShittyDevice ? "1" : "0");
+            return PlanetCompletionValues.ToString() + Helpers.FormatPercentageToString(CurrentScore) + LastPlanet.ToString() /*+ (IsShittyDevice ? "1" : "0")*/;
         }
     }
 
@@ -77,7 +77,7 @@ public class GameManager : Service
         Venus = 3,
         Saturn = 4,
         Mercury = 5,
-        None = -1
+        None = 0
     }
 
     private bool _isMobile = false;
@@ -170,7 +170,6 @@ public class GameManager : Service
 
         // Step 5: Extract current level
         var lastPlanet = Planet.None;
-        // int isShittyDevice = 0;
 
         int planetValue;
         if (int.TryParse(planetCompletionsCompiled.Substring(18, 1), out planetValue))
@@ -181,7 +180,7 @@ public class GameManager : Service
             }
         }
 
-
+        // int isShittyDevice = 0;
         //   int.TryParse(planetCompletionsCompiled.Substring(19,1), out isShittyDevice);
 
         // Step 6: Assign to the struct

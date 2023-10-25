@@ -10,6 +10,7 @@ public class ButtonExecuteLevelClicked : ButtonExecuteBase
 
         MainMenuManager menuManager = ServiceLocator.Instance.GetService<MainMenuManager>();
 
-        menuManager.LoadLevel();
+        //menuManager.LoadLevel();
+        menuManager.ShowPlanetSheet(true);
     }
 }

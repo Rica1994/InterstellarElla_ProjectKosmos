@@ -38,6 +38,10 @@ public class MenuLevel : MonoBehaviour
     [SerializeField]
     private Text _textPercentage;
 
+    [SerializeField]
+    private FactSheet.FactSheetData _factSheetData;
+    public FactSheet.FactSheetData FactSheetData => _factSheetData;
+
     private const string _animationPlanetPop = "A_MenuLevel_Text_Planet_Popup";
     private const string _animationPlanetPoof = "A_MenuLevel_Text_Planet_Poof";
 
@@ -47,6 +51,28 @@ public class MenuLevel : MonoBehaviour
     private const string _animationValuePop = "A_MenuLevel_Text_Value_Popup";
     private const string _animationValuePoof = "A_MenuLevel_Text_Value_Poof";
 
+    private void Start()
+    {
+        _factSheetData.CompletionPercentage = GameManager.Data.PlanetCompletionValues.MercuryCompletion;
+        switch (_myLevelType)
+        {
+            case LevelType.Venus:
+                _factSheetData.CompletionPercentage = GameManager.Data.PlanetCompletionValues.VenusCompletion;
+                break;
+            case LevelType.Mars:
+                _factSheetData.CompletionPercentage = GameManager.Data.PlanetCompletionValues.MarsCompletion;
+                break;
+            case LevelType.Saturn:
+                _factSheetData.CompletionPercentage = GameManager.Data.PlanetCompletionValues.SaturnCompletion;
+                break;
+            case LevelType.Pluto:
+                _factSheetData.CompletionPercentage = GameManager.Data.PlanetCompletionValues.PlutoCompletion;
+                break;
+            case LevelType.Mercury:
+                _factSheetData.CompletionPercentage = GameManager.Data.PlanetCompletionValues.MercuryCompletion;
+                break;
+        }
+    }
 
     public void SetLevelScore(string scoreString)
     {
