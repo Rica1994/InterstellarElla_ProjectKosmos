@@ -196,7 +196,19 @@ public class SimpleCarController : PlayerController, IVehicle
 
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
         _virtualCamManager = ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>();
+
+        ServiceLocator.Instance.GetService<HudManager>().TouchButton.Pressed += OnTouchButtonPressed;
     }
+
+    private void OnTouchButtonPressed()
+    {
+        if (BoostCoolingDown == false && IsInPerfectJump == false)
+        {
+            //  RemoveBarriers();
+            Boost();
+        }
+    }
+
     private void OnEnable()
     {
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;

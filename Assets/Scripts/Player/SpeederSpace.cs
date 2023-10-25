@@ -121,12 +121,24 @@ public class SpeederSpace : PlayerController, IVehicle
     private void OnEnable()
     {
         // Subscribe to events
+
+        ServiceLocator.Instance.GetService<HudManager>().TouchButton.Pressed += OnTouchButtonPressed;
+
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
         playerInput.Move.performed += OnMoveInput;
         playerInput.Move.canceled += OnMoveInput;
 
         playerInput.Action.performed += OnMagnetInput;
     }
+
+    private void OnTouchButtonPressed()
+    {
+        if (_magnetIsActive == false && _magnetOnCooldown == false)
+        {
+            StartCoroutine(ActivateMagnet());
+        }
+    }
+
     private void OnDisable()
     {
         if (_isApplicationQuitting)
@@ -328,13 +340,13 @@ public class SpeederSpace : PlayerController, IVehicle
         _magnetAudioSource.clip = _magnetSounds[0];
         _magnetAudioSource.Play();
 
-        yield return new WaitForSeconds(_magnetSounds[0].length);
-
         _magnetIsActive = true;
 
         // anable object and particles
         _magnetSpace.EnableFullObject(true);
         _magnetSpace.StartParticleSystem(true);
+
+        yield return new WaitForSeconds(_magnetSounds[0].length);
 
         _magnetAudioSource.Stop();
         _magnetAudioSource.clip = _magnetSounds[1];
