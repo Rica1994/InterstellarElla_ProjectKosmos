@@ -54,12 +54,14 @@ public class Answer : MonoBehaviour
 
     public void Highlight(bool correct)
     {
-        if (correct) _borderImage.color = Color.green;
-        else _borderImage.color = Color.red;
+        _button.enabled = false;
+        if (correct) _borderImage.color = new Color(0, 1, 0, 1);
+        else _borderImage.color = new Color(1, 0, 0, 1);
     }
 
     public void UnHighlight()
     {
+        _button.enabled = true;
         _borderImage.color = _originalBorderImageColor;
     }
     

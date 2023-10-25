@@ -69,7 +69,7 @@ public class Quiz : MonoBehaviour
     {
         if (_submitButton.gameObject.activeSelf == false)
         {
-            Helpers.Show(_submitButton.transform, 1.0f);
+            Helpers.Show(_submitButton.transform, 0.3f);
         }
 
         foreach (var a in _answers)
@@ -82,7 +82,7 @@ public class Quiz : MonoBehaviour
     {
         // Deactivate answer buttons
         MakeInteractable(false);
-        Helpers.Hide(_submitButton.transform, 1.0f, this);
+        Helpers.Hide(_submitButton.transform, 0.3f, this);
 
         // Check the selected answer
         Answer selectedAnswer = null;
@@ -104,7 +104,7 @@ public class Quiz : MonoBehaviour
         // Check whether it is correct.
         bool answeredCorrectly = _correctAnswer == selectedAnswer;
         selectedAnswer.Highlight(answeredCorrectly);
-        selectedAnswer.Button.interactable = false;
+        //selectedAnswer.Button.interactable = false;
 
         // Act accordingly
         // draft for now to have maggie react here. maybe with want to keep the quiz a generic script? 

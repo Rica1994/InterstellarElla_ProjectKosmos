@@ -34,11 +34,6 @@ public class ButtonExecuteLevelSkip : ButtonExecuteBase
             // we're in the main menu
             Debug.LogWarning("this is the main menu !!! loading nothing");
         }
-        else if (FindObjectOfType<SkipCutscene>() != null)
-        {
-            // we're in a cutscene
-            Debug.LogWarning("this is a cutscene !!! loading nothing");
-        }
         else
         {
             _levelManager = ServiceLocator.Instance.GetService<LevelManager>();
