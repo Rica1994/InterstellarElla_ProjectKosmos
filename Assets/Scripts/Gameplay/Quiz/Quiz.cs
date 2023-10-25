@@ -108,14 +108,12 @@ public class Quiz : MonoBehaviour
 
         // Act accordingly
         // draft for now to have maggie react here. maybe with want to keep the quiz a generic script? 
-        Maggie maggie = FindObjectOfType<Maggie>();
 
         if (answeredCorrectly)
         {
             Debug.Log("Answered Correctly");
             if (_questionCompleteSound != null)
                 ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_questionCompleteSound);
-            maggie.MakeHappy();
             Helpers.DoAfter(2.5f, () => OnQuestionCompleted?.Invoke(), this);
         }
         else
@@ -124,7 +122,6 @@ public class Quiz : MonoBehaviour
             
             if (_questionFailedSound != null)
                 ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_questionFailedSound);
-            maggie.MakeSad();
 
             selectedAnswer.IsDisabled = true;
             
