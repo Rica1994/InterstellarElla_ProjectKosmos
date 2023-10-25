@@ -54,9 +54,13 @@ public class MainMenuManager : Service
     [SerializeField]
     private ButtonBase _buttonLevelSelect;
 
+    [SerializeField]
+    private FactSheet _factSheet;
+
     private List<MenuLevel> _levels = new List<MenuLevel>();
 
     private SceneController _sceneController;
+
 
     #region Animation / Animator strings
     // animation strings
@@ -81,6 +85,7 @@ public class MainMenuManager : Service
     private const string _level_5_4 = "A_Rotate_L5-L4";
 
     private const string _camZoom = "A_CameraLevelZoom";
+    private const string _camLevelSelected = "A_CameraPlanetSelected";
 
     #endregion
 
@@ -144,24 +149,66 @@ public class MainMenuManager : Service
             _currentLevel.AnimationRotater.Play(_levelRotateFast);
 
             // zoom camera (needs to be animation
-            _menuAnimator.CameraAnimation.Play(_camZoom);
+            _menuAnimator.PlayPlanetSelectAnimation(true);
+            _factSheet.ShowSheet(false, true, 1.0f);
+
+            StartCoroutine(Helpers.DoAfter(1f, () => 
+            {
+                _menuAnimator.CameraAnimation.Play(_camZoom);
+            }));
 
             SceneType sceneToLoad = ChooseCorrectSceneWork();
-           // switch (ScenesToLoad)
-           // {
-           //     case SceneChoice.Work:
-           //         sceneToLoad = ChooseCorrectSceneWork();
-           //         break;
-           //     case SceneChoice.Build:
-           //         sceneToLoad = ChooseCorrectSceneBuild();
-           //         break;
-           // }
+
 #if UNITY_EDITOR
             // load the loading scene first, then the actual scene for gameplay
-            _sceneController.LoadIntermissionLoading(sceneToLoad, false, null, false, PageType.Loading, 0.8f);
+            _sceneController.LoadIntermissionLoading(sceneToLoad, false, null, false, PageType.Loading, 1.8f);
 #elif UNITY_WEBGL && !UNITY_EDITOR
-            _sceneController.Load(sceneToLoad);
+            StartCoroutine(Helpers.DoAfter(1.8f, () => _sceneController.Load(sceneToLoad)));
 #endif
+
+            // switch (ScenesToLoad)
+            // {
+            //     case SceneChoice.Work:
+            //         sceneToLoad = ChooseCorrectSceneWork();
+            //         break;
+            //     case SceneChoice.Build:
+            //         sceneToLoad = ChooseCorrectSceneBuild();
+            //         break;
+            // }
+
+        }
+    }
+
+    public void ShowPlanetSheet(bool show)
+    {
+        if (show)
+        {
+            var length = 1.0f;
+            _menuAnimator.PlayPlanetSelectAnimation(false);
+
+            _factSheet.InitializeSheet(CurrentLevel.FactSheetData);
+
+            StartCoroutine(Helpers.DoAfter(length, () =>
+            {
+                _factSheet.ShowSheet(true, true);
+                _buttonBackward.DisableButton(true);
+                _buttonForward.DisableButton(true);
+            }));
+
+            Helpers.FadeImage(new GameObject[] { _buttonForward.gameObject, _buttonBackward.gameObject }, 0.0f, 1.0f);
+        }
+        else
+        {
+            _factSheet.ShowSheet(false, true);
+
+        
+            Helpers.FadeImage(new GameObject[] { _buttonForward.gameObject, _buttonBackward.gameObject }, 1.0f, 1.0f);
+
+            StartCoroutine(Helpers.DoAfter(2.0f, () => {
+                _menuAnimator.PlayPlanetSelectAnimation(true);
+                _buttonBackward.EnableButton();
+                _buttonForward.EnableButton();
+            }));
         }
     }
 

@@ -45,6 +45,12 @@ public class Answer : MonoBehaviour
         set => this.enabled = !value;
     }
 
+    [Serializable]
+    public struct AnswerData
+    {
+        public string AnswerText;
+        public AudioClip AnswerAudioClip;
+    }
     
     private void Awake()
     {

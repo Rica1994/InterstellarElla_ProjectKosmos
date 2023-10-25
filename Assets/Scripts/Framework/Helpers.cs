@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Helpers
 {
@@ -114,5 +116,32 @@ public class Helpers
     {
         int percentage = (int)Math.Round(value);
         return percentage.ToString("D3");
+    }
+
+    public static void FadeImage(Image[] images, float targetAlpha ,float time)
+    {
+        for (int i = 0; i < images.Length; i++)
+        {
+            var imageColor = images[i].color;
+            images[i].DOColor(new Color(imageColor.r, imageColor.g, imageColor.b, targetAlpha), time);
+        }
+    }
+
+    public static void FadeText(TMP_Text[] texts, float targetAlpha, float time)
+    {
+        for (int i = 0; i < texts.Length; i++)
+        {
+            var textColor = texts[i].color;
+            texts[i].DOColor(new Color(textColor.r, textColor.g, textColor.b, targetAlpha), time);
+        }
+    }
+
+    public static void FadeImage(GameObject[] gameObjects, float targetAlpha ,float time)
+    {
+        for (int i = 0; i < gameObjects.Length; i++)
+        {
+            var images = gameObjects[i].GetComponentsInChildren<Image>();
+            FadeImage(images, targetAlpha ,time);
+        }
     }
 }

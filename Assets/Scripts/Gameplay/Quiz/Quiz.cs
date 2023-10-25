@@ -39,6 +39,11 @@ public class Quiz : MonoBehaviour
     [SerializeField]
     private AudioElement _questionFailedSound;
 
+    [SerializeField]
+    private AudioSource _maggieAudioSource;
+
+    public AudioSource MaggieAudioSource => _maggieAudioSource;
+
     public Transform QuestionTransform => _questionTransform;
     public Answer[] Answers => _answers;
 
@@ -48,6 +53,7 @@ public class Quiz : MonoBehaviour
         public string QuestionString;
         public AudioElement AudioElement;
         public string[] AnswerStrings;
+        public Answer.AnswerData[] AnswerAnswerData;
         public int CorrectIndex;
     }
 
@@ -168,5 +174,11 @@ public class Quiz : MonoBehaviour
 
         _questionText.text = questionData.QuestionString;
         _correctAnswer = _answers[questionData.CorrectIndex];
+    }
+
+    public void PlayVo(AudioClip audioClip)
+    {
+        _maggieAudioSource.clip = audioClip;
+        _maggieAudioSource.Play();
     }
 }

@@ -26,10 +26,25 @@ public class QuizChainAction : ChainAction
         _quiz.OnQuestionCompleted += OnQuestionCompleted;
     }
 
-    void OnValidate()
-    {
-        _useUserBasedAction = true;
-    }
+    //void OnValidate()
+    //{
+    //    _useUserBasedAction = true;
+    //
+    //    for (int i = 0; i < _questions.Count; i++)
+    //    {
+    //        if (_questions[i].AnswerAnswerData.Length <= 0)
+    //        {
+    //            var question = _questions[i].AnswerAnswerData;
+    //            question = new Answer.AnswerData[3] { new Answer.AnswerData (), new Answer.AnswerData(), new Answer.AnswerData() };
+    //        }
+    //        var answerString = _questions[i].AnswerStrings;
+    //        var answerData = _questions[i].AnswerAnswerData;
+    //        for (int j = 0; j < answerString.Length; j++)
+    //        {
+    //            answerData[j].AnswerText = answerString[j];
+    //        }
+    //    }
+    //}
 
     private void OnQuestionCompleted()
     {
@@ -79,6 +94,7 @@ public class QuizChainAction : ChainAction
 
         yield return new WaitForSeconds(question.AudioElement.Clip.length);
 
+        int indexAnswer = 0;
         // Show the answers
         foreach (var quizAnswer in _quiz.Answers)
         {
@@ -86,8 +102,13 @@ public class QuizChainAction : ChainAction
             quizAnswer.UnHighlight();
             quizAnswer.Deselect();
             Helpers.Show(quizAnswer.transform, 0.4f);
-            audioController.PlayAudio(quizAnswer.AudioRecording);
-            yield return new WaitForSeconds(quizAnswer.AudioRecording.Clip.length);
+
+            var clip = question.AnswerAnswerData[indexAnswer].AnswerAudioClip;
+            _quiz.PlayVo(clip);
+            
+            indexAnswer++;
+
+            yield return new WaitForSeconds(clip.length);
         }
 
         // Reset the question so it's interactable
