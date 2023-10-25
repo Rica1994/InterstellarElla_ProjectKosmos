@@ -18,7 +18,13 @@ public class Answer : MonoBehaviour
     
     [SerializeField]
     private Image _borderImage;
-    
+
+    [SerializeField]
+    private Sprite _defaultSprite;
+
+    [SerializeField]
+    private Sprite _selectedSprite;
+
     [SerializeField]
     private TMP_Text _answerText;
 
@@ -61,6 +67,7 @@ public class Answer : MonoBehaviour
     public void Highlight(bool correct)
     {
         _button.enabled = false;
+        _borderImage.sprite = _selectedSprite;
         if (correct) _borderImage.color = new Color(0, 1, 0, 1);
         else _borderImage.color = new Color(1, 0, 0, 1);
     }
@@ -69,6 +76,7 @@ public class Answer : MonoBehaviour
     {
         _button.enabled = true;
         _borderImage.color = _originalBorderImageColor;
+        _borderImage.sprite = _defaultSprite;
     }
     
     public void Select()
