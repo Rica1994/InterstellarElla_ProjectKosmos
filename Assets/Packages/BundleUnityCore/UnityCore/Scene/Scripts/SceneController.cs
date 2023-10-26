@@ -112,16 +112,16 @@ namespace UnityCore
                     StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading));
                     return;
                 }
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
                 StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading));
-#elif UNITY_WEBGL && !UNITY_EDITOR
-                string currentSceneName = SceneManager.GetActiveScene().name;
-                string relativePath = GetRelativePath(currentSceneName, scene);
+//#elif UNITY_WEBGL && !UNITY_EDITOR
+//                string currentSceneName = SceneManager.GetActiveScene().name;
+//                string relativePath = GetRelativePath(currentSceneName, scene);
 
-                string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(GameManager.Data.ToString())}";
+//                string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(GameManager.Data.ToString())}";
 
-                Application.ExternalEval($"window.location.href = '{relativePath + "/index.html" + "?data=" + data}';");
-#endif
+//                Application.ExternalEval($"window.location.href = '{relativePath + "/index.html" + "?data=" + data}';");
+//#endif
             }
 
 
@@ -146,7 +146,15 @@ namespace UnityCore
 
                     yield return new WaitUntil(() => _pageController.PageIsOn(m_LoadingPage));
                 }
+#if UNITY_WEBGL && !UNITY_EDITOR
+                string currentSceneName = SceneManager.GetActiveScene().name;
+                string relativePath = GetRelativePath(currentSceneName, m_TargetScene);
 
+                string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(GameManager.Data.ToString())}";
+
+                Application.ExternalEval($"window.location.href = '{relativePath + "/index.html" + "?data=" + data}';");
+                yield break;
+#endif
                 string targetSceneName = SceneTypeToString(m_TargetScene);
                 SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
             }
@@ -406,7 +414,7 @@ namespace UnityCore
                 return "";
             }
 
-            #endregion
+#endregion
         }
     }
 }

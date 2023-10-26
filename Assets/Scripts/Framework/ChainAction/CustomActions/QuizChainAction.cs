@@ -21,6 +21,9 @@ public class QuizChainAction : ChainAction
     [SerializeField]
     float _typeSpeed = 15f;
 
+    [SerializeField]
+    private AudioElement _quizEndSound;
+
     private void Start()
     {
         _quiz.OnQuestionCompleted += OnQuestionCompleted;
@@ -92,7 +95,7 @@ public class QuizChainAction : ChainAction
             audioController.PlayAudio(question.AudioElement);
         }
 
-        yield return new WaitForSeconds(question.AudioElement.Clip.length);
+        yield return new WaitForSeconds(question.AudioElement.Clip.length + 1.3f);
 
         int indexAnswer = 0;
         // Show the answers
@@ -169,11 +172,12 @@ public class QuizChainAction : ChainAction
 
     private void EndQuiz()
     {
+        _quiz.PlayEndSound();
         _quiz.QuestionTransform.gameObject.GetComponent<TextMeshProUGUI>().enabled = false;
         foreach (var quizAnswer in _quiz.Answers)
         {
             Helpers.Hide(quizAnswer.transform, 0.2f, this);
         }
-        Helpers.DoAfter(1.0f, () => _userBasedActionCompleted = true, this);
+        Helpers.DoAfter(3f, () => _userBasedActionCompleted = true, this);
     }
 }
