@@ -19,7 +19,7 @@ public abstract class PlayerController : MonoBehaviour
     public float CollisionAngle => _collisionAngle;
 
     
-    protected void Start()
+    public virtual void Start()
     {
         _knockbackComponent =
             new MultiplierTimerComponent(0.0f, 1.0f, 0.0f, true, 1f, true, 1f);

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[DefaultExecutionOrder(-1000)]
 public class Service : MonoBehaviour
 {
     private bool _isApplicationQuitting = false;

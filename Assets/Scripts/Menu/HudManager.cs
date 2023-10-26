@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 public class HudManager : Service
 {
     [SerializeField] private GameObject _joystick;
-    [SerializeField, FormerlySerializedAs("_action")] private TouchButton _touchButton;
+    [SerializeField] private TouchButton _touchButton;
 
     public TouchButton TouchButton => _touchButton;
 

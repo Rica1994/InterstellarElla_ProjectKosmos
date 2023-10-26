@@ -197,7 +197,9 @@ public class SimpleCarController : PlayerController, IVehicle
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
         _virtualCamManager = ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>();
 
-        ServiceLocator.Instance.GetService<HudManager>().TouchButton.Pressed += OnTouchButtonPressed;
+        var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
+        touchButton.Pressed += OnTouchButtonPressed;
+        touchButton.CooldownLength = -1.0f;
     }
 
     private void OnTouchButtonPressed()
@@ -214,6 +216,10 @@ public class SimpleCarController : PlayerController, IVehicle
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
         playerInput.Move.performed += OnMoveInput;
         playerInput.Move.canceled += OnMoveInput;
+
+        var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
+        touchButton.Pressed += OnTouchButtonPressed;
+        touchButton.CooldownLength = -1.0f;
     }
     private void FixedUpdate()
     {

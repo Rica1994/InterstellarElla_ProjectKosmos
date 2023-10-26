@@ -221,6 +221,10 @@ public class SpeederGround : PlayerController, IVehicle, IElla
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
 
         _playerPositionWorldForward = this.transform.position.z;
+
+        var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
+        touchButton.CooldownLength = -1.0f;
+        touchButton.Pressed += OnTouchButtonPressed;
     }
 
     protected override void OnEnable()
@@ -229,12 +233,14 @@ public class SpeederGround : PlayerController, IVehicle, IElla
         // Subscribe to events
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
 
-        ServiceLocator.Instance.GetService<HudManager>().TouchButton.Pressed += OnTouchButtonPressed;
 
         playerInput.Move.performed += OnMoveInput;
         playerInput.Move.canceled += OnMoveInput;
         playerInput.Action.started += OnJumpInput;
 
+        var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
+        touchButton.Pressed += OnTouchButtonPressed;
+        touchButton.CooldownLength = -1.0f;
     }
 
     private void OnTouchButtonPressed()

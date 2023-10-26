@@ -116,19 +116,27 @@ public class SpeederSpace : PlayerController, IVehicle
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
         _particleManager = ServiceLocator.Instance.GetService<ParticleManager>();
 
-        SetBounds();    
+        SetBounds();
+
+        var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
+        touchButton.Pressed += OnTouchButtonPressed;
+        touchButton.CooldownLength = -1.0f;
+
+        Debug.LogWarning("Start of speeder space got called \n hooked on touchbutton.Pressed");
     }
     private void OnEnable()
     {
         // Subscribe to events
-
-        ServiceLocator.Instance.GetService<HudManager>().TouchButton.Pressed += OnTouchButtonPressed;
 
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
         playerInput.Move.performed += OnMoveInput;
         playerInput.Move.canceled += OnMoveInput;
 
         playerInput.Action.performed += OnMagnetInput;
+
+        var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
+        touchButton.Pressed += OnTouchButtonPressed;
+        touchButton.CooldownLength = -1.0f;
     }
 
     private void OnTouchButtonPressed()
