@@ -228,10 +228,18 @@ public class SpeederGround : PlayerController, IVehicle, IElla
         base.OnEnable();
         // Subscribe to events
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
+
+        ServiceLocator.Instance.GetService<HudManager>().TouchButton.Pressed += OnTouchButtonPressed;
+
         playerInput.Move.performed += OnMoveInput;
         playerInput.Move.canceled += OnMoveInput;
         playerInput.Action.started += OnJumpInput;
 
+    }
+
+    private void OnTouchButtonPressed()
+    {
+        JumpInput();
     }
 
     private void OnDisable()

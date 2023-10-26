@@ -183,6 +183,7 @@ public class MainMenuManager : Service
     {
         if (show)
         {
+            _buttonLevelSelect.DisableButton();
             var length = 1.0f;
             _menuAnimator.PlayPlanetSelectAnimation(false);
 
@@ -199,6 +200,7 @@ public class MainMenuManager : Service
         }
         else
         {
+            _buttonLevelSelect.EnableButton();
             _factSheet.ShowSheet(false, true);
 
         
