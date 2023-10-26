@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Playables;
 
 [Serializable]
 public class ChainAction : MonoBehaviour
@@ -44,6 +45,9 @@ public class ChainAction : MonoBehaviour
 
     public bool RepeatUntilRequisiteIsMet => _repeatUntilRequisiteIsMet;
 
+    [SerializeField]
+    private bool _playAndCompleteAction = false;
+
     protected virtual void Awake()
     {
         foreach (var obj in _requisiteObjects)
@@ -57,6 +61,14 @@ public class ChainAction : MonoBehaviour
             {
                 Debug.LogWarning("One of the assigned requisiteObjects does not implement IRequisite!");
             }
+        }
+    }
+
+    protected virtual void Start()
+    {
+        if (_playAndCompleteAction)
+        {
+            _maxTime = -1;
         }
     }
 

@@ -6,7 +6,9 @@ using TMPro;
 using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class Quiz : MonoBehaviour
 {
@@ -34,10 +36,23 @@ public class Quiz : MonoBehaviour
     private TMP_Text _questionText;
 
     [SerializeField]
+    private AudioElement _questionStartSound;
+
+    [SerializeField]
     private AudioElement _questionCompleteSound;
 
     [SerializeField]
     private AudioElement _questionFailedSound;
+
+    [SerializeField]
+    private AudioElement _endQuizSound;
+
+    [SerializeField]
+    private AudioElement _maggieComment;
+    [SerializeField]
+    private List<AudioClip> _maggieWrongAnswerClips = new List<AudioClip>();
+    [SerializeField]
+    private List<AudioClip> _maggieRightAnswerClips = new List<AudioClip>();
 
     [SerializeField]
     private AudioSource _maggieAudioSource;
@@ -125,7 +140,11 @@ public class Quiz : MonoBehaviour
         else
         {
             Debug.Log("Answered Incorrectly");
-            
+            if (Random.Range(0, 4) == 3)
+            {
+                PlayMaggieComment(false);
+            }
+
             if (_questionFailedSound != null)
                 ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_questionFailedSound);
 
@@ -167,6 +186,7 @@ public class Quiz : MonoBehaviour
 
     public void SetupQuestion(QuestionData questionData)
     {
+        ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_questionStartSound);
         for (int i = 0; i < _answers.Length; i++)
         {
             _answers[i].SetAnswerText(questionData.AnswerStrings[i]);
@@ -180,5 +200,23 @@ public class Quiz : MonoBehaviour
     {
         _maggieAudioSource.clip = audioClip;
         _maggieAudioSource.Play();
+    }
+
+    public void PlayMaggieComment(bool correctAnswer)
+    {
+        if (correctAnswer)
+        {
+            _maggieComment.Clip = _maggieRightAnswerClips[Random.Range(0, _maggieRightAnswerClips.Count)];
+        }
+        else
+        {
+            _maggieComment.Clip = _maggieWrongAnswerClips[Random.Range(0, _maggieWrongAnswerClips.Count)];
+        }
+        ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_maggieComment);
+    }
+
+    public void PlayEndSound()
+    {
+        ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_endQuizSound);
     }
 }

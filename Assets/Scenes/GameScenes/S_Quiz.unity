@@ -154,6 +154,8 @@ MonoBehaviour:
   _chainActions:
   - {fileID: 498350116}
   - {fileID: 1226615342}
+  - {fileID: 1977616260}
+  - {fileID: 1256294657}
   - {fileID: 1028249890}
   _startOnAwake: 1
 --- !u!4 &11710211
@@ -436,6 +438,8 @@ MonoBehaviour:
   _chainActions:
   - {fileID: 498350116}
   - {fileID: 2047596338}
+  - {fileID: 1977616260}
+  - {fileID: 1256294657}
   - {fileID: 1028249890}
   _startOnAwake: 1
 --- !u!4 &310008827
@@ -568,6 +572,8 @@ MonoBehaviour:
   _chainActions:
   - {fileID: 498350116}
   - {fileID: 1969612810}
+  - {fileID: 1977616260}
+  - {fileID: 1256294657}
   - {fileID: 1028249890}
   _startOnAwake: 1
 --- !u!4 &478083618
@@ -596,7 +602,7 @@ GameObject:
   - component: {fileID: 498350117}
   - component: {fileID: 498350116}
   m_Layer: 0
-  m_Name: AudioAction
+  m_Name: BeginQuiz_AudioAction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -619,8 +625,9 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _audioElement:
-    Clip: {fileID: 8300000, guid: 5d5bc9508f7ae4343a34ab12c2f1248b, type: 3}
+    Clip: {fileID: 8300000, guid: 8f88ed3d1c7cd9748989549e2167f211, type: 3}
     Type: 4
     Volume: 1
     Pitch: 1
@@ -739,6 +746,8 @@ MonoBehaviour:
   _chainActions:
   - {fileID: 498350116}
   - {fileID: 1964860521}
+  - {fileID: 1977616260}
+  - {fileID: 1256294657}
   - {fileID: 1028249890}
   _startOnAwake: 1
 --- !u!4 &603474716
@@ -804,6 +813,7 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _quiz: {fileID: 57160999}
   _questions:
   - QuestionString: "Op Mars kan je\u2026"
@@ -870,6 +880,14 @@ MonoBehaviour:
       AnswerAudioClip: {fileID: 8300000, guid: 3c8518492b105a1458ecabee65a09b1c, type: 3}
     CorrectIndex: 2
   _typeSpeed: 15
+  _quizEndSound:
+    Clip: {fileID: 0}
+    Type: 0
+    Volume: 1
+    Pitch: 1
+    RandomizePitchSlightly: 0
+    PitchLowerLimitAddition: 0.2
+    PitchUpperLimitAddition: 0.2
 --- !u!1 &858449704
 GameObject:
   m_ObjectHideFlags: 0
@@ -952,7 +970,9 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _sceneToLoad: 2
+  _endGame: 0
 --- !u!4 &1028249891
 Transform:
   m_ObjectHideFlags: 0
@@ -965,7 +985,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1226615341
 GameObject:
@@ -1001,11 +1021,12 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _quiz: {fileID: 57160999}
   _questions:
   - QuestionString: Welke giftige stof bevatten de wolken boven Venus?
     AudioElement:
-      Clip: {fileID: 8300000, guid: d69bbbca7b792a0458a9ad72eeeee481, type: 3}
+      Clip: {fileID: 8300000, guid: ecccfb5d481caeb4db65510e08844bd6, type: 3}
       Type: 4
       Volume: 1
       Pitch: 1
@@ -1013,14 +1034,20 @@ MonoBehaviour:
       PitchLowerLimitAddition: 0.2
       PitchUpperLimitAddition: 0.2
     AnswerStrings:
-    - ' Zwavelzuur'
+    - Zwavelzuur
     - Asbest
     - Kwik
-    AnswerAnswerData: []
+    AnswerAnswerData:
+    - AnswerText: Zwavelzuur
+      AnswerAudioClip: {fileID: 8300000, guid: b644446ded78aba4db26c18612e5daec, type: 3}
+    - AnswerText: Asbest
+      AnswerAudioClip: {fileID: 8300000, guid: 7a5f7030ec984e547a72036c995609d4, type: 3}
+    - AnswerText: Kwik
+      AnswerAudioClip: {fileID: 8300000, guid: 7905c250cfd66ab439fd7a9f27b0d827, type: 3}
     CorrectIndex: 0
   - QuestionString: "Op Venus is er \u2026 "
     AudioElement:
-      Clip: {fileID: 8300000, guid: ef49391939e2a2b4d9b9b8ce25ed75c0, type: 3}
+      Clip: {fileID: 8300000, guid: 76c0397837f2cbc42a5d493fcf2fb7a0, type: 3}
       Type: 4
       Volume: 1
       Pitch: 1
@@ -1031,11 +1058,17 @@ MonoBehaviour:
     - Meer, maar wel zwakkere wind dan op aarde
     - Meer en sterkere wind dan op aarde
     - Minder, maar wel sterkere wind
-    AnswerAnswerData: []
+    AnswerAnswerData:
+    - AnswerText: Meer, maar wel zwakkere wind dan op aarde
+      AnswerAudioClip: {fileID: 8300000, guid: a5ea16fb3bf92ce43868459b7cbf9b52, type: 3}
+    - AnswerText: Meer en sterkere wind dan op aarde
+      AnswerAudioClip: {fileID: 8300000, guid: 547de3ccf53f8e245ab5478727ff3e8c, type: 3}
+    - AnswerText: Minder, maar wel sterkere wind
+      AnswerAudioClip: {fileID: 8300000, guid: b8324c65052c4fe4b9cfb7dc7201a30f, type: 3}
     CorrectIndex: 2
   - QuestionString: Wie of wat is Cleopatra?
     AudioElement:
-      Clip: {fileID: 8300000, guid: 713a39b6b4824b54caf22012ccc84f1f, type: 3}
+      Clip: {fileID: 8300000, guid: 0583a8f1432b95d4fa0b54005db2a4d7, type: 3}
       Type: 4
       Volume: 1
       Pitch: 1
@@ -1046,9 +1079,23 @@ MonoBehaviour:
     - 'De koningin van Venus '
     - Een krater op Venus
     - 'Een meteoriet op Venus '
-    AnswerAnswerData: []
+    AnswerAnswerData:
+    - AnswerText: 'De koningin van Venus '
+      AnswerAudioClip: {fileID: 8300000, guid: a4176a81f7180e043abac99eda855a72, type: 3}
+    - AnswerText: Een krater op Venus
+      AnswerAudioClip: {fileID: 8300000, guid: 8169dea64646f5242a69d0fa36a5898a, type: 3}
+    - AnswerText: 'Een meteoriet op Venus '
+      AnswerAudioClip: {fileID: 8300000, guid: 569e7ad3134d0e74ca5867d1253ac15b, type: 3}
     CorrectIndex: 1
   _typeSpeed: 15
+  _quizEndSound:
+    Clip: {fileID: 0}
+    Type: 0
+    Volume: 1
+    Pitch: 1
+    RandomizePitchSlightly: 0
+    PitchLowerLimitAddition: 0.2
+    PitchUpperLimitAddition: 0.2
 --- !u!4 &1226615343
 Transform:
   m_ObjectHideFlags: 0
@@ -1062,6 +1109,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 11710211}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1256294656
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1256294658}
+  - component: {fileID: 1256294657}
+  m_Layer: 0
+  m_Name: WaitChainAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1256294657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256294656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3fe8564495c67d45ac630f408da418b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
+  _waitSeconds: 2
+--- !u!4 &1256294658
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256294656}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -16.212244, y: 47.362064, z: 93.820984}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1391355547
 PrefabInstance:
@@ -1078,7 +1175,7 @@ PrefabInstance:
     - target: {fileID: 3611885756584529763, guid: 2c43976f0d1ba2143be4891166db62e0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -682
       objectReference: {fileID: 0}
     - target: {fileID: 3611885756584529763, guid: 2c43976f0d1ba2143be4891166db62e0,
         type: 3}
@@ -1169,6 +1266,8 @@ MonoBehaviour:
   _chainActions:
   - {fileID: 498350116}
   - {fileID: 797099799}
+  - {fileID: 1977616260}
+  - {fileID: 1256294657}
   - {fileID: 1028249890}
   _startOnAwake: 1
 --- !u!4 &1796135124
@@ -1220,11 +1319,12 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _quiz: {fileID: 57160999}
   _questions:
   - QuestionString: "Op Mercurius is er\u2026"
     AudioElement:
-      Clip: {fileID: 8300000, guid: d69bbbca7b792a0458a9ad72eeeee481, type: 3}
+      Clip: {fileID: 8300000, guid: 92fa9f8cabf0ab94b8cc61f8025f7ad6, type: 3}
       Type: 4
       Volume: 1
       Pitch: 1
@@ -1235,11 +1335,17 @@ MonoBehaviour:
     - Minder zwaartekracht dan op de aarde
     - Meer zwaartekracht dan op de aarde
     - Evenveel zwaartekracht als op de aarde
-    AnswerAnswerData: []
+    AnswerAnswerData:
+    - AnswerText: Minder zwaartekracht dan op de aarde
+      AnswerAudioClip: {fileID: 8300000, guid: 773f42c1230dcc64dbd00d7585b9248f, type: 3}
+    - AnswerText: Meer zwaartekracht dan op de aarde
+      AnswerAudioClip: {fileID: 8300000, guid: 4ec31eedd62f0ab4ba0df8258d6378cc, type: 3}
+    - AnswerText: Evenveel zwaartekracht als op de aarde
+      AnswerAudioClip: {fileID: 8300000, guid: 1412a73d0c859cb448e89ec007eba222, type: 3}
     CorrectIndex: 0
   - QuestionString: Waardoor is er ijs op Mercurius?
     AudioElement:
-      Clip: {fileID: 8300000, guid: ef49391939e2a2b4d9b9b8ce25ed75c0, type: 3}
+      Clip: {fileID: 8300000, guid: 084560ef50decef46809ffca83c695ea, type: 3}
       Type: 4
       Volume: 1
       Pitch: 1
@@ -1250,11 +1356,17 @@ MonoBehaviour:
     - Het is afkomstig uit de kern van de planeet
     - Door een sneeuwballengevecht van reuzenaliens
     - 'Door kometen die op de polen neerstortten '
-    AnswerAnswerData: []
+    AnswerAnswerData:
+    - AnswerText: Het is afkomstig uit de kern van de planeet
+      AnswerAudioClip: {fileID: 8300000, guid: fba6ffd034927a6419c6c5bd7012d806, type: 3}
+    - AnswerText: Door een sneeuwballengevecht van reuzenaliens
+      AnswerAudioClip: {fileID: 8300000, guid: f2c79b60cbc8eb4459c668a0b331d1f5, type: 3}
+    - AnswerText: 'Door kometen die op de polen neerstortten '
+      AnswerAudioClip: {fileID: 8300000, guid: 9cc1e091df0d9e747b16c6db4f0bea54, type: 3}
     CorrectIndex: 2
   - QuestionString: Waaruit bestaan de kern en de mantel van Mercurius voornamelijk?
     AudioElement:
-      Clip: {fileID: 8300000, guid: 713a39b6b4824b54caf22012ccc84f1f, type: 3}
+      Clip: {fileID: 8300000, guid: 0ab21a26c79648147860cefb46561502, type: 3}
       Type: 4
       Volume: 1
       Pitch: 1
@@ -1265,9 +1377,23 @@ MonoBehaviour:
     - Silica en ijzer
     - Silicone en aluminium
     - Silicium en koper
-    AnswerAnswerData: []
+    AnswerAnswerData:
+    - AnswerText: Silica en ijzer
+      AnswerAudioClip: {fileID: 8300000, guid: 4a7cff426a41d1445811081c43627f95, type: 3}
+    - AnswerText: Silicone en aluminium
+      AnswerAudioClip: {fileID: 8300000, guid: dc0317285e9849246ab573c22a7d3ef8, type: 3}
+    - AnswerText: Silicium en koper
+      AnswerAudioClip: {fileID: 8300000, guid: 52b508a226242df4cab1d39929874f53, type: 3}
     CorrectIndex: 0
   _typeSpeed: 15
+  _quizEndSound:
+    Clip: {fileID: 0}
+    Type: 0
+    Volume: 1
+    Pitch: 1
+    RandomizePitchSlightly: 0
+    PitchLowerLimitAddition: 0.2
+    PitchUpperLimitAddition: 0.2
 --- !u!4 &1964860522
 Transform:
   m_ObjectHideFlags: 0
@@ -1316,11 +1442,12 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _quiz: {fileID: 57160999}
   _questions:
   - QuestionString: Hoe heet de maan van Saturnus die groter is dan de planeet Mercurius?
     AudioElement:
-      Clip: {fileID: 8300000, guid: d69bbbca7b792a0458a9ad72eeeee481, type: 3}
+      Clip: {fileID: 8300000, guid: 008e4df487de4494f904612b09363a3f, type: 3}
       Type: 4
       Volume: 1
       Pitch: 1
@@ -1331,11 +1458,17 @@ MonoBehaviour:
     - Enceladus
     - Titan
     - Thetys
-    AnswerAnswerData: []
+    AnswerAnswerData:
+    - AnswerText: Enceladus
+      AnswerAudioClip: {fileID: 8300000, guid: 0c4a8ba2332d7cf469d741a269f7706b, type: 3}
+    - AnswerText: Titan
+      AnswerAudioClip: {fileID: 8300000, guid: 54a9d8ceddefae340bade22d9d6d2b80, type: 3}
+    - AnswerText: Thetys
+      AnswerAudioClip: {fileID: 8300000, guid: ee3f81bdd5eb89348b2dcac7b1f7b3bc, type: 3}
     CorrectIndex: 1
   - QuestionString: Uit welke twee gassen bestaat Saturnus?
     AudioElement:
-      Clip: {fileID: 8300000, guid: ef49391939e2a2b4d9b9b8ce25ed75c0, type: 3}
+      Clip: {fileID: 8300000, guid: 4f325b2e722edbc48b90a54cadf02ee7, type: 3}
       Type: 4
       Volume: 1
       Pitch: 1
@@ -1346,11 +1479,17 @@ MonoBehaviour:
     - Fluor en stikstof
     - Helium en waterstof
     - Krypton en zuurstof
-    AnswerAnswerData: []
+    AnswerAnswerData:
+    - AnswerText: Fluor en stikstof
+      AnswerAudioClip: {fileID: 8300000, guid: ecb209f27514ba54d94588db1bfefc22, type: 3}
+    - AnswerText: Helium en waterstof
+      AnswerAudioClip: {fileID: 8300000, guid: f3258f477fbfc06459538696ddbb6c29, type: 3}
+    - AnswerText: Krypton en zuurstof
+      AnswerAudioClip: {fileID: 8300000, guid: 8c13b84a86035ff46be58f0c4a23bc5e, type: 3}
     CorrectIndex: 1
   - QuestionString: Hoe heet een van de herdermanen van Saturnus?
     AudioElement:
-      Clip: {fileID: 8300000, guid: 713a39b6b4824b54caf22012ccc84f1f, type: 3}
+      Clip: {fileID: 8300000, guid: ef1c7a6769bceb246ab5820573ae1965, type: 3}
       Type: 4
       Volume: 1
       Pitch: 1
@@ -1361,9 +1500,23 @@ MonoBehaviour:
     - Pot
     - Vergiet
     - Pan
-    AnswerAnswerData: []
+    AnswerAnswerData:
+    - AnswerText: Pot
+      AnswerAudioClip: {fileID: 8300000, guid: 131499506975ed842959c2655e2f37ce, type: 3}
+    - AnswerText: Vergiet
+      AnswerAudioClip: {fileID: 8300000, guid: 2dc84a8585bad114ba11e8dae2cc944f, type: 3}
+    - AnswerText: Pan
+      AnswerAudioClip: {fileID: 8300000, guid: 6ba3e0bd6c7f1f64fa04122284b0b24d, type: 3}
     CorrectIndex: 2
   _typeSpeed: 15
+  _quizEndSound:
+    Clip: {fileID: 8300000, guid: 7477ff6baa7f9b5459984ae72ff2ef1a, type: 3}
+    Type: 4
+    Volume: 0.2
+    Pitch: 1
+    RandomizePitchSlightly: 0
+    PitchLowerLimitAddition: 0.2
+    PitchUpperLimitAddition: 0.2
 --- !u!4 &1969612811
 Transform:
   m_ObjectHideFlags: 0
@@ -1377,6 +1530,69 @@ Transform:
   m_Children: []
   m_Father: {fileID: 478083618}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1977616259
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1977616261}
+  - component: {fileID: 1977616260}
+  m_Layer: 0
+  m_Name: EndQuiz_AudioAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1977616260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977616259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8edd9374269b74b4fb962461e69dd51a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
+  _unityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 57160999}
+        m_MethodName: PlayMaggieComment
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+--- !u!4 &1977616261
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977616259}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 551.0756, y: 284.1159, z: 1.4980774}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2047596337
 GameObject:
@@ -1412,11 +1628,12 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _quiz: {fileID: 57160999}
   _questions:
   - QuestionString: 'Bestaat er een ondergrondse oceaan op Pluto? '
     AudioElement:
-      Clip: {fileID: 8300000, guid: d69bbbca7b792a0458a9ad72eeeee481, type: 3}
+      Clip: {fileID: 8300000, guid: 3f440e0c7400a904ea253d9af502d782, type: 3}
       Type: 4
       Volume: 1
       Pitch: 1
@@ -1427,12 +1644,18 @@ MonoBehaviour:
     - Waarschijnlijk, maar het is nog niet bewezen
     - Nee, dat kan niet door de speciale atmosfeer daar
     - Ja, en er zijn er meerdere
-    AnswerAnswerData: []
+    AnswerAnswerData:
+    - AnswerText: Waarschijnlijk, maar het is nog niet bewezen
+      AnswerAudioClip: {fileID: 8300000, guid: 9244a8d257347cb4c825ac536111f2d6, type: 3}
+    - AnswerText: Nee, dat kan niet door de speciale atmosfeer daar
+      AnswerAudioClip: {fileID: 8300000, guid: 2003071f4ac99594cb658efb247c42c9, type: 3}
+    - AnswerText: Ja, en er zijn er meerdere
+      AnswerAudioClip: {fileID: 8300000, guid: 6230cee3160034e458fabc9d14b98bf7, type: 3}
     CorrectIndex: 0
   - QuestionString: Waarom maakt een uitbarsting van een ijsvulkaan op Pluto geen
       lawaai?
     AudioElement:
-      Clip: {fileID: 8300000, guid: ef49391939e2a2b4d9b9b8ce25ed75c0, type: 3}
+      Clip: {fileID: 8300000, guid: 91cfd654c03693240b267aef161fdc4f, type: 3}
       Type: 4
       Volume: 1
       Pitch: 1
@@ -1443,11 +1666,18 @@ MonoBehaviour:
     - De uitbarstingen van een ijsvulkaan daar zijn maar heel klein
     - De atmosfeer is zo dun dat geluidsgolven zich niet voort kunnen bewegen
     - De atmosfeer is zo dik dat geluidsgolven er niet door kunnen
-    AnswerAnswerData: []
+    AnswerAnswerData:
+    - AnswerText: De uitbarstingen van een ijsvulkaan daar zijn maar heel klein
+      AnswerAudioClip: {fileID: 8300000, guid: 3ff07e381d5cf1546a29e316f7c9708a, type: 3}
+    - AnswerText: De atmosfeer is zo dun dat geluidsgolven zich niet voort kunnen
+        bewegen
+      AnswerAudioClip: {fileID: 8300000, guid: 884d01cb2251b0f48b994c83e3f4d551, type: 3}
+    - AnswerText: De atmosfeer is zo dik dat geluidsgolven er niet door kunnen
+      AnswerAudioClip: {fileID: 8300000, guid: 7fe6a92d319c6354582181c57859be1a, type: 3}
     CorrectIndex: 1
   - QuestionString: Waaruit bestaat het ijs dat je op Pluto vindt?
     AudioElement:
-      Clip: {fileID: 8300000, guid: 713a39b6b4824b54caf22012ccc84f1f, type: 3}
+      Clip: {fileID: 8300000, guid: 406d7e422a8e2934182c2bb73e00c70e, type: 3}
       Type: 4
       Volume: 1
       Pitch: 1
@@ -1456,11 +1686,25 @@ MonoBehaviour:
       PitchUpperLimitAddition: 0.2
     AnswerStrings:
     - Meestal uit stikstof
-    - 'Uit room '
+    - Uit room
     - Voor meer dan de helft uit water
-    AnswerAnswerData: []
+    AnswerAnswerData:
+    - AnswerText: Meestal uit stikstof
+      AnswerAudioClip: {fileID: 8300000, guid: 3e72fe3a83dd3c3409d4e102bbff04b6, type: 3}
+    - AnswerText: Uit room
+      AnswerAudioClip: {fileID: 8300000, guid: d68f1b5185fae304492af5e8b8b4a471, type: 3}
+    - AnswerText: Voor meer dan de helft uit water
+      AnswerAudioClip: {fileID: 8300000, guid: f8d37294f2944744ab6f5dd1d6dc7d32, type: 3}
     CorrectIndex: 0
   _typeSpeed: 15
+  _quizEndSound:
+    Clip: {fileID: 0}
+    Type: 0
+    Volume: 1
+    Pitch: 1
+    RandomizePitchSlightly: 0
+    PitchLowerLimitAddition: 0.2
+    PitchUpperLimitAddition: 0.2
 --- !u!4 &2047596339
 Transform:
   m_ObjectHideFlags: 0
@@ -1562,6 +1806,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 3590168759948001092, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4235481271623901292, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1611,6 +1860,106 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: P_Quiz
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _endQuizSound.Clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 7477ff6baa7f9b5459984ae72ff2ef1a, type: 3}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _endQuizSound.Type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _maggieComment.Type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _questionStartSound.Clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 25123028d50dd8345bd6a57c1167c94d, type: 3}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _questionStartSound.Type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _questionFailedSound.Clip
+      value: 
+      objectReference: {fileID: 8300000, guid: e32d210c35f5ea84b909588770c9f618, type: 3}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _questionStartSound.Volume
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _questionCompleteSound.Clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 6f8a925a66aeb0f49bf309987e914f4a, type: 3}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _questionFailedSound.Volume
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _maggieRightAnswerClips.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _maggieWrongAnswerClips.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _maggieRightAnswerClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 50d15ef7fab256048a4e89e6829454cd, type: 3}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _maggieRightAnswerClips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 3509c27cc83c1ed42bec3e519b864614, type: 3}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _maggieRightAnswerClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: db9fba316aca285419df09025625a146, type: 3}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _maggieRightAnswerClips.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 5761d6395e17cc2458f7d067520f2da6, type: 3}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _maggieWrongAnswerClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 111ea6035cfa9e640bc5367f489bc73f, type: 3}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _maggieWrongAnswerClips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 8efa2fb7d17bc924591be59f01c38cca, type: 3}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _maggieWrongAnswerClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: f298eee94c221ee40a78fec0ae877b41, type: 3}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _maggieWrongAnswerClips.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 6cdd9d4aa78931b46828e5b440993b61, type: 3}
+    - target: {fileID: 4235481272775225332, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
+        type: 3}
+      propertyPath: _questionFailedSound.RandomizePitchSlightly
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4235481272775225333, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
         type: 3}

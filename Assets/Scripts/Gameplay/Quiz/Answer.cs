@@ -61,6 +61,7 @@ public class Answer : MonoBehaviour
         }
 
         _button.onClick.AddListener(Select);
+        _borderImage.color = new Color(1, 1, 1);
         _originalBorderImageColor = _borderImage.color;
     }
 
@@ -68,8 +69,8 @@ public class Answer : MonoBehaviour
     {
         _button.enabled = false;
         _borderImage.sprite = _selectedSprite;
-        if (correct) _borderImage.color = new Color(0, 1, 0, 1);
-        else _borderImage.color = new Color(1, 0, 0, 1);
+        if (correct) _borderImage.color = new Color(0, 1, 0, 0.7f);
+        else _borderImage.color = new Color(1, 0, 0, 0.7f);
     }
 
     public void UnHighlight()
