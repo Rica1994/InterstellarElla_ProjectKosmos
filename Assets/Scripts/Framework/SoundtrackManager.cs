@@ -24,8 +24,10 @@ public class SoundtrackManager : Service
 
 
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        if (_isDestroyed) return;
         _passByAudioSourceStandardPitch = _passByAudioSource.pitch;
         // Initialize Audio Sources
         currentSource = gameObject.GetComponent<AudioSource>();

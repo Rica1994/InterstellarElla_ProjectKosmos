@@ -24,8 +24,10 @@ public class VirtualCameraManager : Service
 
     private float _currentFov;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        if (_isDestroyed) return;
         _currentFov = _defaultFov;
     }
 

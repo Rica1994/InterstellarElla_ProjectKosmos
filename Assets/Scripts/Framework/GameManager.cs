@@ -123,11 +123,15 @@ public class GameManager : Service
 #endif
     }
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        if (_isDestroyed) return;
+
         PlayerController.PlayerControllerEnabledEvent += OnPlayerControllerEnabled;
 #if UNITY_EDITOR
-        ParseData(Data.ToString());
+        Data = new SaveData();
+        //ParseData(Data.ToString());
 #elif !UNITY_EDITOR && UNITY_WEBGL
 
         string url = Application.absoluteURL;

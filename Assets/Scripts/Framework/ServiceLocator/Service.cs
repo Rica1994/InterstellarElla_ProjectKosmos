@@ -6,11 +6,18 @@ using UnityEngine;
 public class Service : MonoBehaviour
 {
     private bool _isApplicationQuitting = false;
+    protected bool _isDestroyed = false;
 
     virtual protected void OnEnable()
     {
+       
+    }
+
+    virtual protected void Awake()
+    {
         if (ServiceLocator.Instance.Contains(this))
         {
+            _isDestroyed = true;
             Destroy(this);
         }
         else

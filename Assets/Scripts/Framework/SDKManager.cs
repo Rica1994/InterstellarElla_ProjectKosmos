@@ -22,8 +22,10 @@ public class SDKManager : Service
     // Define the delegate type.
     public delegate void EventHandler(string eventType, bool eventDetail);
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        if (_isDestroyed) return;
         // Initialize the SDK with the event handler.
         InitializeSDK(HandleSDKEvent);
     }

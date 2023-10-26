@@ -75,8 +75,10 @@ public class LevelManager : Service
 
     #region Unity Functions
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        if (_isDestroyed) return;
         // subscribe endgame triggers
         if (_endGameTrigger != null) _endGameTrigger.OnTriggered += OnEndGameTriggered;
 

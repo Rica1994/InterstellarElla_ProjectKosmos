@@ -90,8 +90,10 @@ public class MainMenuManager : Service
     #endregion
 
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        if (_isDestroyed) return;
         _levelsIncluded[0] = _3_Venus;
         _levelsIncluded[1] = _1_Mars;
         _levelsIncluded[2] = _4_Saturn;

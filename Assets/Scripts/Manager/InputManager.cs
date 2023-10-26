@@ -9,8 +9,10 @@ public class InputManager : Service
 
     public PI_InputElla.PlayerActions PlayerInput => _input.Player;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        if (_isDestroyed) return;
         _input = new PI_InputElla();
     }
 
