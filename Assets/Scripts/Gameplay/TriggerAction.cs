@@ -8,11 +8,11 @@ public class TriggerAction : MonoBehaviour
     [SerializeField]
     private ChainAction _action;
 
-    //    [SerializeField]
-    private bool _destroyOnActionComplete = false;
-
     [SerializeField]
     private bool _onlyTriggerOnce = false;
+
+    [SerializeField]
+    private bool _destroyAfterChainAction = false;
 
     private TriggerHandler _triggerHandler;
 
@@ -26,7 +26,7 @@ public class TriggerAction : MonoBehaviour
 
     private void OnChainActionDone()
     {
-        if (_destroyOnActionComplete) Destroy(gameObject);
+        if (_destroyAfterChainAction) Destroy(gameObject);
     }
 
     private void OnTriggered(TriggerHandler me, Collider other, bool hasEntered)

@@ -4,19 +4,36 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [DefaultExecutionOrder(-100)]
-public class Sequence : MonoBehaviour   
+public class Sequence : MonoBehaviour
 {
     [SerializeField]
     private List<ChainAction> _chainActions = new List<ChainAction>();
 
     [SerializeField]
     private bool _startOnAwake = false;
-    
+
+    [SerializeField]
+    private bool _destroyAfter = false;
+
     public List<ChainAction> ChainActions => _chainActions;
 
     private void Start()
     {
-      if (_startOnAwake) ChainManager.Instance.StartChain(this);
+        if (_startOnAwake) ChainManager.Instance.StartChain(this);
+
+        if (_chainActions.Count > 0)
+        {
+            _chainActions[_chainActions.Count - 1].ChainActionDone += OnLastChainActionDone;
+        }
+        else
+        {
+            Debug.LogError("This sequence has no chain actions, delete this object", gameObject);
+        }
+    }
+
+    private void OnLastChainActionDone()
+    {
+        if (_destroyAfter) Destroy(gameObject);
     }
 
 #if UNITY_EDITOR
