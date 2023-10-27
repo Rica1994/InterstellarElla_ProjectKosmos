@@ -218,13 +218,6 @@ public class SmoothPathAligningTool : EditorWindow
             }
         }
 
-        float SortByPositionZ(float z1, float z2)
-        {
-            return z1.CompareTo(z2);
-        }
-
-
-
         if (GUILayout.Button("SHOW Visuals for Player bounding boxes"))
         {
             _objectsToBeAlligned = FindObjectsOfType<SmoothPathToBeAlligned>().ToList();

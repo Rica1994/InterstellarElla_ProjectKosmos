@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class RockWall : MonoBehaviour
 {
-    [SerializeField] private float collisionDelay = 0.1f;
     [SerializeField] private float impulseForce = 10.0f;
     [SerializeField] private Vector3 impulseDirection = new Vector3(0.0f, 1.0f, 1.0f);
     [SerializeField] private float maxRandomAngle = 30.0f;

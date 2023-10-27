@@ -158,7 +158,7 @@ public class SimpleCarController : PlayerController, IVehicle
     {
         //_gravityComponent = new GravityComponent();
     }
-    private void Start()
+    protected override void Start()
     {
         base.Start();
         _ignoreMe = LayerMask.GetMask("UI", "Ignore Raycast");
@@ -211,8 +211,9 @@ public class SimpleCarController : PlayerController, IVehicle
         }
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
         playerInput.Move.performed += OnMoveInput;
         playerInput.Move.canceled += OnMoveInput;

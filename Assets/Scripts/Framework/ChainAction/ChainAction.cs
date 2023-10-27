@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Serialization;
 
-[Serializable]
+[DefaultExecutionOrder(-99)]
 public class ChainAction : MonoBehaviour
 {
     #region Events
@@ -45,7 +46,7 @@ public class ChainAction : MonoBehaviour
 
     public bool RepeatUntilRequisiteIsMet => _repeatUntilRequisiteIsMet;
 
-    [SerializeField]
+    [SerializeField] 
     private bool _playAndCompleteAction = false;
 
     protected virtual void Awake()

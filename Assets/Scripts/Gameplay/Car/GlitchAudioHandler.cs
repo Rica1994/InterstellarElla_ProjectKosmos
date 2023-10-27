@@ -49,9 +49,6 @@ public class GlitchAudioHandler : MonoBehaviour
     [SerializeField]
     private float _thresholdSlippingSpeed = 6.0f;
 
-    [SerializeField]
-    private float _fadeTimeSlippingSound = 0.5f;
-
     private SimpleCarController _carController;
 
     private float _previousSteeringAngle;

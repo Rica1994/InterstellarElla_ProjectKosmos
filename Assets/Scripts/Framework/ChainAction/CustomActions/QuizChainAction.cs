@@ -24,8 +24,9 @@ public class QuizChainAction : ChainAction
     [SerializeField]
     private AudioElement _quizEndSound;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         _quiz.OnQuestionCompleted += OnQuestionCompleted;
     }
 

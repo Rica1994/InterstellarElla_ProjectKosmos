@@ -162,12 +162,10 @@ namespace UnityCore
                                                       SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
                                                       PageType loadingPage = PageType.None)
             {
+
+#if UNITY_EDITOR
                 yield return new WaitForSeconds(timeDelay);
-
-                Load(SceneType.S_Loading, null, false, PageType.Loading);
-
-                yield return new WaitForSeconds(3);
-
+#endif
                 Load(sceneToLoad, null, false, PageType.Loading);
             }
             private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
@@ -209,7 +207,7 @@ namespace UnityCore
                 }
 
                 // showcase the UI_persistent(pause_button) when needed
-                if (m_TargetScene == SceneType.S_MainMenu || m_TargetScene == SceneType.S_Loading)
+                if (m_TargetScene == SceneType.S_MainMenu)
                 {
                     _pageController.ShowPauseButton(false);
                     ServiceLocator.Instance.GetService<GameManager>().SetPlayerController(null);
@@ -263,7 +261,6 @@ namespace UnityCore
                     case "S_GameStartUpScene": return SceneType.S_GameStartUpScene;
 
                     case "S_MainMenu": return SceneType.S_MainMenu;
-                    case "S_Loading": return SceneType.S_Loading;
 
                     case "S_Level_1_Intro": return SceneType.S_Level_1_Intro;
                     case "S_Level_1_0_Work": return SceneType.S_Level_1_0_Work;

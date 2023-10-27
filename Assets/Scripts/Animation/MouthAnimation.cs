@@ -64,11 +64,6 @@ public class MouthAnimation : MonoBehaviour
     [DllImport("__Internal")]
     private static extern bool GetSamples(string name, float[] freqData, int size);
 
-    //[SerializeField]
-    //private Text _text;
-
-    private bool _clipStopped = false;
-
     private void Start()
     {
         //InitializeVariables();

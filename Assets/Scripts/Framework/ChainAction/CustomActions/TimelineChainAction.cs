@@ -11,15 +11,11 @@ public class TimelineChainAction : ChainAction
     [SerializeField]
     private SkipCutscene _skipButton;
 
-    [SerializeField]
-    private bool _playAndCompleteAction = false;
-
     protected override void Awake()
     {
         base.Awake();
 
-        if (_playAndCompleteAction == false) _maxTime = _maxTime = (float)_playableDirector.duration;
-        else _maxTime = -1;
+        _maxTime = (float)_playableDirector.duration;
         
     }
 

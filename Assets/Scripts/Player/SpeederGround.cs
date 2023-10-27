@@ -19,18 +19,7 @@ public class SpeederGround : PlayerController, IVehicle, IElla
 
     public float speedForward = 50f;
     [SerializeField, Range(0.1f, 0.5f)] private float _tiltSpeedUpMultiplier = 0.3f;
-    [SerializeField] private float _startSidewaySpeed = 20.0f;
     [SerializeField] private float _speedSideways = 15f;
-    [SerializeField] private float _startSideWaySpeedAcceleration = 5.0f;
-
-    [SerializeField] private float _sidewaysAcceleration = 5.0f;
-    //public static float SpeedForward;
-
-    [Header("Maximum Input ranges joystick")]
-    [SerializeField,] private float _forwardAngleRange = 120f;
-
-    [SerializeField] private float _horizontalAngleRange = 60f;
-
 
     [Header("Boost")]
     [SerializeField, Range(1.0f, 3.0f)] private float _boostSpeedMultiplier = 2f;
@@ -95,12 +84,8 @@ public class SpeederGround : PlayerController, IVehicle, IElla
     private Vector3 _lastPosition;
     private Vector3 _velocity;
 
-    private float _hoverMovement = 1.0f;
 
-    [SerializeField]
-    private Vector3 _velocityNormalized;
 
-    private float _xRotation = 0;
 
     [SerializeField]
     private Transform _visual;
@@ -150,7 +135,7 @@ public class SpeederGround : PlayerController, IVehicle, IElla
     private float _playerStuckUnknownTimer, _playerStuckMaybeTimer;
     private float _playerStuckUnknownTimeLimit = 2f;
     private float _playerStuckMaybeLimit = 5f;
-    private bool _playerMightBeStuck, _playerStuck;
+    private bool _playerMightBeStuck;
     private float _playerStuckFirstDistance = 20;
     private float _playerStuckSecondDistance = 10;
     private float _playerPositionWorldForward;
@@ -213,7 +198,7 @@ public class SpeederGround : PlayerController, IVehicle, IElla
     }
 
 
-    private void Start()
+    protected override void Start()
     {
         base.Start();
         _lastPosition = transform.position;
@@ -375,13 +360,8 @@ public class SpeederGround : PlayerController, IVehicle, IElla
                 if (distanceCovered <= _playerStuckSecondDistance)
                 {
                     // player is likely stuck, respawn to latest checkpoint
-
-                    _playerStuck = true;
-
                     ServiceLocator.Instance.GetService<GameManager>().RespawnPlayer(this.gameObject,
                         ServiceLocator.Instance.GetService<LevelManager>().CurrentCheckpoint);
-
-                    _playerStuck = false;
                 }
                 else
                 {
@@ -545,13 +525,11 @@ public class SpeederGround : PlayerController, IVehicle, IElla
     {
         // Calculate normalized velocity
         _velocity = (transform.position - _lastPosition) / Time.deltaTime;
-        _velocityNormalized = _velocity.normalized;
-        //      _lastPosition = transform.position;
-        //
+
 
         _target.transform.localPosition = new Vector3(_input.x * 3, 0, 5.14f);
-        //
-        //      // Rotate towards Target
+
+        // Rotate towards Target
         var rot = Quaternion.FromToRotation(_visual.transform.forward,
             _target.transform.position - _visual.transform.position) * _visual.transform.rotation;
         _visual.transform.rotation = Quaternion.Lerp(_visual.transform.rotation, rot, 0.2f);
