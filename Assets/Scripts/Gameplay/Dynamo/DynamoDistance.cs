@@ -45,8 +45,8 @@ public class DynamoDistance : MonoBehaviour
 
     private float _defaultEnginePitch;
     private float _lastDynamoSpeed;
-    private float _dynamoDefaultSpeed;
-    private float _startDynamoLerpingSpeed;
+    [SerializeField]
+    private float _dynamoDefaultSpeed = 40;
 
     public float SpeedFactor = 3;
 
@@ -119,7 +119,7 @@ public class DynamoDistance : MonoBehaviour
         if (dif > 2.0f)
         {
             _lastDynamoSpeed = _dynamo.m_Speed;
-            _engineAudioSource.pitch = _defaultEnginePitch * (_dynamo.m_Speed / _dynamoDefaultSpeed);
+            _engineAudioSource.pitch = Mathf.Clamp(_defaultEnginePitch * (_dynamo.m_Speed / _dynamoDefaultSpeed), 0, 3);
         }
     }
 
