@@ -14,7 +14,6 @@ namespace UnityCore
             S_GameStartUpScene = 1,
 
             S_MainMenu = 2,
-            S_Loading = 3,
 
             S_Level_1_Intro = 4,
             S_Level_1_0_Work = 5,
