@@ -7,8 +7,9 @@ public class MaggieTriggerChainAction : ChainAction
     [SerializeField]
     private GameObject _visual;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         _useUserBasedAction = true;
 
         if (_visual == null)

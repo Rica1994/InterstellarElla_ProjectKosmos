@@ -67,7 +67,6 @@ public class EllaExploring : PlayerController, IElla
     private bool _isHovering = false;
     private bool _isTryingHover = false;
     private bool _canHover = false;
-    private bool _startedHoverFromGround = false;
 
     private bool _isGrounded = false;
     private bool _isApplicationQuitting = false;
@@ -111,7 +110,7 @@ public class EllaExploring : PlayerController, IElla
 
         _rightVector = Vector3.Cross(_moveDirection, Vector3.up);
     }
-    private void Start()
+    protected override void Start()
     {
         base.Start();
         // create needed particle systems for boost
@@ -129,8 +128,9 @@ public class EllaExploring : PlayerController, IElla
         touchButton.Unpressed += OnTouchButtonUnPressed;
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         // Subscribe to events
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
 
@@ -299,7 +299,6 @@ public class EllaExploring : PlayerController, IElla
     {
         // make sure I'm not in a jump pad bounce when trying to do this
         _isTryingHover = false;
-        _startedHoverFromGround = false;
         _hoverComponent.HoverValueReset();
 
         //Debug.Log(this.name);
@@ -478,7 +477,6 @@ public class EllaExploring : PlayerController, IElla
             {
                 _hoverStrength = _hoverStrengthMax;
 
-                _startedHoverFromGround = true;
                 _sourceIgnitionBoots.Play();
             }
             else
@@ -512,7 +510,6 @@ public class EllaExploring : PlayerController, IElla
         else
         {
             _isHovering = false;
-            _startedHoverFromGround = false;
 
             // stop particle
             _particleBootLeft.Stop();

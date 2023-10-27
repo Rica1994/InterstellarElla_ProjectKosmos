@@ -55,8 +55,9 @@ public class SpeederGroundCutsceneStateAction : ChainAction
     private CinemachineDollyCart _dynamoCart;
     private DynamoDistance _dynamoDistance;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _autopilot = FindObjectOfType<Autopilot>();
         _followWithDamping = FindObjectOfType<FollowWithDamping>();
         _brain = FindObjectOfType<CinemachineBrain>();

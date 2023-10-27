@@ -22,8 +22,6 @@ public class GlitchAnimatedEvent : MonoBehaviour
 
     protected AudioController _audioController;
 
-    private bool _isActive = false;
-
     protected virtual void Start()
     {
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
@@ -54,7 +52,5 @@ public class GlitchAnimatedEvent : MonoBehaviour
 
         // play sound lever
         _audioController.PlayAudio(_soundToPlay);
-
-        _isActive = true;
     }
 }

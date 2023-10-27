@@ -42,9 +42,6 @@ public class AutoJumpMaster : MonoBehaviour
     [SerializeField]
     private AutoJumpEntryTrigger _entryTrigger;
 
-    [Header("Status")]
-    [SerializeField] private bool _isActive = true;
-
     [Header("Swap camera if present")]
     [SerializeField]
     private SwapCamera _swapCamera;

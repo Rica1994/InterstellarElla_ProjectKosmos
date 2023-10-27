@@ -8,8 +8,9 @@ public class PickUpChainAction : ChainAction
     [SerializeField]
     private int _amountPickUpsBeforeCompleted = 1;
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         _useUserBasedAction = true;
         ServiceLocator.Instance.GetService<PickUpManager>().PickUpPickedUpEvent += OnPickUpPickedUp;
     }

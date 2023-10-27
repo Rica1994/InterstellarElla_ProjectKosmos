@@ -10,7 +10,6 @@ public class SpeederSpace : PlayerController, IVehicle
 {
     // Parameters
     [SerializeField] private float _moveSpeed = 20f;
-    [SerializeField] private float _rotationSpeed = 1f;
     [SerializeField] private float _cameraBoundOffset = 1f;
 
     // Controllers
@@ -107,7 +106,7 @@ public class SpeederSpace : PlayerController, IVehicle
         _moveComponent = new MoveComponent();
         _boostComponent = new MultiplierTimerComponent(0.0f, 1.5f, true, 2f, true, 1f);
     }
-    void Start()
+    protected override void Start()
     {
         base.Start();
 
@@ -124,8 +123,9 @@ public class SpeederSpace : PlayerController, IVehicle
 
         Debug.LogWarning("Start of speeder space got called \n hooked on touchbutton.Pressed");
     }
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         // Subscribe to events
 
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;

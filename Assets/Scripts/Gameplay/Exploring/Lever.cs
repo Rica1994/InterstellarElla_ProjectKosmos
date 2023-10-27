@@ -30,9 +30,6 @@ public class Lever : MonoBehaviour
 
     private float _cutsceneBufferTime = 1.5f;
 
-    private bool _isActive = false;
-
-
     private void Start()
     {
         SwapCurrentActiveCamera(false, true);
@@ -65,8 +62,6 @@ public class Lever : MonoBehaviour
 
         // disable/enable a specific camera if present
         SwapCurrentActiveCamera(true, false);
-
-        _isActive = true;
     }
 
 

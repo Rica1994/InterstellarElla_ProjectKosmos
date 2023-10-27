@@ -48,8 +48,6 @@ public class PickUpManager : Service
     private float _pickupComboTimer;
 
     private int _pickupCurrentCombo = 0;
-    private int _pickupComboLimit = 10;
-
 
     private void Start()
     {

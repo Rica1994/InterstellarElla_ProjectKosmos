@@ -12,9 +12,6 @@ public class SoundtrackChainAction : ChainAction
     private bool _fadeIn = false;
 
     [SerializeField]
-    private bool _fadeOut = false;
-
-    [SerializeField]
     private bool _crossfade = false;
 
     [SerializeField]
@@ -23,15 +20,11 @@ public class SoundtrackChainAction : ChainAction
     [SerializeField]
     private float _targetVolume = 1.0f;
 
-    [SerializeField]
-    private bool _playAndCompleteAction = false;
-
     protected override void Awake()
     {
         base.Awake();
 
-        if (_playAndCompleteAction == false) _maxTime = _audioClip.length;
-        else _maxTime = -1;
+        _maxTime = _audioClip.length;
     }
 
     public override void Execute()

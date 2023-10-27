@@ -21,7 +21,7 @@ public class TouchButton : MonoBehaviour
     private int _fingerId = 1000;
     [SerializeField]
     private int _fingerIndex = 1000;
-    private Collider2D collider;
+    private Collider2D _collider;
 
     [SerializeField]
     private float _cooldownLength = 0.5f;
@@ -36,7 +36,7 @@ public class TouchButton : MonoBehaviour
 
     private void Start()
     {
-        collider = GetComponent<Collider2D>();
+        _collider = GetComponent<Collider2D>();
     }
 
     private void Update()
@@ -50,7 +50,7 @@ public class TouchButton : MonoBehaviour
             for (int i = 0; i < Input.touchCount; i++)
             {
                 Touch touch = Input.GetTouch(i);
-                if (collider.OverlapPoint(touch.position))
+                if (_collider.OverlapPoint(touch.position))
                 {
                     _fingerId = touch.fingerId;
                     isPressed = true;
