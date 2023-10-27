@@ -163,9 +163,7 @@ namespace UnityCore
                                                       PageType loadingPage = PageType.None)
             {
 
-#if UNITY_EDITOR
                 yield return new WaitForSeconds(timeDelay);
-#endif
                 Load(sceneToLoad, null, false, PageType.Loading);
             }
             private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
@@ -382,7 +380,7 @@ namespace UnityCore
                 if (currentSceneName.Contains("Quiz"))
                 {
                     // From quiz we always go to Main Menu
-                    return $"../../MainMenu";
+                    return $"../../S_MainMenu";
                 }
 
 
@@ -402,9 +400,9 @@ namespace UnityCore
                 switch (targetScene)
                 {
                     case SceneType.S_MainMenu:
-                        return "../../../MainMenu";
+                        return "../../../S_MainMenu";
                     case SceneType.S_Quiz:
-                        return "../../Quiz";
+                        return "../../S_Quiz";
                 }
 
                 Debug.LogError($"{currentSceneName} to load {targetScene} does not work.");
