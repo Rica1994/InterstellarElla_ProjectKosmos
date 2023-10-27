@@ -269,14 +269,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _ellaVoiceClip:
-    Clip: {fileID: 8300000, guid: 6e4c76cf3a861a2488bcd2480d2f7caa, type: 3}
-    Type: 6
-    Volume: 1
-    Pitch: 1
-    RandomizePitchSlightly: 0
-    PitchLowerLimitAddition: 0.2
-    PitchUpperLimitAddition: 0.2
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _ellaClip: {fileID: 8300000, guid: 6e4c76cf3a861a2488bcd2480d2f7caa, type: 3}
 --- !u!4 &13482174
 Transform:
@@ -2602,9 +2599,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 1
   _playableDirector: {fileID: 487144669}
   _skipButton: {fileID: 0}
-  _playAndCompleteAction: 1
 --- !u!4 &124092213 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4656872726092211660, guid: 995ae77a4b7366845a541dfe395a0598,
@@ -4642,7 +4643,7 @@ PrefabInstance:
     - target: {fileID: 5387424818983408643, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.1539268
+      value: 2.1539307
       objectReference: {fileID: 0}
     - target: {fileID: 5387424818983408643, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
@@ -4652,17 +4653,17 @@ PrefabInstance:
     - target: {fileID: 5387424818983408643, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.18468343
+      value: 0.18468326
       objectReference: {fileID: 0}
     - target: {fileID: 5387424818983408643, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.05081546
+      value: 0.05081557
       objectReference: {fileID: 0}
     - target: {fileID: 5387424818983408643, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.009562278
+      value: -0.009562289
       objectReference: {fileID: 0}
     - target: {fileID: 5387424819014693459, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
@@ -4782,7 +4783,7 @@ PrefabInstance:
     - target: {fileID: 5387424819468885091, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.5842867
+      value: -3.5842857
       objectReference: {fileID: 0}
     - target: {fileID: 5387424819468885091, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
@@ -4792,17 +4793,17 @@ PrefabInstance:
     - target: {fileID: 5387424819468885091, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.16502193
+      value: 0.16502191
       objectReference: {fileID: 0}
     - target: {fileID: 5387424819468885091, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.15726383
+      value: 0.15726392
       objectReference: {fileID: 0}
     - target: {fileID: 5387424819468885091, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.026663737
+      value: -0.026663747
       objectReference: {fileID: 0}
     - target: {fileID: 5387424819511367939, guid: 6df5de7120db92446b46169bf79b1307,
         type: 3}
@@ -7628,9 +7629,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _playableDirector: {fileID: 1556137428}
   _skipButton: {fileID: 826440163}
-  _playAndCompleteAction: 0
 --- !u!4 &370061792
 Transform:
   m_ObjectHideFlags: 0
@@ -7643,7 +7648,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1399451453}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &371090999 stripped
 Transform:
@@ -9382,6 +9387,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 1
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _visual: {fileID: 239508322}
 --- !u!4 &438435746
 Transform:
@@ -9453,7 +9463,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: 1bfb14f3529743442b1406291197a562, type: 3}
+  _maggiePcAudioClip: {fileID: 0}
 --- !u!4 &450639728
 Transform:
   m_ObjectHideFlags: 0
@@ -11708,14 +11724,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _ellaVoiceClip:
-    Clip: {fileID: 8300000, guid: 55e8cf5b0d933074bafcfe461fdc76cb, type: 3}
-    Type: 6
-    Volume: 1
-    Pitch: 1
-    RandomizePitchSlightly: 0
-    PitchLowerLimitAddition: 0.2
-    PitchUpperLimitAddition: 0.2
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _ellaClip: {fileID: 8300000, guid: 55e8cf5b0d933074bafcfe461fdc76cb, type: 3}
 --- !u!4 &566362864
 Transform:
@@ -12699,9 +12712,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _playableDirector: {fileID: 1924875160}
   _skipButton: {fileID: 826440163}
-  _playAndCompleteAction: 0
 --- !u!4 &620197370
 Transform:
   m_ObjectHideFlags: 0
@@ -12714,7 +12731,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1399451453}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &622155636
 PrefabInstance:
@@ -14011,10 +14028,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _chainActions:
+  - {fileID: 0}
   - {fileID: 370061791}
   - {fileID: 620197369}
   - {fileID: 1502663076}
   _startOnAwake: 0
+  _destroyAfter: 0
 --- !u!4 &680963006 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1784853444946223437, guid: 58ccb12e0a0082548b9e69426f6aa794,
@@ -16382,7 +16401,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: f060e5fef68864d4daade321fafecb3c, type: 3}
+  _maggiePcAudioClip: {fileID: 0}
 --- !u!4 &836152226
 Transform:
   m_ObjectHideFlags: 0
@@ -18727,13 +18752,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 1
   _audioClip: {fileID: 8300000, guid: 1cc5bd28416f77e4ab9ef421b5547d79, type: 3}
   _fadeIn: 1
-  _fadeOut: 0
   _crossfade: 0
   _loop: 1
   _targetVolume: 1
-  _playAndCompleteAction: 1
 --- !u!4 &962314880 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1954347008504103415, guid: c2c61faa556ed924c90247d89beee3cd,
@@ -19155,7 +19183,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: e402423523eaea840ba45ae4aa6ae2ba, type: 3}
+  _maggiePcAudioClip: {fileID: 0}
 --- !u!4 &997671572
 Transform:
   m_ObjectHideFlags: 0
@@ -20660,6 +20694,69 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c8d0a47d2e8f54c9f19d270d2ec7a4, type: 3}
+--- !u!1 &1063621294
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1063621295}
+  - component: {fileID: 1063621296}
+  m_Layer: 0
+  m_Name: SoundTrackChange
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1063621295
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063621294}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1399451453}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1063621296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063621294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8edd9374269b74b4fb962461e69dd51a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 1
+  _unityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1625640156}
+        m_MethodName: FadeOutCurrent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &1064724445 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2128230908682576503, guid: 80692f7c8312e0c41bb4941c4944bc87,
@@ -26100,6 +26197,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1063621295}
   - {fileID: 370061792}
   - {fileID: 620197370}
   - {fileID: 1502663075}
@@ -28211,7 +28309,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1399451453}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1502663076
 MonoBehaviour:
@@ -28226,7 +28324,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _sceneToLoad: 14
+  _endGame: 0
 --- !u!4 &1508279075 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1954347008504103415, guid: c2c61faa556ed924c90247d89beee3cd,
@@ -30137,6 +30241,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2c61faa556ed924c90247d89beee3cd, type: 3}
+--- !u!114 &1625640156 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5561442047988924326, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1473345258743301282}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3fc816227b805242b2575834ce33ff4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1626814593
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31395,6 +31511,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _waitSeconds: 5
 --- !u!4 &1680861041
 Transform:
@@ -32262,14 +32383,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _ellaVoiceClip:
-    Clip: {fileID: 8300000, guid: 04f4006af68f1b14fa9bad91d166e429, type: 3}
-    Type: 6
-    Volume: 1
-    Pitch: 1
-    RandomizePitchSlightly: 0
-    PitchLowerLimitAddition: 0.2
-    PitchUpperLimitAddition: 0.2
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _ellaClip: {fileID: 8300000, guid: 04f4006af68f1b14fa9bad91d166e429, type: 3}
 --- !u!4 &1722186019
 Transform:
@@ -32503,14 +32621,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _ellaVoiceClip:
-    Clip: {fileID: 8300000, guid: ab0494edbf19f7d449862b7c949927bc, type: 3}
-    Type: 6
-    Volume: 1
-    Pitch: 1
-    RandomizePitchSlightly: 0
-    PitchLowerLimitAddition: 0.2
-    PitchUpperLimitAddition: 0.2
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _ellaClip: {fileID: 8300000, guid: ab0494edbf19f7d449862b7c949927bc, type: 3}
 --- !u!4 &1737596810
 Transform:
@@ -39644,6 +39759,7 @@ MonoBehaviour:
   - {fileID: 1680861040}
   - {fileID: 1722186018}
   _startOnAwake: 0
+  _destroyAfter: 0
 --- !u!4 &1787166959652963745
 Transform:
   m_ObjectHideFlags: 0
@@ -39720,7 +39836,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: a0b87d1f04cdf5c419b05ec3f72273d0, type: 3}
+  _maggiePcAudioClip: {fileID: 0}
 --- !u!4 &1787166960680276717
 Transform:
   m_ObjectHideFlags: 0
@@ -39763,6 +39885,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 1
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _visual: {fileID: 1866704259777199535}
 --- !u!65 &1787166961332664037
 BoxCollider:
