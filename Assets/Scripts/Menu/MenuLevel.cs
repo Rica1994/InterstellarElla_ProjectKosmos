@@ -25,18 +25,10 @@ public class MenuLevel : MonoBehaviour
 
     [Header("Animation components UI")]
     [SerializeField] private Animation _animationPlanet;
-    [SerializeField] private Animation _animationScore;
-    [SerializeField] private Animation _animationValue;
 
     [Header("Text components score")]
     [SerializeField]
     private Text _textPlanet;
-    [SerializeField]
-    private Text _textScore;
-    [SerializeField]
-    private Text _textValue;
-    [SerializeField]
-    private Text _textPercentage;
 
     [SerializeField]
     private FactSheet.FactSheetData _factSheetData;
@@ -74,12 +66,6 @@ public class MenuLevel : MonoBehaviour
         }
     }
 
-    public void SetLevelScore(string scoreString)
-    {
-        _textValue.text = scoreString;
-    }
-
-
     public void PopupAnimationsText()
     {
         ServiceLocator.Instance.GetService<MainMenuManager>().StartCoroutine(PopupAnimationRoutine());     
@@ -92,9 +78,6 @@ public class MenuLevel : MonoBehaviour
     public void HideAllText()
     {
         _textPlanet.gameObject.SetActive(false);
-        _textScore.gameObject.SetActive(false);
-        _textValue.gameObject.SetActive(false);
-        _textPercentage.gameObject.SetActive(false);
     }
 
 
@@ -103,28 +86,12 @@ public class MenuLevel : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         _animationPlanet.Play(_animationPlanetPop);
-
-        yield return new WaitForSeconds(0.1f);
-
-        _animationScore.Play(_animationScorePop);
-
-        yield return new WaitForSeconds(0.1f);
-
-        _animationValue.Play(_animationValuePop);
     }
     private IEnumerator PoofAnimationRoutine()
     {
         yield return new WaitForSeconds(0.1f);
 
         _animationPlanet.Play(_animationPlanetPoof);
-
-        yield return new WaitForSeconds(0.1f);
-
-        _animationScore.Play(_animationScorePoof);
-
-        yield return new WaitForSeconds(0.1f);
-
-        _animationValue.Play(_animationValuePoof);
     }
 
 }

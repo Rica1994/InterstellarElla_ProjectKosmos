@@ -123,17 +123,6 @@ public class MainMenuManager : Service
 
         // show buttons after delay
         StartCoroutine(EnableButtonsDelay(0));
-        // set scores
-        SetPlanetScores();
-    }
-
-
-    private void SetPlanetScores()
-    {
-        for (int i = 0; i < _levels.Count; i++)
-        {
-            _levels[i].SetLevelScore(ParseScoreFromScoreValues(_levels[i].MyLevelType));
-        }
     }
 
 
