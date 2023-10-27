@@ -163,9 +163,7 @@ namespace UnityCore
                                                       PageType loadingPage = PageType.None)
             {
 
-#if UNITY_EDITOR
                 yield return new WaitForSeconds(timeDelay);
-#endif
                 Load(sceneToLoad, null, false, PageType.Loading);
             }
             private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
