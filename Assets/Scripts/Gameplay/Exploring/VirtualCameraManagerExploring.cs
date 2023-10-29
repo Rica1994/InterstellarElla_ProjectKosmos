@@ -66,9 +66,9 @@ public class VirtualCameraManagerExploring : Service
     /// Should cut from our current 3rd person virtual camera to a new virtual camera used in a cutscene, and also reset back to the other camera at the end.
     /// </summary>
     /// <param name="virtualCamToActivate"></param>
-    public void SwapCutsceneCamera(CinemachineVirtualCamera virtualCamToActivate, float cutsceneLength)
+    public void SwapCutsceneCamera(CinemachineVirtualCamera virtualCamToActivate, float cutsceneLength, bool smoothCameraBlend = false)
     {
-        StartCoroutine(CutsceneRoutine(virtualCamToActivate, cutsceneLength));
+        StartCoroutine(CutsceneRoutine(virtualCamToActivate, cutsceneLength, smoothCameraBlend));
     }
 
     /// <summary>
@@ -163,10 +163,17 @@ public class VirtualCameraManagerExploring : Service
     }
 
 
-    private IEnumerator CutsceneRoutine(CinemachineVirtualCamera virtualCam, float cutsceneLength)
+    private IEnumerator CutsceneRoutine(CinemachineVirtualCamera virtualCam, float cutsceneLength, bool smoothCameraBlend = false)
     {
-        // set cinemachine brain blending to cut
-        _camBrain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
+        if (smoothCameraBlend)
+        {
+
+        }
+        else
+        {
+            // set cinemachine brain blending to cut
+            _camBrain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
+        }
 
         // activate/prioritize camera 
         virtualCam.MoveToTopOfPrioritySubqueue();

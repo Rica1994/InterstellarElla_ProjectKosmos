@@ -14,12 +14,12 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  m_FogMode: 3
-  m_FogDensity: 0.01
-  m_LinearFogStart: 0
-  m_LinearFogEnd: 300
+  m_Fog: 1
+  m_FogColor: {r: 1, g: 1, b: 1, a: 1}
+  m_FogMode: 2
+  m_FogDensity: 0.005
+  m_LinearFogStart: -176
+  m_LinearFogEnd: 1094.3
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
@@ -5489,6 +5489,7 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _unityEvent:
     m_PersistentCalls:
       m_Calls:
@@ -5517,6 +5518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action: {fileID: 146783902}
   _onlyTriggerOnce: 0
+  _destroyAfterChainAction: 0
 --- !u!114 &146783904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6236,22 +6238,22 @@ PrefabInstance:
     - target: {fileID: 3054168533803280212, guid: 198a4be55fd76b24db581366de8f8d76,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.65096045
+      value: 0.65096384
       objectReference: {fileID: 0}
     - target: {fileID: 3054168533803280212, guid: 198a4be55fd76b24db581366de8f8d76,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.0026133284
+      value: 0.0015653704
       objectReference: {fileID: 0}
     - target: {fileID: 3054168533803280212, guid: 198a4be55fd76b24db581366de8f8d76,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7591011
+      value: 0.759105
       objectReference: {fileID: 0}
     - target: {fileID: 3054168533803280212, guid: 198a4be55fd76b24db581366de8f8d76,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0030474616
+      value: -0.0018254123
       objectReference: {fileID: 0}
     - target: {fileID: 3054168533803280212, guid: 198a4be55fd76b24db581366de8f8d76,
         type: 3}
@@ -6789,6 +6791,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action: {fileID: 190657131}
   _onlyTriggerOnce: 1
+  _destroyAfterChainAction: 0
 --- !u!114 &190657131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6806,6 +6809,7 @@ MonoBehaviour:
   _timeUntilNextRepeat: 12.02
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: 704d42948ee9cb44e8f908f1f1d0ae5e, type: 3}
   _maggiePcAudioClip: {fileID: 0}
 --- !u!114 &190657132
@@ -10359,6 +10363,7 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: c13f9cd26a5b42e4fa47e3089523a21c, type: 3}
   _maggiePcAudioClip: {fileID: 0}
 --- !u!114 &283141770
@@ -10375,6 +10380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action: {fileID: 283141769}
   _onlyTriggerOnce: 1
+  _destroyAfterChainAction: 0
 --- !u!114 &283141771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11882,6 +11888,7 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: 6d501af017b42354894871b9b883e38f, type: 3}
   _maggiePcAudioClip: {fileID: 0}
 --- !u!114 &327667838
@@ -11898,6 +11905,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action: {fileID: 327667837}
   _onlyTriggerOnce: 1
+  _destroyAfterChainAction: 0
 --- !u!114 &327667839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12230,6 +12238,7 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _unityEvent:
     m_PersistentCalls:
       m_Calls:
@@ -12280,6 +12289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action: {fileID: 341272945}
   _onlyTriggerOnce: 0
+  _destroyAfterChainAction: 0
 --- !u!114 &341272947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13357,6 +13367,7 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _unityEvent:
     m_PersistentCalls:
       m_Calls:
@@ -13385,6 +13396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action: {fileID: 376042748}
   _onlyTriggerOnce: 0
+  _destroyAfterChainAction: 0
 --- !u!114 &376042750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17786,6 +17798,7 @@ MonoBehaviour:
   _requisiteLogic: 1
   _requisiteObjects:
   - {fileID: 2065099125}
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: a8669b804e0493c4eb5c7a0e252bf8a3, type: 3}
   _maggiePcAudioClip: {fileID: 8300000, guid: 9a4b71725eae64d4987b808bbc499e44, type: 3}
 --- !u!114 &540859893
@@ -17802,6 +17815,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action: {fileID: 540859892}
   _onlyTriggerOnce: 1
+  _destroyAfterChainAction: 0
 --- !u!114 &540859894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22646,6 +22660,7 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: 82d19497d7fdf774a85af4fd2f548f71, type: 3}
   _maggiePcAudioClip: {fileID: 0}
 --- !u!114 &719590740
@@ -22662,6 +22677,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action: {fileID: 719590739}
   _onlyTriggerOnce: 1
+  _destroyAfterChainAction: 0
 --- !u!114 &719590741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29711,6 +29727,7 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: 1fa861901acec374ebcae3f134f6a02c, type: 3}
   _maggiePcAudioClip: {fileID: 0}
 --- !u!114 &978681507
@@ -29727,6 +29744,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action: {fileID: 978681506}
   _onlyTriggerOnce: 1
+  _destroyAfterChainAction: 0
 --- !u!114 &978681508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30166,6 +30184,7 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: 4f0fb73bda706cc4c9eb3edd1c19da51, type: 3}
   _maggiePcAudioClip: {fileID: 0}
 --- !u!114 &987318975
@@ -30182,6 +30201,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action: {fileID: 987318974}
   _onlyTriggerOnce: 1
+  _destroyAfterChainAction: 0
 --- !u!114 &987318976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46556,6 +46576,7 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _unityEvent:
     m_PersistentCalls:
       m_Calls:
@@ -46584,6 +46605,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action: {fileID: 1606437970}
   _onlyTriggerOnce: 0
+  _destroyAfterChainAction: 0
 --- !u!114 &1606437972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51287,6 +51309,7 @@ MonoBehaviour:
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: 9d26d9cc19a87aa48ad65377e58686d8, type: 3}
   _maggiePcAudioClip: {fileID: 0}
 --- !u!114 &1726231489
@@ -51303,6 +51326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _action: {fileID: 1726231488}
   _onlyTriggerOnce: 1
+  _destroyAfterChainAction: 0
 --- !u!114 &1726231490
 MonoBehaviour:
   m_ObjectHideFlags: 0

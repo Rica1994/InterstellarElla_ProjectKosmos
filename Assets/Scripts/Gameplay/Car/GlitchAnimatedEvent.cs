@@ -22,6 +22,9 @@ public class GlitchAnimatedEvent : MonoBehaviour
 
     protected AudioController _audioController;
 
+    [SerializeField]
+    private bool _smoothCameraBlend = false;
+
     protected virtual void Start()
     {
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
@@ -42,7 +45,7 @@ public class GlitchAnimatedEvent : MonoBehaviour
         glitch.ToggleMoveInput(animationLength);
 
         // logic to swap current virtual camera, and return to normal afterwards
-        ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>().SwapCutsceneCamera(_virtualCamera, animationLength);
+        ServiceLocator.Instance.GetService<VirtualCameraManagerExploring>().SwapCutsceneCamera(_virtualCamera, animationLength, _smoothCameraBlend);
 
         // play cutscene animation
         _animationCamera.Play();
