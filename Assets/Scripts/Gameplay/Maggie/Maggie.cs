@@ -37,22 +37,26 @@ public class Maggie : MonoBehaviour
 
     public void PopUp()
     {
+        if (_animator == null) return;
         _sfxMaggieSource.Play();
         _animator.SetTrigger(POP_UP_TRIGGER);
     }
 
     public void PopDown()
     {
+        if (_animator == null) return;
         _animator.SetTrigger(POP_DOWN_TRIGGER);
     }
 
     public void MakeHappy()
     {
+        if (_animator == null) return;
         _animator.SetTrigger(HAPPY_TRIGGER);
     }
 
     public void MakeSad()
     {
+        if (_animator == null) return;
         _animator.SetTrigger(SAD_TRIGGER);
     }
 }

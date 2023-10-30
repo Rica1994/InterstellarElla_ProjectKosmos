@@ -29,10 +29,10 @@ public class MagnetComponent : MonoBehaviour
 
     private void Start()
     {
-        if (FindObjectOfType<PlayerController>() == null) 
-        {
-            this.enabled = false;
-        }
+    //   if (FindObjectOfType<PlayerController>() == null) 
+    //   {
+    //       this.enabled = false;
+    //   }
     }
 
     private void OnDestroy()

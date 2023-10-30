@@ -108,13 +108,18 @@ public class SoundtrackManager : Service
         StartCoroutine(FadeOut(currentSource));
     }
 
-    IEnumerator FadeOut(AudioSource source)
+    public void FadeOutCurrent(float fadeOutTime)
+    {
+        StartCoroutine(FadeOut(currentSource, fadeOutTime));
+    }
+
+    IEnumerator FadeOut(AudioSource source, float fadeOutTime = 1.0f)
     {
         float startVolume = source.volume;
         float startTime = Time.time;
-        while (Time.time < startTime + fadeTime)
+        while (Time.time < startTime + fadeOutTime)
         {
-            float t = (Time.time - startTime) / fadeTime;
+            float t = (Time.time - startTime) / fadeOutTime;
             source.volume = startVolume * (1f - t);
             yield return null;
         }
