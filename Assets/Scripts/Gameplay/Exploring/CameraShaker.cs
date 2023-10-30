@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Cinemachine;
 
+[DefaultExecutionOrder(2000)]
 public class CameraShaker : MonoBehaviour
 {
     public CinemachineBrain cinemachineBrain;
@@ -17,6 +18,11 @@ public class CameraShaker : MonoBehaviour
 
     void Start()
     {
+        if (cinemachineBrain == null)
+        {
+            var player = FindObjectOfType<PlayerController>();
+            if (player != null)  cinemachineBrain = player.GetComponentInChildren<CinemachineBrain>();
+        }
         // Initialize the current virtual camera and noise module
         UpdateCurrentVirtualCamera();
     }
@@ -24,7 +30,8 @@ public class CameraShaker : MonoBehaviour
     void Update()
     {
         // If the active virtual camera changes, update the current virtual camera and noise module
-        if (cinemachineBrain.ActiveVirtualCamera != null && cinemachineBrain.ActiveVirtualCamera.VirtualCameraGameObject != currentVirtualCamera.gameObject)
+        if (currentVirtualCamera == null || 
+            (cinemachineBrain.ActiveVirtualCamera != null && cinemachineBrain.ActiveVirtualCamera.VirtualCameraGameObject != currentVirtualCamera.gameObject))
         {
             UpdateCurrentVirtualCamera();
         }
@@ -69,6 +76,10 @@ public class CameraShaker : MonoBehaviour
 
     private void UpdateCurrentVirtualCamera()
     {
+        if (cinemachineBrain.ActiveVirtualCamera == null || cinemachineBrain.ActiveVirtualCamera.VirtualCameraGameObject == null)
+        {
+            return;
+        }
         // Set the current virtual camera
         currentVirtualCamera = cinemachineBrain.ActiveVirtualCamera.VirtualCameraGameObject.GetComponent<CinemachineVirtualCamera>();
         // Get the noise module from the current virtual camera

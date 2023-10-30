@@ -183,7 +183,7 @@ public class SimpleCarController : PlayerController, IVehicle
         //   UIPanel.Instance.BoostButtonElla.onClick.AddListener(BoostCall);
 
         var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
-        playerInput.Action.started += x => OnBoostInput();
+        playerInput.Action.started += OnActionStarted;
 
         if (_useCustomGravity == true)
         {
@@ -200,6 +200,20 @@ public class SimpleCarController : PlayerController, IVehicle
         var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
         touchButton.Pressed += OnTouchButtonPressed;
         touchButton.CooldownLength = -1.0f;
+    }
+
+    private void OnActionStarted(InputAction.CallbackContext obj)
+    {
+        OnBoostInput();
+    }
+
+    private void OnDestroy()
+    {
+        var playerInput = ServiceLocator.Instance.GetService<InputManager>().PlayerInput;
+        if (playerInput.Get() != null) playerInput.Action.started -= OnActionStarted;
+
+        var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
+        touchButton.Pressed -= OnTouchButtonPressed;
     }
 
     private void OnTouchButtonPressed()
