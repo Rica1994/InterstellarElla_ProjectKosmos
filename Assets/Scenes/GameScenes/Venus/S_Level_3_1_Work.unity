@@ -12054,7 +12054,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 3b56213142d9e8c4da015a5dc2e9eb51, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.449
+  m_Volume: 0.33
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -22976,13 +22976,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 1
   _audioClip: {fileID: 8300000, guid: 1866ce7dd35839a4ea7b001f2ae3665c, type: 3}
   _fadeIn: 0
-  _fadeOut: 0
   _crossfade: 0
   _loop: 1
-  _targetVolume: 1
-  _playAndCompleteAction: 1
+  _targetVolume: 0.5
 --- !u!1001 &1915048273
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25631,6 +25634,7 @@ MonoBehaviour:
   - {fileID: 1787166961503617372}
   - {fileID: 1787166961115424084}
   _startOnAwake: 1
+  _destroyAfter: 0
 --- !u!4 &1787166959819747865
 Transform:
   m_ObjectHideFlags: 0
@@ -25696,7 +25700,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _maggieAudioClip: {fileID: 8300000, guid: 091beff49241220428d61cd53f77c5f7, type: 3}
+  _maggiePcAudioClip: {fileID: 0}
 --- !u!4 &1787166961115424085
 Transform:
   m_ObjectHideFlags: 0
@@ -25757,6 +25767,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 1
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _visual: {fileID: 1866704259673393687}
 --- !u!65 &1787166961503617373
 BoxCollider:
@@ -25802,14 +25817,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _ellaVoiceClip:
-    Clip: {fileID: 8300000, guid: d69bbbca7b792a0458a9ad72eeeee481, type: 3}
-    Type: 6
-    Volume: 1
-    Pitch: 1
-    RandomizePitchSlightly: 0
-    PitchLowerLimitAddition: 0.2
-    PitchUpperLimitAddition: 0.2
+  _repeatUntilRequisiteIsMet: 0
+  _timeUntilNextRepeat: 10
+  _requisiteLogic: 0
+  _requisiteObjects: []
+  _playAndCompleteAction: 0
   _ellaClip: {fileID: 8300000, guid: d69bbbca7b792a0458a9ad72eeeee481, type: 3}
 --- !u!4 &4092487206086850570
 Transform:
