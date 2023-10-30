@@ -268,6 +268,8 @@ public class EllaExploring : PlayerController, IElla
     
     private void OnMoveInput(InputAction.CallbackContext obj)
     {
+        if (GameManager.IsInCutscene) return;
+
         var x = obj.ReadValue<Vector2>();
         _input = x;
     }
@@ -291,6 +293,7 @@ public class EllaExploring : PlayerController, IElla
 
     private void HoverInput()
     {
+        if (GameManager.IsInCutscene) return;
         // make sure I'm not in a jump pad bounce when trying to do this
         _isTryingHover = true;
     }
