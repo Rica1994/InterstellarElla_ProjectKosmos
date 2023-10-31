@@ -12050,11 +12050,10 @@ AudioSource:
   m_GameObject: {fileID: 1039506273}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 6789049073784190771, guid: a4c1ceea24bc10643a26cad843440403,
-    type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 3b56213142d9e8c4da015a5dc2e9eb51, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.33
+  m_Volume: 0.157
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -22985,7 +22984,7 @@ MonoBehaviour:
   _fadeIn: 0
   _crossfade: 0
   _loop: 1
-  _targetVolume: 0.5
+  _targetVolume: 0.25
 --- !u!1001 &1915048273
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25264,6 +25263,11 @@ PrefabInstance:
       propertyPath: ButtonContinue
       value: 
       objectReference: {fileID: 1473345258743301284}
+    - target: {fileID: 5561442047988924325, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7926606816940189281, guid: 1b3ad37f3b38f694fb268141fa5866d0,
         type: 3}
       propertyPath: m_Name
