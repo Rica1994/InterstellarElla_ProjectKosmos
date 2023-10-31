@@ -39,11 +39,11 @@ public class AmbientRandomSoundPlayer : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
 
-        int randIndex = -1;
-        do
+        int randIndex = Random.Range(0, _soundClips.Length);
+        if (randIndex == _lastPlayedClipIndex)
         {
-            randIndex = Random.Range(0, _soundClips.Length);
-        } while (randIndex == _lastPlayedClipIndex);
+            randIndex = (randIndex + 1) % _soundClips.Length;
+        }
 
         _lastPlayedClipIndex = randIndex;
         _ambientSoundSource.clip = _soundClips[randIndex];
