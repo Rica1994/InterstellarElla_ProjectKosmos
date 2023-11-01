@@ -22,8 +22,6 @@ public class SoundtrackManager : Service
 
     public AudioMixer AudioMixer => _audioMixer;
 
-
-
     protected override void Awake()
     {
         base.Awake();
@@ -39,11 +37,23 @@ public class SoundtrackManager : Service
         PlayClip(clip, false);
     }
 
-    public void PlayClip(AudioClip clip, bool fadeIn = false, bool fadeOutCurrent = false, bool loop = false, float targetVolume = 1f)
+    public IEnumerator PlayClipAfterCurrent(AudioClip clip, bool fadeIn = false, bool fadeOutCurrent = false, bool loop = false, float targetVolume = 1f)
+    {
+        currentSource.loop = false;
+        yield return new WaitUntil(() => currentSource.time >= currentSource.clip.length - 0.01f || currentSource.isPlaying == false);
+
+        PlayClip(clip, fadeIn, fadeOutCurrent, loop, targetVolume);
+    }
+
+    public void PlayClip(AudioClip clip, bool fadeIn = false, bool fadeOutCurrent = false, bool loop = false, float targetVolume = 1f, bool letCurrentClipFinish = false)
     {
         if (fadeOutCurrent)
         {
             StartCoroutine(FadeOutAndPlayNext(clip, fadeIn, loop, targetVolume));
+        }
+        else if (letCurrentClipFinish)
+        {
+            StartCoroutine(PlayClipAfterCurrent(clip, fadeIn, fadeOutCurrent: false, loop, targetVolume));
         }
         else
         {

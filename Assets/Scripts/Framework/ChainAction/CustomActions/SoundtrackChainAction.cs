@@ -18,6 +18,9 @@ public class SoundtrackChainAction : ChainAction
     private bool _loop = false;
 
     [SerializeField]
+    private bool _letCurrentClipFinish = false;
+
+    [SerializeField]
     private float _targetVolume = 1.0f;
 
     protected override void Awake()
@@ -30,6 +33,8 @@ public class SoundtrackChainAction : ChainAction
     public override void Execute()
     {
         base.Execute();
-        ServiceLocator.Instance.GetService<SoundtrackManager>().PlayClip(_audioClip, _fadeIn, _crossfade, _loop, _targetVolume);
+        var soundTrackManager = ServiceLocator.Instance.GetService<SoundtrackManager>();
+
+        soundTrackManager.PlayClip(_audioClip, _fadeIn, _crossfade, _loop, _targetVolume, _letCurrentClipFinish);
     }
 }
