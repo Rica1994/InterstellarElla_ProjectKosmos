@@ -20,6 +20,10 @@ public class JumpPad : MonoBehaviour
     private Transform _transformDirectionXZ;
     [SerializeField]
     private Transform _transformDirectionY;
+    [SerializeField]
+    private ParticleSystem _windParticle;
+    [SerializeField]
+    private Animation _propellerAnimation;
 
     [Header("Swap camera if present")]
     [SerializeField]
@@ -210,8 +214,10 @@ public class JumpPad : MonoBehaviour
         _trigger.enabled = true;
 
         // activate particle
-        var particleIdle = ServiceLocator.Instance.GetService<ParticleManager>().CreateParticleLocalSpacePermanent(ParticleType.PS_JumpPadIdle, _visuals.transform);
-        particleIdle.Play();
+        _windParticle.Play();
+
+        // play propeller animation
+        _propellerAnimation.Play();
 
         // play sound activation
         if (playSoundActivation == true)
