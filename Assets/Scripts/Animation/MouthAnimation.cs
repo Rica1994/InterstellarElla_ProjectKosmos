@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class MouthAnimation : MonoBehaviour
 {
+    const int BAND_8 = 8;
     public AudioSource VoiceSource;
     // Mouth references
     [SerializeField]
@@ -25,6 +26,12 @@ public class MouthAnimation : MonoBehaviour
     private SkinnedMeshRenderer _closedMouthSad;
     [SerializeField]
     private SkinnedMeshRenderer _openMouthSad;
+
+    [Header("Joint")]
+    [SerializeField]
+    private Transform _mouthJoint;
+    [SerializeField]
+    private float _mouthScaleMultiplier = 4.0f;
 
     public enum Mood
     {
@@ -66,33 +73,34 @@ public class MouthAnimation : MonoBehaviour
 
     private void Start()
     {
-        //InitializeVariables();
+        InitializeVariables();
     }
 
     private void InitializeVariables()
     {
-        samples = new float[_sampleDataLength];
+        //samples = new float[_sampleDataLength];
         AudioFrequencyBand8 = new AudioBand(BandCount.Eight);
+        //StartSampling(name, VoiceSource.clip.length, 512);
     }
 
     private void Update()
     {
-        UpdateMouth();
-        //if (VoiceSource.isPlaying)
-        //{
-        //    AudioFrequencyBand8.Update((sample) =>
-        //    {
-        //    #if UNITY_EDITOR
-        //        VoiceSource.GetSpectrumData(sample, 0, FFTWindow.Blackman);
-        //    #endif
-        //    #if UNITY_WEBGL && !UNITY_EDITOR
-        //        StartSampling(name, VoiceSource.clip.length, 512);
-        //        bool gotSamples = GetSamples(name, sample, sample.Length);
-        //        //_text.text = "Got Samples: " + gotSamples + "\n" + "Sample Data: " + string.Join(", ", sample);
-        //    #endif
-        //        UpdateMouth();
-        //    });
-        //}
+        //UpdateMouth();
+        if (VoiceSource.isPlaying)
+        {
+            AudioFrequencyBand8.Update((sample) =>
+            {
+#if UNITY_EDITOR
+                VoiceSource.GetSpectrumData(sample, 0, FFTWindow.Blackman);
+#endif
+#if UNITY_WEBGL && !UNITY_EDITOR
+                StartSampling(name, VoiceSource.clip.length, 512);
+                GetSamples(name, sample, sample.Length);
+                //_text.text = "Got Samples: " + gotSamples + "\n" + "Sample Data: " + string.Join(", ", sample);
+#endif
+                UpdateMouth();
+            });
+        }
         //else
         //{
         //    //_text.text = VoiceSource.name + ":no values";
@@ -108,9 +116,11 @@ public class MouthAnimation : MonoBehaviour
         {
             _timePassedWithCurrentMouth = 0.0f;
             float volume = AudioFrequencyBand8.GetAmplitude();
+            Debug.Log(volume);
 
             if (volume < _thresholdHalfOpen)
             {
+                _mouthJoint.localScale = new Vector3(1, 1, 1);
                 //Debug.Log("Closed Mouth Activated");
                 switch (MaggieMood)
                 {
@@ -154,6 +164,7 @@ public class MouthAnimation : MonoBehaviour
             }
             else if (volume >= _thresholdHalfOpen && volume < _thresholdOpen)
             {
+                _mouthJoint.localScale = new Vector3(1, 1, 1);
                 //Debug.Log("Half Open Mouth Activated");
                 switch (MaggieMood)
                 {
@@ -197,6 +208,7 @@ public class MouthAnimation : MonoBehaviour
             }
             else
             {
+                _mouthJoint.localScale = new Vector3(1, volume * _mouthScaleMultiplier, 1);
                 //Debug.Log("Open Mouth Activated");
                 switch (MaggieMood)
                 {
@@ -262,7 +274,6 @@ public class MouthAnimation : MonoBehaviour
         VoiceSource.clip = clip;
         RefreshAudioSource();
         InitializeVariables();
-        AudioFrequencyBand8.Reset();
         VoiceSource.Play();
     }
 }
