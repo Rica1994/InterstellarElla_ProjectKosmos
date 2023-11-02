@@ -24,33 +24,54 @@ public class ChainActionEditor : Editor
         // Add a header for "Repeat until requisite is met"
         EditorGUILayout.LabelField("Repeat options", EditorStyles.boldLabel);
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("_repeatUntilRequisiteIsMet"));
-
-        if (serializedObject.FindProperty("_repeatUntilRequisiteIsMet").boolValue)
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("_repeat"));
+        bool repeat = serializedObject.FindProperty("_repeat").boolValue;
+        if (repeat)
         {
-            // If true, draw the requisite fields
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("_timeUntilNextRepeat"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("_requisiteLogic"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("_repeatUntilRequisitIsMet"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("_repeatNumberOfTimes"));
 
-            // Manually draw the list
-            EditorGUILayout.LabelField("Requisite Objects", EditorStyles.boldLabel);
-            for (int i = 0; i < _requisiteObjects.arraySize; i++)
-            {
-                SerializedProperty element = _requisiteObjects.GetArrayElementAtIndex(i);
-                EditorGUILayout.PropertyField(element, GUIContent.none);
-            }
+            bool repeatUntilRequisitIsMet = serializedObject.FindProperty("_repeatUntilRequisitIsMet").boolValue;
+            bool repeatNumberOfTimes = serializedObject.FindProperty("_repeatNumberOfTimes").boolValue;
 
-            // Buttons to add or remove elements from the list
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Add Requisite"))
+            EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
+
+            if (repeatUntilRequisitIsMet) serializedObject.FindProperty("_repeatNumberOfTimes").boolValue = false;
+            else if (repeatNumberOfTimes) serializedObject.FindProperty("_repeatUntilRequisitIsMet").boolValue = false;
+
+            if (repeatUntilRequisitIsMet)
             {
-                _requisiteObjects.InsertArrayElementAtIndex(_requisiteObjects.arraySize);
+                serializedObject.FindProperty("_timesToRepeat").intValue = 0;
+
+                // If true, draw the requisite fields
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("_timeUntilNextRepeat"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("_requisiteLogic"));
+
+                // Manually draw the list
+                EditorGUILayout.LabelField("Requisite Objects", EditorStyles.boldLabel);
+                for (int i = 0; i < _requisiteObjects.arraySize; i++)
+                {
+                    SerializedProperty element = _requisiteObjects.GetArrayElementAtIndex(i);
+                    EditorGUILayout.PropertyField(element, GUIContent.none);
+                }
+
+                // Buttons to add or remove elements from the list
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Add Requisite"))
+                {
+                    _requisiteObjects.InsertArrayElementAtIndex(_requisiteObjects.arraySize);
+                }
+                if (GUILayout.Button("Remove Last Requisite") && _requisiteObjects.arraySize > 0)
+                {
+                    _requisiteObjects.DeleteArrayElementAtIndex(_requisiteObjects.arraySize - 1);
+                }
+
+                EditorGUILayout.EndHorizontal();
             }
-            if (GUILayout.Button("Remove Last Requisite") && _requisiteObjects.arraySize > 0)
+            else if (repeatNumberOfTimes)
             {
-                _requisiteObjects.DeleteArrayElementAtIndex(_requisiteObjects.arraySize - 1);
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("_timesToRepeat"));
             }
-            EditorGUILayout.EndHorizontal();
         }
 
         serializedObject.ApplyModifiedProperties();

@@ -25,7 +25,17 @@ public class ChainAction : MonoBehaviour
     protected bool _useUserBasedAction = false;
 
     [SerializeField, HideInInspector]
-    private bool _repeatUntilRequisiteIsMet = false;
+    private bool _repeat = false;
+
+    [SerializeField, HideInInspector]
+    private bool _repeatUntilRequisitIsMet = false;
+
+    [SerializeField, HideInInspector]
+    private bool _repeatNumberOfTimes = false;
+
+    [SerializeField, HideInInspector]
+    private int _timesToRepeat = 0;
+    private int _timesRepeated = 0;
 
     [SerializeField, HideInInspector]
     private float _timeUntilNextRepeat = 10.0f;
@@ -44,9 +54,9 @@ public class ChainAction : MonoBehaviour
 
     private bool _isBeingExecuted = false;
 
-    public bool RepeatUntilRequisiteIsMet => _repeatUntilRequisiteIsMet;
+    public bool Repeat => _repeat;
 
-    [SerializeField] 
+    [SerializeField]
     private bool _playAndCompleteAction = false;
 
     protected virtual void Awake()
@@ -92,9 +102,10 @@ public class ChainAction : MonoBehaviour
 
         if (IsCompleted())
         {
-            if (RepeatUntilRequisiteIsMet && AreRequisitesMet() == false)
+            _timesRepeated++;
+            if (Repeat && AreRequisitesMet() == false)
             {
-                StartCoroutine(Repeat(_timeUntilNextRepeat));
+                StartCoroutine(RepeatAction(_timeUntilNextRepeat));
                 return;
             }
 
@@ -117,18 +128,21 @@ public class ChainAction : MonoBehaviour
 
     public virtual void OnExit()
     {
-       // ChainActionDone?.Invoke();
+        // ChainActionDone?.Invoke();
         //Debug.Log("ChainAction: " + _nameChainAction + " finished.");
     }
 
-    private IEnumerator Repeat(float afterTime)
+    private IEnumerator RepeatAction(float afterTime)
     {
         _isBeingExecuted = false;
         ResetChainAction();
 
-        yield return new WaitForSeconds(afterTime);
+        if (_repeatUntilRequisitIsMet)
+        {
+            yield return new WaitForSeconds(afterTime);
+        }
 
-        if (AreRequisitesMet() && RepeatUntilRequisiteIsMet)
+        if (AreRequisitesMet() && Repeat)
         {
             ChainActionDone?.Invoke();
             yield break;
@@ -141,16 +155,21 @@ public class ChainAction : MonoBehaviour
 
     public bool AreRequisitesMet()
     {
-        if (_requisiteLogic == RequisiteLogic.All)
+        if (_repeatUntilRequisitIsMet)
         {
-            // All requisites must be met (AND logic)
-            return _requisites.All(r => r.IsRequisiteMet());
+            if (_requisiteLogic == RequisiteLogic.All)
+            {
+                // All requisites must be met (AND logic)
+                return _requisites.All(r => r.IsRequisiteMet());
+            }
+            else
+            {
+                // Only one requisite must be met (OR logic)
+                return _requisites.Any(r => r.IsRequisiteMet());
+            }
         }
-        else
-        {
-            // Only one requisite must be met (OR logic)
-            return _requisites.Any(r => r.IsRequisiteMet());
-        }
+        // else check for amount of times repeated
+        else  return _repeatNumberOfTimes && _timesRepeated >= _timesToRepeat;
     }
 
     public void SetUserBasedActionComplete()

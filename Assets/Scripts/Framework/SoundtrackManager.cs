@@ -40,7 +40,7 @@ public class SoundtrackManager : Service
     public IEnumerator PlayClipAfterCurrent(AudioClip clip, bool fadeIn = false, bool fadeOutCurrent = false, bool loop = false, float targetVolume = 1f)
     {
         currentSource.loop = false;
-        yield return new WaitUntil(() => currentSource.time >= currentSource.clip.length - 0.01f || currentSource.isPlaying == false);
+        yield return new WaitUntil(() => currentSource.time >= currentSource.clip.length - 0.03f || currentSource.isPlaying == false);
 
         PlayClip(clip, fadeIn, fadeOutCurrent, loop, targetVolume);
     }
