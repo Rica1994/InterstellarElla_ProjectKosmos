@@ -8,6 +8,8 @@ public class CrashingMeteor : MonoBehaviour
     [SerializeField]
     private Transform _meteorAngle;
     [SerializeField]
+    private Transform _crater;
+    [SerializeField]
     private AudioElement _crashSound;
 
     [Header("Settings")]
@@ -43,6 +45,9 @@ public class CrashingMeteor : MonoBehaviour
 
     private void Awake()
     {
+        // set random rotation to crater
+        _crater.localRotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+
         // Set random scale based on mininum and maximum
         if (_randomizeScale)
         {
