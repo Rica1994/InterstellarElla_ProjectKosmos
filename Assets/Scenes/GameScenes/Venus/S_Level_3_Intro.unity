@@ -609,7 +609,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -1825,6 +1828,26 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 3174480021489073328, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3174480021489073999, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 3174480021489073999, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 3174480021489073999, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.02
+      objectReference: {fileID: 0}
     - target: {fileID: 3187982323189572630, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
         type: 3}
       propertyPath: m_Layer
@@ -2035,6 +2058,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 7189874681285051824, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: df61fc1921cd0a0458a14c2e1212bd6d, type: 2}
     - target: {fileID: 7615030361444083340, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
         type: 3}
       propertyPath: m_Layer
@@ -2042,14 +2070,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7989393012952938753, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
         type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7989393012952938753, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
-        type: 3}
-      propertyPath: _voiceSource
+      propertyPath: _playableDirector
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1813917263}
     - target: {fileID: 8023855752267684532, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
         type: 3}
       propertyPath: m_Layer
@@ -2066,19 +2089,12 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 7189874681285051824, guid: a6f94caf64fd11e4a9f704dc90f1f4ff, type: 3}
-    - {fileID: 376388414, guid: a6f94caf64fd11e4a9f704dc90f1f4ff, type: 3}
     - {fileID: 376388415, guid: a6f94caf64fd11e4a9f704dc90f1f4ff, type: 3}
+    - {fileID: 376388414, guid: a6f94caf64fd11e4a9f704dc90f1f4ff, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a6f94caf64fd11e4a9f704dc90f1f4ff, type: 3}
 --- !u!4 &1512483892 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4095883765674488094, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 1512483891}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1512483893 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4803335723106857910, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
     type: 3}
   m_PrefabInstance: {fileID: 1512483891}
   m_PrefabAsset: {fileID: 0}
@@ -2088,26 +2104,13 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1512483891}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &1512483895
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+--- !u!82 &1512483897 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 18108565489066944, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
+    type: 3}
+  m_PrefabInstance: {fileID: 1512483891}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1512483893}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!95 &1512483896
+--- !u!95 &1512483899
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -2423,13 +2426,13 @@ PlayableDirector:
   - key: {fileID: 7233972608265286742, guid: 03a2f3dfb047e34428928d7d3fa1f9ef, type: 2}
     value: {fileID: 27}
   - key: {fileID: -8170288432589220017, guid: 03a2f3dfb047e34428928d7d3fa1f9ef, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 1512483897}
   - key: {fileID: -7023198101342230172, guid: 03a2f3dfb047e34428928d7d3fa1f9ef, type: 2}
     value: {fileID: 0}
   - key: {fileID: 2466050163639212566, guid: 03a2f3dfb047e34428928d7d3fa1f9ef, type: 2}
-    value: {fileID: 1512483896}
+    value: {fileID: 1512483899}
   - key: {fileID: 4463366399478313262, guid: 03a2f3dfb047e34428928d7d3fa1f9ef, type: 2}
-    value: {fileID: 1512483895}
+    value: {fileID: 0}
   - key: {fileID: 5276343277128203546, guid: 03a2f3dfb047e34428928d7d3fa1f9ef, type: 2}
     value: {fileID: 657068814}
   - key: {fileID: -267304168838238581, guid: 03a2f3dfb047e34428928d7d3fa1f9ef, type: 2}
@@ -2598,7 +2601,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []

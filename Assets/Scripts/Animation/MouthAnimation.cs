@@ -14,6 +14,7 @@ public class MouthAnimation : MonoBehaviour
     public AudioSource VoiceSource;
 
     private AudioClip _audioClip;
+    private int _audioClipIndex;
 
     // Mouth references
     [SerializeField]
@@ -87,13 +88,19 @@ public class MouthAnimation : MonoBehaviour
 
     private void Awake()
     {
-        SetTimelineAudioTrack();
+        if (_playableDirector != null)
+        {
+            SetTimelineAudioTrack();
+        }
     }
 
     private void Start()
     {
         InitializeVariables();
-        RegisterVisibilityChangeCallback();
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            RegisterVisibilityChangeCallback();
+        }
     }
 
     private void InitializeVariables()
@@ -319,29 +326,32 @@ public class MouthAnimation : MonoBehaviour
             }
         }
 
-        _audioClip = ((AudioPlayableAsset)audioTrack.GetClips().FirstOrDefault().asset).clip;
-        if (_audioClip != null)
+        //_audioClip = ((AudioPlayableAsset)audioTrack.GetClips().FirstOrDefault().asset).clip;
+        //if (_audioClip != null)
+        //{
+        //    Debug.Log("Name of audioclip: " + _audioClip.name);
+        //}
+
+        List<AudioClip> audioClips = new List<AudioClip>();
+
+        foreach (var clip in audioTrack.GetClips())
         {
-            Debug.Log("Name of audioclip: " + _audioClip.name);
+            // Assuming that the TimelineClip's asset is an AudioPlayableAsset
+            AudioPlayableAsset audioPlayableAsset = clip.asset as AudioPlayableAsset;
+            if (audioPlayableAsset != null)
+            {
+                // Retrieve the AudioClip and add it to the list
+                AudioClip audioClip = audioPlayableAsset.clip;
+                if (audioClip != null)
+                {
+                    audioClips.Add(audioClip);
+                    Debug.Log("Found AudioClip: " + audioClip.name);
+                }
+            }
         }
 
-        //List<AudioClip> audioClips = new List<AudioClip>();
-
-        //foreach (var clip in audioTrack.GetClips())
-        //{
-        //    // Assuming that the TimelineClip's asset is an AudioPlayableAsset
-        //    AudioPlayableAsset audioPlayableAsset = clip.asset as AudioPlayableAsset;
-        //    if (audioPlayableAsset != null)
-        //    {
-        //        // Retrieve the AudioClip and add it to the list
-        //        AudioClip audioClip = audioPlayableAsset.clip;
-        //        if (audioClip != null)
-        //        {
-        //            audioClips.Add(audioClip);
-        //            Debug.Log("Found AudioClip: " + audioClip.name);
-        //        }
-        //    }
-        //}
+        _audioClip = audioClips[_audioClipIndex];
+        _audioClipIndex++;
     }
 
     // This will be called from JavaScript

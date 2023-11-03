@@ -54,6 +54,9 @@ MonoBehaviour:
   _openMouthHappy: {fileID: 7660637367635576035}
   _closedMouthSad: {fileID: 3980786278058626366}
   _openMouthSad: {fileID: 7293054733148616962}
+  _mouthJoint: {fileID: 0}
+  _mouthScaleMultiplier: 4
+  _playableDirector: {fileID: 0}
   MaggieMood: 0
   _timeTillNextMouthChange: 0.08
   _thresholdHalfOpen: 0.033
@@ -771,3 +774,83 @@ SkinnedMeshRenderer:
     type: 3}
   m_PrefabInstance: {fileID: 5650198622234955495}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &8816468480242074362 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3761608408805313565, guid: b4dbdce37300ebd4185468ad66e0b923,
+    type: 3}
+  m_PrefabInstance: {fileID: 5650198622234955495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &9019794459890658683
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 8816468480242074362}
+    m_Modifications:
+    - target: {fileID: 5034369058863243337, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034369058863243337, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034369058863243337, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034369058863243337, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.00024
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034369058863243337, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034369058863243337, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034369058863243337, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034369058863243337, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034369058863243337, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034369058863243337, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034369058863243337, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034369058863244214, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_Name
+      value: PS_MaggieDust
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034369058863244214, guid: 468387afbda1fc7498e83b020d5c7223,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 468387afbda1fc7498e83b020d5c7223, type: 3}
