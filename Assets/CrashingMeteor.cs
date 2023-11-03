@@ -9,16 +9,22 @@ public class CrashingMeteor : MonoBehaviour
     private Transform _meteorAngle;
     [SerializeField]
     private Transform _crater;
+
     [SerializeField]
-    private AudioElement _crashSound;
+    private AudioClip[] _meteoriteWhooshSounds;
+
+    [SerializeField]
+    private AudioClip[] _crashSounds;
 
     [Header("Settings")]
 
     // Size
     [SerializeField] private bool _randomizeScale = true;
-    [Range(0.5f, 1.5f)] [SerializeField]
+    [Range(0.5f, 1.5f)]
+    [SerializeField]
     private float _minScale = 0.5f;
-    [Range(0.5f, 1.5f)] [SerializeField]
+    [Range(0.5f, 1.5f)]
+    [SerializeField]
     private float _maxScale = 1.5f;
 
     // Angle
@@ -32,16 +38,16 @@ public class CrashingMeteor : MonoBehaviour
 
     // Speed
     [SerializeField] private bool _randomizeSpeed = true;
-    [Range(0.5f, 2f)]
+    [Range(0.05f, 2f)]
     [SerializeField]
-    private float _minSpeed = 0.5f;
-    [Range(0.5f, 2f)]
+    private float _minSpeed = 0.05f;
+    [Range(0.25f, 2f)]
     [SerializeField]
     private float _maxSpeed = 2f;
 
     private string METEOR_SPEED = "MeteorSpeed";
 
-
+    private int _amountTimesCrashed = 0;
 
     private void Awake()
     {
@@ -63,10 +69,26 @@ public class CrashingMeteor : MonoBehaviour
         }
 
         // Set random speed based on mininum and maximum
-        if (_randomizeAngle)
+        if (_randomizeSpeed)
         {
             float randomSpeed = Random.Range(_minSpeed, _maxSpeed);
             GetComponent<Animator>().SetFloat(METEOR_SPEED, randomSpeed);
         }
+    }
+
+    public void MeteorSpawned()
+    {
+        float pitch = Random.Range(0.8f, 1.2f);
+        AudioClip randomClip = _meteoriteWhooshSounds[Random.Range(0, _meteoriteWhooshSounds.Length)];
+
+        ServiceLocator.Instance.GetService<SoundtrackManager>().PlaySFX(randomClip, false, 0.5f, pitch);
+    }
+
+    public void MeteorCrashed()
+    {
+        float pitch = Random.Range(0.8f, 1.2f);
+        AudioClip randomClip = _crashSounds[Random.Range(0, _crashSounds.Length)];
+
+        ServiceLocator.Instance.GetService<SoundtrackManager>().PlaySFX(randomClip, false, 0.5f, pitch);
     }
 }

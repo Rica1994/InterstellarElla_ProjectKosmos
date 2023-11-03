@@ -44,7 +44,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -195,14 +198,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _meteorAngle: {fileID: 4712867275855406321}
   _crater: {fileID: 6045365721914393858}
-  _crashSound:
-    Clip: {fileID: 0}
-    Type: 0
-    Volume: 1
-    Pitch: 1
-    RandomizePitchSlightly: 0
-    PitchLowerLimitAddition: 0.2
-    PitchUpperLimitAddition: 0.2
+  _meteoriteWhooshSounds:
+  - {fileID: 8300000, guid: c91eae178caf31e4180b08d980c0e92b, type: 3}
+  - {fileID: 8300000, guid: 8e2e0c795c89ef445826c48a0a91c028, type: 3}
+  - {fileID: 8300000, guid: c7e11440ea39fe64b9cb354d355d2101, type: 3}
+  - {fileID: 8300000, guid: f4df3b4baf762bb4d9210af0c0836b40, type: 3}
+  _crashSounds:
+  - {fileID: 8300000, guid: f1029b70699924047a97cb18ce37736c, type: 3}
+  - {fileID: 8300000, guid: 01089570c1cfb4945b54d4803297a6fa, type: 3}
+  - {fileID: 8300000, guid: dffe1e380fed60847ad28359670bab9d, type: 3}
   _randomizeScale: 1
   _minScale: 0.5
   _maxScale: 1.5
