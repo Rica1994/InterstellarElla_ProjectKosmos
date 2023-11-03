@@ -15,6 +15,9 @@ public class SoundtrackManager : Service
     private AudioSource _passByAudioSource;
     private float _passByAudioSourceStandardPitch;
 
+    [SerializeField]
+    private AudioSource[] _sfxAudioSources;
+
     private AudioSource currentSource;
     private AudioSource nextSource;
 
@@ -167,5 +170,31 @@ public class SoundtrackManager : Service
         //_passByAudioSource.loop = setting.IsLooping;
 
         _passByAudioSource.Play();
+    }
+
+    public void PlaySFX(AudioClip clip, bool forcePlay, float volume = 1.0f, float pitch = 1.0f)
+    {
+        AudioSource freeAudioSource = null;
+        // find free sfx source
+        for (int i = 0; i < _sfxAudioSources.Length; i++)
+        {
+            if (_sfxAudioSources[i].isPlaying == false)
+                freeAudioSource = _sfxAudioSources[i];
+        }
+
+        if (freeAudioSource == null && forcePlay == false)
+        {
+            Debug.Log("Had no free sfx audioSource, aborting call");
+            return;
+        }
+        else if (forcePlay)
+        {
+            freeAudioSource = _sfxAudioSources[0];
+        }
+
+        freeAudioSource.clip = clip;
+        freeAudioSource.volume = volume;
+        freeAudioSource.pitch = pitch;
+        freeAudioSource.Play();
     }
 }
