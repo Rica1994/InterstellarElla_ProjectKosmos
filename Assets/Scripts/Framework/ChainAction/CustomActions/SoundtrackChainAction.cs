@@ -63,6 +63,7 @@ public class SoundtrackChainAction : ChainAction
             case SoundAction.FadeOutCurrentSoundtrack:
                 soundTrackManager.FadeOutCurrent(_fadeTime);
                 break;
+            case SoundAction.None:
             default:
                 soundTrackManager.PlayClip(_audioClip, _fadeIn, _crossfade, _loop, _targetVolume, _letCurrentClipFinish);
                 break;

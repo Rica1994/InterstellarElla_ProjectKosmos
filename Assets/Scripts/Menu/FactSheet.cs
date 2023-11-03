@@ -136,16 +136,16 @@ public class FactSheet : MonoBehaviour
 
     public void ApplyCompletion()
     {
-        StartCoroutine(FillCircle(_factSheetData.CompletionPercentage / 100.0f));
+        StartCoroutine(FillCircleAndShowFacts(_factSheetData.CompletionPercentage / 100.0f));
     }
 
-    private IEnumerator FillCircle(float progress)
+    private IEnumerator FillCircleAndShowFacts(float progress)
     {
         float passedTime = 0.0f;
         int factIndex = 0;
 
         float timeTillProgressFilled = progress / _progressBarFillSpeed;
-        float timePerFactShown = timeTillProgressFilled / ((int)_factSheetData.CompletionPercentage / 10.0f);
+        float timePerFactShown = timeTillProgressFilled / (_factSheetData.CompletionPercentage / 10.0f);
 
 
         while (_completionCircleImage.fillAmount < progress)
@@ -164,5 +164,6 @@ public class FactSheet : MonoBehaviour
         }
 
         _completionCircleImage.fillAmount = progress;
+
     }
 }

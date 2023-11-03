@@ -89,7 +89,6 @@ public class MainMenuManager : Service
 
     #endregion
 
-
     protected override void Awake()
     {
         base.Awake();
@@ -298,9 +297,6 @@ public class MainMenuManager : Service
 
         ScaleLevelUp();
     }
-
-
-
 
     private void RotateLevelSetup(bool isForward)
     {
