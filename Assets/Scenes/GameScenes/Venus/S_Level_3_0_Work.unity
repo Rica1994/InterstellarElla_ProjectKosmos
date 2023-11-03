@@ -269,7 +269,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -2599,7 +2602,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -7629,7 +7635,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -9387,7 +9396,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 1
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -9463,7 +9475,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -11724,7 +11739,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -12712,7 +12730,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -16401,7 +16422,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -18752,17 +18776,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
   _playAndCompleteAction: 1
   _audioClip: {fileID: 8300000, guid: 1cc5bd28416f77e4ab9ef421b5547d79, type: 3}
   _fadeIn: 1
+  _fadeOut: 0
   _crossfade: 0
   _loop: 1
   _letCurrentClipFinish: 0
   _targetVolume: 1
+  _soundAction: -1
+  _fadeTime: 1
 --- !u!4 &962314880 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1954347008504103415, guid: c2c61faa556ed924c90247d89beee3cd,
@@ -19184,7 +19214,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -20735,29 +20768,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1063621294}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8edd9374269b74b4fb962461e69dd51a, type: 3}
+  m_Script: {fileID: 11500000, guid: e1a227a22261ed04db82d9f45c7a00c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
-  _playAndCompleteAction: 1
-  _unityEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1625640156}
-        m_MethodName: FadeOutCurrent
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  _playAndCompleteAction: 0
+  _audioClip: {fileID: 0}
+  _fadeIn: 0
+  _fadeOut: 0
+  _crossfade: 0
+  _loop: 0
+  _letCurrentClipFinish: 0
+  _targetVolume: 1
+  _soundAction: 1
+  _fadeTime: 1
 --- !u!4 &1064724445 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2128230908682576503, guid: 80692f7c8312e0c41bb4941c4944bc87,
@@ -28325,7 +28356,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -30247,18 +30281,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2c61faa556ed924c90247d89beee3cd, type: 3}
---- !u!114 &1625640156 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5561442047988924326, guid: 1b3ad37f3b38f694fb268141fa5866d0,
-    type: 3}
-  m_PrefabInstance: {fileID: 1473345258743301282}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3fc816227b805242b2575834ce33ff4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1626814593
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31517,7 +31539,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -32389,7 +32414,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -32627,7 +32655,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -39842,7 +39873,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -39891,7 +39925,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 1
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
