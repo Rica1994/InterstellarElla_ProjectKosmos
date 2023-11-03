@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
-
+using System.Runtime.InteropServices;
 public class MouthAnimation : MonoBehaviour
 {
     const int BAND_8 = 8;
@@ -81,6 +81,10 @@ public class MouthAnimation : MonoBehaviour
     [DllImport("__Internal")]
     private static extern bool GetSamples(string name, float[] freqData, int size);
 
+    // Import the JavaScript function
+    [DllImport("__Internal")]
+    private static extern void RegisterVisibilityChangeCallback();
+
     private void Awake()
     {
         SetTimelineAudioTrack();
@@ -89,6 +93,7 @@ public class MouthAnimation : MonoBehaviour
     private void Start()
     {
         InitializeVariables();
+        RegisterVisibilityChangeCallback();
     }
 
     private void InitializeVariables()
@@ -337,5 +342,20 @@ public class MouthAnimation : MonoBehaviour
         //        }
         //    }
         //}
+    }
+
+    // This will be called from JavaScript
+    public void OnVisibilityChanged(int visible)
+    {
+        if (visible == 1)
+        {
+            Debug.Log("User is viewing the WebGL tab");
+
+        }
+        else
+        {
+            Debug.Log("User has left the WebGL tab");
+            Restart();
+        }
     }
 }
