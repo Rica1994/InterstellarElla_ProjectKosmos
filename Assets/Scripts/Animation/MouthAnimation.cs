@@ -1,13 +1,20 @@
 using Assets.Scripts;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using UnityCore.Audio;
 using UnityEngine;
+using UnityEngine.Playables;
+using UnityEngine.Timeline;
 using UnityEngine.UI;
 
 public class MouthAnimation : MonoBehaviour
 {
     const int BAND_8 = 8;
     public AudioSource VoiceSource;
+
+    private AudioClip _audioClip;
+
     // Mouth references
     [SerializeField]
     private SkinnedMeshRenderer _halfOpenMouth;
@@ -32,6 +39,9 @@ public class MouthAnimation : MonoBehaviour
     private Transform _mouthJoint;
     [SerializeField]
     private float _mouthScaleMultiplier = 4.0f;
+
+    [SerializeField]
+    private PlayableDirector _playableDirector;
 
     public enum Mood
     {
@@ -71,6 +81,11 @@ public class MouthAnimation : MonoBehaviour
     [DllImport("__Internal")]
     private static extern bool GetSamples(string name, float[] freqData, int size);
 
+    private void Awake()
+    {
+        SetTimelineAudioTrack();
+    }
+
     private void Start()
     {
         InitializeVariables();
@@ -92,20 +107,21 @@ public class MouthAnimation : MonoBehaviour
             {
 #if UNITY_EDITOR
                 VoiceSource.GetSpectrumData(sample, 0, FFTWindow.Blackman);
-#endif
-#if UNITY_WEBGL && !UNITY_EDITOR
-                StartSampling(name, VoiceSource.clip.length, 512);
+#elif UNITY_WEBGL && !UNITY_EDITOR
+                Debug.Log("isPlaying");
+                if (_playableDirector != null)
+                {
+                    StartSampling(name, _audioClip.length, 512);
+                }
+                else
+                {
+                    StartSampling(name, VoiceSource.clip.length, 512);
+                }
                 GetSamples(name, sample, sample.Length);
-                //_text.text = "Got Samples: " + gotSamples + "\n" + "Sample Data: " + string.Join(", ", sample);
 #endif
                 UpdateMouth();
             });
         }
-        //else
-        //{
-        //    //_text.text = VoiceSource.name + ":no values";
-        //    _clipStopped = true;
-        //}
     }
 
     private void UpdateMouth()
@@ -116,7 +132,6 @@ public class MouthAnimation : MonoBehaviour
         {
             _timePassedWithCurrentMouth = 0.0f;
             float volume = AudioFrequencyBand8.GetAmplitude();
-            Debug.Log(volume);
 
             if (volume < _thresholdHalfOpen)
             {
@@ -275,5 +290,52 @@ public class MouthAnimation : MonoBehaviour
         RefreshAudioSource();
         InitializeVariables();
         VoiceSource.Play();
+    }
+
+    public void Restart()
+    {
+        #if UNITY_WEBGL && !UNITY_EDITOR
+        CloseSampling(name);
+        #endif
+    }
+
+    private void SetTimelineAudioTrack()
+    {
+        TimelineAsset timeline = _playableDirector.playableAsset as TimelineAsset;
+        //TrackAsset maggieTrack = timeline.GetOutputTracks().FirstOrDefault(t => t.name == "MaggieAudioTrack");
+
+        AudioTrack audioTrack = null;
+        foreach (var track in _playableDirector.playableAsset.outputs)
+        {
+            if (track.streamName == "MaggieAudioTrack")
+            {
+                audioTrack = track.sourceObject as AudioTrack;
+                break;
+            }
+        }
+
+        _audioClip = ((AudioPlayableAsset)audioTrack.GetClips().FirstOrDefault().asset).clip;
+        if (_audioClip != null)
+        {
+            Debug.Log("Name of audioclip: " + _audioClip.name);
+        }
+
+        //List<AudioClip> audioClips = new List<AudioClip>();
+
+        //foreach (var clip in audioTrack.GetClips())
+        //{
+        //    // Assuming that the TimelineClip's asset is an AudioPlayableAsset
+        //    AudioPlayableAsset audioPlayableAsset = clip.asset as AudioPlayableAsset;
+        //    if (audioPlayableAsset != null)
+        //    {
+        //        // Retrieve the AudioClip and add it to the list
+        //        AudioClip audioClip = audioPlayableAsset.clip;
+        //        if (audioClip != null)
+        //        {
+        //            audioClips.Add(audioClip);
+        //            Debug.Log("Found AudioClip: " + audioClip.name);
+        //        }
+        //    }
+        //}
     }
 }
