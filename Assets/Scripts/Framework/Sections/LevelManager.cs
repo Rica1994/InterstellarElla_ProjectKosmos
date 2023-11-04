@@ -32,6 +32,9 @@ public class LevelManager : Service
     public SceneType NextScene => _nextScene;
     public bool IsSameBuildNextScene;
 
+    [SerializeField]
+    private bool _isLastLevel = false;
+
     [Header("Respawn Logic")]
     [SerializeField]
     private GameObject _firstCheckPoint;
@@ -222,7 +225,7 @@ public class LevelManager : Service
     public void EndLevel()
     {
         _hasEndedLevel = true;
-        ServiceLocator.Instance.GetService<GameManager>().EndGame();
+        ServiceLocator.Instance.GetService<GameManager>().EndLevel(_isLastLevel);
     }
 
     private void OnDeathTriggered(TriggerHandler trigger, Collider other, bool hasEntered)

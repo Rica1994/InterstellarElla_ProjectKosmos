@@ -4,21 +4,26 @@ using UnityCore.Scene;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class NextLevelChainAction : ChainAction
 {
     [SerializeField]
     private SceneType _sceneToLoad;
 
-    [SerializeField]
-    private bool _endGame = false;
+
+    [SerializeField, FormerlySerializedAs("_endGame")]
+    private bool _endLevel = false;
+
+    [SerializeField, FormerlySerializedAs("_endGame")]
+    private bool _isLastLevel = false;
 
     public override void Execute()
     {
         base.Execute();
-        if (_endGame)
+        if (_endLevel)
         {
-            ServiceLocator.Instance.GetService<GameManager>().EndGame();
+            ServiceLocator.Instance.GetService<GameManager>().EndLevel(_isLastLevel);
         }
         ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(_sceneToLoad, false, null, false, UnityCore.Menus.PageType.Loading);
 

@@ -206,38 +206,46 @@ public class GameManager : Service
         Data = data;
     }
 
-    public void EndGame()
+    public void EndLevel(bool isLastLevel)
     {
-        Debug.Log("Game Over");
         var pickUpManager = ServiceLocator.Instance.GetService<PickUpManager>();
         var pickUpsCollected = pickUpManager.PickUpsPickedUp;
-        Debug.Log($"You collected {pickUpsCollected} / {pickUpManager.PickUps.Count}");
-        
-        Data.CurrentScore = ConvertPlanetScoreToPercentage(pickUpsCollected);
+        Debug.Log($"You collected {pickUpsCollected} / {pickUpManager.PickUps.Count} this level.");
 
-        var currentPlanet = GetCurrentPlanet();
-        Data.LastPlanet = (int)currentPlanet;
-        Debug.Log("End Game called, with current planet: " + currentPlanet.ToString() + " and current score: " + Data.CurrentScore);
-        switch (currentPlanet)
+        // Add the collected pickups of the last level, to the current score.
+        Data.CurrentScore += pickUpsCollected;
+
+        if (isLastLevel)
         {
-            case Planet.Mars:
-                if (Data.CurrentScore > Data.PlanetCompletionValues.MarsCompletion) Data.PlanetCompletionValues.MarsCompletion = Data.CurrentScore;
-                break;
-            case Planet.Venus:
-                if (Data.CurrentScore > Data.PlanetCompletionValues.VenusCompletion) Data.PlanetCompletionValues.VenusCompletion = Data.CurrentScore;
-                break;
-            case Planet.Saturn:
-                if (Data.CurrentScore > Data.PlanetCompletionValues.SaturnCompletion) Data.PlanetCompletionValues.SaturnCompletion = Data.CurrentScore;
-                break;
-            case Planet.Pluto:
-                if (Data.CurrentScore > Data.PlanetCompletionValues.PlutoCompletion) Data.PlanetCompletionValues.PlutoCompletion = Data.CurrentScore;
-                break;
-            case Planet.Mercury:
-                if (Data.CurrentScore > Data.PlanetCompletionValues.MercuryCompletion) Data.PlanetCompletionValues.MercuryCompletion = Data.CurrentScore;
-                break;
-        }
+            Debug.Log("Game Ended");
 
-        Data.CurrentScore = 0.0f;
+            // converting the current score to a percentage number (between 0 and 100)
+            Data.CurrentScore = ConvertPlanetScoreToPercentage(Data.CurrentScore);
+
+            var currentPlanet = GetCurrentPlanet();
+            Data.LastPlanet = (int)currentPlanet;
+            Debug.Log("End Game called, with current planet: " + currentPlanet.ToString() + " and current score: " + Data.CurrentScore);
+            switch (currentPlanet)
+            {
+                case Planet.Mars:
+                    if (Data.CurrentScore > Data.PlanetCompletionValues.MarsCompletion) Data.PlanetCompletionValues.MarsCompletion = Data.CurrentScore;
+                    break;
+                case Planet.Venus:
+                    if (Data.CurrentScore > Data.PlanetCompletionValues.VenusCompletion) Data.PlanetCompletionValues.VenusCompletion = Data.CurrentScore;
+                    break;
+                case Planet.Saturn:
+                    if (Data.CurrentScore > Data.PlanetCompletionValues.SaturnCompletion) Data.PlanetCompletionValues.SaturnCompletion = Data.CurrentScore;
+                    break;
+                case Planet.Pluto:
+                    if (Data.CurrentScore > Data.PlanetCompletionValues.PlutoCompletion) Data.PlanetCompletionValues.PlutoCompletion = Data.CurrentScore;
+                    break;
+                case Planet.Mercury:
+                    if (Data.CurrentScore > Data.PlanetCompletionValues.MercuryCompletion) Data.PlanetCompletionValues.MercuryCompletion = Data.CurrentScore;
+                    break;
+            }
+
+            Data.CurrentScore = 0.0f;
+        }
     }
 
     public float ConvertPlanetScoreToPercentage(float score)
