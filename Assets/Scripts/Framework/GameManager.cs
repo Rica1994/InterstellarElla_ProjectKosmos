@@ -14,7 +14,7 @@ public class GameManager : Service
     public struct SaveData
     {
         public PlanetCompletionValues PlanetCompletionValues;
-        public float CurrentScore;
+        public int CurrentScore;
         public int LastPlanet;
         //   public bool IsShittyDevice;
 
@@ -65,6 +65,12 @@ public class GameManager : Service
         Client
     }
 
+    public static int MARS_DATA_NEEDED = 250;
+    public static int PLUTO_DATA_NEEDED = 250;
+    public static int VENUS_DATA_NEEDED = 250;
+    public static int SATURN_DATA_NEEDED = 250;
+    public static int MERCURY_DATA_NEEDED = 250;
+
     #endregion
 
 
@@ -106,6 +112,8 @@ public class GameManager : Service
         }
     }
 
+    private bool _isInitalized = false;
+
 #if !UNITY_EDITOR && UNITY_WEBGL
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern bool IsMobile();
@@ -137,12 +145,32 @@ public class GameManager : Service
 #endif
     }
 
+    private void Initialize()
+    {
+        var hud = ServiceLocator.Instance.GetService<HudManager>();
+        var pickupManager = ServiceLocator.Instance.GetService<PickUpManager>();
+        var currentPlanet = GetCurrentPlanet();
+
+        switch (currentPlanet)
+        {
+            case Planet.Mars:
+            case Planet.Pluto:
+            case Planet.Venus:
+            case Planet.Saturn:
+            case Planet.Mercury:
+                hud.Initialize(currentPlanet);
+                pickupManager.PickUpsPickedUp = Data.CurrentScore;
+                break;
+        }
+    }
+
     protected override void Awake()
     {
         base.Awake();
         if (_isDestroyed) return;
 
         PlayerController.PlayerControllerEnabledEvent += OnPlayerControllerEnabled;
+
 #if UNITY_EDITOR
         Data = new SaveData();
         //ParseData(Data.ToString());
@@ -158,6 +186,17 @@ public class GameManager : Service
             Debug.Log("?data= not found in URL");
         }
 #endif
+    }   
+
+    private void Start()
+    {
+        Initialize();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        Initialize();
     }
 
     private void OnPlayerControllerEnabled(PlayerController controller)
@@ -227,7 +266,7 @@ public class GameManager : Service
         Debug.Log($"You collected {pickUpsCollected} / {pickUpManager.PickUps.Count} this level.");
 
         // Add the collected pickups of the last level, to the current score.
-        Data.CurrentScore += pickUpsCollected;
+        Data.CurrentScore = pickUpsCollected;
 
         if (isLastLevel)
         {
@@ -258,34 +297,42 @@ public class GameManager : Service
                     break;
             }
 
-            Data.CurrentScore = 0.0f;
+            Data.CurrentScore = 0;
         }
     }
 
-    public float ConvertPlanetScoreToPercentage(float score)
+    public int ConvertPlanetScoreToPercentage(float score)
     {
         float scoreRecalculated = 0.0f;
         switch (GetCurrentPlanet())
         {
             case Planet.Venus:
                 scoreRecalculated = score / 250.0f;
-                return (Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f)) * 100.0f;
+                scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
+                break;
             case Planet.Saturn:
                 scoreRecalculated = score / 250.0f;
-                return (Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f)) * 100.0f;
+                scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
+                break;
             case Planet.Mars:
                 scoreRecalculated = score / 250.0f;
-                return (Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f)) * 100.0f;
+                scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
+                break;
             case Planet.Pluto:
                 scoreRecalculated = score / 250.0f;
-                return (Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f)) * 100.0f;
+                scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
+                break;
             case Planet.Mercury:
                 scoreRecalculated = score / 250.0f;
-                return (Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f)) * 100.0f;
+                scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
+                break;
             default:
                 Debug.LogError("This is being called from a wrong scene, this should only be called from the end of a level");
-                return 0.0f;
+                scoreRecalculated = 0;
+                break;
         }
+
+        return (int)scoreRecalculated;
     }
 
     public Planet GetCurrentPlanet()

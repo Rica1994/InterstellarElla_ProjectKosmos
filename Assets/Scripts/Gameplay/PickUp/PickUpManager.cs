@@ -17,11 +17,9 @@ public class PickUpManager : Service
     #endregion
 
     private List<PickUp> _pickUps = new List<PickUp>();
-
-    private int _pickUpsPickedUp = 0;
     private List<EllaPickupType> _foundEllaPickups = new List<EllaPickupType>();
 
-    public int PickUpsPickedUp => _pickUpsPickedUp;
+    public int PickUpsPickedUp { get; set; } = 0;
     public List<EllaPickupType> FoundEllaPickUps => _foundEllaPickups;
 
     public List<PickUp> PickUps => _pickUps;
@@ -151,7 +149,7 @@ public class PickUpManager : Service
 
     private void OnPickUpPickedUp(PickUp pickup)
     {
-        _pickUpsPickedUp++;
+        PickUpsPickedUp++;
 
         if (pickup as EllaPickUp)
         {
@@ -173,7 +171,7 @@ public class PickUpManager : Service
         //ServiceLocator.Instance.GetService<ParticleManager>().
         //CreateParticleWorldSpace(ParticleType.PS_PickupTrigger, this.transform.position);
 
-        PickUpPickedUpEvent?.Invoke(_pickUpsPickedUp);
+        PickUpPickedUpEvent?.Invoke(PickUpsPickedUp);
     }
 
 
