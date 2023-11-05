@@ -9,27 +9,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Service
 {
-    [SerializeField]
-    private bool _simulateMobile = false;
-
-    private PlayerController _playerController;
-
-    public static bool IsShittyDevice = false;
-
-    private static bool _isInCutScene = false;
-    public static bool IsInCutscene
-    {
-        get => _isInCutScene;
-        set
-        {
-            _isInCutScene = value;
-            var audioController = ServiceLocator.Instance.GetService<AudioController>();
-            if (audioController != null)
-            {
-                audioController.MixerAdjustment(value ? MixerType.MixerFXMuted : MixerType.MixerNormal);
-            }
-        }
-    }
+    #region StructsAndEnums
 
     public struct SaveData
     {
@@ -79,6 +59,23 @@ public class GameManager : Service
         Mercury = 5,
         None = 0
     }
+    public enum BuildType
+    {
+        Debug,
+        Client
+    }
+
+    #endregion
+
+
+    [SerializeField]
+    private bool _simulateMobile = false;
+
+    [SerializeField]
+    private BuildType _targetBuildType = BuildType.Debug;
+    public BuildType TargetBuildType => _targetBuildType;
+
+    private PlayerController _playerController;
 
     private bool _isMobile = false;
     public bool IsMobileWebGl => _isMobile;
@@ -91,6 +88,23 @@ public class GameManager : Service
 
     public static SaveData Data;
     public PlayerController PlayerController => _playerController;
+
+    public static bool IsShittyDevice = false;
+
+    private static bool _isInCutScene = false;
+    public static bool IsInCutscene
+    {
+        get => _isInCutScene;
+        set
+        {
+            _isInCutScene = value;
+            var audioController = ServiceLocator.Instance.GetService<AudioController>();
+            if (audioController != null)
+            {
+                audioController.MixerAdjustment(value ? MixerType.MixerFXMuted : MixerType.MixerNormal);
+            }
+        }
+    }
 
 #if !UNITY_EDITOR && UNITY_WEBGL
     [System.Runtime.InteropServices.DllImport("__Internal")]
