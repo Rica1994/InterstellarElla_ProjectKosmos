@@ -8,6 +8,42 @@ using UnityEditor.Build.Reporting;
 public class BuildWindow : EditorWindow
 {
     private string repositoryPath = string.Empty;
+    private bool _selectAllScenesBoolean = false;
+    private bool _lastSelectAllScenesBoolean = false;
+
+    private List<bool> buildToggles = new List<bool>();
+    private string[] levels = new string[] {"S_MainMenu",
+         "Levels\\Mars\\S_Level_1_1_Work",
+         "Levels\\Mars\\S_Level_1_Intro",
+         "Levels\\Mars\\S_Level_1_Outro",
+         "Levels\\Venus\\S_Level_3_0_Work",
+         "Levels\\Venus\\S_Level_3_1_Work",
+         "Levels\\Venus\\S_Level_3_2_Work",
+         "Levels\\Venus\\S_Level_3_3_Work",
+         "Levels\\Venus\\S_Level_3_4_Work",
+         "Levels\\Venus\\S_Level_3_5_Work",
+         "Levels\\Venus\\S_Level_3_Intro",
+         "Levels\\Venus\\S_Level_3_Outro",
+         "Levels\\Saturn\\S_Level_4_0_Work",
+         "Levels\\Saturn\\S_Level_4_1_Work",
+         "Levels\\Saturn\\S_Level_4_2_Work",
+         "Levels\\Saturn\\S_Level_4_3_Work",
+         "Levels\\Saturn\\S_Level_4_4_Work",
+         "Levels\\Saturn\\S_Level_4_5_Work",
+         "Levels\\Saturn\\S_Level_4_Intro",
+         "Levels\\Saturn\\S_Level_4_Outro",
+         "Levels\\Pluto\\S_Level_2_0_Work",
+         "Levels\\Pluto\\S_Level_2_1_Work",
+         "Levels\\Pluto\\S_Level_2_2_Work",
+         "Levels\\Pluto\\S_Level_2_Intro",
+         "Levels\\Pluto\\S_Level_2_Outro",
+        "Levels\\Mercury\\S_Level_5_0_Work",
+        "Levels\\Mercury\\S_Level_5_1_Work",
+        "Levels\\Mercury\\S_Level_5_2_Work",
+        "Levels\\Mercury\\S_Level_5_3_Work",
+        "Levels\\Mercury\\S_Level_5_Intro" ,
+          "Levels\\Mercury\\S_Level_5_Outro",
+            "Levels\\S_Quiz"};
 
     [MenuItem("Build/Build Window")]
     public static void ShowWindow()
@@ -21,13 +57,42 @@ public class BuildWindow : EditorWindow
 
         repositoryPath = EditorGUILayout.TextField("Repository Path", repositoryPath);
 
-        if (GUILayout.Button("Build All Scenes"))
+        for (int i = 0; i < levels.Length; i++)
         {
-            BuildAllScenes();
+            if (buildToggles.Count <= i)
+            {
+                buildToggles.Add(true);
+            }
+
+            buildToggles[i] = EditorGUILayout.Toggle(levels[i], buildToggles[i]);
+        }
+
+        _selectAllScenesBoolean = GUILayout.Toggle(_selectAllScenesBoolean, "Select all scenes");
+        
+        if (_selectAllScenesBoolean && _lastSelectAllScenesBoolean != _selectAllScenesBoolean)
+        {
+            _lastSelectAllScenesBoolean = true;
+            for (int i = 0; i < buildToggles.Count; i++)
+            {
+                buildToggles[i] = true;
+            }
+        }
+        else if (_selectAllScenesBoolean == false && _lastSelectAllScenesBoolean != _selectAllScenesBoolean)
+        {
+            _lastSelectAllScenesBoolean = false;
+            for (int i = 0; i < buildToggles.Count; i++)
+            {
+                buildToggles[i] = false;
+            }
+        }
+        
+        if (GUILayout.Button("Build Selected Scenes"))
+        {
+            BuildSelectedScenes();
         }
     }
 
-    private void BuildAllScenes()
+    private void BuildSelectedScenes()
     {
         if (string.IsNullOrEmpty(repositoryPath))
         {
@@ -38,43 +103,14 @@ public class BuildWindow : EditorWindow
         string projectPath = Application.dataPath.Replace("/Assets", "");
         string scenesDir = Path.Combine(Application.dataPath, "Scenes", "GameScenes");
 
-        string[] levels = new string[] {
-           "S_MainMenu",
-       //  "Levels\\Mars\\S_Level_1_1_Work",
-       //  "Levels\\Mars\\S_Level_1_Intro",
-       //  "Levels\\Mars\\S_Level_1_Outro",
-       //  "Levels\\Venus\\S_Level_3_0_Work",
-       //  "Levels\\Venus\\S_Level_3_1_Work",
-       //  "Levels\\Venus\\S_Level_3_2_Work",
-       //  "Levels\\Venus\\S_Level_3_3_Work",
-       //  "Levels\\Venus\\S_Level_3_4_Work",
-       //  "Levels\\Venus\\S_Level_3_5_Work",
-       //  "Levels\\Venus\\S_Level_3_Intro",
-       //  "Levels\\Venus\\S_Level_3_Outro",
-       //  "Levels\\Saturn\\S_Level_4_0_Work",
-       //  "Levels\\Saturn\\S_Level_4_1_Work",
-       //  "Levels\\Saturn\\S_Level_4_2_Work",
-       //  "Levels\\Saturn\\S_Level_4_3_Work",
-       //  "Levels\\Saturn\\S_Level_4_4_Work",
-       //  "Levels\\Saturn\\S_Level_4_5_Work",
-       //  "Levels\\Saturn\\S_Level_4_Intro",
-       //  "Levels\\Saturn\\S_Level_4_Outro",
-         "Levels\\Pluto\\S_Level_2_0_Work",
-         "Levels\\Pluto\\S_Level_2_1_Work",
-         "Levels\\Pluto\\S_Level_2_2_Work",
-         "Levels\\Pluto\\S_Level_2_Intro",
-         "Levels\\Pluto\\S_Level_2_Outro",
-     //   "Levels\\Mercury\\S_Level_5_0_Work",
-     //   "Levels\\Mercury\\S_Level_5_1_Work",
-     //   "Levels\\Mercury\\S_Level_5_2_Work",
-     //   "Levels\\Mercury\\S_Level_5_3_Work",
-     //   "Levels\\Mercury\\S_Level_5_Intro" ,
-     //     "Levels\\Mercury\\S_Level_5_Outro",
-            "Levels\\S_Quiz" };
-
 
         for (int i = 0; i < levels.Length; i++)
         {
+            if (!buildToggles[i])
+            {
+                continue;  // Skip this scene if its toggle is not checked
+            }
+
             var level = levels[i];
 
             //     if (EditorUtility.DisplayCancelableProgressBar(
@@ -131,5 +167,7 @@ public class BuildWindow : EditorWindow
         }
 
         //  EditorUtility.ClearProgressBar();
+
     }
 }
+
