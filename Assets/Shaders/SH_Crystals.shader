@@ -1,27 +1,15 @@
 // Made with Amplify Shader Editor v1.9.1.8
 // Available at the Unity Asset Store - http://u3d.as/y3X 
-Shader "SH_SandTerrainFirstPass"
+Shader "SH_Crystals"
 {
 	Properties
 	{
-		[HideInInspector]_Mask2("_Mask2", 2D) = "white" {}
-		[HideInInspector]_Mask0("_Mask0", 2D) = "white" {}
-		[HideInInspector]_Mask1("_Mask1", 2D) = "white" {}
-		[HideInInspector]_Mask3("_Mask3", 2D) = "white" {}
-		_ShinyParticleInfluence("ShinyParticleInfluence", Float) = 0
-		_ShinyParticleScale("ShinyParticleScale", Float) = 0
-		_ShinyParticles("ShinyParticles", 2D) = "white" {}
-		_DetailTextureScale("DetailTextureScale", Vector) = (0,0,0,0)
-		_SunColorInfluence("SunColorInfluence", Range( 0 , 1)) = 0
-		_SandShadePower("SandShadePower", Float) = 0
-		_SandShadeScale("SandShadeScale", Float) = 0
-		_SandShadeBias("SandShadeBias", Float) = 0
-		_DetailFadeDistance("DetailFadeDistance", Range( 0 , 1000)) = 0
-		_Sand("Sand", Color) = (0,0,0,0)
-		_SandShade("SandShade", Color) = (0,0,0,0)
-		_Detail("Detail", 2D) = "white" {}
-		_SandTextureInfluence("SandTextureInfluence", Float) = 0
 		_Roughness("Roughness", Range( 0 , 1)) = 0
+		_BaseColor("Base Color", Color) = (0,1,0.9447041,1)
+		_BaseColor1("Base Color", Color) = (0,1,0.9447041,1)
+		_BaseColor2("Base Color", Color) = (0,1,0.9447041,1)
+		_PatternAlpha1("Pattern Alpha", 2D) = "white" {}
+		_PatternScale1("Pattern Scale", Float) = 1
 
 		//_TransmissionShadow( "Transmission Shadow", Range( 0, 1 ) ) = 0.5
 		//_TransStrength( "Trans Strength", Range( 0, 50 ) ) = 1
@@ -158,9 +146,7 @@ Shader "SH_SandTerrainFirstPass"
 		}
 		ENDCG
 
-		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
-	UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
-
+		
 		Pass
 		{
 			
@@ -171,6 +157,7 @@ Shader "SH_SandTerrainFirstPass"
 
 			CGPROGRAM
 			#define ASE_NEEDS_FRAG_SHADOWCOORDS
+			#pragma multi_compile_instancing
 			#pragma multi_compile __ LOD_FADE_CROSSFADE
 			#pragma multi_compile_fog
 			#define ASE_FOG 1
@@ -197,17 +184,7 @@ Shader "SH_SandTerrainFirstPass"
 			#include "UnityPBSLighting.cginc"
 			#include "AutoLight.cginc"
 
-			#define ASE_NEEDS_FRAG_WORLD_POSITION
-			#define ASE_NEEDS_FRAG_WORLD_NORMAL
-			#define ASE_NEEDS_VERT_POSITION
-			#define ASE_NEEDS_FRAG_WORLD_TANGENT
-			#define ASE_NEEDS_FRAG_WORLD_BITANGENT
-			#define ASE_NEEDS_VERT_NORMAL
-			#pragma multi_compile_instancing
-			#pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
-			#pragma multi_compile_local __ _ALPHATEST_ON
-			#pragma shader_feature_local _MASKMAP
-
+			
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
@@ -249,7 +226,6 @@ Shader "SH_SandTerrainFirstPass"
 				float4 screenPos : TEXCOORD8;
 				#endif
 				float4 ase_texcoord9 : TEXCOORD9;
-				float4 ase_texcoord10 : TEXCOORD10;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -273,79 +249,15 @@ Shader "SH_SandTerrainFirstPass"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			uniform sampler2D _Mask2;
-			uniform sampler2D _Mask0;
-			uniform sampler2D _Mask1;
-			uniform sampler2D _Mask3;
-			uniform float4 _MaskMapRemapScale0;
-			uniform float4 _MaskMapRemapOffset2;
-			uniform float4 _MaskMapRemapScale2;
-			uniform float4 _MaskMapRemapScale1;
-			uniform float4 _MaskMapRemapOffset1;
-			uniform float4 _MaskMapRemapScale3;
-			uniform float4 _MaskMapRemapOffset3;
-			uniform float4 _MaskMapRemapOffset0;
-			uniform sampler2D _Detail;
-			uniform float2 _DetailTextureScale;
-			uniform float _SandTextureInfluence;
-			uniform float _DetailFadeDistance;
-			uniform float3 SunColor;
-			uniform float _SunColorInfluence;
-			uniform float4 _Sand;
-			uniform float4 _SandShade;
-			uniform float3 SunDirection;
-			uniform float _SandShadeBias;
-			uniform float _SandShadeScale;
-			uniform float _SandShadePower;
+			uniform float4 _BaseColor;
+			uniform float4 _BaseColor1;
+			uniform sampler2D _PatternAlpha1;
+			uniform float _PatternScale1;
+			uniform float4 _BaseColor2;
 			uniform float _Roughness;
-			uniform sampler2D _ShinyParticles;
-			uniform float _ShinyParticleScale;
-			uniform float _ShinyParticleInfluence;
-			#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-				sampler2D _TerrainHeightmapTexture;//ASE Terrain Instancing
-				sampler2D _TerrainNormalmapTexture;//ASE Terrain Instancing
-			#endif//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_START( Terrain )//ASE Terrain Instancing
-				UNITY_DEFINE_INSTANCED_PROP( float4, _TerrainPatchInstanceData )//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_END( Terrain)//ASE Terrain Instancing
-			CBUFFER_START( UnityTerrain)//ASE Terrain Instancing
-				#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-					float4 _TerrainHeightmapRecipSize;//ASE Terrain Instancing
-					float4 _TerrainHeightmapScale;//ASE Terrain Instancing
-				#endif//ASE Terrain Instancing
-			CBUFFER_END//ASE Terrain Instancing
 
 
-			float3 PerturbNormal107_g88( float3 surf_pos, float3 surf_norm, float height, float scale )
-			{
-				// "Bump Mapping Unparametrized Surfaces on the GPU" by Morten S. Mikkelsen
-				float3 vSigmaS = ddx( surf_pos );
-				float3 vSigmaT = ddy( surf_pos );
-				float3 vN = surf_norm;
-				float3 vR1 = cross( vSigmaT , vN );
-				float3 vR2 = cross( vN , vSigmaS );
-				float fDet = dot( vSigmaS , vR1 );
-				float dBs = ddx( height );
-				float dBt = ddy( height );
-				float3 vSurfGrad = scale * 0.05 * sign( fDet ) * ( dBs * vR1 + dBt * vR2 );
-				return normalize ( abs( fDet ) * vN - vSurfGrad );
-			}
 			
-			appdata ApplyMeshModification( appdata v ){
-			#ifdef UNITY_INSTANCING_ENABLED
-				float2 patchVertex = v.vertex.xy;
-				float4 instanceData = UNITY_ACCESS_INSTANCED_PROP( Terrain, _TerrainPatchInstanceData );
-				float2 sampleCoords = ( patchVertex.xy + instanceData.xy ) * instanceData.z;
-				v.ase_texcoord = float4( sampleCoords.xy * _TerrainHeightmapRecipSize.z, 0, 0 );
-				float height = UnpackHeightmap( tex2Dlod( _TerrainHeightmapTexture, v.ase_texcoord ) );
-				v.vertex.xz = sampleCoords * _TerrainHeightmapScale.xz;
-				v.vertex.y = height * _TerrainHeightmapScale.y;
-				v.normal = tex2Dlod( _TerrainNormalmapTexture, v.ase_texcoord ).rgb * 2 - 1;
-			#endif
-			return v;
-			}
-			
-
 			v2f VertexFunction (appdata v  ) {
 				UNITY_SETUP_INSTANCE_ID(v);
 				v2f o;
@@ -353,16 +265,10 @@ Shader "SH_SandTerrainFirstPass"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				v = ApplyMeshModification(v);
-				float3 objectToViewPos = UnityObjectToViewPos(v.vertex.xyz);
-				float eyeDepth = -objectToViewPos.z;
-				o.ase_texcoord10.x = eyeDepth;
-				
-				o.ase_texcoord9 = v.vertex;
-				o.ase_texcoord10.yz = v.ase_texcoord.xy;
+				o.ase_texcoord9.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord10.w = 0;
+				o.ase_texcoord9.zw = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
@@ -547,41 +453,20 @@ Shader "SH_SandTerrainFirstPass"
 				float4 ScreenPos = IN.screenPos;
 				#endif
 
-				float4 color108 = IsGammaSpace() ? float4(0,0,0,0) : float4(0,0,0,0);
+				float2 temp_cast_0 = (_PatternScale1).xx;
+				float2 texCoord35 = IN.ase_texcoord9.xy * temp_cast_0 + float2( 0,0 );
+				float4 lerpResult37 = lerp( _BaseColor , _BaseColor1 , tex2D( _PatternAlpha1, texCoord35 ));
+				float4 lerpResult44 = lerp( lerpResult37 , _BaseColor2 , float4( 0,0,0,0 ));
 				
-				float3 surf_pos107_g88 = worldPos;
-				float3 surf_norm107_g88 = WorldNormal;
-				float4 tex2DNode24 = tex2D( _Detail, ( (IN.ase_texcoord9.xyz).xz / _DetailTextureScale ) );
-				float eyeDepth = IN.ase_texcoord10.x;
-				float cameraDepthFade49 = (( eyeDepth -_ProjectionParams.y - 0.0 ) / _DetailFadeDistance);
-				float temp_output_51_0 = saturate( ( 1.0 - cameraDepthFade49 ) );
-				float height107_g88 = ( (-1.0 + (( tex2DNode24.b * _SandTextureInfluence ) - 0.0) * (1.0 - -1.0) / (1.0 - 0.0)) * temp_output_51_0 );
-				float scale107_g88 = 1.0;
-				float3 localPerturbNormal107_g88 = PerturbNormal107_g88( surf_pos107_g88 , surf_norm107_g88 , height107_g88 , scale107_g88 );
-				float3x3 ase_worldToTangent = float3x3(WorldTangent,WorldBiTangent,WorldNormal);
-				float3 worldToTangentDir42_g88 = mul( ase_worldToTangent, localPerturbNormal107_g88);
-				float3 temp_output_61_0_g89 = worldToTangentDir42_g88;
-				
-				float3 desaturateInitialColor81 = SunColor;
-				float desaturateDot81 = dot( desaturateInitialColor81, float3( 0.299, 0.587, 0.114 ));
-				float3 desaturateVar81 = lerp( desaturateInitialColor81, desaturateDot81.xxx, 1.0 );
-				float3 normalizeResult72 = normalize( SunDirection );
-				float fresnelNdotV53 = dot( WorldNormal, normalizeResult72 );
-				float fresnelNode53 = ( _SandShadeBias + _SandShadeScale * pow( 1.0 - fresnelNdotV53, _SandShadePower ) );
-				float3 lerpResult56 = lerp( (_Sand).rgb , (_SandShade).rgb , saturate( fresnelNode53 ));
-				float4 temp_output_60_0_g89 = float4( lerpResult56 , 0.0 );
-				float2 texCoord83 = IN.ase_texcoord10.yz * float2( 1,1 ) + float2( 0,0 );
-				float temp_output_107_0 = ( temp_output_51_0 * ( _Roughness + ( tex2D( _ShinyParticles, ( texCoord83 / _ShinyParticleScale ) ).r * _ShinyParticleInfluence ) ) );
-				
-				o.Albedo = color108.rgb;
-				o.Normal = temp_output_61_0_g89;
-				o.Emission = ( float4( ( desaturateVar81 * _SunColorInfluence ) , 0.0 ) * ( temp_output_60_0_g89 + temp_output_107_0 ) ).xyz;
+				o.Albedo = lerpResult44.rgb;
+				o.Normal = fixed3( 0, 0, 1 );
+				o.Emission = half3( 0, 0, 0 );
 				#if defined(_SPECULAR_SETUP)
 					o.Specular = fixed3( 0, 0, 0 );
 				#else
 					o.Metallic = 0;
 				#endif
-				o.Smoothness = temp_output_107_0;
+				o.Smoothness = _Roughness;
 				o.Occlusion = 1;
 				o.Alpha = 1;
 				float AlphaClipThreshold = 0.5;
@@ -723,9 +608,7 @@ Shader "SH_SandTerrainFirstPass"
 			ENDCG
 		}
 
-		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
-	UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
-
+		
 		Pass
 		{
 			
@@ -736,6 +619,7 @@ Shader "SH_SandTerrainFirstPass"
 
 			CGPROGRAM
 			#define ASE_NEEDS_FRAG_SHADOWCOORDS
+			#pragma multi_compile_instancing
 			#pragma multi_compile __ LOD_FADE_CROSSFADE
 			#pragma multi_compile_fog
 			#define ASE_FOG 1
@@ -763,17 +647,7 @@ Shader "SH_SandTerrainFirstPass"
 			#include "UnityPBSLighting.cginc"
 			#include "AutoLight.cginc"
 
-			#define ASE_NEEDS_FRAG_WORLD_POSITION
-			#define ASE_NEEDS_FRAG_WORLD_NORMAL
-			#define ASE_NEEDS_VERT_POSITION
-			#define ASE_NEEDS_FRAG_WORLD_TANGENT
-			#define ASE_NEEDS_FRAG_WORLD_BITANGENT
-			#define ASE_NEEDS_VERT_NORMAL
-			#pragma multi_compile_instancing
-			#pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
-			#pragma multi_compile_local __ _ALPHATEST_ON
-			#pragma shader_feature_local _MASKMAP
-
+			
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
@@ -808,7 +682,6 @@ Shader "SH_SandTerrainFirstPass"
 				float4 screenPos : TEXCOORD8;
 				#endif
 				float4 ase_texcoord9 : TEXCOORD9;
-				float4 ase_texcoord10 : TEXCOORD10;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -832,79 +705,15 @@ Shader "SH_SandTerrainFirstPass"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			uniform sampler2D _Mask2;
-			uniform sampler2D _Mask0;
-			uniform sampler2D _Mask1;
-			uniform sampler2D _Mask3;
-			uniform float4 _MaskMapRemapScale0;
-			uniform float4 _MaskMapRemapOffset2;
-			uniform float4 _MaskMapRemapScale2;
-			uniform float4 _MaskMapRemapScale1;
-			uniform float4 _MaskMapRemapOffset1;
-			uniform float4 _MaskMapRemapScale3;
-			uniform float4 _MaskMapRemapOffset3;
-			uniform float4 _MaskMapRemapOffset0;
-			uniform sampler2D _Detail;
-			uniform float2 _DetailTextureScale;
-			uniform float _SandTextureInfluence;
-			uniform float _DetailFadeDistance;
-			uniform float3 SunColor;
-			uniform float _SunColorInfluence;
-			uniform float4 _Sand;
-			uniform float4 _SandShade;
-			uniform float3 SunDirection;
-			uniform float _SandShadeBias;
-			uniform float _SandShadeScale;
-			uniform float _SandShadePower;
+			uniform float4 _BaseColor;
+			uniform float4 _BaseColor1;
+			uniform sampler2D _PatternAlpha1;
+			uniform float _PatternScale1;
+			uniform float4 _BaseColor2;
 			uniform float _Roughness;
-			uniform sampler2D _ShinyParticles;
-			uniform float _ShinyParticleScale;
-			uniform float _ShinyParticleInfluence;
-			#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-				sampler2D _TerrainHeightmapTexture;//ASE Terrain Instancing
-				sampler2D _TerrainNormalmapTexture;//ASE Terrain Instancing
-			#endif//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_START( Terrain )//ASE Terrain Instancing
-				UNITY_DEFINE_INSTANCED_PROP( float4, _TerrainPatchInstanceData )//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_END( Terrain)//ASE Terrain Instancing
-			CBUFFER_START( UnityTerrain)//ASE Terrain Instancing
-				#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-					float4 _TerrainHeightmapRecipSize;//ASE Terrain Instancing
-					float4 _TerrainHeightmapScale;//ASE Terrain Instancing
-				#endif//ASE Terrain Instancing
-			CBUFFER_END//ASE Terrain Instancing
 
 
-			float3 PerturbNormal107_g88( float3 surf_pos, float3 surf_norm, float height, float scale )
-			{
-				// "Bump Mapping Unparametrized Surfaces on the GPU" by Morten S. Mikkelsen
-				float3 vSigmaS = ddx( surf_pos );
-				float3 vSigmaT = ddy( surf_pos );
-				float3 vN = surf_norm;
-				float3 vR1 = cross( vSigmaT , vN );
-				float3 vR2 = cross( vN , vSigmaS );
-				float fDet = dot( vSigmaS , vR1 );
-				float dBs = ddx( height );
-				float dBt = ddy( height );
-				float3 vSurfGrad = scale * 0.05 * sign( fDet ) * ( dBs * vR1 + dBt * vR2 );
-				return normalize ( abs( fDet ) * vN - vSurfGrad );
-			}
 			
-			appdata ApplyMeshModification( appdata v ){
-			#ifdef UNITY_INSTANCING_ENABLED
-				float2 patchVertex = v.vertex.xy;
-				float4 instanceData = UNITY_ACCESS_INSTANCED_PROP( Terrain, _TerrainPatchInstanceData );
-				float2 sampleCoords = ( patchVertex.xy + instanceData.xy ) * instanceData.z;
-				v.ase_texcoord = float4( sampleCoords.xy * _TerrainHeightmapRecipSize.z, 0, 0 );
-				float height = UnpackHeightmap( tex2Dlod( _TerrainHeightmapTexture, v.ase_texcoord ) );
-				v.vertex.xz = sampleCoords * _TerrainHeightmapScale.xz;
-				v.vertex.y = height * _TerrainHeightmapScale.y;
-				v.normal = tex2Dlod( _TerrainNormalmapTexture, v.ase_texcoord ).rgb * 2 - 1;
-			#endif
-			return v;
-			}
-			
-
 			v2f VertexFunction (appdata v  ) {
 				UNITY_SETUP_INSTANCE_ID(v);
 				v2f o;
@@ -912,16 +721,10 @@ Shader "SH_SandTerrainFirstPass"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				v = ApplyMeshModification(v);
-				float3 objectToViewPos = UnityObjectToViewPos(v.vertex.xyz);
-				float eyeDepth = -objectToViewPos.z;
-				o.ase_texcoord10.x = eyeDepth;
-				
-				o.ase_texcoord9 = v.vertex;
-				o.ase_texcoord10.yz = v.ase_texcoord.xy;
+				o.ase_texcoord9.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord10.w = 0;
+				o.ase_texcoord9.zw = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
@@ -1087,41 +890,20 @@ Shader "SH_SandTerrainFirstPass"
 				#endif
 
 
-				float4 color108 = IsGammaSpace() ? float4(0,0,0,0) : float4(0,0,0,0);
+				float2 temp_cast_0 = (_PatternScale1).xx;
+				float2 texCoord35 = IN.ase_texcoord9.xy * temp_cast_0 + float2( 0,0 );
+				float4 lerpResult37 = lerp( _BaseColor , _BaseColor1 , tex2D( _PatternAlpha1, texCoord35 ));
+				float4 lerpResult44 = lerp( lerpResult37 , _BaseColor2 , float4( 0,0,0,0 ));
 				
-				float3 surf_pos107_g88 = worldPos;
-				float3 surf_norm107_g88 = WorldNormal;
-				float4 tex2DNode24 = tex2D( _Detail, ( (IN.ase_texcoord9.xyz).xz / _DetailTextureScale ) );
-				float eyeDepth = IN.ase_texcoord10.x;
-				float cameraDepthFade49 = (( eyeDepth -_ProjectionParams.y - 0.0 ) / _DetailFadeDistance);
-				float temp_output_51_0 = saturate( ( 1.0 - cameraDepthFade49 ) );
-				float height107_g88 = ( (-1.0 + (( tex2DNode24.b * _SandTextureInfluence ) - 0.0) * (1.0 - -1.0) / (1.0 - 0.0)) * temp_output_51_0 );
-				float scale107_g88 = 1.0;
-				float3 localPerturbNormal107_g88 = PerturbNormal107_g88( surf_pos107_g88 , surf_norm107_g88 , height107_g88 , scale107_g88 );
-				float3x3 ase_worldToTangent = float3x3(WorldTangent,WorldBiTangent,WorldNormal);
-				float3 worldToTangentDir42_g88 = mul( ase_worldToTangent, localPerturbNormal107_g88);
-				float3 temp_output_61_0_g89 = worldToTangentDir42_g88;
-				
-				float3 desaturateInitialColor81 = SunColor;
-				float desaturateDot81 = dot( desaturateInitialColor81, float3( 0.299, 0.587, 0.114 ));
-				float3 desaturateVar81 = lerp( desaturateInitialColor81, desaturateDot81.xxx, 1.0 );
-				float3 normalizeResult72 = normalize( SunDirection );
-				float fresnelNdotV53 = dot( WorldNormal, normalizeResult72 );
-				float fresnelNode53 = ( _SandShadeBias + _SandShadeScale * pow( 1.0 - fresnelNdotV53, _SandShadePower ) );
-				float3 lerpResult56 = lerp( (_Sand).rgb , (_SandShade).rgb , saturate( fresnelNode53 ));
-				float4 temp_output_60_0_g89 = float4( lerpResult56 , 0.0 );
-				float2 texCoord83 = IN.ase_texcoord10.yz * float2( 1,1 ) + float2( 0,0 );
-				float temp_output_107_0 = ( temp_output_51_0 * ( _Roughness + ( tex2D( _ShinyParticles, ( texCoord83 / _ShinyParticleScale ) ).r * _ShinyParticleInfluence ) ) );
-				
-				o.Albedo = color108.rgb;
-				o.Normal = temp_output_61_0_g89;
-				o.Emission = ( float4( ( desaturateVar81 * _SunColorInfluence ) , 0.0 ) * ( temp_output_60_0_g89 + temp_output_107_0 ) ).xyz;
+				o.Albedo = lerpResult44.rgb;
+				o.Normal = fixed3( 0, 0, 1 );
+				o.Emission = half3( 0, 0, 0 );
 				#if defined(_SPECULAR_SETUP)
 					o.Specular = fixed3( 0, 0, 0 );
 				#else
 					o.Metallic = 0;
 				#endif
-				o.Smoothness = temp_output_107_0;
+				o.Smoothness = _Roughness;
 				o.Occlusion = 1;
 				o.Alpha = 1;
 				float AlphaClipThreshold = 0.5;
@@ -1215,9 +997,7 @@ Shader "SH_SandTerrainFirstPass"
 			ENDCG
 		}
 
-		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
-	UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
-
+		
 		Pass
 		{
 			
@@ -1228,6 +1008,7 @@ Shader "SH_SandTerrainFirstPass"
 
 			CGPROGRAM
 			#define ASE_NEEDS_FRAG_SHADOWCOORDS
+			#pragma multi_compile_instancing
 			#pragma multi_compile __ LOD_FADE_CROSSFADE
 			#pragma multi_compile_fog
 			#define ASE_FOG 1
@@ -1255,17 +1036,7 @@ Shader "SH_SandTerrainFirstPass"
 			#include "Lighting.cginc"
 			#include "UnityPBSLighting.cginc"
 
-			#define ASE_NEEDS_FRAG_WORLD_POSITION
-			#define ASE_NEEDS_FRAG_WORLD_NORMAL
-			#define ASE_NEEDS_VERT_POSITION
-			#define ASE_NEEDS_FRAG_WORLD_TANGENT
-			#define ASE_NEEDS_FRAG_WORLD_BITANGENT
-			#define ASE_NEEDS_VERT_NORMAL
-			#pragma multi_compile_instancing
-			#pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
-			#pragma multi_compile_local __ _ALPHATEST_ON
-			#pragma shader_feature_local _MASKMAP
-
+			
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
@@ -1296,7 +1067,6 @@ Shader "SH_SandTerrainFirstPass"
 				float4 tSpace1 : TEXCOORD6;
 				float4 tSpace2 : TEXCOORD7;
 				float4 ase_texcoord8 : TEXCOORD8;
-				float4 ase_texcoord9 : TEXCOORD9;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -1313,79 +1083,15 @@ Shader "SH_SandTerrainFirstPass"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			uniform sampler2D _Mask2;
-			uniform sampler2D _Mask0;
-			uniform sampler2D _Mask1;
-			uniform sampler2D _Mask3;
-			uniform float4 _MaskMapRemapScale0;
-			uniform float4 _MaskMapRemapOffset2;
-			uniform float4 _MaskMapRemapScale2;
-			uniform float4 _MaskMapRemapScale1;
-			uniform float4 _MaskMapRemapOffset1;
-			uniform float4 _MaskMapRemapScale3;
-			uniform float4 _MaskMapRemapOffset3;
-			uniform float4 _MaskMapRemapOffset0;
-			uniform sampler2D _Detail;
-			uniform float2 _DetailTextureScale;
-			uniform float _SandTextureInfluence;
-			uniform float _DetailFadeDistance;
-			uniform float3 SunColor;
-			uniform float _SunColorInfluence;
-			uniform float4 _Sand;
-			uniform float4 _SandShade;
-			uniform float3 SunDirection;
-			uniform float _SandShadeBias;
-			uniform float _SandShadeScale;
-			uniform float _SandShadePower;
+			uniform float4 _BaseColor;
+			uniform float4 _BaseColor1;
+			uniform sampler2D _PatternAlpha1;
+			uniform float _PatternScale1;
+			uniform float4 _BaseColor2;
 			uniform float _Roughness;
-			uniform sampler2D _ShinyParticles;
-			uniform float _ShinyParticleScale;
-			uniform float _ShinyParticleInfluence;
-			#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-				sampler2D _TerrainHeightmapTexture;//ASE Terrain Instancing
-				sampler2D _TerrainNormalmapTexture;//ASE Terrain Instancing
-			#endif//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_START( Terrain )//ASE Terrain Instancing
-				UNITY_DEFINE_INSTANCED_PROP( float4, _TerrainPatchInstanceData )//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_END( Terrain)//ASE Terrain Instancing
-			CBUFFER_START( UnityTerrain)//ASE Terrain Instancing
-				#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-					float4 _TerrainHeightmapRecipSize;//ASE Terrain Instancing
-					float4 _TerrainHeightmapScale;//ASE Terrain Instancing
-				#endif//ASE Terrain Instancing
-			CBUFFER_END//ASE Terrain Instancing
 
 
-			float3 PerturbNormal107_g88( float3 surf_pos, float3 surf_norm, float height, float scale )
-			{
-				// "Bump Mapping Unparametrized Surfaces on the GPU" by Morten S. Mikkelsen
-				float3 vSigmaS = ddx( surf_pos );
-				float3 vSigmaT = ddy( surf_pos );
-				float3 vN = surf_norm;
-				float3 vR1 = cross( vSigmaT , vN );
-				float3 vR2 = cross( vN , vSigmaS );
-				float fDet = dot( vSigmaS , vR1 );
-				float dBs = ddx( height );
-				float dBt = ddy( height );
-				float3 vSurfGrad = scale * 0.05 * sign( fDet ) * ( dBs * vR1 + dBt * vR2 );
-				return normalize ( abs( fDet ) * vN - vSurfGrad );
-			}
 			
-			appdata ApplyMeshModification( appdata v ){
-			#ifdef UNITY_INSTANCING_ENABLED
-				float2 patchVertex = v.vertex.xy;
-				float4 instanceData = UNITY_ACCESS_INSTANCED_PROP( Terrain, _TerrainPatchInstanceData );
-				float2 sampleCoords = ( patchVertex.xy + instanceData.xy ) * instanceData.z;
-				v.ase_texcoord = float4( sampleCoords.xy * _TerrainHeightmapRecipSize.z, 0, 0 );
-				float height = UnpackHeightmap( tex2Dlod( _TerrainHeightmapTexture, v.ase_texcoord ) );
-				v.vertex.xz = sampleCoords * _TerrainHeightmapScale.xz;
-				v.vertex.y = height * _TerrainHeightmapScale.y;
-				v.normal = tex2Dlod( _TerrainNormalmapTexture, v.ase_texcoord ).rgb * 2 - 1;
-			#endif
-			return v;
-			}
-			
-
 			v2f VertexFunction (appdata v  ) {
 				UNITY_SETUP_INSTANCE_ID(v);
 				v2f o;
@@ -1393,16 +1099,10 @@ Shader "SH_SandTerrainFirstPass"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				v = ApplyMeshModification(v);
-				float3 objectToViewPos = UnityObjectToViewPos(v.vertex.xyz);
-				float eyeDepth = -objectToViewPos.z;
-				o.ase_texcoord9.x = eyeDepth;
-				
-				o.ase_texcoord8 = v.vertex;
-				o.ase_texcoord9.yz = v.ase_texcoord.xy;
+				o.ase_texcoord8.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord9.w = 0;
+				o.ase_texcoord8.zw = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
@@ -1569,41 +1269,20 @@ Shader "SH_SandTerrainFirstPass"
 				float3 worldViewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 				half atten = 1;
 
-				float4 color108 = IsGammaSpace() ? float4(0,0,0,0) : float4(0,0,0,0);
+				float2 temp_cast_0 = (_PatternScale1).xx;
+				float2 texCoord35 = IN.ase_texcoord8.xy * temp_cast_0 + float2( 0,0 );
+				float4 lerpResult37 = lerp( _BaseColor , _BaseColor1 , tex2D( _PatternAlpha1, texCoord35 ));
+				float4 lerpResult44 = lerp( lerpResult37 , _BaseColor2 , float4( 0,0,0,0 ));
 				
-				float3 surf_pos107_g88 = worldPos;
-				float3 surf_norm107_g88 = WorldNormal;
-				float4 tex2DNode24 = tex2D( _Detail, ( (IN.ase_texcoord8.xyz).xz / _DetailTextureScale ) );
-				float eyeDepth = IN.ase_texcoord9.x;
-				float cameraDepthFade49 = (( eyeDepth -_ProjectionParams.y - 0.0 ) / _DetailFadeDistance);
-				float temp_output_51_0 = saturate( ( 1.0 - cameraDepthFade49 ) );
-				float height107_g88 = ( (-1.0 + (( tex2DNode24.b * _SandTextureInfluence ) - 0.0) * (1.0 - -1.0) / (1.0 - 0.0)) * temp_output_51_0 );
-				float scale107_g88 = 1.0;
-				float3 localPerturbNormal107_g88 = PerturbNormal107_g88( surf_pos107_g88 , surf_norm107_g88 , height107_g88 , scale107_g88 );
-				float3x3 ase_worldToTangent = float3x3(WorldTangent,WorldBiTangent,WorldNormal);
-				float3 worldToTangentDir42_g88 = mul( ase_worldToTangent, localPerturbNormal107_g88);
-				float3 temp_output_61_0_g89 = worldToTangentDir42_g88;
-				
-				float3 desaturateInitialColor81 = SunColor;
-				float desaturateDot81 = dot( desaturateInitialColor81, float3( 0.299, 0.587, 0.114 ));
-				float3 desaturateVar81 = lerp( desaturateInitialColor81, desaturateDot81.xxx, 1.0 );
-				float3 normalizeResult72 = normalize( SunDirection );
-				float fresnelNdotV53 = dot( WorldNormal, normalizeResult72 );
-				float fresnelNode53 = ( _SandShadeBias + _SandShadeScale * pow( 1.0 - fresnelNdotV53, _SandShadePower ) );
-				float3 lerpResult56 = lerp( (_Sand).rgb , (_SandShade).rgb , saturate( fresnelNode53 ));
-				float4 temp_output_60_0_g89 = float4( lerpResult56 , 0.0 );
-				float2 texCoord83 = IN.ase_texcoord9.yz * float2( 1,1 ) + float2( 0,0 );
-				float temp_output_107_0 = ( temp_output_51_0 * ( _Roughness + ( tex2D( _ShinyParticles, ( texCoord83 / _ShinyParticleScale ) ).r * _ShinyParticleInfluence ) ) );
-				
-				o.Albedo = color108.rgb;
-				o.Normal = temp_output_61_0_g89;
-				o.Emission = ( float4( ( desaturateVar81 * _SunColorInfluence ) , 0.0 ) * ( temp_output_60_0_g89 + temp_output_107_0 ) ).xyz;
+				o.Albedo = lerpResult44.rgb;
+				o.Normal = fixed3( 0, 0, 1 );
+				o.Emission = half3( 0, 0, 0 );
 				#if defined(_SPECULAR_SETUP)
 					o.Specular = fixed3( 0, 0, 0 );
 				#else
 					o.Metallic = 0;
 				#endif
-				o.Smoothness = temp_output_107_0;
+				o.Smoothness = _Roughness;
 				o.Occlusion = 1;
 				o.Alpha = 1;
 				float AlphaClipThreshold = 0.5;
@@ -1696,9 +1375,7 @@ Shader "SH_SandTerrainFirstPass"
 			ENDCG
 		}
 
-		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
-	UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
-
+		
 		Pass
 		{
 			
@@ -1708,6 +1385,7 @@ Shader "SH_SandTerrainFirstPass"
 
 			CGPROGRAM
 			#define ASE_NEEDS_FRAG_SHADOWCOORDS
+			#pragma multi_compile_instancing
 			#pragma multi_compile __ LOD_FADE_CROSSFADE
 			#pragma multi_compile_fog
 			#define ASE_FOG 1
@@ -1735,13 +1413,7 @@ Shader "SH_SandTerrainFirstPass"
 			#include "UnityPBSLighting.cginc"
 			#include "UnityMetaPass.cginc"
 
-			#define ASE_NEEDS_VERT_NORMAL
-			#define ASE_NEEDS_VERT_POSITION
-			#pragma multi_compile_instancing
-			#pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
-			#pragma multi_compile_local __ _ALPHATEST_ON
-			#pragma shader_feature_local _MASKMAP
-
+			
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
@@ -1762,7 +1434,6 @@ Shader "SH_SandTerrainFirstPass"
 					float4 lightCoord : TEXCOORD2;
 				#endif
 				float4 ase_texcoord3 : TEXCOORD3;
-				float4 ase_texcoord4 : TEXCOORD4;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -1775,61 +1446,14 @@ Shader "SH_SandTerrainFirstPass"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			uniform sampler2D _Mask2;
-			uniform sampler2D _Mask0;
-			uniform sampler2D _Mask1;
-			uniform sampler2D _Mask3;
-			uniform float4 _MaskMapRemapScale0;
-			uniform float4 _MaskMapRemapOffset2;
-			uniform float4 _MaskMapRemapScale2;
-			uniform float4 _MaskMapRemapScale1;
-			uniform float4 _MaskMapRemapOffset1;
-			uniform float4 _MaskMapRemapScale3;
-			uniform float4 _MaskMapRemapOffset3;
-			uniform float4 _MaskMapRemapOffset0;
-			uniform float3 SunColor;
-			uniform float _SunColorInfluence;
-			uniform float4 _Sand;
-			uniform float4 _SandShade;
-			uniform float3 SunDirection;
-			uniform float _SandShadeBias;
-			uniform float _SandShadeScale;
-			uniform float _SandShadePower;
-			uniform float _DetailFadeDistance;
-			uniform float _Roughness;
-			uniform sampler2D _ShinyParticles;
-			uniform float _ShinyParticleScale;
-			uniform float _ShinyParticleInfluence;
-			#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-				sampler2D _TerrainHeightmapTexture;//ASE Terrain Instancing
-				sampler2D _TerrainNormalmapTexture;//ASE Terrain Instancing
-			#endif//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_START( Terrain )//ASE Terrain Instancing
-				UNITY_DEFINE_INSTANCED_PROP( float4, _TerrainPatchInstanceData )//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_END( Terrain)//ASE Terrain Instancing
-			CBUFFER_START( UnityTerrain)//ASE Terrain Instancing
-				#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-					float4 _TerrainHeightmapRecipSize;//ASE Terrain Instancing
-					float4 _TerrainHeightmapScale;//ASE Terrain Instancing
-				#endif//ASE Terrain Instancing
-			CBUFFER_END//ASE Terrain Instancing
+			uniform float4 _BaseColor;
+			uniform float4 _BaseColor1;
+			uniform sampler2D _PatternAlpha1;
+			uniform float _PatternScale1;
+			uniform float4 _BaseColor2;
 
 
-			appdata ApplyMeshModification( appdata v ){
-			#ifdef UNITY_INSTANCING_ENABLED
-				float2 patchVertex = v.vertex.xy;
-				float4 instanceData = UNITY_ACCESS_INSTANCED_PROP( Terrain, _TerrainPatchInstanceData );
-				float2 sampleCoords = ( patchVertex.xy + instanceData.xy ) * instanceData.z;
-				v.ase_texcoord = float4( sampleCoords.xy * _TerrainHeightmapRecipSize.z, 0, 0 );
-				float height = UnpackHeightmap( tex2Dlod( _TerrainHeightmapTexture, v.ase_texcoord ) );
-				v.vertex.xz = sampleCoords * _TerrainHeightmapScale.xz;
-				v.vertex.y = height * _TerrainHeightmapScale.y;
-				v.normal = tex2Dlod( _TerrainNormalmapTexture, v.ase_texcoord ).rgb * 2 - 1;
-			#endif
-			return v;
-			}
 			
-
 			v2f VertexFunction (appdata v  ) {
 				UNITY_SETUP_INSTANCE_ID(v);
 				v2f o;
@@ -1837,17 +1461,10 @@ Shader "SH_SandTerrainFirstPass"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				v = ApplyMeshModification(v);
-				float3 ase_worldNormal = UnityObjectToWorldNormal(v.normal);
-				o.ase_texcoord3.xyz = ase_worldNormal;
-				float3 objectToViewPos = UnityObjectToViewPos(v.vertex.xyz);
-				float eyeDepth = -objectToViewPos.z;
-				o.ase_texcoord3.w = eyeDepth;
-				
-				o.ase_texcoord4.xy = v.ase_texcoord.xy;
+				o.ase_texcoord3.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord4.zw = 0;
+				o.ase_texcoord3.zw = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
@@ -1987,26 +1604,14 @@ Shader "SH_SandTerrainFirstPass"
 					SurfaceOutputStandard o = (SurfaceOutputStandard)0;
 				#endif
 
-				float4 color108 = IsGammaSpace() ? float4(0,0,0,0) : float4(0,0,0,0);
+				float2 temp_cast_0 = (_PatternScale1).xx;
+				float2 texCoord35 = IN.ase_texcoord3.xy * temp_cast_0 + float2( 0,0 );
+				float4 lerpResult37 = lerp( _BaseColor , _BaseColor1 , tex2D( _PatternAlpha1, texCoord35 ));
+				float4 lerpResult44 = lerp( lerpResult37 , _BaseColor2 , float4( 0,0,0,0 ));
 				
-				float3 desaturateInitialColor81 = SunColor;
-				float desaturateDot81 = dot( desaturateInitialColor81, float3( 0.299, 0.587, 0.114 ));
-				float3 desaturateVar81 = lerp( desaturateInitialColor81, desaturateDot81.xxx, 1.0 );
-				float3 normalizeResult72 = normalize( SunDirection );
-				float3 ase_worldNormal = IN.ase_texcoord3.xyz;
-				float fresnelNdotV53 = dot( ase_worldNormal, normalizeResult72 );
-				float fresnelNode53 = ( _SandShadeBias + _SandShadeScale * pow( 1.0 - fresnelNdotV53, _SandShadePower ) );
-				float3 lerpResult56 = lerp( (_Sand).rgb , (_SandShade).rgb , saturate( fresnelNode53 ));
-				float4 temp_output_60_0_g89 = float4( lerpResult56 , 0.0 );
-				float eyeDepth = IN.ase_texcoord3.w;
-				float cameraDepthFade49 = (( eyeDepth -_ProjectionParams.y - 0.0 ) / _DetailFadeDistance);
-				float temp_output_51_0 = saturate( ( 1.0 - cameraDepthFade49 ) );
-				float2 texCoord83 = IN.ase_texcoord4.xy * float2( 1,1 ) + float2( 0,0 );
-				float temp_output_107_0 = ( temp_output_51_0 * ( _Roughness + ( tex2D( _ShinyParticles, ( texCoord83 / _ShinyParticleScale ) ).r * _ShinyParticleInfluence ) ) );
-				
-				o.Albedo = color108.rgb;
+				o.Albedo = lerpResult44.rgb;
 				o.Normal = fixed3( 0, 0, 1 );
-				o.Emission = ( float4( ( desaturateVar81 * _SunColorInfluence ) , 0.0 ) * ( temp_output_60_0_g89 + temp_output_107_0 ) ).xyz;
+				o.Emission = half3( 0, 0, 0 );
 				o.Alpha = 1;
 				float AlphaClipThreshold = 0.5;
 
@@ -2031,9 +1636,7 @@ Shader "SH_SandTerrainFirstPass"
 			ENDCG
 		}
 
-		UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
-	UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
-
+		
 		Pass
 		{
 			
@@ -2045,6 +1648,7 @@ Shader "SH_SandTerrainFirstPass"
 
 			CGPROGRAM
 			#define ASE_NEEDS_FRAG_SHADOWCOORDS
+			#pragma multi_compile_instancing
 			#pragma multi_compile __ LOD_FADE_CROSSFADE
 			#pragma multi_compile_fog
 			#define ASE_FOG 1
@@ -2074,26 +1678,20 @@ Shader "SH_SandTerrainFirstPass"
 			#include "Lighting.cginc"
 			#include "UnityPBSLighting.cginc"
 
-			#define ASE_NEEDS_VERT_NORMAL
-			#define ASE_NEEDS_VERT_POSITION
-			#pragma multi_compile_instancing
-			#pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
-			#pragma multi_compile_local __ _ALPHATEST_ON
-			#pragma shader_feature_local _MASKMAP
-
+			
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				float4 ase_texcoord : TEXCOORD0;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
 			struct v2f {
 				V2F_SHADOW_CASTER;
-				float4 ase_texcoord2 : TEXCOORD2;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -2109,48 +1707,9 @@ Shader "SH_SandTerrainFirstPass"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			uniform sampler2D _Mask2;
-			uniform sampler2D _Mask0;
-			uniform sampler2D _Mask1;
-			uniform sampler2D _Mask3;
-			uniform float4 _MaskMapRemapScale0;
-			uniform float4 _MaskMapRemapOffset2;
-			uniform float4 _MaskMapRemapScale2;
-			uniform float4 _MaskMapRemapScale1;
-			uniform float4 _MaskMapRemapOffset1;
-			uniform float4 _MaskMapRemapScale3;
-			uniform float4 _MaskMapRemapOffset3;
-			uniform float4 _MaskMapRemapOffset0;
-			#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-				sampler2D _TerrainHeightmapTexture;//ASE Terrain Instancing
-				sampler2D _TerrainNormalmapTexture;//ASE Terrain Instancing
-			#endif//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_START( Terrain )//ASE Terrain Instancing
-				UNITY_DEFINE_INSTANCED_PROP( float4, _TerrainPatchInstanceData )//ASE Terrain Instancing
-			UNITY_INSTANCING_BUFFER_END( Terrain)//ASE Terrain Instancing
-			CBUFFER_START( UnityTerrain)//ASE Terrain Instancing
-				#ifdef UNITY_INSTANCING_ENABLED//ASE Terrain Instancing
-					float4 _TerrainHeightmapRecipSize;//ASE Terrain Instancing
-					float4 _TerrainHeightmapScale;//ASE Terrain Instancing
-				#endif//ASE Terrain Instancing
-			CBUFFER_END//ASE Terrain Instancing
-
-
-			appdata ApplyMeshModification( appdata v ){
-			#ifdef UNITY_INSTANCING_ENABLED
-				float2 patchVertex = v.vertex.xy;
-				float4 instanceData = UNITY_ACCESS_INSTANCED_PROP( Terrain, _TerrainPatchInstanceData );
-				float2 sampleCoords = ( patchVertex.xy + instanceData.xy ) * instanceData.z;
-				v.ase_texcoord = float4( sampleCoords.xy * _TerrainHeightmapRecipSize.z, 0, 0 );
-				float height = UnpackHeightmap( tex2Dlod( _TerrainHeightmapTexture, v.ase_texcoord ) );
-				v.vertex.xz = sampleCoords * _TerrainHeightmapScale.xz;
-				v.vertex.y = height * _TerrainHeightmapScale.y;
-				v.normal = tex2Dlod( _TerrainNormalmapTexture, v.ase_texcoord ).rgb * 2 - 1;
-			#endif
-			return v;
-			}
 			
 
+			
 			v2f VertexFunction (appdata v  ) {
 				UNITY_SETUP_INSTANCE_ID(v);
 				v2f o;
@@ -2158,8 +1717,7 @@ Shader "SH_SandTerrainFirstPass"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				v = ApplyMeshModification(v);
-				o.ase_texcoord2 = v.ase_texcoord;
+				
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
@@ -2187,8 +1745,7 @@ Shader "SH_SandTerrainFirstPass"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				float4 ase_texcoord : TEXCOORD0;
-
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -2208,7 +1765,7 @@ Shader "SH_SandTerrainFirstPass"
 				o.normal = v.normal;
 				o.texcoord1 = v.texcoord1;
 				o.texcoord2 = v.texcoord2;
-				o.ase_texcoord = v.ase_texcoord;
+				
 				return o;
 			}
 
@@ -2250,7 +1807,7 @@ Shader "SH_SandTerrainFirstPass"
 				o.normal = patch[0].normal * bary.x + patch[1].normal * bary.y + patch[2].normal * bary.z;
 				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
 				o.texcoord2 = patch[0].texcoord2 * bary.x + patch[1].texcoord2 * bary.y + patch[2].texcoord2 * bary.z;
-				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
@@ -2334,114 +1891,43 @@ Shader "SH_SandTerrainFirstPass"
 }
 /*ASEBEGIN
 Version=19108
-Node;AmplifyShaderEditor.CommentaryNode;105;369.5587,-1239.948;Inherit;False;554.3773;419.5102;SandColors;4;55;14;58;57;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;96;534.8562,-266.7217;Inherit;False;871.7434;210.9867;Camera distance mask;4;50;49;52;51;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;95;1275.338,-3.008278;Inherit;False;1228.862;523.7977;Shiny PArticles;8;46;87;83;84;88;85;82;89;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.DesaturateOpNode;81;2590.065,-1035.083;Inherit;True;2;0;FLOAT3;0,0,0;False;1;FLOAT;1;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SimpleDivideOpNode;26;318.8853,-497.2329;Inherit;False;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.SwizzleNode;8;120.1552,-498.4067;Inherit;False;FLOAT2;0;2;2;3;1;0;FLOAT3;0,0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.PosVertexDataNode;48;-241.8911,-576.5784;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector2Node;73;12.89317,-365.2007;Inherit;False;Property;_DetailTextureScale;DetailTextureScale;27;0;Create;True;0;0;0;False;0;False;0,0;5.5,32.8;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
-Node;AmplifyShaderEditor.RangedFloatNode;41;1267.819,-367.8964;Inherit;False;Property;_SandTextureInfluence;SandTextureInfluence;36;0;Create;True;0;0;0;False;0;False;0;1.2;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;39;1597.051,-442.3283;Inherit;True;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;75;2203.696,-312.1063;Inherit;False;Normal From Height;-1;;88;1942fe2c5f1a1f94881a33d532e4afeb;0;2;20;FLOAT;0;False;110;FLOAT;1;False;2;FLOAT3;40;FLOAT3;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;65;2041.88,-302.6973;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.TFHCRemapNode;64;1823.153,-416.6229;Inherit;False;5;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;-1;False;4;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;46;1943.156,69.97663;Inherit;False;Property;_Roughness;Roughness;37;0;Create;True;0;0;0;False;0;False;0;0.42;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;87;2352.2,46.99172;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.TextureCoordinatesNode;83;1325.338,191.7793;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SimpleDivideOpNode;84;1667.026,188.4437;Inherit;False;2;0;FLOAT2;0,0;False;1;FLOAT;0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;88;2199.967,203.0082;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;85;1391.522,335.4064;Inherit;False;Property;_ShinyParticleScale;ShinyParticleScale;25;0;Create;True;0;0;0;False;0;False;0;0.005;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SamplerNode;82;1815.932,182.5197;Inherit;True;Property;_ShinyParticles;ShinyParticles;26;0;Create;True;0;0;0;False;0;False;-1;None;42249e2b82201a544b388419e993a1f0;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;89;1868.637,405.7895;Inherit;False;Property;_ShinyParticleInfluence;ShinyParticleInfluence;24;0;Create;True;0;0;0;False;0;False;0;0.38;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;47;2642.459,-593.6083;Inherit;False;Four Splats First Pass Terrain;0;;89;37452fdfb732e1443b7e39720d05b708;2,102,0,85,0;7;59;FLOAT4;0,0,0,0;False;60;FLOAT4;0,0,0,0;False;61;FLOAT3;0,0,0;False;57;FLOAT;0;False;58;FLOAT;0;False;201;FLOAT;0;False;62;FLOAT;0;False;7;FLOAT4;0;FLOAT3;14;FLOAT;56;FLOAT;45;FLOAT;200;FLOAT;19;FLOAT3;17
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;79;3021.424,-923.0844;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.RangedFloatNode;50;584.856,-196.9731;Inherit;False;Property;_DetailFadeDistance;DetailFadeDistance;32;0;Create;True;0;0;0;False;0;False;0;233;0;1000;0;1;FLOAT;0
-Node;AmplifyShaderEditor.CameraDepthFade;49;866.3068,-211.735;Inherit;False;3;2;FLOAT3;0,0,0;False;0;FLOAT;1;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.OneMinusNode;52;1101.248,-214.142;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SaturateNode;51;1239.933,-216.7217;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SamplerNode;24;504.8871,-512.6872;Inherit;True;Property;_Detail;Detail;35;0;Create;True;0;0;0;False;0;False;-1;None;98b64212b777b704896163bb7d44c346;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.ComponentMaskNode;92;881.4679,-586.422;Inherit;True;True;True;True;False;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.UnpackScaleNormalNode;94;1195.842,-582.2442;Inherit;False;Tangent;2;0;FLOAT4;0,0,0,0;False;1;FLOAT;2;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.Vector3Node;91;1171.431,-719.9967;Inherit;False;Constant;_Vector6;Vector 6;16;0;Create;True;0;0;0;False;0;False;0.5,0.5,1;0,0,0;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.LerpOp;90;1463.158,-609.8141;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.LerpOp;106;2122.368,-150.7234;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;107;2551.046,-199.356;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.Vector3Node;77;2365.151,-1043.634;Inherit;False;Global;SunColor;SunColor;28;0;Create;True;0;0;0;True;0;False;0,0,0;0.73,0.3438484,0.2061176;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.RangedFloatNode;80;2584.798,-827.1965;Inherit;False;Property;_SunColorInfluence;SunColorInfluence;28;0;Create;True;0;0;0;False;0;False;0;0.436;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;109;3127.641,-598.5028;Inherit;False;2;2;0;FLOAT4;0,0,0,0;False;1;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.NormalizeNode;72;1250.525,-1530.691;Inherit;False;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.FresnelNode;53;1493.961,-1418.795;Inherit;False;Standard;WorldNormal;ViewDir;False;False;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;5;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SaturateNode;62;1819.616,-1373.686;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;59;920.6975,-1377.001;Inherit;False;Property;_SandShadeBias;SandShadeBias;31;0;Create;True;0;0;0;False;0;False;0;-2.2;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;60;914.5884,-1293.514;Inherit;False;Property;_SandShadeScale;SandShadeScale;30;0;Create;True;0;0;0;False;0;False;0;6.17;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;61;1000.249,-1221.255;Inherit;False;Property;_SandShadePower;SandShadePower;29;0;Create;True;0;0;0;False;0;False;0;1.01;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;55;421.0009,-1027.438;Inherit;False;Property;_SandShade;SandShade;34;0;Create;True;0;0;0;False;0;False;0,0,0,0;1,0.0604129,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.ColorNode;14;419.5587,-1189.948;Inherit;False;Property;_Sand;Sand;33;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.8196079,0.3389304,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.ComponentMaskNode;58;698.6289,-1048.22;Inherit;False;True;True;True;False;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.ComponentMaskNode;57;699.2698,-1153.995;Inherit;False;True;True;True;False;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.Vector3Node;71;967.5944,-1529.544;Inherit;False;Global;SunDirection;SunDirection;28;0;Create;True;0;0;0;True;0;False;0,0,0;27.4,171.18,354.598;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.LerpOp;56;1993.857,-1114.442;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;78;3341.677,-779.0145;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;117;3933.829,-619.4575;Float;False;False;-1;2;ASEMaterialInspector;0;1;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ExtraPrePass;0;0;ExtraPrePass;6;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;118;3933.829,-619.4575;Float;False;True;-1;2;ASEMaterialInspector;0;4;SH_SandTerrainFirstPass;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardBase;0;1;ForwardBase;18;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;40;Workflow,InvertActionOnDeselection;1;0;Surface;0;0;  Blend;0;0;  Refraction Model;0;0;  Dither Shadows;1;0;Two Sided;1;0;Deferred Pass;1;0;Transmission;0;0;  Transmission Shadow;0.5,False,;0;Translucency;0;0;  Translucency Strength;1,False,;0;  Normal Distortion;0.5,False,;0;  Scattering;2,False,;0;  Direct;0.9,False,;0;  Ambient;0.1,False,;0;  Shadow;0.5,False,;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;Receive Shadows;1;0;GPU Instancing;1;0;LOD CrossFade;1;0;Built-in Fog;1;0;Ambient Light;1;0;Meta Pass;1;0;Add Pass;1;0;Override Baked GI;0;0;Extra Pre Pass;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,;0;  Type;0;0;  Tess;16,False,;0;  Min;10,False,;0;  Max;25,False,;0;  Edge Length;16,False,;0;  Max Displacement;25,False,;0;Fwd Specular Highlights Toggle;0;0;Fwd Reflections Toggle;0;0;Disable Batching;0;0;Vertex Position,InvertActionOnDeselection;1;0;0;6;False;True;True;True;True;True;True;;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;119;3933.829,-619.4575;Float;False;False;-1;2;ASEMaterialInspector;0;1;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardAdd;0;2;ForwardAdd;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;4;1;False;;1;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;True;1;LightMode=ForwardAdd;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;120;3933.829,-619.4575;Float;False;False;-1;2;ASEMaterialInspector;0;1;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Deferred;0;3;Deferred;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Deferred;True;2;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;121;3933.829,-619.4575;Float;False;False;-1;2;ASEMaterialInspector;0;1;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Meta;0;4;Meta;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;122;3933.829,-619.4575;Float;False;False;-1;2;ASEMaterialInspector;0;1;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ShadowCaster;0;5;ShadowCaster;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;;True;3;False;;False;True;1;LightMode=ShadowCaster;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.ColorNode;108;3274.982,-1031.466;Inherit;False;Constant;_Color0;Color 0;15;0;Create;True;0;0;0;False;0;False;0,0,0,0;0,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-WireConnection;81;0;77;0
-WireConnection;26;0;8;0
-WireConnection;26;1;73;0
-WireConnection;8;0;48;0
-WireConnection;39;0;24;3
-WireConnection;39;1;41;0
-WireConnection;75;20;65;0
-WireConnection;65;0;64;0
-WireConnection;65;1;51;0
-WireConnection;64;0;39;0
-WireConnection;87;0;46;0
-WireConnection;87;1;88;0
-WireConnection;84;0;83;0
-WireConnection;84;1;85;0
-WireConnection;88;0;82;1
-WireConnection;88;1;89;0
-WireConnection;82;1;84;0
-WireConnection;47;60;56;0
-WireConnection;47;61;75;40
-WireConnection;47;58;107;0
-WireConnection;79;0;81;0
-WireConnection;79;1;80;0
-WireConnection;49;0;50;0
-WireConnection;52;0;49;0
-WireConnection;51;0;52;0
-WireConnection;24;1;26;0
-WireConnection;92;0;24;0
-WireConnection;94;0;92;0
-WireConnection;90;0;91;0
-WireConnection;90;1;94;0
-WireConnection;90;2;51;0
-WireConnection;107;0;51;0
-WireConnection;107;1;87;0
-WireConnection;109;0;47;0
-WireConnection;109;1;107;0
-WireConnection;72;0;71;0
-WireConnection;53;4;72;0
-WireConnection;53;1;59;0
-WireConnection;53;2;60;0
-WireConnection;53;3;61;0
-WireConnection;62;0;53;0
-WireConnection;58;0;55;0
-WireConnection;57;0;14;0
-WireConnection;56;0;57;0
-WireConnection;56;1;58;0
-WireConnection;56;2;62;0
-WireConnection;78;0;79;0
-WireConnection;78;1;109;0
-WireConnection;118;0;108;0
-WireConnection;118;1;47;14
-WireConnection;118;2;78;0
-WireConnection;118;5;47;45
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ExtraPrePass;0;0;ExtraPrePass;6;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardAdd;0;2;ForwardAdd;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;4;1;False;;1;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;True;1;LightMode=ForwardAdd;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Deferred;0;3;Deferred;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Deferred;True;2;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Meta;0;4;Meta;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;5;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ShadowCaster;0;5;ShadowCaster;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;;True;3;False;;False;True;1;LightMode=ShadowCaster;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;-85,-66;Float;False;True;-1;2;ASEMaterialInspector;0;4;SH_Crystals;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardBase;0;1;ForwardBase;18;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;40;Workflow,InvertActionOnDeselection;1;0;Surface;0;0;  Blend;0;0;  Refraction Model;0;0;  Dither Shadows;1;0;Two Sided;1;0;Deferred Pass;1;0;Transmission;0;0;  Transmission Shadow;0.5,False,;0;Translucency;0;0;  Translucency Strength;1,False,;0;  Normal Distortion;0.5,False,;0;  Scattering;2,False,;0;  Direct;0.9,False,;0;  Ambient;0.1,False,;0;  Shadow;0.5,False,;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;Receive Shadows;1;0;GPU Instancing;1;0;LOD CrossFade;1;0;Built-in Fog;1;0;Ambient Light;1;0;Meta Pass;1;0;Add Pass;1;0;Override Baked GI;0;0;Extra Pre Pass;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,;0;  Type;0;0;  Tess;16,False,;0;  Min;10,False,;0;  Max;25,False,;0;  Edge Length;16,False,;0;  Max Displacement;25,False,;0;Fwd Specular Highlights Toggle;0;0;Fwd Reflections Toggle;0;0;Disable Batching;0;0;Vertex Position,InvertActionOnDeselection;1;0;0;6;False;True;True;True;True;True;False;;False;0
+Node;AmplifyShaderEditor.ColorNode;15;-1487.642,81.39413;Inherit;False;Property;_PaternColor;Patern Color;6;0;Create;True;0;0;0;False;0;False;0.6980392,0.8627452,0.8980393,1;1,1,1,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TextureCoordinatesNode;32;-1707.349,514.2683;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;33;-1892.349,534.2683;Inherit;False;Property;_NormalScale;Normal Scale;10;0;Create;True;0;0;0;False;0;False;1;5.6;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SamplerNode;31;-1450.215,488.7045;Inherit;True;Property;_Normal;Normal;9;0;Create;True;0;0;0;False;0;False;-1;969a5ea5264ae2e4cb261f0dfbdb7877;None;True;0;True;bump;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SamplerNode;6;-1475.607,278.7403;Inherit;True;Property;_PatternAlpha;Pattern Alpha;4;0;Create;True;0;0;0;False;0;False;-1;6aee247fd792b224c82c6a7750ef6e2b;596805a25b337ce4797911d55518e143;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TextureCoordinatesNode;25;-1724.369,300.4496;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;26;-1894.369,325.4496;Inherit;False;Property;_PatternScale;Pattern Scale;7;0;Create;True;0;0;0;False;0;False;1;10.62;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.LerpOp;14;-1050.642,114.3941;Inherit;True;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.RangedFloatNode;17;-491.0926,46.76143;Inherit;False;Property;_Roughness;Roughness;0;0;Create;True;0;0;0;False;0;False;0;1;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SamplerNode;34;-1857.961,-889.6084;Inherit;True;Property;_PatternAlpha1;Pattern Alpha;5;0;Create;True;0;0;0;False;0;False;-1;6aee247fd792b224c82c6a7750ef6e2b;5c03517380701c24e88fce764468afa0;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TextureCoordinatesNode;35;-2106.723,-867.8991;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;36;-2276.723,-842.8991;Inherit;False;Property;_PatternScale1;Pattern Scale;8;0;Create;True;0;0;0;False;0;False;1;3.69;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.LerpOp;37;-1505.796,-1052.655;Inherit;True;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.ColorNode;13;-1876.38,-1309.939;Inherit;False;Property;_BaseColor;Base Color;1;0;Create;True;0;0;0;False;0;False;0,1,0.9447041,1;0,0.3607841,1,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.ColorNode;38;-1870.162,-1137.278;Inherit;False;Property;_BaseColor1;Base Color;2;0;Create;True;0;0;0;False;0;False;0,1,0.9447041,1;0.7764707,0.8980393,0.937255,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.ColorNode;43;-1604.215,-535.6157;Inherit;False;Property;_BaseColor2;Base Color;3;0;Create;True;0;0;0;False;0;False;0,1,0.9447041,1;1,1,1,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.LerpOp;44;-1123.353,-611.6924;Inherit;True;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;1;COLOR;0
+WireConnection;1;0;44;0
+WireConnection;1;5;17;0
+WireConnection;32;0;33;0
+WireConnection;31;1;32;0
+WireConnection;6;1;25;0
+WireConnection;25;0;26;0
+WireConnection;14;1;15;0
+WireConnection;14;2;6;0
+WireConnection;34;1;35;0
+WireConnection;35;0;36;0
+WireConnection;37;0;13;0
+WireConnection;37;1;38;0
+WireConnection;37;2;34;0
+WireConnection;44;0;37;0
+WireConnection;44;1;43;0
 ASEEND*/
-//CHKSM=71459A7CFF894AD519338574987FE3B7A55F25F1
+//CHKSM=6B8974974EC594E48F7321EF017CD3B5E11502A1
