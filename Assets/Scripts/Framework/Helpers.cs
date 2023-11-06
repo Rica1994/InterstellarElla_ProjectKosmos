@@ -19,14 +19,26 @@ public class Helpers
       yield return new WaitForSeconds(time);
       action.Invoke();
    }
-   
-   /// <summary>
-   /// Calls DoAfter but uses a given monobehaviour to execute it.
-   /// </summary>
-   /// <param name="time"></param>
-   /// <param name="action"></param>
-   /// <param name="mono"></param>
-   public static void DoAfter(float time, Action action, MonoBehaviour mono)
+
+    /// <summary>
+    /// Executes an action after time
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="action"></param>
+    /// <returns></returns>
+    public static IEnumerator DoAfterUnscaledTime(float unscaledTime, Action action)
+    {
+        yield return new WaitForSecondsRealtime(unscaledTime);
+        action.Invoke();
+    }
+
+    /// <summary>
+    /// Calls DoAfter but uses a given monobehaviour to execute it.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="action"></param>
+    /// <param name="mono"></param>
+    public static void DoAfter(float time, Action action, MonoBehaviour mono)
    {
       mono.StartCoroutine(DoAfter(time, action));
    }
@@ -118,30 +130,39 @@ public class Helpers
         return percentage.ToString("D3");
     }
 
-    public static void FadeImage(Image[] images, float targetAlpha ,float time)
+    public static void FadeImage(Image[] images, float targetAlpha ,float time, bool isIndependantTimeScale = false)
     {
         for (int i = 0; i < images.Length; i++)
         {
             var imageColor = images[i].color;
-            images[i].DOColor(new Color(imageColor.r, imageColor.g, imageColor.b, targetAlpha), time);
+            images[i].DOColor(new Color(imageColor.r, imageColor.g, imageColor.b, targetAlpha), time).SetUpdate(isIndependantTimeScale);
         }
     }
 
-    public static void FadeText(TMP_Text[] texts, float targetAlpha, float time)
+    public static void FadeText(TMP_Text[] texts, float targetAlpha, float time, bool isIndependantTimeScale = false)
     {
         for (int i = 0; i < texts.Length; i++)
         {
             var textColor = texts[i].color;
-            texts[i].DOColor(new Color(textColor.r, textColor.g, textColor.b, targetAlpha), time);
+            texts[i].DOColor(new Color(textColor.r, textColor.g, textColor.b, targetAlpha), time).SetUpdate(isIndependantTimeScale);
         }
     }
 
-    public static void FadeImage(GameObject[] gameObjects, float targetAlpha ,float time)
+    public static void FadeImage(GameObject[] gameObjects, float targetAlpha ,float time, bool isIndependantTimeScale = false)
     {
         for (int i = 0; i < gameObjects.Length; i++)
         {
             var images = gameObjects[i].GetComponentsInChildren<Image>();
-            FadeImage(images, targetAlpha ,time);
+            FadeImage(images, targetAlpha ,time, isIndependantTimeScale);
+        }
+    }
+
+    public static void FadeText(GameObject[] gameObjects, float targetAlpha, float time, bool isIndependantTimeScale = false)
+    {
+        for (int i = 0; i < gameObjects.Length; i++)
+        {
+            var texts = gameObjects[i].GetComponentsInChildren<TMP_Text>();
+            FadeText(texts, targetAlpha, time, isIndependantTimeScale);
         }
     }
 }

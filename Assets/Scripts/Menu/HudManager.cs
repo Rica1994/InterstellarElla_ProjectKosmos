@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class HudManager : Service
 {
@@ -10,7 +11,13 @@ public class HudManager : Service
     [SerializeField] private TouchButton _touchButton;
 
     [SerializeField]
+    private Button _pauseScreenButton;
+
+    [SerializeField]
     private GameObject _scoreCanvas;
+
+    [SerializeField]
+    private PauseMenu _pauseMenu;
 
     [SerializeField]
     private TMP_Text _pickupsCollectedText;
@@ -25,8 +32,15 @@ public class HudManager : Service
         var gameManager = ServiceLocator.Instance.GetService<GameManager>();
         var currentPlanet = gameManager.GetCurrentPlanet();
 
+        GameManager.CutsceneStartedEvent += OnCutSceneStarted;
+        GameManager.CutsceneEndedEvent += OnCutSceneEnded;
+
         var isCurrentPlanetNone = currentPlanet == GameManager.Planet.None;
         _scoreCanvas.SetActive(!isCurrentPlanetNone);
+        _pauseMenu.gameObject.SetActive(true);
+        _pauseMenu.Show(false, 0.0f);
+
+        _pauseScreenButton.onClick.AddListener(OpenPauseMenu);
 
         if (!gameManager.IsMobileWebGl || isCurrentPlanetNone)
         {
@@ -35,11 +49,22 @@ public class HudManager : Service
         }
     }
 
+    private void OnCutSceneEnded()
+    {
+        _pauseScreenButton.gameObject.SetActive(true);
+    }
+
+    private void OnCutSceneStarted()
+    {
+        _pauseScreenButton.gameObject.SetActive(false);
+    }
+
     public void Initialize(GameManager.Planet currentPlanet)
     {
         ServiceLocator.Instance.GetService<PickUpManager>().PickUpPickedUpEvent += OnPickupPickedUp;
-        
+
         _pickupsCollectedText.text = GameManager.Data.CurrentScore.ToString();
+        _pauseScreenButton.gameObject.SetActive(true);
 
         switch (currentPlanet)
         {
@@ -58,6 +83,9 @@ public class HudManager : Service
             case GameManager.Planet.Mercury:
                 _pickupsNeededText.text = GameManager.MERCURY_DATA_NEEDED.ToString();
                 break;
+            case GameManager.Planet.None:
+                _pauseScreenButton.gameObject.SetActive(false);
+                break;
         }
     }
 
@@ -69,5 +97,10 @@ public class HudManager : Service
     public void SetScore(int pickupsCollected)
     {
         _pickupsCollectedText.text = pickupsCollected.ToString();
+    }
+
+    private void OpenPauseMenu()
+    {
+        _pauseMenu.Show(!_pauseMenu.gameObject.activeSelf);
     }
 }

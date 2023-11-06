@@ -128,6 +128,7 @@ public class SpeederGround : PlayerController, IVehicle, IElla
 
     private Vector3 _previousMoonscooterPosition;
     private Vector3 _previousEllaRyderPosition;
+    private Vector3 _previousVisualPosition;
 
     // store a new checkpoint gameobject on here when entering trigger
     // call Gamemanager.respawn if...
@@ -149,6 +150,7 @@ public class SpeederGround : PlayerController, IVehicle, IElla
         {
             _previousMoonscooterPosition = _moonscooterTransform.localPosition;
             _previousEllaRyderPosition = _ellaRyderTransform.localPosition;
+            _previousVisualPosition = _visual.localPosition;
         }
 
         Initialize();
@@ -182,6 +184,7 @@ public class SpeederGround : PlayerController, IVehicle, IElla
         {
             _moonscooterTransform.localPosition = _previousMoonscooterPosition;
             _ellaRyderTransform.localPosition = _previousEllaRyderPosition;
+            _visual.localPosition = _previousVisualPosition;
 
             if (moveDirection.z < 0f)
             {

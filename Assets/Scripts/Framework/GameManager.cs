@@ -9,6 +9,14 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Service
 {
+    #region Events
+
+    public delegate void GameEvent();
+    public static event GameEvent CutsceneStartedEvent;
+    public static event GameEvent CutsceneEndedEvent;
+
+    #endregion
+
     #region StructsAndEnums
 
     public struct SaveData
@@ -98,17 +106,40 @@ public class GameManager : Service
     public static bool IsShittyDevice = false;
 
     private static bool _isInCutScene = false;
+    private static bool _isGameplayPaused = false;
+
     public static bool IsInCutscene
     {
         get => _isInCutScene;
         set
         {
+            var wasNotInCutScene = _isInCutScene;
             _isInCutScene = value;
             var audioController = ServiceLocator.Instance.GetService<AudioController>();
             if (audioController != null)
             {
                 audioController.MixerAdjustment(value ? MixerType.MixerFXMuted : MixerType.MixerNormal);
             }
+
+            if (wasNotInCutScene && _isInCutScene)
+            {
+                CutsceneStartedEvent?.Invoke();
+            }
+            else if (wasNotInCutScene == false && _isInCutScene == false)
+            {
+                CutsceneEndedEvent?.Invoke();
+            }
+        }
+    }
+
+    public static bool IsGamePlayPaused
+    {
+        get => _isGameplayPaused;
+        set 
+        {
+            ServiceLocator.Instance.GetService<SoundtrackManager>().PauseInSceneAudioSources(value);
+            Time.timeScale = value ? 0 : 1;
+            _isGameplayPaused = value; 
         }
     }
 

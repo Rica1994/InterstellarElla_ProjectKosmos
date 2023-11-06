@@ -5,7 +5,7 @@ using UnityCore.Audio;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[DefaultExecutionOrder(-100)]
+[DefaultExecutionOrder(-101)]
 public class PickUpManager : Service
 {
     #region Events
@@ -98,11 +98,6 @@ public class PickUpManager : Service
             }
         }
     }
-
-
-
-
-
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
