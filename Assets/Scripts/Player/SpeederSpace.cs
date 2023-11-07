@@ -54,8 +54,7 @@ public class SpeederSpace : PlayerController, IVehicle
 
     public bool IsBoosting => _boostComponent.IsTicking;
 
-    [Header("Inversion of controls")]
-    public bool InvertControls;
+    public bool InvertControls { get; set; }
 
     [Header("Magnet")]
     [SerializeField]
