@@ -8,4 +8,20 @@ public class SetQuality : MonoBehaviour
     {
         QualitySettings.SetQualityLevel(1);
     }
+
+    public void ToggleQuality()
+    {
+        // Toggle the quality settings to either low (0) or high (1)
+        if (QualitySettings.GetQualityLevel() > 0)
+        {
+            QualitySettings.SetQualityLevel(0);
+        }
+        else
+        {
+            QualitySettings.SetQualityLevel(1);
+        }
+
+        // Toggle the features based on the quality settings
+        GetComponent<QualitySettingsManager>().ToggleFeatures();
+    }
 }

@@ -9,12 +9,14 @@ public class QualitySettingsManager : MonoBehaviour
 
     private void Start()
     {
-        if (QualitySettings.GetQualityLevel() > 0)
+        ToggleFeatures();
+    }
+
+    public void ToggleFeatures()
+    {
+        for (int i = 0; i < _features.Count; ++i)
         {
-            for (int i = 0; i < _features.Count; ++i)
-            {
-                _features[i].SetActive(true);
-            }
+            _features[i].SetActive(QualitySettings.GetQualityLevel() != 0);
         }
     }
 }
