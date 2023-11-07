@@ -207,13 +207,10 @@ namespace UnityCore
                 // showcase the UI_persistent(pause_button) when needed
                 if (m_TargetScene == SceneType.S_MainMenu)
                 {
-                    _pageController.ShowPauseButton(false);
                     ServiceLocator.Instance.GetService<GameManager>().SetPlayerController(null);
                 }
                 else
                 {
-                    _pageController.ShowPauseButton(true);
-
                     var playerController = FindObjectOfType<PlayerController>();
                     ServiceLocator.Instance.GetService<GameManager>().SetPlayerController(playerController);
                 }

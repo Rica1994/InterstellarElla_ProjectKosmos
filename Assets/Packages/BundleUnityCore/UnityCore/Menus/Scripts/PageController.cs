@@ -18,9 +18,6 @@ namespace UnityCore
 
             public IEnumerator ButtonRunner = null;
 
-            [SerializeField]
-            private ButtonReferencesUI _buttonReferencesUI;
-
             #region Unity Functions
 
             protected override void OnEnable()
@@ -161,26 +158,6 @@ namespace UnityCore
                 {
                     RegisterPage(pageToRegister);
                 }       
-            }
-
-            public void ShowPauseButton(bool isShown = true)
-            {
-                if (isShown == true)
-                {
-                    _buttonReferencesUI.ButtonPause.EnableButton();
-
-                    // do below thing different later date
-                    _buttonReferencesUI.ButtonContinue.EnableButton();
-                    _buttonReferencesUI.ButtonBack.EnableButton();
-                }
-                else
-                {
-                    _buttonReferencesUI.ButtonPause.DisableButton(true);
-
-                    // do below thing different later date
-                    _buttonReferencesUI.ButtonContinue.DisableButton(true);
-                    _buttonReferencesUI.ButtonBack.DisableButton(true);
-                }
             }
 
             #endregion
