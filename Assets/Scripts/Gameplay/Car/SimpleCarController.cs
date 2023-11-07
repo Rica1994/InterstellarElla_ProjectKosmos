@@ -199,7 +199,7 @@ public class SimpleCarController : PlayerController, IVehicle
 
         var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
         touchButton.Pressed += OnTouchButtonPressed;
-        touchButton.CooldownLength = -1.0f;
+        touchButton.CooldownLength = 0.5f;
     }
 
     private void OnActionStarted(InputAction.CallbackContext obj)

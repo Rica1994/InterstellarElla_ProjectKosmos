@@ -122,10 +122,7 @@ public class SpeederGround : PlayerController, IVehicle, IElla
     private Transform _moonscooterTransform;
     [SerializeField]
     private Transform _ellaRyderTransform;
-
-    [SerializeField]
-    private TouchButton _speederGroundButton;
-
+    
     private Vector3 _previousMoonscooterPosition;
     private Vector3 _previousEllaRyderPosition;
     private Vector3 _previousVisualPosition;
@@ -158,11 +155,6 @@ public class SpeederGround : PlayerController, IVehicle, IElla
 
     public void Initialize()
     {
-        if (_speederGroundButton != null)
-        {
-            _speederGroundButton.Pressed += OnPressed;
-        }
-
         _characterController = GetComponent<CharacterController>();
         // Fixes character controller not grounded bug
         _characterController.minMoveDistance = 0f;
@@ -209,10 +201,6 @@ public class SpeederGround : PlayerController, IVehicle, IElla
         _audioController = ServiceLocator.Instance.GetService<AudioController>();
 
         _playerPositionWorldForward = this.transform.position.z;
-
-        var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
-        touchButton.CooldownLength = -1.0f;
-        touchButton.Pressed += OnTouchButtonPressed;
     }
 
     protected override void OnEnable()
@@ -228,7 +216,6 @@ public class SpeederGround : PlayerController, IVehicle, IElla
 
         var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
         touchButton.Pressed += OnTouchButtonPressed;
-        touchButton.CooldownLength = -1.0f;
     }
 
     private void OnTouchButtonPressed()
@@ -251,6 +238,9 @@ public class SpeederGround : PlayerController, IVehicle, IElla
         playerInput.Move.performed -= OnMoveInput;
         playerInput.Move.canceled -= OnMoveInput;
         playerInput.Action.started -= OnJumpInput;
+
+        var touchButton = ServiceLocator.Instance.GetService<HudManager>().TouchButton;
+        touchButton.Pressed -= OnTouchButtonPressed;
     }
     private void FixedUpdate()
     {
@@ -612,11 +602,6 @@ public class SpeederGround : PlayerController, IVehicle, IElla
     {
         JumpInput();
     }
-    private void OnPressed()
-    {
-        JumpInput();
-    }
-
     private void JumpInput()
     {
         // if I'm in a trigger of an auto jump...
