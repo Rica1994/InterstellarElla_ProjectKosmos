@@ -7,6 +7,7 @@ public class Service : MonoBehaviour
 {
     private bool _isApplicationQuitting = false;
     protected bool _isDestroyed = false;
+    public bool IsDestroyed => _isDestroyed;
 
     virtual protected void OnEnable()
     {

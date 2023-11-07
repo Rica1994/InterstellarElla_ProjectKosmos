@@ -9,32 +9,20 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Service
 {
-    [SerializeField]
-    private bool _simulateMobile = false;
+    #region Events
 
-    private PlayerController _playerController;
+    public delegate void GameEvent();
+    public static event GameEvent CutsceneStartedEvent;
+    public static event GameEvent CutsceneEndedEvent;
 
-    public static bool IsShittyDevice = false;
+    #endregion
 
-    private static bool _isInCutScene = false;
-    public static bool IsInCutscene
-    {
-        get => _isInCutScene;
-        set
-        {
-            _isInCutScene = value;
-            var audioController = ServiceLocator.Instance.GetService<AudioController>();
-            if (audioController != null)
-            {
-                audioController.MixerAdjustment(value ? MixerType.MixerFXMuted : MixerType.MixerNormal);
-            }
-        }
-    }
+    #region StructsAndEnums
 
     public struct SaveData
     {
         public PlanetCompletionValues PlanetCompletionValues;
-        public float CurrentScore;
+        public int CurrentScore;
         public int LastPlanet;
         //   public bool IsShittyDevice;
 
@@ -79,6 +67,29 @@ public class GameManager : Service
         Mercury = 5,
         None = 0
     }
+    public enum BuildType
+    {
+        Debug,
+        Client
+    }
+
+    public static int MARS_DATA_NEEDED = 250;
+    public static int PLUTO_DATA_NEEDED = 250;
+    public static int VENUS_DATA_NEEDED = 250;
+    public static int SATURN_DATA_NEEDED = 250;
+    public static int MERCURY_DATA_NEEDED = 250;
+
+    #endregion
+
+
+    [SerializeField]
+    private bool _simulateMobile = false;
+
+    [SerializeField]
+    private BuildType _targetBuildType = BuildType.Debug;
+    public BuildType TargetBuildType => _targetBuildType;
+
+    private PlayerController _playerController;
 
     private bool _isMobile = false;
     public bool IsMobileWebGl => _isMobile;
@@ -91,6 +102,48 @@ public class GameManager : Service
 
     public static SaveData Data;
     public PlayerController PlayerController => _playerController;
+
+    public static bool IsShittyDevice = false;
+
+    private static bool _isInCutScene = false;
+    private static bool _isGameplayPaused = false;
+
+    public static bool IsInCutscene
+    {
+        get => _isInCutScene;
+        set
+        {
+            var wasNotInCutScene = _isInCutScene;
+            _isInCutScene = value;
+            var audioController = ServiceLocator.Instance.GetService<AudioController>();
+            if (audioController != null)
+            {
+                audioController.MixerAdjustment(value ? MixerType.MixerFXMuted : MixerType.MixerNormal);
+            }
+
+            if (wasNotInCutScene && _isInCutScene)
+            {
+                CutsceneStartedEvent?.Invoke();
+            }
+            else if (wasNotInCutScene == false && _isInCutScene == false)
+            {
+                CutsceneEndedEvent?.Invoke();
+            }
+        }
+    }
+
+    public static bool IsGamePlayPaused
+    {
+        get => _isGameplayPaused;
+        set 
+        {
+            ServiceLocator.Instance.GetService<SoundtrackManager>().PauseInSceneAudioSources(value);
+            Time.timeScale = value ? 0 : 1;
+            _isGameplayPaused = value; 
+        }
+    }
+
+    private bool _isInitalized = false;
 
 #if !UNITY_EDITOR && UNITY_WEBGL
     [System.Runtime.InteropServices.DllImport("__Internal")]
@@ -123,12 +176,32 @@ public class GameManager : Service
 #endif
     }
 
+    private void Initialize()
+    {
+        var hud = ServiceLocator.Instance.GetService<HudManager>();
+        var pickupManager = ServiceLocator.Instance.GetService<PickUpManager>();
+        var currentPlanet = GetCurrentPlanet();
+
+        switch (currentPlanet)
+        {
+            case Planet.Mars:
+            case Planet.Pluto:
+            case Planet.Venus:
+            case Planet.Saturn:
+            case Planet.Mercury:
+                hud.Initialize(currentPlanet);
+                pickupManager.PickUpsPickedUp = Data.CurrentScore;
+                break;
+        }
+    }
+
     protected override void Awake()
     {
         base.Awake();
         if (_isDestroyed) return;
 
         PlayerController.PlayerControllerEnabledEvent += OnPlayerControllerEnabled;
+
 #if UNITY_EDITOR
         Data = new SaveData();
         //ParseData(Data.ToString());
@@ -144,6 +217,17 @@ public class GameManager : Service
             Debug.Log("?data= not found in URL");
         }
 #endif
+    }   
+
+    private void Start()
+    {
+        Initialize();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        Initialize();
     }
 
     private void OnPlayerControllerEnabled(PlayerController controller)
@@ -213,7 +297,7 @@ public class GameManager : Service
         Debug.Log($"You collected {pickUpsCollected} / {pickUpManager.PickUps.Count} this level.");
 
         // Add the collected pickups of the last level, to the current score.
-        Data.CurrentScore += pickUpsCollected;
+        Data.CurrentScore = pickUpsCollected;
 
         if (isLastLevel)
         {
@@ -244,34 +328,42 @@ public class GameManager : Service
                     break;
             }
 
-            Data.CurrentScore = 0.0f;
+            Data.CurrentScore = 0;
         }
     }
 
-    public float ConvertPlanetScoreToPercentage(float score)
+    public int ConvertPlanetScoreToPercentage(float score)
     {
         float scoreRecalculated = 0.0f;
         switch (GetCurrentPlanet())
         {
             case Planet.Venus:
                 scoreRecalculated = score / 250.0f;
-                return (Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f)) * 100.0f;
+                scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
+                break;
             case Planet.Saturn:
                 scoreRecalculated = score / 250.0f;
-                return (Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f)) * 100.0f;
+                scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
+                break;
             case Planet.Mars:
                 scoreRecalculated = score / 250.0f;
-                return (Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f)) * 100.0f;
+                scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
+                break;
             case Planet.Pluto:
                 scoreRecalculated = score / 250.0f;
-                return (Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f)) * 100.0f;
+                scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
+                break;
             case Planet.Mercury:
                 scoreRecalculated = score / 250.0f;
-                return (Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f)) * 100.0f;
+                scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
+                break;
             default:
                 Debug.LogError("This is being called from a wrong scene, this should only be called from the end of a level");
-                return 0.0f;
+                scoreRecalculated = 0;
+                break;
         }
+
+        return (int)scoreRecalculated;
     }
 
     public Planet GetCurrentPlanet()

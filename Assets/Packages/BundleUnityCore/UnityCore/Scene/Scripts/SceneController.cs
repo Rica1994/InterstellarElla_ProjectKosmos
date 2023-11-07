@@ -130,7 +130,7 @@ namespace UnityCore
             private IEnumerator WebGLLoadingDelay(SceneType scene, SceneLoadDelegate sceneLoadDelegate, bool reload,
     PageType loadingPage, float timeDelay)
             {
-                // Pause for the specified timeDelay
+                // OpenPauseMenu for the specified timeDelay
                 yield return new WaitForSeconds(timeDelay);
 
                 

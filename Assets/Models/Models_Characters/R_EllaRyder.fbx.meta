@@ -1,14 +1,27 @@
 fileFormatVersion: 2
 guid: 58794c735b9c9c24c85fc1e35c87b7c9
 ModelImporter:
-  serializedVersion: 20300
-  internalIDToNameTable: []
+  serializedVersion: 19301
+  internalIDToNameTable:
+  - first:
+      74: 1827226128182048838
+    second: Take 001
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: ColorPallet
     second: {fileID: 2100000, guid: 1f3ed2c538a6ff54bbf759fdacbc19f3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Ella_Pallet
+    second: {fileID: 2100000, guid: 1f3ed2c538a6ff54bbf759fdacbc19f3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Emissive
+    second: {fileID: 2100000, guid: 1eeafa2ef0543aa4f92b7b450257289c, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -53,7 +66,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -79,19 +92,15 @@ ModelImporter:
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
-    bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
-    maxBonesPerVertex: 4
+    maxBonesPerVertex: 199
     minBoneWeight: 0.001
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
-    secondaryUVMarginMethod: 1
-    secondaryUVMinLightmapResolution: 40
-    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
@@ -106,8 +115,1970 @@ ModelImporter:
   importAnimation: 1
   humanDescription:
     serializedVersion: 3
-    human: []
-    skeleton: []
+    human:
+    - boneName: mixamorig:Hips
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftUpLeg
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightUpLeg
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftLeg
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightLeg
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftFoot
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightFoot
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:Spine
+      humanName: Spine
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:Spine1
+      humanName: Chest
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:Neck
+      humanName: Neck
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:Head
+      humanName: Head
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftShoulder
+      humanName: LeftShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightShoulder
+      humanName: RightShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftArm
+      humanName: LeftUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightArm
+      humanName: RightUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftForeArm
+      humanName: LeftLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightForeArm
+      humanName: RightLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHand
+      humanName: LeftHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHand
+      humanName: RightHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftToeBase
+      humanName: LeftToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightToeBase
+      humanName: RightToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandThumb1
+      humanName: Left Thumb Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandThumb2
+      humanName: Left Thumb Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandThumb3
+      humanName: Left Thumb Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandIndex1
+      humanName: Left Index Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandIndex2
+      humanName: Left Index Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandMiddle1
+      humanName: Left Middle Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandMiddle2
+      humanName: Left Middle Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandMiddle3
+      humanName: Left Middle Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandRing1
+      humanName: Left Ring Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandRing2
+      humanName: Left Ring Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandRing3
+      humanName: Left Ring Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandPinky1
+      humanName: Left Little Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandPinky2
+      humanName: Left Little Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:LeftHandPinky3
+      humanName: Left Little Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandThumb1
+      humanName: Right Thumb Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandThumb2
+      humanName: Right Thumb Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandThumb3
+      humanName: Right Thumb Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandIndex1
+      humanName: Right Index Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandIndex2
+      humanName: Right Index Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandMiddle1
+      humanName: Right Middle Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandMiddle2
+      humanName: Right Middle Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandMiddle3
+      humanName: Right Middle Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandRing1
+      humanName: Right Ring Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandRing2
+      humanName: Right Ring Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandRing3
+      humanName: Right Ring Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandPinky1
+      humanName: Right Little Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandPinky2
+      humanName: Right Little Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:RightHandPinky3
+      humanName: Right Little Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mixamorig:Spine2
+      humanName: UpperChest
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftEyeLid_JNT
+      humanName: LeftEye
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightEyeLid_JNT
+      humanName: RightEye
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: R_EllaRyder(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:rig_C_001_GRUP
+      parentName: R_EllaRyder(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:tech_C_001_GRUP
+      parentName: VFXRig:rig_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:root_C_001_JNT
+      parentName: VFXRig:tech_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:flight_C_001_JNT
+      parentName: VFXRig:root_C_001_JNT
+      position: {x: -0, y: 0.6178452, z: 0.0005110812}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:masterScale_C_001_GRUP
+      parentName: VFXRig:flight_C_001_JNT
+      position: {x: -0, y: -0.0061784517, z: -0.000005110812}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:lowerBack_C_001_GRUP
+      parentName: VFXRig:masterScale_C_001_GRUP
+      position: {x: -0, y: 0.00006178459, z: 0.000000051108106}
+      rotation: {x: -0.018793521, y: 0, z: -0, w: 0.9998234}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowerBack_C_001_JNT
+      parentName: VFXRig:lowerBack_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKFKleg_L_001_GRUP
+      parentName: VFXRig:lowerBack_C_001_JNT
+      position: {x: -0, y: -0.0061738957, z: -0.0002372959}
+      rotation: {x: 0.018793521, y: -0, z: -0, w: 0.9998234}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKupperLeg_L_001_GRUP
+      parentName: VFXRig:IKFKleg_L_001_GRUP
+      position: {x: -0.0004721226, y: 0.00589898, z: 0.000097449316}
+      rotation: {x: 0.01360522, y: -0.01360522, z: 0.7069759, w: 0.7069759}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKupperLeg_L_001_JNT
+      parentName: VFXRig:IKupperLeg_L_001_GRUP
+      position: {x: -0, y: -6.938894e-20, z: 3.469447e-20}
+      rotation: {x: 0.1734501, y: -1.7704382e-13, z: 0.0029063472, w: 0.98483837}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKknee_L_001_JNT
+      parentName: VFXRig:IKupperLeg_L_001_JNT
+      position: {x: -0.002819387, y: -1.4641065e-17, z: 6.938894e-20}
+      rotation: {x: 7.505899e-15, y: -0.017088136, z: -3.6036365e-13, w: 0.999854}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKankle_L_001_JNT
+      parentName: VFXRig:IKknee_L_001_JNT
+      position: {x: -0.0027111636, y: 4.718448e-18, z: -2.879641e-18}
+      rotation: {x: -0.1354177, y: 0.6288301, z: -0.10842247, w: 0.75794417}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperLeg_L_001_GRUP
+      parentName: VFXRig:IKFKleg_L_001_GRUP
+      position: {x: -0.0004721226, y: 0.00589898, z: 0.000097449316}
+      rotation: {x: 0.01360522, y: -0.01360522, z: 0.7069759, w: 0.7069759}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperLeg_L_001_JNT
+      parentName: VFXRig:FKupperLeg_L_001_GRUP
+      position: {x: -1.110223e-18, y: -6.938894e-20, z: 8.673617e-20}
+      rotation: {x: -2.118523e-33, y: 3.469447e-18, z: 1.19166915e-33, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKknee_L_001_JNT
+      parentName: VFXRig:FKupperLeg_L_001_JNT
+      position: {x: -0.002819387, y: -1.4571677e-17, z: 2.0816681e-19}
+      rotation: {x: -4.789536e-34, y: -0.017060423, z: 3.9358754e-32, w: 0.9998545}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKankle_L_001_JNT
+      parentName: VFXRig:FKknee_L_001_JNT
+      position: {x: -0.0027111636, y: 4.510281e-18, z: -2.9143353e-18}
+      rotation: {x: -2.3017668e-32, y: 0.63851094, z: 2.7605045e-32, w: 0.7696127}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:upperLegOffset_L_001_GRUP
+      parentName: VFXRig:lowerBack_C_001_JNT
+      position: {x: -0.0004721226, y: -0.00028274488, z: 0.0000817706}
+      rotation: {x: 0.026889386, y: -0.026889386, z: 0.70659536, w: 0.70659536}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:upperLeg_L_001_JNT
+      parentName: VFXRig:upperLegOffset_L_001_GRUP
+      position: {x: -0, y: -6.938894e-20, z: 3.469447e-20}
+      rotation: {x: 0.17345008, y: -6.245028e-11, z: 0.002906347, w: 0.98483837}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:knee_L_001_JNT
+      parentName: VFXRig:upperLeg_L_001_JNT
+      position: {x: -0.002819387, y: -1.4641065e-17, z: 6.938894e-20}
+      rotation: {x: 7.505899e-15, y: -0.017088136, z: -3.6036365e-13, w: 0.999854}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:ankle_L_001_JNT
+      parentName: VFXRig:knee_L_001_JNT
+      position: {x: -0.0027111636, y: 4.718448e-18, z: -2.879641e-18}
+      rotation: {x: -0.1354177, y: 0.6288301, z: -0.108422466, w: 0.75794417}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKFKleg_R_001_GRUP
+      parentName: VFXRig:lowerBack_C_001_JNT
+      position: {x: -0, y: -0.0061738957, z: -0.0002372959}
+      rotation: {x: 0.018793521, y: -0, z: -0, w: 0.9998234}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKupperLeg_R_001_GRUP
+      parentName: VFXRig:IKFKleg_R_001_GRUP
+      position: {x: 0.00047212298, y: 0.00589898, z: 0.0000974493}
+      rotation: {x: 0.70697594, y: -0.70697594, z: -0.013605221, w: -0.013605221}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKupperLeg_R_001_JNT
+      parentName: VFXRig:IKupperLeg_R_001_GRUP
+      position: {x: 1.110223e-18, y: 6.938894e-20, z: -1.7347234e-20}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKknee_R_001_JNT
+      parentName: VFXRig:IKupperLeg_R_001_JNT
+      position: {x: 0.0028193875, y: 1.9428903e-18, z: -2.2391521e-11}
+      rotation: {x: -1.0194891e-15, y: -0.017088136, z: 2.0902183e-14, w: 0.999854}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKankle_R_001_JNT
+      parentName: VFXRig:IKknee_R_001_JNT
+      position: {x: 0.0027111631, y: 2.2898349e-18, z: 3.497162e-11}
+      rotation: {x: -0.0000000057340688, y: 0.63851094, z: 0.000000004757269, w: 0.7696127}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperLeg_R_001_GRUP
+      parentName: VFXRig:IKFKleg_R_001_GRUP
+      position: {x: 0.00047212298, y: 0.00589898, z: 0.0000974493}
+      rotation: {x: 0.70697594, y: -0.70697594, z: -0.013605221, w: -0.013605221}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperLeg_R_001_JNT
+      parentName: VFXRig:FKupperLeg_R_001_GRUP
+      position: {x: -0, y: 2.0816681e-19, z: -1.04083406e-19}
+      rotation: {x: 0, y: 0, z: 2.4651903e-32, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKknee_R_001_JNT
+      parentName: VFXRig:FKupperLeg_R_001_JNT
+      position: {x: 0.0028193875, y: 2.0122792e-18, z: -2.2391521e-11}
+      rotation: {x: 3.9437306e-31, y: -0.017060423, z: 6.7291505e-33, w: 0.9998545}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKankle_R_001_JNT
+      parentName: VFXRig:FKknee_R_001_JNT
+      position: {x: 0.0027111631, y: 2.4980017e-18, z: 3.497162e-11}
+      rotation: {x: -7.5889674e-32, y: 0.63851094, z: 6.296204e-32, w: 0.7696127}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:upperLegOffset_R_001_GRUP
+      parentName: VFXRig:lowerBack_C_001_JNT
+      position: {x: 0.00047212298, y: -0.00028274467, z: 0.00008177059}
+      rotation: {x: 0.70659536, y: -0.70659536, z: -0.026889386, w: -0.026889386}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:upperLeg_R_001_JNT
+      parentName: VFXRig:upperLegOffset_R_001_GRUP
+      position: {x: 1.110223e-18, y: 6.938894e-20, z: -1.7347234e-20}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:knee_R_001_JNT
+      parentName: VFXRig:upperLeg_R_001_JNT
+      position: {x: 0.0028193875, y: 1.9428903e-18, z: -2.2391521e-11}
+      rotation: {x: -1.0194807e-15, y: -0.017088136, z: 2.1202202e-14, w: 0.999854}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:ankle_R_001_JNT
+      parentName: VFXRig:knee_R_001_JNT
+      position: {x: 0.0027111631, y: 2.2898349e-18, z: 3.497162e-11}
+      rotation: {x: -0.0000000057340688, y: 0.63851094, z: 0.0000000047572657, w: 0.7696127}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:hip_C_001_JNT
+      parentName: VFXRig:masterScale_C_001_GRUP
+      position: {x: -0, y: 0.000061784514, z: 0.000000051108117}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:spineDriver_C_001_JNT
+      parentName: VFXRig:hip_C_001_JNT
+      position: {x: -0, y: 6.6999795e-11, z: -1.2303876e-14}
+      rotation: {x: -0.018793521, y: 0, z: -0, w: 0.9998234}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:spineDriver_C_002_JNT
+      parentName: VFXRig:spineDriver_C_001_JNT
+      position: {x: -0, y: 0.0002925558, z: 1.0547119e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:spineDriver_C_003_JNT
+      parentName: VFXRig:spineDriver_C_002_JNT
+      position: {x: -0, y: 0.0002925558, z: -8.326672e-18}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:spineDriver_C_004_JNT
+      parentName: VFXRig:spineDriver_C_003_JNT
+      position: {x: -0, y: 0.0002925558, z: 1.2698175e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:spineDriver_C_005_JNT
+      parentName: VFXRig:spineDriver_C_004_JNT
+      position: {x: -0, y: 0.0002925558, z: -2.3477747e-16}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:SpineChainSquash_C_005_GRUP
+      parentName: VFXRig:spineDriver_C_005_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:YROTfkCtr01_C_005_GRUP
+      parentName: VFXRig:SpineChainSquash_C_005_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:YROTfkCtr02_C_005_GRUP
+      parentName: VFXRig:YROTfkCtr01_C_005_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:SpineChain_C_005_JNT
+      parentName: VFXRig:YROTfkCtr02_C_005_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:SpineChainSquash_C_003_GRUP
+      parentName: VFXRig:spineDriver_C_003_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:YROTfkCtr01_C_003_GRUP
+      parentName: VFXRig:SpineChainSquash_C_003_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:SpineChain_C_003_JNT
+      parentName: VFXRig:YROTfkCtr01_C_003_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:neck_C_001_JNT
+      parentName: VFXRig:masterScale_C_001_GRUP
+      position: {x: -0, y: 0.0019609109, z: -0.00007136927}
+      rotation: {x: 0.02010652, y: -0, z: -0, w: 0.9997978}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:head_C_001_JNT
+      parentName: VFXRig:neck_C_001_JNT
+      position: {x: -6.5787003e-21, y: 0.0011733624, z: 5.551115e-19}
+      rotation: {x: 0.019478926, y: -0, z: -0, w: 0.9998103}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:clavicle_L_001_JNT
+      parentName: VFXRig:masterScale_C_001_GRUP
+      position: {x: -0.00024489308, y: 0.0016252616, z: 0.00000078080467}
+      rotation: {x: 0.004880889, y: -0.12484408, z: -0.038759924, w: 0.991407}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:clavicle_R_001_JNT
+      parentName: VFXRig:masterScale_C_001_GRUP
+      position: {x: 0.000244893, y: 0.0016252627, z: 0.00000078080603}
+      rotation: {x: 0.991407, y: 0.038759924, z: -0.12484408, w: -0.004880889}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKFKarm_L_001_GRUP
+      parentName: VFXRig:masterScale_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKupperArm_L_001_GRUP
+      parentName: VFXRig:IKFKarm_L_001_GRUP
+      position: {x: -0.0007060567, y: 0.0016625397, z: -0.000117235766}
+      rotation: {x: 0, y: 0, z: 0.0030670438, w: 0.9999953}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKupperArm_L_001_JNT
+      parentName: VFXRig:IKupperArm_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -1.2239864e-16, y: 1.3520465e-28, z: 4.0213907e-18, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKelbow_L_001_JNT
+      parentName: VFXRig:IKupperArm_L_001_JNT
+      position: {x: -0.0019234339, y: -1.9984014e-17, z: -2.602085e-19}
+      rotation: {x: -1.3278367e-14, y: 0.035626996, z: -3.5850928e-13, w: 0.99936515}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKwrist_L_001_JNT
+      parentName: VFXRig:IKelbow_L_001_JNT
+      position: {x: -0.0016440841, y: 1.110223e-18, z: -4.8745727e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperArm_L_001_GRUP
+      parentName: VFXRig:IKFKarm_L_001_GRUP
+      position: {x: -0.0007060567, y: 0.0016625397, z: -0.000117235766}
+      rotation: {x: 0, y: 0, z: 0.0030670438, w: 0.9999953}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperArm_L_001_JNT
+      parentName: VFXRig:FKupperArm_L_001_GRUP
+      position: {x: -1.3877787e-19, y: -1.110223e-18, z: 6.938894e-20}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKelbow_L_001_JNT
+      parentName: VFXRig:FKupperArm_L_001_JNT
+      position: {x: -0.0019234339, y: -2.2204459e-17, z: -2.94903e-19}
+      rotation: {x: 0, y: 0.035581023, z: -0, w: 0.9993668}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKwrist_L_001_JNT
+      parentName: VFXRig:FKelbow_L_001_JNT
+      position: {x: -0.0016440841, y: 0, z: -4.8849813e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:upperArmOffset_L_001_GRUP
+      parentName: VFXRig:masterScale_C_001_GRUP
+      position: {x: -0.0007060567, y: 0.0016625397, z: -0.000117235766}
+      rotation: {x: 0, y: 0, z: 0.0030670438, w: 0.9999953}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:upperArmFkClavConst_L_001_GRUP
+      parentName: VFXRig:upperArmOffset_L_001_GRUP
+      position: {x: -1.3877787e-19, y: 0, z: -6.938894e-20}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:upperArm_L_001_JNT
+      parentName: VFXRig:upperArmFkClavConst_L_001_GRUP
+      position: {x: -1.3877787e-19, y: -1.110223e-18, z: 6.938894e-20}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:elbow_L_001_JNT
+      parentName: VFXRig:upperArm_L_001_JNT
+      position: {x: -0.0019234339, y: -2.2204459e-17, z: -2.94903e-19}
+      rotation: {x: 0, y: 0.035581023, z: -0, w: 0.9993668}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:wrist_L_001_JNT
+      parentName: VFXRig:elbow_L_001_JNT
+      position: {x: -0.0016440841, y: 0, z: -4.8849813e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKFKarm_R_001_GRUP
+      parentName: VFXRig:masterScale_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKupperArm_R_001_GRUP
+      parentName: VFXRig:IKFKarm_R_001_GRUP
+      position: {x: 0.000706057, y: 0.0016625426, z: -0.0001172357}
+      rotation: {x: 0.9999953, y: -0.0030670438, z: -1.8575356e-17, w: 6.0564084e-15}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKupperArm_R_001_JNT
+      parentName: VFXRig:IKupperArm_R_001_GRUP
+      position: {x: -0, y: 0, z: -1.7347234e-20}
+      rotation: {x: -0.0000000839185, y: -5.7710306e-14, z: 0.0000000027571323, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKelbow_R_001_JNT
+      parentName: VFXRig:IKupperArm_R_001_JNT
+      position: {x: 0.0019234292, y: 0.0000000015722768, z: 3.469447e-20}
+      rotation: {x: 0.0000003030026, y: 0.035626985, z: 0.00000006501284, w: 0.99936515}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKwrist_R_001_JNT
+      parentName: VFXRig:IKelbow_R_001_JNT
+      position: {x: 0.0016440836, y: 6.290793e-10, z: 3.968708e-11}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperArm_R_001_GRUP
+      parentName: VFXRig:IKFKarm_R_001_GRUP
+      position: {x: 0.000706057, y: 0.0016625426, z: -0.0001172357}
+      rotation: {x: 0.9999953, y: -0.0030670438, z: -1.8575356e-17, w: 6.0564084e-15}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperArm_R_001_JNT
+      parentName: VFXRig:FKupperArm_R_001_GRUP
+      position: {x: -4.1633362e-19, y: 4.440892e-18, z: -2.2551404e-19}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKelbow_R_001_JNT
+      parentName: VFXRig:FKupperArm_R_001_JNT
+      position: {x: 0.0019234292, y: 0.0000000015722768, z: 1.561251e-19}
+      rotation: {x: 0, y: 0.035581023, z: -0, w: 0.9993668}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKwrist_R_001_JNT
+      parentName: VFXRig:FKelbow_R_001_JNT
+      position: {x: 0.0016440836, y: 6.290793e-10, z: 3.968708e-11}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:upperArmOffset_R_001_GRUP
+      parentName: VFXRig:masterScale_C_001_GRUP
+      position: {x: 0.000706057, y: 0.0016625426, z: -0.0001172357}
+      rotation: {x: 0.9999953, y: -0.0030670438, z: -1.8575356e-17, w: 6.0564084e-15}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:upperArmFkClavConst_R_001_GRUP
+      parentName: VFXRig:upperArmOffset_R_001_GRUP
+      position: {x: 2.7755575e-19, y: 1.110223e-18, z: 1.7347234e-20}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:upperArm_R_001_JNT
+      parentName: VFXRig:upperArmFkClavConst_R_001_GRUP
+      position: {x: -4.1633362e-19, y: 4.440892e-18, z: -2.2551404e-19}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:elbow_R_001_JNT
+      parentName: VFXRig:upperArm_R_001_JNT
+      position: {x: 0.0019234292, y: 0.0000000015722768, z: 1.561251e-19}
+      rotation: {x: 0.000000007445863, y: 0.035581023, z: -2.650988e-10, w: 0.9993668}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:wrist_R_001_JNT
+      parentName: VFXRig:elbow_R_001_JNT
+      position: {x: 0.0016440836, y: 6.290793e-10, z: 3.968708e-11}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:ctrl_C_001_GRUP
+      parentName: VFXRig:rig_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:master_C_001_GRUP
+      parentName: VFXRig:ctrl_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:master_C_001_CTRL
+      parentName: VFXRig:master_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:root_C_001_GRUP
+      parentName: VFXRig:master_C_001_CTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:root_C_001_CTRL
+      parentName: VFXRig:root_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:flight_C_001_GRUP
+      parentName: VFXRig:root_C_001_CTRL
+      position: {x: -0, y: 0.0061784517, z: 0.000005110812}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:flight_C_001_CTRL
+      parentName: VFXRig:flight_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:SpineCtrl_C_001_GRUP
+      parentName: VFXRig:flight_C_001_CTRL
+      position: {x: -0, y: 0, z: 3.330669e-18}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:SpineSubCtrl_C_001_GRUP
+      parentName: VFXRig:SpineCtrl_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:subSpineChain_C_003_GRUP
+      parentName: VFXRig:SpineSubCtrl_C_001_GRUP
+      position: {x: -0, y: 0.0005846984, z: -0.00002198873}
+      rotation: {x: -0.018793521, y: 0, z: -0, w: 0.9998234}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:subSpineChain_C_003_CTRL
+      parentName: VFXRig:subSpineChain_C_003_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:subSpineChain_C_005_GRUP
+      parentName: VFXRig:SpineSubCtrl_C_001_GRUP
+      position: {x: -0, y: 0.0011693967, z: -0.00004397746}
+      rotation: {x: -0.018793521, y: 0, z: -0, w: 0.9998234}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:subSpineChain_C_005_CTRL
+      parentName: VFXRig:subSpineChain_C_005_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:Leg_L_001_GRUP
+      parentName: VFXRig:flight_C_001_CTRL
+      position: {x: -0.0004721226, y: -0.00027947212, z: 0.00009233851}
+      rotation: {x: 0.01360522, y: -0.01360522, z: 0.7069759, w: 0.7069759}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKLeg_L_001_GRUP
+      parentName: VFXRig:Leg_L_001_GRUP
+      position: {x: -0, y: 0, z: 1.7347234e-20}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKlegStretch_L_001_GRUP
+      parentName: VFXRig:IKLeg_L_001_GRUP
+      position: {x: -0.005898361, y: -0.0004721226, z: 0.00012958166}
+      rotation: {x: -0.01360522, y: 0.01360522, z: -0.7069759, w: 0.7069759}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:ikStartLegStretchDist_L_001_LOC
+      parentName: VFXRig:IKlegStretch_L_001_GRUP
+      position: {x: -0.0004721226, y: 0.00589898, z: 0.000097449316}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:fkEndLegStretchDist_L_001_LOC
+      parentName: VFXRig:IKlegStretch_L_001_GRUP
+      position: {x: -0.0004721226, y: 0.000377665, z: -0.00020777395}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKLeg_L_001_GRUP
+      parentName: VFXRig:Leg_L_001_GRUP
+      position: {x: -0, y: -6.938894e-20, z: 1.7347234e-20}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperLeg_L_001_OFFSET
+      parentName: VFXRig:FKLeg_L_001_GRUP
+      position: {x: -0, y: 0, z: -1.7347234e-20}
+      rotation: {x: -1.3877788e-17, y: 3.469447e-18, z: 5.605325e-17, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperLeg_L_001_CTRL
+      parentName: VFXRig:FKupperLeg_L_001_OFFSET
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKknee_L_001_OFFSET
+      parentName: VFXRig:FKupperLeg_L_001_CTRL
+      position: {x: -0.002819387, y: -1.4641065e-17, z: 1.2143064e-19}
+      rotation: {x: 0, y: -0.017060423, z: -0, w: 0.9998545}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKknee_L_001_CTRL
+      parentName: VFXRig:FKknee_L_001_OFFSET
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKankle_L_001OrigOffset
+      parentName: VFXRig:FKknee_L_001_CTRL
+      position: {x: -0.0027111636, y: 4.5796697e-18, z: -2.810252e-18}
+      rotation: {x: 0, y: 0.63851094, z: -0, w: 0.7696127}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKankle_L_001_OrigCtrl
+      parentName: VFXRig:FKankle_L_001OrigOffset
+      position: {x: -0, y: 0, z: 6.938894e-20}
+      rotation: {x: 0, y: -5.551115e-17, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:LegSettings_L_001_GRUP
+      parentName: VFXRig:Leg_L_001_GRUP
+      position: {x: -0.00589555, y: 0.0046695047, z: 0.0001491214}
+      rotation: {x: -0.01360522, y: 0.01360522, z: -0.7069759, w: 0.7069759}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:LegSettings_L_001_CTRL
+      parentName: VFXRig:LegSettings_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:Leg_R_001_GRUP
+      parentName: VFXRig:flight_C_001_CTRL
+      position: {x: 0.00047212298, y: -0.00027947192, z: 0.00009233849}
+      rotation: {x: 0.70697594, y: -0.70697594, z: -0.013605221, w: -0.013605221}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKLeg_R_001_GRUP
+      parentName: VFXRig:Leg_R_001_GRUP
+      position: {x: -0, y: 6.938894e-20, z: -1.7347234e-20}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKlegStretch_R_001_GRUP
+      parentName: VFXRig:IKLeg_R_001_GRUP
+      position: {x: 0.0058983616, y: 0.00047212298, z: -0.00012958169}
+      rotation: {x: 0.70697594, y: -0.70697594, z: -0.013605221, w: 0.013605221}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:ikStartLegStretchDist_R_001_LOC
+      parentName: VFXRig:IKlegStretch_R_001_GRUP
+      position: {x: 0.00047212298, y: 0.00589898, z: 0.0000974493}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:fkEndLegStretchDist_R_001_LOC
+      parentName: VFXRig:IKlegStretch_R_001_GRUP
+      position: {x: 0.00047212298, y: 0.0003776652, z: -0.00020777396}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKLeg_R_001_GRUP
+      parentName: VFXRig:Leg_R_001_GRUP
+      position: {x: 1.110223e-18, y: 2.0816681e-19, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperLeg_R_001_OFFSET
+      parentName: VFXRig:FKLeg_R_001_GRUP
+      position: {x: -2.220446e-18, y: 6.938894e-20, z: 6.938894e-20}
+      rotation: {x: 2.7755576e-17, y: -3.469447e-18, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperLeg_R_001_CTRL
+      parentName: VFXRig:FKupperLeg_R_001_OFFSET
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKknee_R_001_OFFSET
+      parentName: VFXRig:FKupperLeg_R_001_CTRL
+      position: {x: 0.0028193875, y: 2.0122792e-18, z: -2.2391521e-11}
+      rotation: {x: 0, y: -0.017060423, z: -0, w: 0.9998545}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKknee_R_001_CTRL
+      parentName: VFXRig:FKknee_R_001_OFFSET
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKankle_R_001OrigOffset
+      parentName: VFXRig:FKknee_R_001_CTRL
+      position: {x: 0.0027111631, y: 2.4286128e-18, z: 3.497162e-11}
+      rotation: {x: 0, y: 0.63851094, z: -0, w: 0.7696127}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKankle_R_001_OrigCtrl
+      parentName: VFXRig:FKankle_R_001OrigOffset
+      position: {x: 3.469447e-20, y: 1.3877787e-19, z: -6.938894e-20}
+      rotation: {x: 0, y: 1.6653345e-16, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:LegSettings_R_001_GRUP
+      parentName: VFXRig:Leg_R_001_GRUP
+      position: {x: 0.005895551, y: -0.004669504, z: -0.00014912146}
+      rotation: {x: 0.70697594, y: -0.70697594, z: -0.013605221, w: 0.013605221}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:LegSettings_R_001_CTRL
+      parentName: VFXRig:LegSettings_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:neckOffset_C_001_GRUP
+      parentName: VFXRig:flight_C_001_CTRL
+      position: {x: -0, y: 0.0018991265, z: -0.000071420385}
+      rotation: {x: 0.02010652, y: -0, z: -0, w: 0.9997978}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:neck_C_001_GRUP
+      parentName: VFXRig:neckOffset_C_001_GRUP
+      position: {x: -0, y: 5.5511148e-18, z: -2.0816681e-19}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:neck_C_001_CTRL
+      parentName: VFXRig:neck_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:head_C_001_GRUP
+      parentName: VFXRig:neck_C_001_CTRL
+      position: {x: -6.5787003e-21, y: 0.0011733624, z: 4.1380612e-19}
+      rotation: {x: 0.019478926, y: -0, z: -0, w: 0.9998103}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient1head_C_001_GRUP
+      parentName: VFXRig:head_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient2head_C_001_GRUP
+      parentName: VFXRig:orient1head_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient3head_C_001_GRUP
+      parentName: VFXRig:orient2head_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient4head_C_001_GRUP
+      parentName: VFXRig:orient3head_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -3.469447e-18, y: 0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient5head_C_001_GRUP
+      parentName: VFXRig:orient4head_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:head_C_001_CTRL
+      parentName: VFXRig:orient5head_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:clavicle_L_001_GRUP
+      parentName: VFXRig:flight_C_001_CTRL
+      position: {x: -0, y: -0.0061784517, z: -0.000005110812}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:clavicleCollarboneOffset_L_001_GRUP
+      parentName: VFXRig:clavicle_L_001_GRUP
+      position: {x: -0.00024489308, y: 0.0077419286, z: 0.000005840508}
+      rotation: {x: 0.004880889, y: -0.12484408, z: -0.038759924, w: 0.991407}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:clavicleCollarbone_L_001_CTRL
+      parentName: VFXRig:clavicleCollarboneOffset_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:clavicle_R_001_GRUP
+      parentName: VFXRig:flight_C_001_CTRL
+      position: {x: -0, y: -0.0061784517, z: -0.000005110812}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:clavicleCollarboneOffset_R_001_GRUP
+      parentName: VFXRig:clavicle_R_001_GRUP
+      position: {x: 0.000244893, y: 0.0077419295, z: 0.00000584051}
+      rotation: {x: 0.991407, y: 0.038759924, z: -0.12484408, w: -0.004880889}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:clavicleCollarbone_R_001_CTRL
+      parentName: VFXRig:clavicleCollarboneOffset_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:Arm_L_001_GRUP
+      parentName: VFXRig:flight_C_001_CTRL
+      position: {x: -0.0007060567, y: 0.0016007553, z: -0.00011728688}
+      rotation: {x: 0, y: 0, z: 0.0030670438, w: 0.9999953}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKArm_L_001_GRUP
+      parentName: VFXRig:Arm_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKArmStretch_L_001_GRUP
+      parentName: VFXRig:IKArm_L_001_GRUP
+      position: {x: 0.0006583253, y: -0.007783392, z: 0.00011217607}
+      rotation: {x: 0, y: -0, z: -0.0030670438, w: 0.9999953}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKstartArmStretchPos_L_001_LOC
+      parentName: VFXRig:IKArmStretch_L_001_GRUP
+      position: {x: -0.0007060567, y: 0.007779207, z: -0.00011217607}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKendArmStretchPos_L_001_LOC
+      parentName: VFXRig:IKArmStretch_L_001_GRUP
+      position: {x: -0.004269334, y: 0.0077573494, z: 0.0000048971215}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKArm_L_001_GRUP
+      parentName: VFXRig:Arm_L_001_GRUP
+      position: {x: 4.1633362e-19, y: 6.661338e-18, z: 1.7347234e-19}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperArm_L_001_OFFSET
+      parentName: VFXRig:FKArm_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient1FKupperArm_L_001_GRUP
+      parentName: VFXRig:FKupperArm_L_001_OFFSET
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 6.938947e-18, y: -6.7762636e-21, z: -8.4703295e-22, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient2FKupperArm_L_001_GRUP
+      parentName: VFXRig:orient1FKupperArm_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -3.469447e-18, y: 6.9470254e-17, z: 2.0599841e-17, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient3FKupperArm_L_001_GRUP
+      parentName: VFXRig:orient2FKupperArm_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient4FKupperArm_L_001_GRUP
+      parentName: VFXRig:orient3FKupperArm_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperArm_L_001_CTRL
+      parentName: VFXRig:orient4FKupperArm_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKelbow_L_001_OFFSET
+      parentName: VFXRig:FKupperArm_L_001_CTRL
+      position: {x: -0.0019234339, y: -2.1094237e-17, z: -3.2959746e-19}
+      rotation: {x: 0, y: 0.035581023, z: -0, w: 0.9993668}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKelbow_L_001_CTRL
+      parentName: VFXRig:FKelbow_L_001_OFFSET
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKwrist_L_001_OFFSET
+      parentName: VFXRig:FKelbow_L_001_CTRL
+      position: {x: -0.0016440841, y: 0, z: -4.8815118e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKwrist_L_001_CTRL
+      parentName: VFXRig:FKwrist_L_001_OFFSET
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:ArmSettings_L_001_GRUP
+      parentName: VFXRig:Arm_L_001_GRUP
+      position: {x: -0.008563261, y: 0.000030670293, z: 0.00011692231}
+      rotation: {x: 0, y: -0, z: -0.0030670438, w: 0.9999953}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:ArmSettings_L_001_CTRL
+      parentName: VFXRig:ArmSettings_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:Arm_R_001_GRUP
+      parentName: VFXRig:flight_C_001_CTRL
+      position: {x: 0.000706057, y: 0.001600758, z: -0.000117286814}
+      rotation: {x: 0.9999953, y: -0.0030670438, z: -1.8575356e-17, w: 6.0564084e-15}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKArm_R_001_GRUP
+      parentName: VFXRig:Arm_R_001_GRUP
+      position: {x: -0, y: 0, z: -1.7347234e-20}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKArmStretch_R_001_GRUP
+      parentName: VFXRig:IKArm_R_001_GRUP
+      position: {x: -0.00065832556, y: 0.0077833943, z: -0.00011217599}
+      rotation: {x: 0.9999953, y: -0.0030670438, z: 1.8575356e-17, w: -6.0564084e-15}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKstartArmStretchPos_R_001_LOC
+      parentName: VFXRig:IKArmStretch_R_001_GRUP
+      position: {x: 0.000706057, y: 0.00777921, z: -0.00011217599}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:IKendArmStretchPos_R_001_LOC
+      parentName: VFXRig:IKArmStretch_R_001_GRUP
+      position: {x: 0.0042693294, y: 0.0077573494, z: 0.000004897084}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKArm_R_001_GRUP
+      parentName: VFXRig:Arm_R_001_GRUP
+      position: {x: -4.1633362e-19, y: -4.440892e-18, z: -1.561251e-19}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperArm_R_001_OFFSET
+      parentName: VFXRig:FKArm_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient1FKupperArm_R_001_GRUP
+      parentName: VFXRig:FKupperArm_R_001_OFFSET
+      position: {x: -0, y: 0, z: -1.7347234e-20}
+      rotation: {x: 1.2246469e-16, y: 4.7433845e-20, z: 1.7347235e-18, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient2FKupperArm_R_001_GRUP
+      parentName: VFXRig:orient1FKupperArm_R_001_GRUP
+      position: {x: -0, y: 0, z: -1.7347234e-20}
+      rotation: {x: 1.2246469e-16, y: -4.1795994e-17, z: 3.2526065e-19, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient3FKupperArm_R_001_GRUP
+      parentName: VFXRig:orient2FKupperArm_R_001_GRUP
+      position: {x: -0, y: 0, z: -3.469447e-20}
+      rotation: {x: -1.0976542e-19, y: -3.5788505e-17, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:orient4FKupperArm_R_001_GRUP
+      parentName: VFXRig:orient3FKupperArm_R_001_GRUP
+      position: {x: -0, y: 0, z: -3.469447e-20}
+      rotation: {x: -1.0976542e-19, y: -3.5788505e-17, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKupperArm_R_001_CTRL
+      parentName: VFXRig:orient4FKupperArm_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKelbow_R_001_OFFSET
+      parentName: VFXRig:FKupperArm_R_001_CTRL
+      position: {x: 0.0019234292, y: 0.0000000015722768, z: 1.04083406e-19}
+      rotation: {x: 0, y: 0.035581023, z: -0, w: 0.9993668}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKelbow_R_001_CTRL
+      parentName: VFXRig:FKelbow_R_001_OFFSET
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKwrist_R_001_OFFSET
+      parentName: VFXRig:FKelbow_R_001_CTRL
+      position: {x: 0.0016440836, y: 6.290793e-10, z: 3.968708e-11}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:FKwrist_R_001_CTRL
+      parentName: VFXRig:FKwrist_R_001_OFFSET
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:ArmSettings_R_001_GRUP
+      parentName: VFXRig:Arm_R_001_GRUP
+      position: {x: 0.008563256, y: -0.000030668092, z: -0.00011692224}
+      rotation: {x: 0.9999953, y: -0.0030670438, z: 1.8575356e-17, w: -6.0564084e-15}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:ArmSettings_R_001_CTRL
+      parentName: VFXRig:ArmSettings_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:folControllers_C_001_GRUP
+      parentName: VFXRig:ctrl_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:EyelidDriverCtrl_L_001_GRUP
+      parentName: VFXRig:folControllers_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:uplidSec2_L_001_GRUP
+      parentName: VFXRig:EyelidDriverCtrl_L_001_GRUP
+      position: {x: -0.15018636, y: 1.0646174, z: 0.13575096}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:RotdupOffuplidSec2_L_001_GRUP
+      parentName: VFXRig:uplidSec2_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:dupOffuplidSec2_L_001_GRUP
+      parentName: VFXRig:RotdupOffuplidSec2_L_001_GRUP
+      position: {x: 2.7755575e-19, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:uplidSec2_L_001_CTRL
+      parentName: VFXRig:dupOffuplidSec2_L_001_GRUP
+      position: {x: -2.7755575e-19, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:uplidMiddle_L_001_GRUP
+      parentName: VFXRig:EyelidDriverCtrl_L_001_GRUP
+      position: {x: -0.1103033, y: 1.0853323, z: 0.15327297}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:RotdupOffuplidMiddle_L_001_GRUP
+      parentName: VFXRig:uplidMiddle_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:dupOffuplidMiddle_L_001_GRUP
+      parentName: VFXRig:RotdupOffuplidMiddle_L_001_GRUP
+      position: {x: -5.32907e-19, y: 0, z: -1.010303e-18}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:uplidMiddle_L_001_CTRL
+      parentName: VFXRig:dupOffuplidMiddle_L_001_GRUP
+      position: {x: 5.32907e-19, y: 0, z: 1.010303e-18}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:uplidSec1_L_001_GRUP
+      parentName: VFXRig:EyelidDriverCtrl_L_001_GRUP
+      position: {x: -0.062087182, y: 1.0624653, z: 0.16582288}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:RotdupOffuplidSec1_L_001_GRUP
+      parentName: VFXRig:uplidSec1_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:dupOffuplidSec1_L_001_GRUP
+      parentName: VFXRig:RotdupOffuplidSec1_L_001_GRUP
+      position: {x: 1.3877787e-19, y: -2.220446e-18, z: -2.7755575e-19}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:uplidSec1_L_001_CTRL
+      parentName: VFXRig:dupOffuplidSec1_L_001_GRUP
+      position: {x: -1.3877787e-19, y: 2.220446e-18, z: 2.7755575e-19}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowlidSec2_L_001_GRUP
+      parentName: VFXRig:EyelidDriverCtrl_L_001_GRUP
+      position: {x: -0.13521515, y: 0.98352814, z: 0.14204288}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:RotdupOfflowlidSec2_L_001_GRUP
+      parentName: VFXRig:lowlidSec2_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:dupOfflowlidSec2_L_001_GRUP
+      parentName: VFXRig:RotdupOfflowlidSec2_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowlidSec2_L_001_CTRL
+      parentName: VFXRig:dupOfflowlidSec2_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowlidMiddle_L_001_GRUP
+      parentName: VFXRig:EyelidDriverCtrl_L_001_GRUP
+      position: {x: -0.11647975, y: 0.9789095, z: 0.152457}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:RotdupOfflowlidMiddle_L_001_GRUP
+      parentName: VFXRig:lowlidMiddle_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:dupOfflowlidMiddle_L_001_GRUP
+      parentName: VFXRig:RotdupOfflowlidMiddle_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowlidMiddle_L_001_CTRL
+      parentName: VFXRig:dupOfflowlidMiddle_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowlidSec1_L_001_GRUP
+      parentName: VFXRig:EyelidDriverCtrl_L_001_GRUP
+      position: {x: -0.0748837, y: 0.9847164, z: 0.16103898}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:RotdupOfflowlidSec1_L_001_GRUP
+      parentName: VFXRig:lowlidSec1_L_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:dupOfflowlidSec1_L_001_GRUP
+      parentName: VFXRig:RotdupOfflowlidSec1_L_001_GRUP
+      position: {x: -0, y: -3.330669e-18, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowlidSec1_L_001_CTRL
+      parentName: VFXRig:dupOfflowlidSec1_L_001_GRUP
+      position: {x: -0, y: 3.330669e-18, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:EyelidDriverCtrl_R_001_GRUP
+      parentName: VFXRig:folControllers_C_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:uplidSec2_R_001_GRUP
+      parentName: VFXRig:EyelidDriverCtrl_R_001_GRUP
+      position: {x: 0.15018636, y: 1.0646174, z: 0.13575096}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -6.123234e-17}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:RotdupOffuplidSec2_R_001_GRUP
+      parentName: VFXRig:uplidSec2_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:dupOffuplidSec2_R_001_GRUP
+      parentName: VFXRig:RotdupOffuplidSec2_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:uplidSec2_R_001_CTRL
+      parentName: VFXRig:dupOffuplidSec2_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:uplidMiddle_R_001_GRUP
+      parentName: VFXRig:EyelidDriverCtrl_R_001_GRUP
+      position: {x: 0.1103033, y: 1.0853323, z: 0.1532776}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -6.123234e-17}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:RotdupOffuplidMiddle_R_001_GRUP
+      parentName: VFXRig:uplidMiddle_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:dupOffuplidMiddle_R_001_GRUP
+      parentName: VFXRig:RotdupOffuplidMiddle_R_001_GRUP
+      position: {x: 5.3290704e-17, y: 0, z: 1.7763568e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:uplidMiddle_R_001_CTRL
+      parentName: VFXRig:dupOffuplidMiddle_R_001_GRUP
+      position: {x: -5.3290704e-17, y: 0, z: -1.7763568e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:uplidSec1_R_001_GRUP
+      parentName: VFXRig:EyelidDriverCtrl_R_001_GRUP
+      position: {x: 0.062134862, y: 1.0624062, z: 0.16586024}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -6.123234e-17}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:RotdupOffuplidSec1_R_001_GRUP
+      parentName: VFXRig:uplidSec1_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:dupOffuplidSec1_R_001_GRUP
+      parentName: VFXRig:RotdupOffuplidSec1_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:uplidSec1_R_001_CTRL
+      parentName: VFXRig:dupOffuplidSec1_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowlidSec2_R_001_GRUP
+      parentName: VFXRig:EyelidDriverCtrl_R_001_GRUP
+      position: {x: 0.13521516, y: 0.98352814, z: 0.14204288}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -6.123234e-17}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:RotdupOfflowlidSec2_R_001_GRUP
+      parentName: VFXRig:lowlidSec2_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:dupOfflowlidSec2_R_001_GRUP
+      parentName: VFXRig:RotdupOfflowlidSec2_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowlidSec2_R_001_CTRL
+      parentName: VFXRig:dupOfflowlidSec2_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowlidMiddle_R_001_GRUP
+      parentName: VFXRig:EyelidDriverCtrl_R_001_GRUP
+      position: {x: 0.11647975, y: 0.9789095, z: 0.152457}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -6.123234e-17}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:RotdupOfflowlidMiddle_R_001_GRUP
+      parentName: VFXRig:lowlidMiddle_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:dupOfflowlidMiddle_R_001_GRUP
+      parentName: VFXRig:RotdupOfflowlidMiddle_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowlidMiddle_R_001_CTRL
+      parentName: VFXRig:dupOfflowlidMiddle_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowlidSec1_R_001_GRUP
+      parentName: VFXRig:EyelidDriverCtrl_R_001_GRUP
+      position: {x: 0.0748837, y: 0.98473835, z: 0.16103898}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -6.123234e-17}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VFXRig:RotdupOfflowlidSec1_R_001_GRUP
+      parentName: VFXRig:lowlidSec1_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:dupOfflowlidSec1_R_001_GRUP
+      parentName: VFXRig:RotdupOfflowlidSec1_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: VFXRig:lowlidSec1_R_001_CTRL
+      parentName: VFXRig:dupOfflowlidSec1_R_001_GRUP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: SM_EllaRyder
+      parentName: R_EllaRyder(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:Hips
+      parentName: R_EllaRyder(Clone)
+      position: {x: 0.0000014716893, y: 0.56494814, z: -0.0039937943}
+      rotation: {x: -0.00000026175033, y: 0.000001068149, z: -0.00003404364, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:Spine
+      parentName: mixamorig:Hips
+      position: {x: -0, y: 0.04777027, z: -0.00061068626}
+      rotation: {x: -0.0063912515, y: -0.0000012857068, z: 0.00003403612, w: 0.9999796}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:Spine1
+      parentName: mixamorig:Spine
+      position: {x: -0, y: 0.05573654, z: -2.9802322e-10}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:Spine2
+      parentName: mixamorig:Spine1
+      position: {x: -0, y: 0.06369888, z: 5.9604643e-10}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:Neck
+      parentName: mixamorig:Spine2
+      position: {x: 5.820766e-13, y: 0.07166123, z: 5.9604643e-10}
+      rotation: {x: 0.006391514, y: -0, z: -0, w: 0.9999796}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:Head
+      parentName: mixamorig:Neck
+      position: {x: -0, y: 0.06576904, z: -0.001382327}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:HeadTop_End
+      parentName: mixamorig:Head
+      position: {x: -5.820766e-13, y: 0.51211065, z: -0.010763494}
+      rotation: {x: -7.1054274e-15, y: 4.7888195e-19, z: 2.1684043e-19, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightEyeLid_JNT
+      parentName: mixamorig:Head
+      position: {x: 0.10484527, y: 0.1617715, z: 0.1166545}
+      rotation: {x: 1, y: 3.078807e-12, z: 1.0886969e-11, w: 0.00000008266896}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightEyeLid_Up_R_JNT
+      parentName: RightEyeLid_JNT
+      position: {x: -0.042762797, y: -0.03113, z: -0.057598}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightEyeLid_Up_C_JNT
+      parentName: RightEyeLid_JNT
+      position: {x: 0.005453, y: -0.05399, z: -0.045048}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightEyeLid_Up_L_JNT
+      parentName: RightEyeLid_JNT
+      position: {x: 0.045335997, y: -0.03328, z: -0.027525999}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightEyeLid_Up_R_02_JNT
+      parentName: RightEyeLid_JNT
+      position: {x: -0.0435895, y: -0.03572, z: -0.048412}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightEyeLid_Up_C_02_JNT
+      parentName: RightEyeLid_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightEyeLid_Up_L_02_JNT
+      parentName: RightEyeLid_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightEyeLid_Down_L_JNT
+      parentName: RightEyeLid_JNT
+      position: {x: 0.028368, y: 0.052698, z: -0.031506}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightEyeLid_Down_R_JNT
+      parentName: RightEyeLid_JNT
+      position: {x: -0.029631099, y: 0.050307997, z: -0.050591}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightEyeLid_Down_C_JNT
+      parentName: RightEyeLid_JNT
+      position: {x: 0.009969, y: 0.058153998, z: -0.040634997}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftEyeLid_JNT
+      parentName: mixamorig:Head
+      position: {x: -0.1048546, y: 0.16176884, z: 0.116654955}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftEyeLid_Up_R_JNT
+      parentName: LeftEyeLid_JNT
+      position: {x: 0.042762693, y: 0.031127965, z: 0.057597425}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftEyeLid_Up_C_JNT
+      parentName: LeftEyeLid_JNT
+      position: {x: -0.005453419, y: 0.05399494, z: 0.04504751}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftEyeLid_Up_L_JNT
+      parentName: LeftEyeLid_JNT
+      position: {x: -0.045336477, y: 0.033280063, z: 0.027525501}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftEyeLid_Up_R_02_JNT
+      parentName: LeftEyeLid_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftEyeLid_Up_C_02_JNT
+      parentName: LeftEyeLid_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftEyeLid_Up_L_02_JNT
+      parentName: LeftEyeLid_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftEyeLid_Down_L_JNT
+      parentName: LeftEyeLid_JNT
+      position: {x: -0.028367942, y: -0.052695196, z: 0.03150531}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftEyeLid_Down_R_JNT
+      parentName: LeftEyeLid_JNT
+      position: {x: 0.029630933, y: -0.050304983, z: 0.05059082}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftEyeLid_Down_C_JNT
+      parentName: LeftEyeLid_JNT
+      position: {x: -0.009969286, y: -0.05815151, z: 0.04063446}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftShoulder
+      parentName: mixamorig:Spine2
+      position: {x: -0.024871388, y: 0.063435666, z: 0.00017545879}
+      rotation: {x: 0.5759847, y: -0.4115548, z: 0.57192993, w: 0.41443983}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftArm
+      parentName: mixamorig:LeftShoulder
+      position: {x: -0.0000000017881393, y: 0.052340753, z: 0.00000015258789}
+      rotation: {x: -0.16093238, y: -0.00631242, z: 0.0045945407, w: 0.98693454}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftForeArm
+      parentName: mixamorig:LeftArm
+      position: {x: 0.0000000011920929, y: 0.18381122, z: 0}
+      rotation: {x: -0.00000035003566, y: 0.0012900446, z: -0.00000018794383, w: 0.99999917}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHand
+      parentName: mixamorig:LeftForeArm
+      position: {x: 5.9604643e-10, y: 0.1680116, z: 0}
+      rotation: {x: 0.0045341067, y: 0.006536805, z: 0.04717246, w: 0.9988551}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandThumb1
+      parentName: mixamorig:LeftHand
+      position: {x: 0.01429009, y: 0.016527481, z: 0.009900665}
+      rotation: {x: 0.07848411, y: 0.0056469603, z: -0.32149568, w: 0.94363606}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandThumb2
+      parentName: mixamorig:LeftHandThumb1
+      position: {x: 0.0028108787, y: 0.01898281, z: -0.000000076293944}
+      rotation: {x: 0.00056274334, y: 0.0058586937, z: -0.051231787, w: 0.99866945}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandThumb3
+      parentName: mixamorig:LeftHandThumb2
+      position: {x: 0.00093919755, y: 0.021087188, z: 0}
+      rotation: {x: -0.0024254867, y: 0.022031173, z: -0.15349391, w: 0.987901}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandThumb4
+      parentName: mixamorig:LeftHandThumb3
+      position: {x: -0.0037500476, y: 0.013884983, z: 0.00000015258789}
+      rotation: {x: -0.000000014901163, y: 1.665335e-16, z: -0.000000011175873, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandIndex1
+      parentName: mixamorig:LeftHand
+      position: {x: 0.021042995, y: 0.06011623, z: 0.00044403074}
+      rotation: {x: -0.0042061945, y: 0.00039695116, z: -0.046336014, w: 0.998917}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandIndex2
+      parentName: mixamorig:LeftHandIndex1
+      position: {x: 0.000029485225, y: 0.016695824, z: 0}
+      rotation: {x: 0.0000005287853, y: -0.00023701879, z: -0.0034091223, w: 0.99999416}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandIndex3
+      parentName: mixamorig:LeftHandIndex2
+      position: {x: -0.00008438587, y: 0.016530342, z: 0}
+      rotation: {x: -0.00000012387495, y: 0.00009805429, z: 0.004567147, w: 0.99998957}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandIndex4
+      parentName: mixamorig:LeftHandIndex3
+      position: {x: 0.00005489826, y: 0.013570442, z: 0}
+      rotation: {x: -1.8189894e-12, y: -4.6566134e-10, z: 5.280754e-11, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandMiddle1
+      parentName: mixamorig:LeftHand
+      position: {x: 0.005931649, y: 0.06262512, z: -0.00053070066}
+      rotation: {x: -0.0042125853, y: 0.00025658272, z: -0.04673037, w: 0.9988986}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandMiddle2
+      parentName: mixamorig:LeftHandMiddle1
+      position: {x: 0.000016946793, y: 0.017984925, z: 0.00000015258789}
+      rotation: {x: -0.0000005112554, y: -0.00004947995, z: -0.001594201, w: 0.99999875}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandMiddle3
+      parentName: mixamorig:LeftHandMiddle2
+      position: {x: -0.00004036367, y: 0.0178339, z: 0}
+      rotation: {x: -0.000000011437923, y: 0.000032553486, z: 0.0018897054, w: 0.9999982}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandMiddle4
+      parentName: mixamorig:LeftHandMiddle3
+      position: {x: 0.00002341628, y: 0.014969864, z: 0}
+      rotation: {x: 9.094947e-13, y: -5.9776724e-23, z: -6.57252e-11, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandRing1
+      parentName: mixamorig:LeftHand
+      position: {x: -0.005978112, y: 0.064602695, z: -0.0014278411}
+      rotation: {x: -0.0040956535, y: 0.0027248617, z: -0.04685568, w: 0.99888957}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandRing2
+      parentName: mixamorig:LeftHandRing1
+      position: {x: 0.000012087822, y: 0.016761893, z: 0}
+      rotation: {x: -0.00000006292029, y: -0.000011348101, z: -0.0010968298, w: 0.9999994}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandRing3
+      parentName: mixamorig:LeftHandRing2
+      position: {x: -0.000023806095, y: 0.01624321, z: 0.00000015258789}
+      rotation: {x: 0.0000002576481, y: 0.000009946837, z: 0.0011815431, w: 0.99999934}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandRing4
+      parentName: mixamorig:LeftHandRing3
+      position: {x: 0.0000117146965, y: 0.013554649, z: 0}
+      rotation: {x: -9.094948e-13, y: -9.313227e-10, z: 7.30438e-12, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandPinky1
+      parentName: mixamorig:LeftHand
+      position: {x: -0.02099653, y: 0.06254353, z: 0.000027313232}
+      rotation: {x: -0.004199144, y: 0.0005461789, z: -0.046683744, w: 0.9989008}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandPinky2
+      parentName: mixamorig:LeftHandPinky1
+      position: {x: 0.000014505386, y: 0.014401474, z: 0}
+      rotation: {x: -0.00000023782928, y: 0.000014838434, z: -0.00056046265, w: 0.9999999}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandPinky3
+      parentName: mixamorig:LeftHandPinky2
+      position: {x: -0.00000056028364, y: 0.012641525, z: 0.00000015258789}
+      rotation: {x: 0.00000031571957, y: -0.000049496797, z: -0.00076650124, w: 0.9999997}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftHandPinky4
+      parentName: mixamorig:LeftHandPinky3
+      position: {x: -0.000013954639, y: 0.008682861, z: 0}
+      rotation: {x: 0, y: 0, z: 9.2072114e-11, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightShoulder
+      parentName: mixamorig:Spine2
+      position: {x: 0.024871388, y: 0.06344284, z: -0.00038567663}
+      rotation: {x: -0.5694143, y: -0.4162878, z: 0.5783573, w: -0.40984714}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightArm
+      parentName: mixamorig:RightShoulder
+      position: {x: 2.7755574e-18, y: 0.052340716, z: 1.4210854e-16}
+      rotation: {x: -0.16082671, y: 0.0031474014, z: 0.0073831095, w: 0.98695004}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightForeArm
+      parentName: mixamorig:RightArm
+      position: {x: 5.9604643e-10, y: 0.18376163, z: 0.00000015258789}
+      rotation: {x: 0.00000018996825, y: -0.00113718, z: -0.00000012664212, w: 0.99999934}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHand
+      parentName: mixamorig:RightForeArm
+      position: {x: 5.9604643e-10, y: 0.16794667, z: 0}
+      rotation: {x: 0.006880151, y: 0.0038926632, z: -0.059359394, w: 0.9982054}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandThumb1
+      parentName: mixamorig:RightHand
+      position: {x: -0.014124603, y: 0.015688324, z: 0.010233002}
+      rotation: {x: 0.07113101, y: -0.0038829476, z: 0.34785095, w: 0.9348396}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandThumb2
+      parentName: mixamorig:RightHandThumb1
+      position: {x: -0.002197647, y: 0.018638458, z: 0.000000076293944}
+      rotation: {x: 0.000015813192, y: -0.00078983785, z: 0.09680615, w: 0.995303}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandThumb3
+      parentName: mixamorig:RightHandThumb2
+      position: {x: 0.0016103362, y: 0.020996626, z: 0}
+      rotation: {x: -0.000008934758, y: -0.00015914626, z: -0.022046145, w: 0.99975693}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandThumb4
+      parentName: mixamorig:RightHandThumb3
+      position: {x: 0.00058731076, y: 0.018093415, z: 0}
+      rotation: {x: 1.9081958e-17, y: -0.0000000018626451, z: 0.000000010244548, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandIndex1
+      parentName: mixamorig:RightHand
+      position: {x: -0.021777501, y: 0.0641811, z: 0.0001347351}
+      rotation: {x: -0.006948467, y: -0.0026688618, z: 0.057509504, w: 0.9983172}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandIndex2
+      parentName: mixamorig:RightHandIndex1
+      position: {x: -0.000056952238, y: 0.01544979, z: 0.00000015258789}
+      rotation: {x: -0.00000006866074, y: -0.00008860925, z: 0.002493279, w: 0.9999969}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandIndex3
+      parentName: mixamorig:RightHandIndex2
+      position: {x: 0.00001882434, y: 0.0146455, z: 0}
+      rotation: {x: -0.00000017673244, y: 0.00006836311, z: 0.0010240702, w: 0.99999946}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandIndex4
+      parentName: mixamorig:RightHandIndex3
+      position: {x: 0.0000381279, y: 0.0113593675, z: 0.00000015258789}
+      rotation: {x: 9.094948e-13, y: -4.656613e-10, z: 1.2901324e-10, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandMiddle1
+      parentName: mixamorig:RightHand
+      position: {x: -0.007217088, y: 0.060492247, z: -0.00086509704}
+      rotation: {x: -0.0071578254, y: 0.0007461003, z: 0.05721848, w: 0.9983358}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandMiddle2
+      parentName: mixamorig:RightHandMiddle1
+      position: {x: -0.00008419126, y: 0.019883309, z: 0}
+      rotation: {x: -0.00000022716453, y: -0.000032913624, z: 0.0039476007, w: 0.99999225}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandMiddle3
+      parentName: mixamorig:RightHandMiddle2
+      position: {x: 0.00007019162, y: 0.019069824, z: 0}
+      rotation: {x: -0.00000047895304, y: -0.00010214167, z: -0.0013541616, w: 0.9999991}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandMiddle4
+      parentName: mixamorig:RightHandMiddle3
+      position: {x: 0.000013999938, y: 0.014548111, z: 0}
+      rotation: {x: 0, y: 0, z: 3.5687e-12, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandRing1
+      parentName: mixamorig:RightHand
+      position: {x: 0.0074831033, y: 0.06049751, z: -0.000108489985}
+      rotation: {x: -0.0071232305, y: 0.00018514358, z: 0.05800605, w: 0.99829084}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandRing2
+      parentName: mixamorig:RightHandRing1
+      position: {x: -0.00004632473, y: 0.017325897, z: 0}
+      rotation: {x: 0.000000006361502, y: -0.00006804904, z: 0.0018049484, w: 0.9999984}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandRing3
+      parentName: mixamorig:RightHandRing2
+      position: {x: 0.000016627311, y: 0.017807083, z: 0}
+      rotation: {x: 0.00000018568376, y: 0.000033748664, z: 0.00051581924, w: 0.9999999}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandRing4
+      parentName: mixamorig:RightHandRing3
+      position: {x: 0.000029695033, y: 0.015101814, z: 0}
+      rotation: {x: 2.2737362e-13, y: 1.31848034e-23, z: 5.7987393e-11, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandPinky1
+      parentName: mixamorig:RightHand
+      position: {x: 0.02151149, y: 0.0625217, z: -0.00029182434}
+      rotation: {x: -0.007051898, y: -0.0010078173, z: 0.05951917, w: 0.9982018}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandPinky2
+      parentName: mixamorig:RightHandPinky1
+      position: {x: 0.0000047063827, y: 0.013870926, z: 0}
+      rotation: {x: 0.00000025926545, y: 0.000057931513, z: 0.00081284385, w: 0.9999997}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandPinky3
+      parentName: mixamorig:RightHandPinky2
+      position: {x: 0.000024871826, y: 0.012588996, z: 0}
+      rotation: {x: 0.00000024001784, y: 0.00019747247, z: -0.0030648725, w: 0.9999953}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightHandPinky4
+      parentName: mixamorig:RightHandPinky3
+      position: {x: -0.000029578208, y: 0.0072404095, z: -0.00000015258789}
+      rotation: {x: 1.8189894e-12, y: -8.045624e-23, z: -4.4231285e-11, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftUpLeg
+      parentName: mixamorig:Hips
+      position: {x: -0.048831727, y: -0.026436606, z: 0.004339653}
+      rotation: {x: 0.17331766, y: -0.0056087906, z: 0.98482066, w: -0.00760113}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftLeg
+      parentName: mixamorig:LeftUpLeg
+      position: {x: -0.000000009536743, y: 0.24396995, z: -4.4408918e-17}
+      rotation: {x: -0.01977882, y: -0.000035293513, z: 0.0020239078, w: 0.99980235}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftFoot
+      parentName: mixamorig:LeftLeg
+      position: {x: 0.0016983817, y: 0.24161683, z: -0.000047998496}
+      rotation: {x: 0.4578462, y: 0.14838806, z: -0.082076535, w: 0.87270916}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftToeBase
+      parentName: mixamorig:LeftFoot
+      position: {x: -0.000000009536743, y: 0.08436024, z: 0.0000000023841857}
+      rotation: {x: 0.32592466, y: 0.08312167, z: -0.028781008, w: 0.9412946}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:LeftToe_End
+      parentName: mixamorig:LeftToeBase
+      position: {x: 0.0000000047683715, y: 0.034318175, z: 0}
+      rotation: {x: 4.656613e-10, y: -0.0000000074505815, z: -0.0000000018917492,
+        w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightUpLeg
+      parentName: mixamorig:Hips
+      position: {x: 0.046496958, y: -0.026427649, z: 0.003465594}
+      rotation: {x: -0.000047171674, y: -0.00803608, z: 0.9999672, w: -0.0010413044}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightLeg
+      parentName: mixamorig:RightUpLeg
+      position: {x: 8.881784e-18, y: 0.2439561, z: -0.0000000023841857}
+      rotation: {x: -0.013965265, y: 0.00003199607, z: -0.0020233062, w: 0.99990046}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightFoot
+      parentName: mixamorig:RightLeg
+      position: {x: 3.5527136e-17, y: 0.24155526, z: -0.0000000023841855}
+      rotation: {x: 0.4546911, y: 0.005118391, z: 0.0008383816, w: 0.8906341}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightToeBase
+      parentName: mixamorig:RightFoot
+      position: {x: -0, y: 0.08272321, z: 0.0000000023841857}
+      rotation: {x: 0.33310178, y: -0.08199919, z: 0.029092567, w: 0.9388679}
+      scale: {x: 1, y: 1, z: 1}
+    - name: mixamorig:RightToe_End
+      parentName: mixamorig:RightToeBase
+      position: {x: -0, y: 0.034115892, z: 0}
+      rotation: {x: 0, y: 0, z: 0.000000001047738, w: 1}
+      scale: {x: 1, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -118,15 +2089,13 @@ ModelImporter:
     globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 2
+  animationType: 3
   humanoidOversampling: 1
-  avatarSetup: 0
-  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
-  remapMaterialsIfMaterialImportModeIsNone: 0
+  avatarSetup: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

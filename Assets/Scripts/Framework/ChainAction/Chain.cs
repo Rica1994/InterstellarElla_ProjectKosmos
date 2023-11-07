@@ -34,7 +34,7 @@ public class Chain
     {
         _chainActions.Enqueue(chainAction);
     }
-    
+
     public void Play()
     {
         Debug.Log("Chain Started");
@@ -43,16 +43,15 @@ public class Chain
             PlayNextChainAction();
         }
     }
-    
+
     public void EndCurrentChainAction(bool force = false)
     {
         if (_currentChainAction != null)
         {
             _currentChainAction.OnExit();
             _currentChainAction.ChainActionDone -= OnCurrentChainActionDone;
+            Debug.Log($"ChainAction {_currentChainAction.name} completed");
         }
-
-        Debug.Log($"ChainAction {_currentChainAction.name} completed");
 
         if (_chainActions.Count > 0)
         {

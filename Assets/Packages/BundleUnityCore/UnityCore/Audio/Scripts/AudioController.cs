@@ -37,6 +37,7 @@ namespace UnityCore
             // initialized in awake to Mixer.Normal
             private MixerType _currentMixerType;
 
+            private float _sfxVolume = 1.0f;
 
 
             #region Extra Classes
@@ -107,6 +108,11 @@ namespace UnityCore
 
 
             #region Public Functions
+
+            public void SetSFXVolume(float volume)
+            {
+                _sfxVolume = volume;
+            }
 
             public void PlayAudio(AudioElement audioEm, bool fade = false, float delay = 0f)
             {
@@ -224,7 +230,7 @@ namespace UnityCore
 
                 if (job.AudioEM.Volume != 0)
                 {
-                    volumeToUse = job.AudioEM.Volume;
+                    volumeToUse = job.AudioEM.Volume * _sfxVolume;
                 }
                 if (job.AudioEM.Pitch != 0)
                 {
