@@ -20,6 +20,12 @@ public class Helpers
       action.Invoke();
    }
 
+    public static IEnumerator DoAfterFrame(Action action)
+    {
+        yield return new WaitForEndOfFrame();
+        action.Invoke();
+    }
+
     /// <summary>
     /// Executes an action after time
     /// </summary>
