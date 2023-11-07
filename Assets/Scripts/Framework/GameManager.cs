@@ -189,8 +189,12 @@ public class GameManager : Service
             case Planet.Venus:
             case Planet.Saturn:
             case Planet.Mercury:
+                hud.EnableHUD(true);
                 hud.Initialize(currentPlanet);
                 pickupManager.PickUpsPickedUp = Data.CurrentScore;
+                break;
+            case Planet.None:
+                hud.EnableHUD(false);
                 break;
         }
     }
@@ -227,7 +231,7 @@ public class GameManager : Service
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-        Initialize();
+        StartCoroutine(Helpers.DoAfterFrame(Initialize));
     }
 
     private void OnPlayerControllerEnabled(PlayerController controller)

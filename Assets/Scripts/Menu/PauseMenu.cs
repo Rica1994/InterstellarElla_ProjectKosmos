@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityCore.Scene;
 using UnityEngine;
@@ -47,12 +48,19 @@ public class PauseMenu : MonoBehaviour
         Helpers.FadeImage(new GameObject[] { this.gameObject }, targetAlpha, popUpTime, true);
         Helpers.FadeText(new GameObject[] { this.gameObject }, targetAlpha, popUpTime, true);
 
-
-        StartCoroutine(Helpers.DoAfterUnscaledTime(_popupTime, () => 
-        {
+        Action lambda = () => {
             this.gameObject.SetActive(show);
             GameManager.IsGamePlayPaused = show;
-        }));
+        };
+
+        if (gameObject.activeSelf && gameObject.activeInHierarchy)
+        {
+            StartCoroutine(Helpers.DoAfterUnscaledTime(_popupTime, lambda));
+        }
+        else
+        {
+            lambda();
+        }
     }
 
     private void Start()

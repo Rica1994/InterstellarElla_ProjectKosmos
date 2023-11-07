@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class HudManager : Service
 {
+    [SerializeField]
+    private GameObject _hudRoot;
+
     [SerializeField] private GameObject _joystick;
     [SerializeField] private TouchButton _touchButton;
 
@@ -102,5 +105,10 @@ public class HudManager : Service
     private void OpenPauseMenu()
     {
         _pauseMenu.Show(!_pauseMenu.gameObject.activeSelf);
+    }
+
+    public void EnableHUD(bool enable)
+    {
+        _hudRoot.SetActive(enable);
     }
 }
