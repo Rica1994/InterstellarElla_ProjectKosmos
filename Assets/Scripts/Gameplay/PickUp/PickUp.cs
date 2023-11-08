@@ -13,6 +13,15 @@ public class PickUp : MonoBehaviour
 
     private bool _pickedUp;
 
+    [SerializeField]
+    private Type _PickUpType;
+
+    public enum Type
+    {
+        Basic = 0,
+        Special = 1,
+    }
+
     private void Start()
     {
         var collider = GetComponent<Collider>();

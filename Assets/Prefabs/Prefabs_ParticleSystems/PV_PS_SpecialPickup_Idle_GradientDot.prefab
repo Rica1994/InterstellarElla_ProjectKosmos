@@ -30,12 +30,12 @@ PrefabInstance:
     - target: {fileID: 6362609946642542285, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 6362609946642542285, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 6362609946642542285, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
         type: 3}
@@ -50,7 +50,7 @@ PrefabInstance:
     - target: {fileID: 6362609946642542285, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 6362609946642542285, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
         type: 3}
@@ -65,7 +65,7 @@ PrefabInstance:
     - target: {fileID: 6362609946642542320, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
         type: 3}
       propertyPath: m_Name
-      value: PV_PS_Pickup_Idle
+      value: PV_PS_SpecialPickup_Idle_GradientDot
       objectReference: {fileID: 0}
     - target: {fileID: 6362609946642542322, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
         type: 3}
@@ -84,8 +84,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6362609946642542322, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
         type: 3}
+      propertyPath: RotationModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6362609946642542322, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
+        type: 3}
       propertyPath: ShapeModule.radius.value
       value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 6362609946642542322, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
+        type: 3}
+      propertyPath: RotationModule.curve.scalar
+      value: 6.283185
       objectReference: {fileID: 0}
     - target: {fileID: 6362609946642542322, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
         type: 3}
@@ -176,6 +186,11 @@ PrefabInstance:
         type: 3}
       propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[2].outWeight
       value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 6362609946642542323, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
+        type: 3}
+      propertyPath: m_RenderAlignment
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6362609946642542323, guid: 9a8d76622dc7b0f46b04bfbc231cc48e,
         type: 3}
