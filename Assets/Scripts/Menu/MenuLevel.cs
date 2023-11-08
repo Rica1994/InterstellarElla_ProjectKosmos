@@ -3,21 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum LevelType
-{
-    Venus = 0,
-    Mars = 1,
-    Saturn = 2,
-    Pluto = 3,
-    Mercury = 4
-}
-
 public class MenuLevel : MonoBehaviour
 {
     [Header("My Planet is")]
     [SerializeField]
-    private LevelType _myLevelType;
-    public LevelType MyLevelType => _myLevelType;
+    private GameManager.Planet _myPlanetType;
+    public GameManager.Planet MyPlanetType => _myPlanetType;
+
 
     [Header("Animation components children")]
     public Animation AnimationScaler;
@@ -46,21 +38,21 @@ public class MenuLevel : MonoBehaviour
     private void Start()
     {
         _factSheetData.CompletionPercentage = GameManager.Data.PlanetCompletionValues.MercuryCompletion;
-        switch (_myLevelType)
+        switch (_myPlanetType)
         {
-            case LevelType.Venus:
+            case GameManager.Planet.Venus:
                 _factSheetData.CompletionPercentage = GameManager.Data.PlanetCompletionValues.VenusCompletion;
                 break;
-            case LevelType.Mars:
+            case GameManager.Planet.Mars:
                 _factSheetData.CompletionPercentage = GameManager.Data.PlanetCompletionValues.MarsCompletion;
                 break;
-            case LevelType.Saturn:
+            case GameManager.Planet.Saturn:
                 _factSheetData.CompletionPercentage = GameManager.Data.PlanetCompletionValues.SaturnCompletion;
                 break;
-            case LevelType.Pluto:
+            case GameManager.Planet.Pluto:
                 _factSheetData.CompletionPercentage = GameManager.Data.PlanetCompletionValues.PlutoCompletion;
                 break;
-            case LevelType.Mercury:
+            case GameManager.Planet.Mercury:
                 _factSheetData.CompletionPercentage = GameManager.Data.PlanetCompletionValues.MercuryCompletion;
                 break;
         }

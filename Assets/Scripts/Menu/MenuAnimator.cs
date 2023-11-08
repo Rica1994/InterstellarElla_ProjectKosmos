@@ -24,12 +24,6 @@ public class MenuAnimator : MonoBehaviour
         {
             CameraAnimator.SetTrigger("LevelSelected");
         }
-
-
-        //   CameraAnimation.clip = CameraAnimation.GetClip(cameraAnimation);
-        //   
-        //   if (reverse) CameraAnimation.Rewind(cameraAnimation);
-        //   else CameraAnimation.Play();
     }
 
 }

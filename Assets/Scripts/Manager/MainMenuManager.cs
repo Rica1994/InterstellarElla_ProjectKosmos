@@ -98,6 +98,25 @@ public class MainMenuManager : Service
         _levelsIncluded[2] = _4_Saturn;
         _levelsIncluded[3] = _2_Pluto;
         _levelsIncluded[4] = _5_Mercury;
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    // Opens the fact sheet when the scene is loaded and it comes from a quiz
+    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        var lastPlanet = (GameManager.Planet)GameManager.Data.LastPlanet;
+        if (lastPlanet == GameManager.Planet.None) return;
+
+        StartCoroutine(Helpers.DoAfterFrame(() => 
+        {
+            while (_currentLevel.MyPlanetType != lastPlanet)
+            {
+                ForwardLevel();
+            }
+
+            ShowPlanetSheet(true);
+        }));
     }
 
     private void Start()
@@ -202,40 +221,6 @@ public class MainMenuManager : Service
                 _buttonForward.EnableButton();
             }));
         }
-    }
-
-    private int GetLevelsToGoUp(string sceneName)
-    {
-        if (sceneName.Contains("Level") || sceneName.Contains("Quiz"))
-            return 2; // For scenes like S_Level_1_0_Introscene, go two levels up
-        else
-            return 0; // Default case, stay in the current directory
-    }
-    private string ParseScoreFromScoreValues(LevelType levelType)
-    {
-        var planetValues = GameManager.Data.PlanetCompletionValues;
-
-        float planetValue = 0.0f;
-        switch (levelType)
-        {
-            case LevelType.Venus:
-                planetValue = planetValues.VenusCompletion;
-                break;
-            case LevelType.Mars:
-                planetValue = planetValues.MarsCompletion;
-                break;
-            case LevelType.Saturn:
-                planetValue = planetValues.SaturnCompletion;
-                break;
-            case LevelType.Pluto:
-                planetValue = planetValues.PlutoCompletion;
-                break;
-            case LevelType.Mercury:
-                planetValue = planetValues.MercuryCompletion;
-                break;
-        }
-
-        return Helpers.FormatPercentageToString(planetValue);
     }
 
     public string GetPlanetNameFromEnum(SceneType sceneType)
@@ -374,24 +359,7 @@ public class MainMenuManager : Service
                 return SceneType.None;
         }
     }
-    private SceneType ChooseCorrectSceneBuild()
-    {
-        switch (_levelIndex)
-        {
-            case 0:
-                return SceneType.S_Level_1_Intro;
-            case 1:
-                return SceneType.S_Level_2_Intro;
-            case 2:
-                return SceneType.S_Level_3_Intro;
-            case 3:
-                return SceneType.S_Level_4_Intro;
-            case 4:
-                return SceneType.S_Level_5_Intro;
-            default:
-                return SceneType.None;
-        }
-    }
+
     private IEnumerator EnableButtonsDelay(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
@@ -399,6 +367,11 @@ public class MainMenuManager : Service
         _buttonBackward.EnableButton();
         _buttonForward.EnableButton();
         _buttonLevelSelect.EnableButton();
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
 
