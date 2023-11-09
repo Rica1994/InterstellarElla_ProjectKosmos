@@ -28,9 +28,15 @@ public class VisualizeCollidersTool : EditorWindow
         if (GUILayout.Button("Toggle Colliders"))
         {
             _visualizeColliders = FindObjectsOfType<VisualizeCollider>().ToList();
-            for (int i = 0; i < _visualizeColliders.Count; i++)
+            
+            if (_visualizeColliders.Count > 0)
             {
-                _visualizeColliders[i].ToggleVisuals(!_visualizeColliders[0].DrawCollider);
+                bool drawCollider = !_visualizeColliders[0].DrawCollider;
+
+                for (int i = 0; i < _visualizeColliders.Count; i++)
+                {
+                    _visualizeColliders[i].ToggleVisuals(drawCollider);
+                }
             }
         }
     }
