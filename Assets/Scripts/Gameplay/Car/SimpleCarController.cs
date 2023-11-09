@@ -52,14 +52,6 @@ public class SimpleCarController : PlayerController, IVehicle
     private float _steeringAngle;
     public float SteeringAngle => _steeringAngle;
 
-    /// <summary>
-    /// Calculates the path for the car.
-    /// </summary>
-    private NavMeshPath _navMeshPath;
-
-    [SerializeField]
-    private LayerMask _ignoreMe;
-
     private float _brakeTorque = 0.0f;
     private float _motorTorque = 0.0f;
 
@@ -161,7 +153,6 @@ public class SimpleCarController : PlayerController, IVehicle
     protected override void Start()
     {
         base.Start();
-        _ignoreMe = LayerMask.GetMask("UI", "Ignore Raycast");
         GetComponent<Rigidbody>().centerOfMass = transform.InverseTransformPoint(_centerOfMass.position);
 
         // Reset position
@@ -299,6 +290,7 @@ public class SimpleCarController : PlayerController, IVehicle
     }
     private void GetInput()
     {
+
         // if no input is detected...
         if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) == 0 || BlockMove == true)
         {
@@ -317,10 +309,12 @@ public class SimpleCarController : PlayerController, IVehicle
             }
         }
         // else if slight input is being made...
-        else if (Mathf.Abs(_input.x) + Mathf.Abs(_input.y) <= 0.18f && IsBoosting == false)
+        else if (IsBoosting == false)
         {
-            _motorTorque = motorForce / 2;
-            _brakeTorque = motorForce / 2;
+            var inputMagnitude = _input.magnitude;
+
+            _motorTorque = motorForce * inputMagnitude;
+            _brakeTorque = 0;
             _timeIdle = 0.0f;
         }
         // else if major input...
@@ -445,7 +439,7 @@ public class SimpleCarController : PlayerController, IVehicle
         // limiting car velocity
         if (_rigidbody.velocity.magnitude > _speed)
         {
-            _rigidbody.velocity = _rigidbody.velocity.normalized * _speed;
+            _rigidbody.velocity = _rigidbody.velocity.normalized * _speed * _input.magnitude;
         }
     }
     private void Boost()
