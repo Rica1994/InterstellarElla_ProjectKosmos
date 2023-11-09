@@ -136,7 +136,7 @@ public class FactSheet : MonoBehaviour
 
     public void ApplyCompletion()
     {
-        StartCoroutine(FillCircleAndShowFacts(_factSheetData.CompletionPercentage / 100.0f));
+        StartCoroutine(FillCircleAndShowFacts(Mathf.Round(_factSheetData.CompletionPercentage / 10.0f) / 10.0f));
     }
 
     private IEnumerator FillCircleAndShowFacts(float progress)

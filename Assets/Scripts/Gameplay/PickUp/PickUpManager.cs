@@ -144,7 +144,8 @@ public class PickUpManager : Service
 
     private void OnPickUpPickedUp(PickUp pickup)
     {
-        PickUpsPickedUp++;
+        if (pickup.PickUpType == PickUp.Type.Special) PickUpsPickedUp += 3;
+        else PickUpsPickedUp++;
 
         if (pickup as EllaPickUp)
         {

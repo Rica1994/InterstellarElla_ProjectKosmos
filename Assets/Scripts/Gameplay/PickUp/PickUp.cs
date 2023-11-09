@@ -14,8 +14,8 @@ public class PickUp : MonoBehaviour
     private bool _pickedUp;
 
     [SerializeField]
-    private Type _PickUpType;
-
+    private Type _pickUpType;
+    public Type PickUpType => _pickUpType;
     public enum Type
     {
         Basic = 0,
