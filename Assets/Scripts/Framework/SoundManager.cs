@@ -22,6 +22,9 @@ public class SoundManager : Service
     [SerializeField]
     private AudioSource[] _sfxAudioSources;
 
+    [SerializeField]
+    private AudioSource _chordAudioSource;
+
     private AudioSource _currentSoundtrackAudioSource;
     private AudioSource _nextSoundtrackAudioSource;
 
@@ -333,5 +336,19 @@ public class SoundManager : Service
         _soundtrackVolume = volume;
         _nextSoundtrackAudioSource.volume = volume;
         _currentSoundtrackAudioSource.volume = volume;
+    }
+
+    // Call this method with an index to play a specific note in the major chord at a potentially higher octave
+    public void PlayNoteInMajorChord(AudioClip clip, int noteIndex, float basePitch = 1.0f)
+    {
+        int[] intervals = new int[] { 0, 4, 7 }; // Major chord intervals: root, major third, perfect fifth
+        int octave = noteIndex / intervals.Length; // Calculate how many octaves to jump
+        int actualIndex = noteIndex % intervals.Length; // Calculate the note within the chord
+
+        float targetPitch = basePitch * Mathf.Pow(2, intervals[actualIndex] / 12f + octave);
+
+        _chordAudioSource.clip = clip;
+        _chordAudioSource.pitch = targetPitch;
+        _chordAudioSource.Play();
     }
 }

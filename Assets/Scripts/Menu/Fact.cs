@@ -36,11 +36,12 @@ public class Fact : MonoBehaviour
     {
         if (show == false)
         {
-            Helpers.FadeImage(new Image[] { _coverImage }, _coverImageStartAlpha, 1.0f);
+            Helpers.FadeImage(new Image[] { _coverImage }, 0.0f, 1.0f);
             Helpers.FadeText(new TMP_Text[] { factText }, 0.0f, 1.0f);
         }
         else
         {
+            _coverImage.color = new Color(_coverImage.color.r, _coverImage.color.g, _coverImage.color.b, _coverImageStartAlpha);
             Helpers.FadeImage(new Image[] { _coverImage }, 0.0f, 1.0f);
             Helpers.FadeText(new TMP_Text[] {factText}, _factTextStartAlpha, 1.0f);
         }

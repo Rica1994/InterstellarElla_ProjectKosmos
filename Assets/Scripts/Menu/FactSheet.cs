@@ -54,6 +54,12 @@ public class FactSheet : MonoBehaviour
     [SerializeField]
     private List<TMP_Text> _allText = new List<TMP_Text>();
 
+    [SerializeField]
+    private AudioClip _factPopSound;
+
+    [SerializeField]
+    private AudioClip _factPopSoundPunch;
+
     private FactSheetData _factSheetData;
 
     private List<Image> _images = new List<Image>();
@@ -83,7 +89,7 @@ public class FactSheet : MonoBehaviour
         int days = (data.RotationTimeInMinutes / 60) / 24;
         int daysInMinutes = days * 24 * 60;
 
-        int hours = (data.RotationTimeInMinutes - daysInMinutes)/ 60;
+        int hours = (data.RotationTimeInMinutes - daysInMinutes) / 60;
         int hoursInMinutes = hours * 60;
 
         int minutes = (data.RotationTimeInMinutes - daysInMinutes - hoursInMinutes) % 60;
@@ -104,7 +110,7 @@ public class FactSheet : MonoBehaviour
         for (int i = 0; i < data.FactStrings.Length; i++)
         {
             _facts[i].InitializeFact(data.FactStrings[i]);
-        } 
+        }
     }
 
     public void ShowSheet(bool show, bool fade, float time = 2.0f)
@@ -126,10 +132,10 @@ public class FactSheet : MonoBehaviour
             Helpers.FadeText(_allText.ToArray(), targetAlpha, time);
         }
 
-        StartCoroutine(Helpers.DoAfter(time, ApplyCompletion));
-
-        if (show == false)
+        if (show) StartCoroutine(Helpers.DoAfter(time, ApplyCompletion));
+        else
         {
+            _facts.ForEach(fact => fact.ShowFact(false));
             StartCoroutine(Helpers.DoAfter(fade ? time : 0.0f, () => gameObject.SetActive(false)));
         }
     }
@@ -141,21 +147,29 @@ public class FactSheet : MonoBehaviour
 
     private IEnumerator FillCircleAndShowFacts(float progress)
     {
+        _completionCircleImage.fillAmount = 0.0f;
+        var soundManager = ServiceLocator.Instance.GetService<SoundManager>();
+
         float passedTime = 0.0f;
         int factIndex = 0;
+        int amountOfFactsToShow = (int)(_factSheetData.CompletionPercentage / 10.0f);
 
         float timeTillProgressFilled = progress / _progressBarFillSpeed;
-        float timePerFactShown = timeTillProgressFilled / (_factSheetData.CompletionPercentage / 10.0f);
+        float timePerFactShown = timeTillProgressFilled / amountOfFactsToShow;
 
-
-        while (_completionCircleImage.fillAmount < progress)
+        // Show fact while the progresscircle is being filled.
+        while (passedTime < timeTillProgressFilled)
         {
             _completionCircleImage.fillAmount += _progressBarFillSpeed * Time.deltaTime;
             passedTime += Time.deltaTime;
 
-            if (passedTime > timePerFactShown && factIndex < _facts.Count)
+            if (passedTime >= timePerFactShown && factIndex < _facts.Count && factIndex < amountOfFactsToShow)
             {
                 passedTime = 0.0f;
+
+                soundManager.PlayNoteInMajorChord(_factPopSound, factIndex, 1.0f);
+                soundManager.PlaySFX(_factPopSoundPunch, false);
+
                 _facts[factIndex].ShowFact(true);
                 factIndex++;
             }
@@ -163,7 +177,21 @@ public class FactSheet : MonoBehaviour
             yield return null;
         }
 
-        _completionCircleImage.fillAmount = progress;
 
+        // Make sure all facts are shown
+        if (factIndex < amountOfFactsToShow)
+        {
+            do
+            {
+                soundManager.PlayNoteInMajorChord(_factPopSound, factIndex, 1.0f);
+                soundManager.PlaySFX(_factPopSoundPunch, false);
+
+                _facts[factIndex].ShowFact(true);
+                factIndex++;
+            }
+            while (factIndex < amountOfFactsToShow);
+        }
+
+        _completionCircleImage.fillAmount = progress;
     }
 }

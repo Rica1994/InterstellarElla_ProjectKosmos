@@ -208,6 +208,7 @@ public class GameManager : Service
 
 #if UNITY_EDITOR
         Data = new SaveData();
+        Data.PlanetCompletionValues.VenusCompletion = 100.0f;
         //ParseData(Data.ToString());
 #elif !UNITY_EDITOR && UNITY_WEBGL
 
