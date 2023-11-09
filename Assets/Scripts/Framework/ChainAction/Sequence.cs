@@ -15,6 +15,9 @@ public class Sequence : MonoBehaviour
     [SerializeField]
     private bool _destroyAfter = false;
 
+    [SerializeField]
+    private bool _loop = false;
+
     public List<ChainAction> ChainActions => _chainActions;
 
     private void Start()
@@ -33,6 +36,11 @@ public class Sequence : MonoBehaviour
 
     private void OnLastChainActionDone()
     {
+        if (_loop) StartCoroutine(Helpers.DoAfterFrame(() => 
+        {
+            ChainManager.Instance.StartChain(this);
+        }));
+
         if (_destroyAfter) Destroy(gameObject);
     }
 

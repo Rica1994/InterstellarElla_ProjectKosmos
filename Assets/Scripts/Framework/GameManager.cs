@@ -137,7 +137,7 @@ public class GameManager : Service
         get => _isGameplayPaused;
         set 
         {
-            ServiceLocator.Instance.GetService<SoundtrackManager>().PauseInSceneAudioSources(value);
+            ServiceLocator.Instance.GetService<SoundManager>().PauseInSceneAudioSources(value);
             Time.timeScale = value ? 0 : 1;
             _isGameplayPaused = value; 
         }

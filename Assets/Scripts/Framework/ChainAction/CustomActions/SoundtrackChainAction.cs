@@ -57,7 +57,7 @@ public class SoundtrackChainAction : ChainAction
     public override void Execute()
     {
         base.Execute();
-        var soundTrackManager = ServiceLocator.Instance.GetService<SoundtrackManager>();
+        var soundTrackManager = ServiceLocator.Instance.GetService<SoundManager>();
         switch (_soundAction)
         {
             case SoundAction.FadeOutCurrentSoundtrack:

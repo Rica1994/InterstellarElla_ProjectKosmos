@@ -22,7 +22,7 @@ public class SettingsMenu : MonoBehaviour
 
     private void SetMusicVolume(float volume)
     {
-        var soundTrackManager = ServiceLocator.Instance.GetService<SoundtrackManager>();
+        var soundTrackManager = ServiceLocator.Instance.GetService<SoundManager>();
         // Apply the volume to all music audio sources managed by SoundtrackManager
         soundTrackManager.SetMusicVolume(volume);
 
@@ -32,7 +32,7 @@ public class SettingsMenu : MonoBehaviour
 
     private void SetSFXVolume(float volume)
     {
-        var soundTrackManager = ServiceLocator.Instance.GetService<SoundtrackManager>();
+        var soundTrackManager = ServiceLocator.Instance.GetService<SoundManager>();
         var audioController = ServiceLocator.Instance.GetService<AudioController>();
 
         // Apply the volume to all SFX audio sources managed by SoundtrackManager

@@ -5,6 +5,7 @@ using UnityCore.Scene;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class MainMenuManager : Service
 {
     [Header("Included Levels")]
@@ -53,6 +54,21 @@ public class MainMenuManager : Service
     private ButtonBase _buttonBackward;
     [SerializeField]
     private ButtonBase _buttonLevelSelect;
+
+    [SerializeField]
+    private AudioClip _openFactSheetClip;
+
+    [SerializeField]
+    private AudioClip _closeFactSheetClip;
+
+    [SerializeField]
+    private AudioClip _zoomOnPlanetClip;
+
+    [SerializeField]
+    private AudioClip _zoomOutPlanetClip;
+
+    [SerializeField]
+    private AudioClip _startLevelClip;
 
     [SerializeField]
     private FactSheet _factSheet;
@@ -159,6 +175,10 @@ public class MainMenuManager : Service
 
             // zoom camera (needs to be animation
             _menuAnimator.PlayPlanetSelectAnimation(true);
+
+            // play music
+            ServiceLocator.Instance.GetService<SoundManager>().PlayClip(_startLevelClip);
+
             _factSheet.ShowSheet(false, true, 1.0f);
 
             StartCoroutine(Helpers.DoAfter(1f, () => 
@@ -170,9 +190,9 @@ public class MainMenuManager : Service
 
 #if UNITY_EDITOR
             // load the loading scene first, then the actual scene for gameplay
-            _sceneController.LoadIntermissionLoading(sceneToLoad, false, null, false, PageType.Loading, 1.8f);
+            _sceneController.LoadIntermissionLoading(sceneToLoad, false, null, false, PageType.Loading, _startLevelClip.length);
 #elif UNITY_WEBGL && !UNITY_EDITOR
-            StartCoroutine(Helpers.DoAfter(1.8f, () => _sceneController.Load(sceneToLoad)));
+            StartCoroutine(Helpers.DoAfter(_startLevelClip.length, () => _sceneController.Load(sceneToLoad)));
 #endif
 
             // switch (ScenesToLoad)
@@ -190,17 +210,21 @@ public class MainMenuManager : Service
 
     public void ShowPlanetSheet(bool show)
     {
+        var soundManager = ServiceLocator.Instance.GetService<SoundManager>();
+
         if (show)
         {
             _buttonLevelSelect.DisableButton();
-            var length = 1.0f;
             _menuAnimator.PlayPlanetSelectAnimation(false);
+            StartCoroutine(Helpers.DoAfter(0.25f, () => soundManager.PlaySFX(_zoomOnPlanetClip, true)));
 
             _factSheet.InitializeSheet(CurrentLevel.FactSheetData);
 
-            StartCoroutine(Helpers.DoAfter(length, () =>
+
+            StartCoroutine(Helpers.DoAfter(1.0f, () =>
             {
-                _factSheet.ShowSheet(true, true);
+                soundManager.PlaySFX(_openFactSheetClip, true);
+                _factSheet.ShowSheet(true, true, _openFactSheetClip.length);
                 _buttonBackward.DisableButton(true);
                 _buttonForward.DisableButton(true);
             }));
@@ -210,12 +234,14 @@ public class MainMenuManager : Service
         else
         {
             _buttonLevelSelect.EnableButton();
-            _factSheet.ShowSheet(false, true);
+            _factSheet.ShowSheet(false, true, _closeFactSheetClip.length);
+            soundManager.PlaySFX(_closeFactSheetClip, true);
 
-        
-            Helpers.FadeImage(new GameObject[] { _buttonForward.gameObject, _buttonBackward.gameObject }, 1.0f, 1.0f);
+            Helpers.FadeImage(new GameObject[] { _buttonForward.gameObject, _buttonBackward.gameObject }, 1.0f, _closeFactSheetClip.length);
 
-            StartCoroutine(Helpers.DoAfter(2.0f, () => {
+            StartCoroutine(Helpers.DoAfter(_closeFactSheetClip.length + 0.25f, () => {
+                soundManager.PlaySFX(_zoomOutPlanetClip, true);
+
                 _menuAnimator.PlayPlanetSelectAnimation(true);
                 _buttonBackward.EnableButton();
                 _buttonForward.EnableButton();

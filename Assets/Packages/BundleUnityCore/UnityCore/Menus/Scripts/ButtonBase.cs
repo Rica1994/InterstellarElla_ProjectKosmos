@@ -32,7 +32,7 @@ public class ButtonBase : MonoBehaviour, IClickable
 
     [Header("Audio")]
     [SerializeField]
-    protected AudioElement _soundEffect;
+    protected AudioClip _audioClip;
 
     [Header("Trigger")]
     [SerializeField]
@@ -44,14 +44,14 @@ public class ButtonBase : MonoBehaviour, IClickable
     private Button _myButton;
     public Button MyButton => _myButton;
 
-    protected AudioController _audioController;
+    protected SoundManager _soundManager;
     protected PageController _pageController; // storing this in a variable somehow did not work !? (big mystery)-> keep assigning its value
 
 
     #region UNITY FUNCTIONS
     protected virtual void Start()
     {
-        _audioController = ServiceLocator.Instance.GetService<AudioController>();
+        _soundManager = ServiceLocator.Instance.GetService<SoundManager>();
         _pageController = ServiceLocator.Instance.GetService<PageController>();
 
         //DisableButton(true); // gives a problem for if we return to main menu (we try to run acoroutine on buttons that get destroyed)
@@ -159,11 +159,12 @@ public class ButtonBase : MonoBehaviour, IClickable
     }
     protected virtual void PlaySoundEffect()
     {
-        if (_soundEffect != null)
+        if (_audioClip != null)
         {
-            _audioController.PlayAudio(_soundEffect);
+            _soundManager.PlaySFX(_audioClip, false, 0.5f);
         }
     }
+
     protected virtual void PlayAnimation(string animationString)
     {
         if (_animationComponent != null)

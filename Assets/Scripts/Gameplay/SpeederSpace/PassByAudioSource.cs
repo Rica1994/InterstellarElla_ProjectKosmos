@@ -29,7 +29,7 @@ public class PassByAudioSource : MonoBehaviour
     {
         if (hasEntered)
         {
-            ServiceLocator.Instance.GetService<SoundtrackManager>().PlayClipAt3DLocation(transform.position, _setting);
+            ServiceLocator.Instance.GetService<SoundManager>().PlayClipAt3DLocation(transform.position, _setting);
         }
     }
 

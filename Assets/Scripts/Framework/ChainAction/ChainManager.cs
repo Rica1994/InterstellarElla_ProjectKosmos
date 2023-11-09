@@ -48,4 +48,13 @@ public class ChainManager : MonoBehaviourSingleton<ChainManager>
         Chain CurrentChain = _chain;
         return CurrentChain;
     }
+
+    private void OnDestroy()
+    {
+        if (_chain != null)
+        {
+            _chain.OnChainCompleted -= OnChainCompleted;
+        }
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
+    }
 }

@@ -91,6 +91,7 @@ public class Chain
             _currentChainAction = _chainActions.Dequeue();
             _currentChainAction.ChainActionDone += OnCurrentChainActionDone;
             _currentChainAction.Execute();
+            _currentChainAction.OnEnter();
         }
         catch (Exception e)
         {

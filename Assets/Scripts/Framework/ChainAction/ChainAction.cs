@@ -122,6 +122,9 @@ public class ChainAction : MonoBehaviour
 
     public virtual void OnEnter()
     {
+        _elapsedTime = 0.0f;
+        _timesRepeated = 0;
+
         ChainActionStarted?.Invoke();
         //Debug.Log("ChainAction: " + _nameChainAction + " started.");
     }

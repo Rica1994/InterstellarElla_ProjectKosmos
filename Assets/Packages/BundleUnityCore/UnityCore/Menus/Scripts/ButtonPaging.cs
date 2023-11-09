@@ -40,11 +40,11 @@ public class ButtonPaging : ButtonBase
         // if this page is alrdy on...
         if (_pageController.PageIsOn(_turnThisPage) == true)
         {
-            _audioController.PlayAudio(_soundEffectOff);
+            //_soundManager.PlayClip(_soundEffectOff);
         }
         else
         {
-            _audioController.PlayAudio(_soundEffect);
+            _soundManager.PlaySFX(_audioClip, false, 0.5f);
         }
     }
 

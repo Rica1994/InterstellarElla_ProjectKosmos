@@ -81,7 +81,7 @@ public class CrashingMeteor : MonoBehaviour
         float pitch = Random.Range(0.8f, 1.2f);
         AudioClip randomClip = _meteoriteWhooshSounds[Random.Range(0, _meteoriteWhooshSounds.Length)];
 
-        ServiceLocator.Instance.GetService<SoundtrackManager>().PlaySFX(randomClip, false, 0.5f, pitch);
+        ServiceLocator.Instance.GetService<SoundManager>().PlaySFX(randomClip, false, 0.5f, pitch);
     }
 
     public void MeteorCrashed()
@@ -89,6 +89,6 @@ public class CrashingMeteor : MonoBehaviour
         float pitch = Random.Range(0.8f, 1.2f);
         AudioClip randomClip = _crashSounds[Random.Range(0, _crashSounds.Length)];
 
-        ServiceLocator.Instance.GetService<SoundtrackManager>().PlaySFX(randomClip, false, 0.5f, pitch);
+        ServiceLocator.Instance.GetService<SoundManager>().PlaySFX(randomClip, false, 0.5f, pitch);
     }
 }
