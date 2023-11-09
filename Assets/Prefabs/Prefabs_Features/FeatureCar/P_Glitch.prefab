@@ -20314,7 +20314,6 @@ GameObject:
   - component: {fileID: 2813341083691783324}
   - component: {fileID: 2813341083691783320}
   - component: {fileID: 2813341083691783522}
-  - component: {fileID: 764921589}
   m_Layer: 10
   m_Name: RemoteCar_TEST
   m_TagString: Player
@@ -20444,21 +20443,6 @@ MonoBehaviour:
   _particleLeftJet: {fileID: 3885245374790457786}
   _particleRightJet: {fileID: 8893336124717252123}
   BlockMove: 0
---- !u!114 &764921589
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2813341083691783327}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ea08a21023f4ea4da4579089a36e50c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectToSpawn: {fileID: 7043237957399196017, guid: ea2dfb05e8eae4c4ea41e127991eca3a,
-    type: 3}
-  spawnInterval: 0.23
 --- !u!1 &2939962355386322945
 GameObject:
   m_ObjectHideFlags: 0
@@ -52047,8 +52031,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8358264329770268594}
-  m_LocalRotation: {x: 0.13052616, y: -0, z: -0, w: 0.9914449}
-  m_LocalPosition: {x: 271.52, y: 73.57282, z: -88.39425}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.7600002, z: -2.4300003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9206758313138751746}
@@ -52113,7 +52097,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 3000
+  far clip plane: 100
   field of view: 60
   orthographic: 0
   orthographic size: 10
