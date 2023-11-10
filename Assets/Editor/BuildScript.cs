@@ -4,15 +4,17 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 using UnityEditor.Build.Reporting;
+using System;
 
 public class BuildWindow : EditorWindow
 {
     private string repositoryPath = string.Empty;
     private bool _selectAllScenesBoolean = false;
-    private bool _lastSelectAllScenesBoolean = false;
+    private Vector2 scrollPosition;
 
     private List<bool> buildToggles = new List<bool>();
     private string[] levels = new string[] {"S_MainMenu",
+            "Levels\\S_Quiz",
          "Levels\\Mars\\S_Level_1_1_Work",
          "Levels\\Mars\\S_Level_1_Intro",
          "Levels\\Mars\\S_Level_1_Outro",
@@ -42,8 +44,7 @@ public class BuildWindow : EditorWindow
         "Levels\\Mercury\\S_Level_5_2_Work",
         "Levels\\Mercury\\S_Level_5_3_Work",
         "Levels\\Mercury\\S_Level_5_Intro" ,
-          "Levels\\Mercury\\S_Level_5_Outro",
-            "Levels\\S_Quiz"};
+          "Levels\\Mercury\\S_Level_5_Outro"};
 
     [MenuItem("Build/Build Window")]
     public static void ShowWindow()
@@ -54,41 +55,86 @@ public class BuildWindow : EditorWindow
     private void OnGUI()
     {
         GUILayout.Label("Build Settings", EditorStyles.boldLabel);
-
         repositoryPath = EditorGUILayout.TextField("Repository Path", repositoryPath);
 
-        for (int i = 0; i < levels.Length; i++)
-        {
-            if (buildToggles.Count <= i)
-            {
-                buildToggles.Add(true);
-            }
-
-            buildToggles[i] = EditorGUILayout.Toggle(levels[i], buildToggles[i]);
-        }
-
         _selectAllScenesBoolean = GUILayout.Toggle(_selectAllScenesBoolean, "Select all scenes");
-        
-        if (_selectAllScenesBoolean && _lastSelectAllScenesBoolean != _selectAllScenesBoolean)
+        HandleSelectAllScenes();
+
+        // Use the full width of the editor window for the scroll view
+        scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.ExpandWidth(true), GUILayout.Height(400));
+
+        string lastFolder = "";
+        foreach (var level in levels)
         {
-            _lastSelectAllScenesBoolean = true;
-            for (int i = 0; i < buildToggles.Count; i++)
+            int index = Array.IndexOf(levels, level);
+            EnsureBuildToggleExists(index);
+
+            // Extract folder name
+            string folderName = ExtractFolderName(level);
+
+            // Display folder label if it's different from the last one
+            if (folderName != lastFolder)
             {
-                buildToggles[i] = true;
+                if (!string.IsNullOrEmpty(lastFolder))
+                {
+                    GUILayout.Space(10); // Extra space between groups
+                }
+                GUILayout.Label(folderName, EditorStyles.boldLabel);
+                lastFolder = folderName;
             }
+
+            // Custom layout for each toggle
+            GUILayout.BeginHorizontal();
+            buildToggles[index] = GUILayout.Toggle(buildToggles[index], "", GUILayout.Width(20)); // Toggle with a fixed width
+            GUILayout.Label(new GUIContent(level, level), GUILayout.ExpandWidth(true)); // Label with tooltip and expanding width
+            GUILayout.EndHorizontal();
         }
-        else if (_selectAllScenesBoolean == false && _lastSelectAllScenesBoolean != _selectAllScenesBoolean)
-        {
-            _lastSelectAllScenesBoolean = false;
-            for (int i = 0; i < buildToggles.Count; i++)
-            {
-                buildToggles[i] = false;
-            }
-        }
-        
+        GUILayout.EndScrollView();
+
         if (GUILayout.Button("Build Selected Scenes"))
         {
             BuildSelectedScenes();
+        }
+    }
+
+    private string ExtractFolderName(string level)
+    {
+        // Logic to extract the folder name from the level string
+        // Example: "Levels\\Mars\\S_Level_1_1_Work" -> "Mars"
+        var splitPath = level.Split('\\');
+        if (splitPath.Length > 1 && splitPath[0] == "Levels")
+        {
+            return splitPath[1]; // Returns the subfolder name
+        }
+        return "MainMenu"; // Default for levels not in subfolders
+    }
+
+    private void EnsureBuildToggleExists(int index)
+    {
+        if (buildToggles.Count <= index)
+        {
+            buildToggles.Add(true);
+        }
+    }
+
+    private void HandleSelectAllScenes()
+    {
+        if (_selectAllScenesBoolean)
+        {
+            SetAllToggles(true);
+        }
+        else
+        {
+            SetAllToggles(false);
+        }
+    }
+
+    private void SetAllToggles(bool value)
+    {
+        for (int i = 0; i < levels.Length; i++)
+        {
+            EnsureBuildToggleExists(i);
+            buildToggles[i] = value;
         }
     }
 
@@ -163,11 +209,6 @@ public class BuildWindow : EditorWindow
             {
                 Debug.LogError("Build failed for " + sceneName + " at " + buildPath);
             }
-
         }
-
-        //  EditorUtility.ClearProgressBar();
-
     }
 }
-
