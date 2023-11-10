@@ -4,6 +4,7 @@ using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 [DefaultExecutionOrder(-500)]
 [RequireComponent(typeof(AudioSource))]
@@ -21,6 +22,9 @@ public class SoundManager : Service
 
     [SerializeField]
     private AudioSource[] _sfxAudioSources;
+
+    [SerializeField]
+    private AudioSource[] _3DSfxAudioSources;
 
     [SerializeField]
     private AudioSource _chordAudioSource;
@@ -259,19 +263,38 @@ public class SoundManager : Service
         }
     }
 
-    public void PlayClipAt3DLocation(Vector3 pos, PassByAudioSource.AudioSourceSetting setting)
+    public void PlayClipAt3DLocation(Vector3 pos, AudioSourceSetting setting)
     {
         if (_passByAudioSource.isPlaying) return;
 
         _passByAudioSource.transform.position = pos;
 
-        float randomPitch = _passByAudioSourceStandardPitch + Random.Range(-0.15f, 0.15f);
+        float randomPitch = _passByAudioSourceStandardPitch + UnityEngine.Random.Range(-0.15f, 0.15f);
         _passByAudioSource.pitch = randomPitch;
-        //_passByAudioSource.minDistance = setting.MinMaxDistance.x;
-        //_passByAudioSource.maxDistance = setting.MinMaxDistance.y;
-        //_passByAudioSource.loop = setting.IsLooping;
+      //  _passByAudioSource.minDistance = setting.MinMaxDistance.x;
+      //  _passByAudioSource.maxDistance = setting.MinMaxDistance.y;
+      //  _passByAudioSource.loop = setting.IsLooping;
 
         _passByAudioSource.Play();
+    }
+
+    public AudioSource PlaySFXAt3DLocation(AudioClip clip, Vector3 pos, AudioSourceSetting setting)
+    {
+        var freeAudioSource = GetFreeAudioSource(_3DSfxAudioSources);
+        if (freeAudioSource == null) return null;
+
+        float randomPitch = 1.0f + UnityEngine.Random.Range(setting.MinMaxRandomPitchValues.x, setting.MinMaxRandomPitchValues.y);
+
+        freeAudioSource.clip = clip;
+        freeAudioSource.transform.position = pos;
+        freeAudioSource.pitch = randomPitch;
+        freeAudioSource.volume = setting.Volume;
+        freeAudioSource.minDistance = setting.MinMaxDistance.x;
+        freeAudioSource.maxDistance = setting.MinMaxDistance.y;
+        freeAudioSource.loop = setting.IsLooping;
+        freeAudioSource.Play();
+
+        return freeAudioSource;
     }
 
     public void PlaySFX(AudioClip clip, bool forcePlay, float volume = 1.0f, float pitch = 1.0f)
@@ -350,5 +373,42 @@ public class SoundManager : Service
         _chordAudioSource.clip = clip;
         _chordAudioSource.pitch = targetPitch;
         _chordAudioSource.Play();
+    }
+
+    public AudioSource GetFreeAudioSource(AudioSource[] sources)
+    {
+        for (int i = 0; i < sources.Length; i++)
+        {
+            if (sources[i].isPlaying == false) return sources[i];
+        }
+
+        Debug.LogWarning("GetFreeAudioSource()  no free audio sources found!");
+        return null;
+    }
+}
+
+[Serializable]
+public struct AudioSourceSetting
+{
+    public bool IsThreeDimensional;
+    public bool IsLooping;
+    public float Volume;
+    public Vector2 MinMaxDistance;
+    public Vector2 MinMaxRandomPitchValues;
+
+    public AudioSourceSetting(float volume, bool isThreeDimensional, bool isLooping, Vector2 minMaxDistance, Vector2 minMaxRandomPitchValues)
+    {
+        Volume = volume;
+        IsThreeDimensional = isThreeDimensional;
+        IsLooping = isLooping;
+        MinMaxDistance = minMaxDistance;
+        MinMaxRandomPitchValues = minMaxRandomPitchValues;
+    }
+
+    // Overloaded constructor with defaults
+    // Static factory method to create a default AudioSourceSetting
+    public static AudioSourceSetting CreateDefault()
+    {
+        return new AudioSourceSetting(1.0f, false, false, Vector2.zero, Vector2.zero);
     }
 }

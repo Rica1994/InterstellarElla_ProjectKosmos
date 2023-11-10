@@ -3,15 +3,9 @@ using UnityCore.Audio;
 using UnityEngine;
 
 
+[RequireComponent(typeof(Collider), typeof(TriggerHandler))]
 public class PassByAudioSource : MonoBehaviour
 {
-    [Serializable]
-    public struct AudioSourceSetting
-    {
-        public Vector2 MinMaxDistance;
-        public bool IsLooping;
-    }
-
     private AudioSource audioSource;
 
     private TriggerHandler _triggerHandler;
