@@ -147,9 +147,9 @@ public class PickUpManager : Service
         if (pickup.PickUpType == PickUp.Type.Special) PickUpsPickedUp += 3;
         else PickUpsPickedUp++;
 
-        if (pickup as EllaPickUp)
+        if (pickup.PickUpType == PickUp.Type.Special)
         {
-            _foundEllaPickups.Add(((EllaPickUp)pickup).Type);
+           // _foundEllaPickups.Add(((EllaPickUp)pickup).Type);
            ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_soundEffectPickup2);
            AdjustPitch(_pickupCurrentCombo, true);
         }
