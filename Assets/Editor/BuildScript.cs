@@ -10,6 +10,7 @@ public class BuildWindow : EditorWindow
 {
     private string repositoryPath = string.Empty;
     private bool _selectAllScenesBoolean = false;
+    private bool _lastSelectAllScenesBoolean = false;
     private Vector2 scrollPosition;
 
     private List<bool> buildToggles = new List<bool>();
@@ -119,12 +120,14 @@ public class BuildWindow : EditorWindow
 
     private void HandleSelectAllScenes()
     {
-        if (_selectAllScenesBoolean)
+        if (_selectAllScenesBoolean && _lastSelectAllScenesBoolean != _selectAllScenesBoolean)
         {
+            _lastSelectAllScenesBoolean = true;
             SetAllToggles(true);
         }
-        else
+        else if (_selectAllScenesBoolean == false && _lastSelectAllScenesBoolean != _selectAllScenesBoolean)
         {
+            _lastSelectAllScenesBoolean = false;
             SetAllToggles(false);
         }
     }
