@@ -88,6 +88,9 @@ public class MouthAnimation : MonoBehaviour
     //[DllImport("__Internal")]
     //private static extern void RegisterVisibilityChangeCallback();
 
+    [SerializeField]
+    private GameObject _maggieDustParticle;
+
     private void Awake()
     {
         if (_playableDirector != null)
@@ -119,6 +122,15 @@ public class MouthAnimation : MonoBehaviour
 
     private void Update()
     {
+        if (transform.localScale.x == 0)
+        {
+            _maggieDustParticle.SetActive(false);
+        }
+        else
+        {
+            _maggieDustParticle.SetActive(true);
+        }
+
         //UpdateMouth();
         if (VoiceSource.isPlaying)
         {
