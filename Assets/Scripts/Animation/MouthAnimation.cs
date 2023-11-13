@@ -54,7 +54,7 @@ public class MouthAnimation : MonoBehaviour
         Thinking
     }
 
-    [SerializeField] private Mood MaggieMood;
+    public Mood MaggieMood;
 
 
     [SerializeField, Range(0f, 1f)]

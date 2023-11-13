@@ -17,6 +17,9 @@ public class MaggieChainAction : ChainAction
     private AudioSource _maggieAudioSource;
     private MouthAnimation _maggieMouthAnimation;
 
+    [SerializeField]
+    private MouthAnimation.Mood _maggieMood;
+
     protected override void Awake()
     {
         base.Awake();
@@ -42,6 +45,8 @@ public class MaggieChainAction : ChainAction
     public override void Execute()
     {
         base.Execute();
+        _maggieMouthAnimation.Restart();
+        _maggieMouthAnimation.MaggieMood = _maggieMood;
         _maggie.PopUp();
         _maggieMouthAnimation.VoiceSource = _maggieAudioSource;
         StartCoroutine(Helpers.DoAfter(_maggie.PopUpLength, () =>
