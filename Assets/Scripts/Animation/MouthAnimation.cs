@@ -8,6 +8,8 @@ using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
 using System.Runtime.InteropServices;
+
+[ExecuteInEditMode]
 public class MouthAnimation : MonoBehaviour
 {
     const int BAND_8 = 8;
@@ -46,7 +48,7 @@ public class MouthAnimation : MonoBehaviour
 
     public enum Mood
     {
-        Happy,  
+        Happy,
         Sad,
         Confused,
         Thinking
@@ -92,6 +94,11 @@ public class MouthAnimation : MonoBehaviour
         {
             SetTimelineAudioTrack();
         }
+    }
+
+    private void OnValidate()
+    {
+        InitializeVariables();
     }
 
     private void Start()
@@ -145,135 +152,68 @@ public class MouthAnimation : MonoBehaviour
             _timePassedWithCurrentMouth = 0.0f;
             float volume = AudioFrequencyBand8.GetAmplitude();
 
+            _halfOpenMouth.enabled = false;
+            _wavyMouth.enabled = false;
+            _lineMouth.enabled = false;
+            _closedMouthHappy.enabled = false;
+            _openMouthHappy.enabled = false;
+            _closedMouthSad.enabled = false;
+            _openMouthSad.enabled = false;
+
+            _mouthJoint.localScale = new Vector3(1, 1, 1);
+
             if (volume < _thresholdHalfOpen)
             {
-                _mouthJoint.localScale = new Vector3(1, 1, 1);
-                //Debug.Log("Closed Mouth Activated");
                 switch (MaggieMood)
                 {
                     case Mood.Happy:
-                        _halfOpenMouth.enabled = false;
-                        _wavyMouth.enabled = false;
-                        _lineMouth.enabled = false;
                         _closedMouthHappy.enabled = true;
-                        _openMouthHappy.enabled = false;
-                        _closedMouthSad.enabled = false;
-                        _openMouthSad.enabled = false;
                         break;
                     case Mood.Sad:
-                        _halfOpenMouth.enabled = false;
-                        _wavyMouth.enabled = false;
-                        _lineMouth.enabled = false;
-                        _closedMouthHappy.enabled = false;
-                        _openMouthHappy.enabled = false;
                         _closedMouthSad.enabled = true;
-                        _openMouthSad.enabled = false;
                         break;
                     case Mood.Confused:
-                        _halfOpenMouth.enabled = false;
                         _wavyMouth.enabled = true;
-                        _lineMouth.enabled = false;
-                        _closedMouthHappy.enabled = false;
-                        _openMouthHappy.enabled = false;
-                        _closedMouthSad.enabled = false;
-                        _openMouthSad.enabled = false;
                         break;
                     case Mood.Thinking:
-                        _halfOpenMouth.enabled = false;
-                        _wavyMouth.enabled = false;
                         _lineMouth.enabled = true;
-                        _closedMouthHappy.enabled = false;
-                        _openMouthHappy.enabled = false;
-                        _closedMouthSad.enabled = false;
-                        _openMouthSad.enabled = false;
                         break;
                 }
             }
             else if (volume >= _thresholdHalfOpen && volume < _thresholdOpen)
             {
-                _mouthJoint.localScale = new Vector3(1, 1, 1);
-                //Debug.Log("Half Open Mouth Activated");
                 switch (MaggieMood)
                 {
                     case Mood.Happy:
                         _halfOpenMouth.enabled = true;
-                        _wavyMouth.enabled = false;
-                        _lineMouth.enabled = false;
-                        _closedMouthHappy.enabled = false;
-                        _openMouthHappy.enabled = false;
-                        _closedMouthSad.enabled = false;
-                        _openMouthSad.enabled = false;
                         break;
                     case Mood.Sad:
                         _halfOpenMouth.enabled = true;
-                        _wavyMouth.enabled = false;
-                        _lineMouth.enabled = false;
-                        _closedMouthHappy.enabled = false;
-                        _openMouthHappy.enabled = false;
-                        _closedMouthSad.enabled = false;
-                        _openMouthSad.enabled = false;
                         break;
                     case Mood.Confused:
-                        _halfOpenMouth.enabled = false;
                         _wavyMouth.enabled = true;
-                        _lineMouth.enabled = false;
-                        _closedMouthHappy.enabled = false;
-                        _openMouthHappy.enabled = false;
-                        _closedMouthSad.enabled = false;
-                        _openMouthSad.enabled = false;
                         break;
                     case Mood.Thinking:
-                        _halfOpenMouth.enabled = false;
-                        _wavyMouth.enabled = false;
                         _lineMouth.enabled = true;
-                        _closedMouthHappy.enabled = false;
-                        _openMouthHappy.enabled = false;
-                        _closedMouthSad.enabled = false;
-                        _openMouthSad.enabled = false;
                         break;
                 }
             }
             else
             {
                 _mouthJoint.localScale = new Vector3(1, volume * _mouthScaleMultiplier, 1);
-                //Debug.Log("Open Mouth Activated");
                 switch (MaggieMood)
                 {
                     case Mood.Happy:
-                        _halfOpenMouth.enabled = false;
-                        _wavyMouth.enabled = false;
-                        _lineMouth.enabled = false;
-                        _closedMouthHappy.enabled = false;
                         _openMouthHappy.enabled = true;
-                        _closedMouthSad.enabled = false;
-                        _openMouthSad.enabled = false;
                         break;
                     case Mood.Sad:
-                        _halfOpenMouth.enabled = false;
-                        _wavyMouth.enabled = false;
-                        _lineMouth.enabled = false;
-                        _closedMouthHappy.enabled = false;
-                        _openMouthHappy.enabled = false;
-                        _closedMouthSad.enabled = false;
                         _openMouthSad.enabled = true;
                         break;
                     case Mood.Confused:
-                        _halfOpenMouth.enabled = false;
                         _wavyMouth.enabled = true;
-                        _lineMouth.enabled = false;
-                        _closedMouthHappy.enabled = false;
-                        _openMouthHappy.enabled = false;
-                        _closedMouthSad.enabled = false;
-                        _openMouthSad.enabled = false;
                         break;
                     case Mood.Thinking:
-                        _halfOpenMouth.enabled = false;
-                        _wavyMouth.enabled = false;
                         _lineMouth.enabled = true;
-                        _closedMouthHappy.enabled = false;
-                        _openMouthHappy.enabled = false;
-                        _closedMouthSad.enabled = false;
-                        _openMouthSad.enabled = false;
                         break;
                 }
             }
@@ -306,9 +246,9 @@ public class MouthAnimation : MonoBehaviour
 
     public void Restart()
     {
-        #if UNITY_WEBGL && !UNITY_EDITOR
+#if UNITY_WEBGL && !UNITY_EDITOR
         CloseSampling(name);
-        #endif
+#endif
     }
 
     private void SetTimelineAudioTrack()
