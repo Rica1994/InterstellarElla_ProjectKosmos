@@ -171,24 +171,6 @@ public class SpeederGround : PlayerController, IVehicle, IElla
         moveDirection.Normalize();
         transform.forward = moveDirection;
         _rightVector = Vector3.Cross(moveDirection, Vector3.up);
-
-        if (_moonscooterTransform != null && _ellaRyderTransform != null)
-        {
-            _moonscooterTransform.localPosition = _previousMoonscooterPosition;
-            _ellaRyderTransform.localPosition = _previousEllaRyderPosition;
-            _visual.localPosition = _previousVisualPosition;
-
-            if (moveDirection.z < 0f)
-            {
-                _visual.Rotate(0.0f, 180.0f, 0.0f);
-                _moonscooterTransform.rotation = Quaternion.identity;
-                _ellaRyderTransform.rotation = Quaternion.identity;
-                //_moonscooterTransform.Rotate(0.0f, 180.0f, 0.0f);
-            }
-        }
-
-
-
         _standardRotation = transform.rotation;
     }
 

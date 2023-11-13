@@ -1,22 +1,70 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QualitySettingsManager : MonoBehaviour
+[System.Serializable]
+public class GameObjectArray
 {
     [SerializeField]
-    private List<GameObject> _features = new List<GameObject>();
+    private GameObject[] _qualityLevelFeatures;
+
+    // Public method to access the GameObjects
+    public GameObject[] QualityLevelFeatures => _qualityLevelFeatures;
+}
+
+
+public class QualitySettingsManager : Service
+{
+    public GameObjectArray[] qualityLevels = new GameObjectArray[Enum.GetValues(typeof(QualityLevel)).Length];
 
     private void Start()
     {
-        ToggleFeatures();
+        SetQualityLevelFeatures(QualitySettings.GetQualityLevel());
     }
 
-    public void ToggleFeatures()
+    public void ToggleQualityLevel()
     {
-        for (int i = 0; i < _features.Count; ++i)
+        if (QualitySettings.names.Length - 1 != QualitySettings.GetQualityLevel())
         {
-            _features[i].SetActive(QualitySettings.GetQualityLevel() != 0);
+            QualitySettings.IncreaseLevel();
+        }
+        else
+        {
+            QualitySettings.SetQualityLevel(0);
+        }
+
+        SetQualityLevelFeatures(QualitySettings.GetQualityLevel());
+    }
+
+    private void SetQualityLevelFeatures(int qualityLevel)
+    {
+        for (int i = 0; i < qualityLevels.Length; i++)
+        {
+            if (i != qualityLevel)
+            {
+                foreach (GameObject go in qualityLevels[i].QualityLevelFeatures)
+                {
+                    if (go != null)
+                    {
+                        go.SetActive(false);
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < qualityLevels.Length; i++)
+        {
+            if (i == qualityLevel)
+            {
+                foreach (GameObject go in qualityLevels[i].QualityLevelFeatures)
+                {
+                    if (go != null)
+                    {
+                        go.SetActive(true);
+                    }
+                }
+            }
         }
     }
 }

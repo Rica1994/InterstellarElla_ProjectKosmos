@@ -24,6 +24,9 @@ public class DebugMenu : MonoBehaviour
     [SerializeField]
     private TMP_Text _gameTimeText;
 
+    [SerializeField]
+    private Button _toggleQualityLevelButton;
+
     private void Start()
     {
         // remove ourselves when we are building for the client.
@@ -36,6 +39,7 @@ public class DebugMenu : MonoBehaviour
         _increaseGameTimeButton.onClick.AddListener(IncreaseGameTime);
         _decreaseGameTimeButton.onClick.AddListener(DecreaseGameTime);
         _resetGameTimeButton.onClick.AddListener(ResetGameTime);
+        _toggleQualityLevelButton.onClick.AddListener(ToggleQualityLevel);
     }
 
     private void ShowDebugCanvas()
@@ -67,5 +71,11 @@ public class DebugMenu : MonoBehaviour
         _increaseGameTimeButton.onClick.RemoveAllListeners();
         _decreaseGameTimeButton.onClick.RemoveAllListeners();
         _resetGameTimeButton.onClick.RemoveAllListeners();
+        _toggleQualityLevelButton.onClick.RemoveAllListeners();
+    }
+
+    private void ToggleQualityLevel()
+    {
+        ServiceLocator.Instance.GetService<QualitySettingsManager>().ToggleQualityLevel();
     }
 }
