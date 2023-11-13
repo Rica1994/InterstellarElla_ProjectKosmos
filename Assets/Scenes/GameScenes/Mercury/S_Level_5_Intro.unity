@@ -985,6 +985,7 @@ MonoBehaviour:
   - {fileID: 657063958}
   _startOnAwake: 1
   _destroyAfter: 0
+  _loop: 0
 --- !u!4 &1185019280
 Transform:
   m_ObjectHideFlags: 0
@@ -1497,7 +1498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 8291974955a5e3949b6af3f232e6d739, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 23aaff62223523845b153ceab0b3a54b, type: 2}
   isGlobal: 1
   blendDistance: 0
   weight: 1
@@ -1578,7 +1579,7 @@ PlayableDirector:
   - key: {fileID: 7233972608265286742, guid: 41ece9fb367cf8c4f9cd9e4ea53dba40, type: 2}
     value: {fileID: 27}
   - key: {fileID: -5494194678187307828, guid: 41ece9fb367cf8c4f9cd9e4ea53dba40, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 1826909995804073097}
   - key: {fileID: -1970045986246116957, guid: 41ece9fb367cf8c4f9cd9e4ea53dba40, type: 2}
     value: {fileID: 0}
   - key: {fileID: 736420294976456804, guid: 41ece9fb367cf8c4f9cd9e4ea53dba40, type: 2}
@@ -1951,21 +1952,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 1463560591171610043, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: a46d89d6b704fb141a96ceef9a92b58f, type: 2}
-    - target: {fileID: 1463560591171610043, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
-        type: 3}
-      propertyPath: m_Materials.Array.data[1]
-      value: 
-      objectReference: {fileID: 2100000, guid: 28ac72446b14c4a4f83d9fa60a01f1bb, type: 2}
-    - target: {fileID: 1463560591171610043, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
-        type: 3}
-      propertyPath: m_Materials.Array.data[2]
-      value: 
-      objectReference: {fileID: 2100000, guid: 1eeafa2ef0543aa4f92b7b450257289c, type: 2}
     - target: {fileID: 1485818213914897020, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
         type: 3}
       propertyPath: m_Layer
@@ -2010,6 +1996,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3174480021489073328, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3174480021489073999, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 3174480021489073999, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 3174480021489073999, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 3187982323189572630, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
         type: 3}
@@ -2228,14 +2234,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7989393012952938753, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
         type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7989393012952938753, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
-        type: 3}
-      propertyPath: _voiceSource
+      propertyPath: _playableDirector
       value: 
-      objectReference: {fileID: 302759410}
+      objectReference: {fileID: 1813917263}
     - target: {fileID: 8023855752267684532, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
         type: 3}
       propertyPath: m_Layer
@@ -2284,7 +2285,7 @@ Animator:
   m_GameObject: {fileID: 1826909995804073093}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: df61fc1921cd0a0458a14c2e1212bd6d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2312,6 +2313,12 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!82 &1826909995804073097 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 18108565489066944, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
+    type: 3}
+  m_PrefabInstance: {fileID: 1826909995804073091}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1990495537422995392
 MonoBehaviour:
   m_ObjectHideFlags: 0
