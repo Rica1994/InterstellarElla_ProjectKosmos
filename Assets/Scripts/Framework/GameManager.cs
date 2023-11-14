@@ -73,11 +73,11 @@ public class GameManager : Service
         Client
     }
 
-    public static int MARS_DATA_NEEDED = 250;
-    public static int PLUTO_DATA_NEEDED = 250;
+    public static int MARS_DATA_NEEDED = 300;
+    public static int PLUTO_DATA_NEEDED = 125;
     public static int VENUS_DATA_NEEDED = 250;
-    public static int SATURN_DATA_NEEDED = 250;
-    public static int MERCURY_DATA_NEEDED = 250;
+    public static int SATURN_DATA_NEEDED = 350;
+    public static int MERCURY_DATA_NEEDED = 350;
 
     #endregion
 
@@ -208,7 +208,6 @@ public class GameManager : Service
 
 #if UNITY_EDITOR
         Data = new SaveData();
-        Data.PlanetCompletionValues.VenusCompletion = 100.0f;
         //ParseData(Data.ToString());
 #elif !UNITY_EDITOR && UNITY_WEBGL
 

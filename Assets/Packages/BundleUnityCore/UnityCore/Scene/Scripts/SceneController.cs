@@ -6,6 +6,7 @@ using UnityCore.Audio;
 using UnityCore.Menus;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEngine.Timeline.AnimationPlayableAsset;
 
 namespace UnityCore
 {
@@ -60,7 +61,7 @@ namespace UnityCore
             }
 
             public void Load(SceneType scene, SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
-                PageType loadingPage = PageType.None)
+                PageType loadingPage = PageType.None, LoadSceneMode loadMode = LoadSceneMode.Single)
             {
                 if (loadingPage != PageType.None && _pageController == null)
                 {
@@ -77,7 +78,7 @@ namespace UnityCore
                 m_SceneLoadDelegate = sceneLoadDelegate;
                 m_LoadingPage = loadingPage;
 
-                StartCoroutine(LoadScene());
+                StartCoroutine(LoadScene(loadMode));
             }
             public void LoadTargetAfterLoadingScene(SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
                 PageType loadingPage = PageType.None)
@@ -101,7 +102,7 @@ namespace UnityCore
             }
 
             public void LoadIntermissionLoading(SceneType scene, bool isSameBuild = false, SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
-                PageType loadingPage = PageType.None, float timeDelayToStartFirstLoad = 1)
+                PageType loadingPage = PageType.None, float timeDelayToStartFirstLoad = 1, LoadSceneMode loadMode = LoadSceneMode.Single)
             {
                 // we still need to add a delay on the webgl loading (so we still have our fancy main menu effect)
 
@@ -109,19 +110,19 @@ namespace UnityCore
                 // => if true, do the usual loading, else the webgl loading
                 if (isSameBuild == true)
                 {
-                    StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading));
+                    StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading, loadMode));
                     return;
                 }
-//#if UNITY_EDITOR
-                StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading));
-//#elif UNITY_WEBGL && !UNITY_EDITOR
-//                string currentSceneName = SceneManager.GetActiveScene().name;
-//                string relativePath = GetRelativePath(currentSceneName, scene);
+                //#if UNITY_EDITOR
+                StartCoroutine(LoadLoadingIntoTarget(timeDelayToStartFirstLoad, scene, null, false, PageType.Loading, loadMode));
+                //#elif UNITY_WEBGL && !UNITY_EDITOR
+                //                string currentSceneName = SceneManager.GetActiveScene().name;
+                //                string relativePath = GetRelativePath(currentSceneName, scene);
 
-//                string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(GameManager.Data.ToString())}";
+                //                string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(GameManager.Data.ToString())}";
 
-//                Application.ExternalEval($"window.location.href = '{relativePath + "/index.html" + "?data=" + data}';");
-//#endif
+                //                Application.ExternalEval($"window.location.href = '{relativePath + "/index.html" + "?data=" + data}';");
+                //#endif
             }
 
 
@@ -133,12 +134,12 @@ namespace UnityCore
                 // OpenPauseMenu for the specified timeDelay
                 yield return new WaitForSeconds(timeDelay);
 
-                
+
             }
 
             #region Private Functions
 
-            private IEnumerator LoadScene()
+            private IEnumerator LoadScene(LoadSceneMode loadMode = LoadSceneMode.Single)
             {
                 if (m_LoadingPage != PageType.None)
                 {
@@ -146,25 +147,32 @@ namespace UnityCore
 
                     yield return new WaitUntil(() => _pageController.PageIsOn(m_LoadingPage));
                 }
+
+
+
 #if UNITY_WEBGL && !UNITY_EDITOR
-                string currentSceneName = SceneManager.GetActiveScene().name;
-                string relativePath = GetRelativePath(currentSceneName, m_TargetScene);
+                if (loadMode == LoadSceneMode.Single)
+                {
 
-                string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(GameManager.Data.ToString())}";
+                    string currentSceneName = SceneManager.GetActiveScene().name;
+                    string relativePath = GetRelativePath(currentSceneName, m_TargetScene);
 
-                Application.ExternalEval($"window.location.href = '{relativePath + "/index.html" + "?data=" + data}';");
-                yield break;
+                    string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(GameManager.Data.ToString())}";
+
+                    Application.ExternalEval($"window.location.href = '{relativePath + "/index.html" + "?data=" + data}';");
+                    yield break;
+                }
 #endif
                 string targetSceneName = SceneTypeToString(m_TargetScene);
-                SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
+                SceneManager.LoadScene(targetSceneName, loadMode);
             }
             private IEnumerator LoadLoadingIntoTarget(float timeDelay, SceneType sceneToLoad,
                                                       SceneLoadDelegate sceneLoadDelegate = null, bool reload = false,
-                                                      PageType loadingPage = PageType.None)
+                                                      PageType loadingPage = PageType.None, LoadSceneMode loadMode = LoadSceneMode.Single)
             {
 
                 yield return new WaitForSeconds(timeDelay);
-                Load(sceneToLoad, null, false, PageType.Loading);
+                Load(sceneToLoad, null, false, PageType.Loading, loadMode);
             }
             private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
             {
@@ -406,7 +414,7 @@ namespace UnityCore
                 return "";
             }
 
-#endregion
+            #endregion
         }
     }
 }
