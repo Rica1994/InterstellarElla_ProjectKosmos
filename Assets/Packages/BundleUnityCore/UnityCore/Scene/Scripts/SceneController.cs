@@ -388,6 +388,10 @@ namespace UnityCore
                     return $"../../S_MainMenu";
                 }
 
+                if (currentSceneName.Contains("StartUp"))
+                {
+                    return "../S_MainMenu";
+                }
 
                 // If we are leaving from a planet scene
 
