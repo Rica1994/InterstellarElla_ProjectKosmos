@@ -268,7 +268,11 @@ public class EllaExploring : PlayerController, IElla
     
     private void OnMoveInput(InputAction.CallbackContext obj)
     {
-        if (GameManager.IsInCutscene) return;
+        if (GameManager.IsInCutscene)
+        {
+            _input = Vector2.zero;
+            return;
+        }
 
         var x = obj.ReadValue<Vector2>();
         _input = x;
@@ -337,7 +341,7 @@ public class EllaExploring : PlayerController, IElla
 
     private void Move()
     {
-        if (BlockMove == true)
+        if (BlockMove == true || GameManager.IsInCutscene)
         {
             return;
         }
