@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityCore.Scene;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class DebugMenu : MonoBehaviour
@@ -27,6 +29,9 @@ public class DebugMenu : MonoBehaviour
     [SerializeField]
     private Button _toggleQualityLevelButton;
 
+    [SerializeField]
+    private Button _testSDKButton;
+
     private void Start()
     {
         // remove ourselves when we are building for the client.
@@ -40,6 +45,7 @@ public class DebugMenu : MonoBehaviour
         _decreaseGameTimeButton.onClick.AddListener(DecreaseGameTime);
         _resetGameTimeButton.onClick.AddListener(ResetGameTime);
         _toggleQualityLevelButton.onClick.AddListener(ToggleQualityLevel);
+        _testSDKButton.onClick.AddListener(LoadSDKTestScene);
     }
 
     private void ShowDebugCanvas()
@@ -77,5 +83,10 @@ public class DebugMenu : MonoBehaviour
     private void ToggleQualityLevel()
     {
         ServiceLocator.Instance.GetService<QualitySettingsManager>().ToggleQualityLevel();
+    }
+
+    private void LoadSDKTestScene()
+    {
+        SceneManager.LoadScene("S_SDKTestScene", LoadSceneMode.Additive);
     }
 }
