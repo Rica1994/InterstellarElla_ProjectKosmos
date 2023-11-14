@@ -9,7 +9,7 @@ using UnityEngine.Timeline;
 using UnityEngine.UI;
 using System.Runtime.InteropServices;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class MouthAnimation : MonoBehaviour
 {
     const int BAND_8 = 8;
@@ -304,6 +304,11 @@ public class MouthAnimation : MonoBehaviour
 
         _audioClip = audioClips[_audioClipIndex];
         _audioClipIndex++;
+    }
+
+    public void SetPlayableDirectorReference(PlayableDirector playableDirector)
+    {
+        _playableDirector = playableDirector;
     }
 
     //// This will be called from JavaScript

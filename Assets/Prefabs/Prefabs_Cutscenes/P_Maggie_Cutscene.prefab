@@ -54,13 +54,14 @@ MonoBehaviour:
   _openMouthHappy: {fileID: 7660637367635576035}
   _closedMouthSad: {fileID: 3980786278058626366}
   _openMouthSad: {fileID: 7293054733148616962}
-  _mouthJoint: {fileID: 0}
+  _mouthJoint: {fileID: 6008283888107472392}
   _mouthScaleMultiplier: 4
   _playableDirector: {fileID: 0}
   MaggieMood: 0
   _timeTillNextMouthChange: 0.08
   _thresholdHalfOpen: 0.033
   _thresholdOpen: 0.09
+  _maggieDustParticle: {fileID: 4103083524155985613}
 --- !u!95 &376388414
 Animator:
   serializedVersion: 3
@@ -985,6 +986,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5650198622234955495}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &6008283888107472392 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2091992297157560559, guid: b4dbdce37300ebd4185468ad66e0b923,
+    type: 3}
+  m_PrefabInstance: {fileID: 5650198622234955495}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9019794459890658683
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1059,3 +1066,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 468387afbda1fc7498e83b020d5c7223, type: 3}
+--- !u!1 &4103083524155985613 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5034369058863244214, guid: 468387afbda1fc7498e83b020d5c7223,
+    type: 3}
+  m_PrefabInstance: {fileID: 9019794459890658683}
+  m_PrefabAsset: {fileID: 0}
