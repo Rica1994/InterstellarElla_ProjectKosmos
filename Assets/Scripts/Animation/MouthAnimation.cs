@@ -9,7 +9,7 @@ using UnityEngine.Timeline;
 using UnityEngine.UI;
 using System.Runtime.InteropServices;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class MouthAnimation : MonoBehaviour
 {
     const int BAND_8 = 8;
@@ -54,7 +54,7 @@ public class MouthAnimation : MonoBehaviour
         Thinking
     }
 
-    [SerializeField] private Mood MaggieMood;
+    public Mood MaggieMood;
 
 
     [SerializeField, Range(0f, 1f)]
@@ -88,6 +88,9 @@ public class MouthAnimation : MonoBehaviour
     //[DllImport("__Internal")]
     //private static extern void RegisterVisibilityChangeCallback();
 
+    [SerializeField]
+    private GameObject _maggieDustParticle;
+
     private void Awake()
     {
         if (_playableDirector != null)
@@ -119,6 +122,15 @@ public class MouthAnimation : MonoBehaviour
 
     private void Update()
     {
+        if (transform.localScale.x == 0)
+        {
+            _maggieDustParticle.SetActive(false);
+        }
+        else
+        {
+            _maggieDustParticle.SetActive(true);
+        }
+
         //UpdateMouth();
         if (VoiceSource.isPlaying)
         {
@@ -292,6 +304,11 @@ public class MouthAnimation : MonoBehaviour
 
         _audioClip = audioClips[_audioClipIndex];
         _audioClipIndex++;
+    }
+
+    public void SetPlayableDirectorReference(PlayableDirector playableDirector)
+    {
+        _playableDirector = playableDirector;
     }
 
     //// This will be called from JavaScript
