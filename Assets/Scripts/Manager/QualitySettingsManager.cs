@@ -33,6 +33,20 @@ public class QualitySettingsManager : Service
     {
         base.Awake();
 
+
+        Initialize();
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        Initialize();
+    }
+
+    private void Initialize()
+    {
+        _qualityObjects = null;
         List<QualityObject> qualityObjectList = new List<QualityObject>();
 
         // Get all root objects in the scene
@@ -53,7 +67,7 @@ public class QualitySettingsManager : Service
     public void ToggleQualityLevel()
     {
         int currentQualityLevelIndex = QualitySettings.GetQualityLevel();
-        currentQualityLevelIndex = (currentQualityLevelIndex + 1) % qualityLevels.Length;
+        currentQualityLevelIndex = (currentQualityLevelIndex + 1) % QualitySettings.names.Length;
         var currentQualityLevelToRank = IndexToQualityRank(currentQualityLevelIndex);
 
         SetQualityLevelFeatures(currentQualityLevelToRank);
