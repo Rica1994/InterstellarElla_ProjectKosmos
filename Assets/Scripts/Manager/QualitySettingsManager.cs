@@ -21,7 +21,6 @@ public class QualitySettingsManager : Service
     [System.Flags]
     public enum QualityRank
     {
-        None = 0,
         Low = 1,
         Medium = 2,
         High = 4,
@@ -104,7 +103,7 @@ public class QualitySettingsManager : Service
                 var qualityObject = _qualityObjects[i];
 
                 bool turnOnObject = (qualityObject.QualityRank & currentQualityLevel) == currentQualityLevel;
-                qualityObject.gameObject.SetActive(turnOnObject);
+                qualityObject.EnableObject(turnOnObject);
             }
         }
     }
