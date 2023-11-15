@@ -46,7 +46,7 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
                 qualityLevel = QualitySettingsManager.QualityRank.Low;
             }
 
-            GameManager.Data.QualityLevel = qualityLevel;
+            GameManager.Data.QualityRank = qualityLevel;
 
             // Disable the benchmark script after measuring the performance
             enabled = false;
