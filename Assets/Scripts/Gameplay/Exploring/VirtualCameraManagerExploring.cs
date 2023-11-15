@@ -210,8 +210,15 @@ public class VirtualCameraManagerExploring : Service
             {
                 framingTransposerPreviousCam = previousCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
 
-                framingTransposerPreviousCam.m_CameraDistance = _originalCameraDistance;
-                _virtualCameraFramingTransposers.RemoveAt(0);              
+                if (framingTransposerPreviousCam != null)
+                {
+                    framingTransposerPreviousCam.m_CameraDistance = _originalCameraDistance;
+                }
+
+                if (!_virtualCameraFramingTransposers[0])
+                {
+                    _virtualCameraFramingTransposers.RemoveAt(0);              
+                }
             }
             previousCamera.m_Lens.FieldOfView = _originalCameraFOV;
 

@@ -11,6 +11,9 @@ public class TimelineChainAction : ChainAction
     [SerializeField]
     private SkipCutscene _skipButton;
 
+    [SerializeField]
+    private bool _stopGameplayDuring = false;
+
     protected override void Awake()
     {
         base.Awake();
@@ -29,6 +32,11 @@ public class TimelineChainAction : ChainAction
             _skipButton.playableDirector = _playableDirector;
             _skipButton.transform.GetChild(0).gameObject.SetActive(true);
         }
+
+        if (_stopGameplayDuring)
+        {
+            GameManager.IsInCutscene = true;
+        }
     }
 
     public override void OnExit()
@@ -40,5 +48,9 @@ public class TimelineChainAction : ChainAction
             _skipButton.transform.GetChild(0).gameObject.SetActive(false);
         }
 
+        if (_stopGameplayDuring)
+        {
+            GameManager.IsInCutscene = false;
+        }
     }
 }

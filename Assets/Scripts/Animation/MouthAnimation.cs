@@ -308,6 +308,7 @@ public class MouthAnimation : MonoBehaviour
 
     public void SetPlayableDirectorReference(PlayableDirector playableDirector)
     {
+        Restart();
         _playableDirector = playableDirector;
     }
 
