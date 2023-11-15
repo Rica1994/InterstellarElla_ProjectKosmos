@@ -21,7 +21,6 @@ public class QualitySettingsManager : Service
     [System.Flags]
     public enum QualityRank
     {
-        None = 0,
         Low = 1,
         Medium = 2,
         High = 4,
@@ -48,56 +47,65 @@ public class QualitySettingsManager : Service
 
         _qualityObjects = qualityObjectList.ToArray();
 
-        SetQualityLevelFeatures((int)GameManager.Data.QualityLevel);
+        SetQualityLevelFeatures(GameManager.Data.QualityRank);
     }
 
     public void ToggleQualityLevel()
     {
-        if (QualitySettings.names.Length - 1 != QualitySettings.GetQualityLevel())
-        {
-            QualitySettings.IncreaseLevel();
-        }
-        else
-        {
-            QualitySettings.SetQualityLevel(0);
-        }
+        int currentQualityLevelIndex = QualitySettings.GetQualityLevel();
+        currentQualityLevelIndex = (currentQualityLevelIndex + 1) % qualityLevels.Length;
+        var currentQualityLevelToRank = IndexToQualityRank(currentQualityLevelIndex);
 
-        SetQualityLevelFeatures(QualitySettings.GetQualityLevel());
+        SetQualityLevelFeatures(currentQualityLevelToRank);
+
+        //if (QualitySettings.names.Length - 1 != QualitySettings.GetQualityLevel())
+        //{
+        //    QualitySettings.IncreaseLevel();
+        //}
+        //else
+        //{
+        //    QualitySettings.SetQualityLevel(0);
+        //}
+
     }
 
-    private void SetQualityLevelFeatures(int qualityLevel)
+    private void SetQualityLevelFeatures(QualityRank qualityRank)
     {
-        for (int i = 0; i < qualityLevels.Length; i++)
-        {
-            if (i != qualityLevel)
-            {
-                foreach (GameObject go in qualityLevels[i].QualityLevelFeatures)
-                {
-                    if (go != null)
-                    {
-                        go.SetActive(false);
-                    }
-                }
-            }
-        }
+        int qualityLevelIndex = QualityRankToIndex(qualityRank);
+        QualitySettings.SetQualityLevel(qualityLevelIndex);
 
-        for (int i = 0; i < qualityLevels.Length; i++)
-        {
-            if (i == qualityLevel)
-            {
-                foreach (GameObject go in qualityLevels[i].QualityLevelFeatures)
-                {
-                    if (go != null)
-                    {
-                        go.SetActive(true);
-                    }
-                }
-            }
-        }
 
-        if (Enum.IsDefined(typeof(QualityRank), qualityLevel))
+        //for (int i = 0; i < qualityLevels.Length; i++)
+        //{
+        //    if (i != qualityRank)
+        //    {
+        //        foreach (GameObject go in qualityLevels[i].QualityLevelFeatures)
+        //        {
+        //            if (go != null)
+        //            {
+        //                go.SetActive(false);
+        //            }
+        //        }
+        //    }
+        //}
+
+        //for (int i = 0; i < qualityLevels.Length; i++)
+        //{
+        //    if (i == qualityRank)
+        //    {
+        //        foreach (GameObject go in qualityLevels[i].QualityLevelFeatures)
+        //        {
+        //            if (go != null)
+        //            {
+        //                go.SetActive(true);
+        //            }
+        //        }
+        //    }
+        //}
+
+        if (Enum.IsDefined(typeof(QualityRank), qualityRank))
         {
-            var currentQualityLevel = (QualityRank)qualityLevel;
+            var currentQualityLevel = (QualityRank)qualityRank;
 
             for (int i = 0; i < _qualityObjects.Length; i++)
             {
@@ -107,5 +115,35 @@ public class QualitySettingsManager : Service
                 qualityObject.gameObject.SetActive(turnOnObject);
             }
         }
+    }
+
+    private int QualityRankToIndex(QualityRank rank)
+    {
+        // Handle the case where rank is None or not defined
+        if (!Enum.IsDefined(typeof(QualityRank), rank))
+        {
+            return 0; 
+        }
+
+        int index = 0;
+        int value = 1;
+
+        while (value < (int)rank)
+        {
+            index++;
+            value <<= 1; // Equivalent to value *= 2
+        }
+
+        return index;
+    }
+
+    private QualityRank IndexToQualityRank(int index)
+    {
+        // Assuming the order in QualitySettings.names matches the order of your QualityRank enum
+        if (Enum.IsDefined(typeof(QualityRank), 1 << index))
+        {
+            return (QualityRank)(1 << index);
+        }
+        return QualityRank.Low;
     }
 }

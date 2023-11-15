@@ -24,11 +24,11 @@ public class GameManager : Service
         public PlanetCompletionValues PlanetCompletionValues;
         public int CurrentScore;
         public int LastPlanet;
-        public QualitySettingsManager.QualityRank QualityLevel;
+        public QualitySettingsManager.QualityRank QualityRank;
 
         public override string ToString()
         {
-            return PlanetCompletionValues.ToString() + Helpers.FormatPercentageToString(CurrentScore) + LastPlanet.ToString() + ((int)QualityLevel).ToString();
+            return PlanetCompletionValues.ToString() + Helpers.FormatPercentageToString(CurrentScore) + LastPlanet.ToString() + ((int)QualityRank).ToString();
         }
     }
 
@@ -208,7 +208,7 @@ public class GameManager : Service
 
 #if UNITY_EDITOR
         Data = new SaveData();
-        Data.QualityLevel = QualitySettingsManager.QualityRank.Low;
+        Data.QualityRank = QualitySettingsManager.QualityRank.Low;
         //ParseData(Data.ToString());
 #elif !UNITY_EDITOR && UNITY_WEBGL
 
@@ -297,7 +297,7 @@ public class GameManager : Service
         data.LastPlanet = (int)lastPlanet;
         data.CurrentScore += currentScore;
         data.PlanetCompletionValues = values;
-        data.QualityLevel = qualityLevel;
+        data.QualityRank = qualityLevel;
         //   data.IsShittyDevice = (isShittyDevice == 1) ? true : false;
 
         Data = data;
