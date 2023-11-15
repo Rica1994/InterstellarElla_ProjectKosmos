@@ -24,11 +24,11 @@ public class GameManager : Service
         public PlanetCompletionValues PlanetCompletionValues;
         public int CurrentScore;
         public int LastPlanet;
-        //   public bool IsShittyDevice;
+        public QualitySettingsManager.QualityRank QualityLevel;
 
         public override string ToString()
         {
-            return PlanetCompletionValues.ToString() + Helpers.FormatPercentageToString(CurrentScore) + LastPlanet.ToString() /*+ (IsShittyDevice ? "1" : "0")*/;
+            return PlanetCompletionValues.ToString() + Helpers.FormatPercentageToString(CurrentScore) + LastPlanet.ToString() + ((int)QualityLevel).ToString();
         }
     }
 
@@ -208,6 +208,7 @@ public class GameManager : Service
 
 #if UNITY_EDITOR
         Data = new SaveData();
+        Data.QualityLevel = QualitySettingsManager.QualityRank.Low;
         //ParseData(Data.ToString());
 #elif !UNITY_EDITOR && UNITY_WEBGL
 
@@ -272,8 +273,15 @@ public class GameManager : Service
             }
         }
 
-        // int isShittyDevice = 0;
-        //   int.TryParse(planetCompletionsCompiled.Substring(19,1), out isShittyDevice);
+        var qualityLevel = QualitySettingsManager.QualityRank.Low;
+        int qualityValue = 0;
+        if (int.TryParse(planetCompletionsCompiled.Substring(19, 1), out qualityValue)) 
+        {
+            if (Enum.IsDefined(typeof(QualitySettingsManager.QualityRank), qualityValue))
+            {
+                qualityLevel = (QualitySettingsManager.QualityRank)qualityValue;
+            }
+        }
 
         // Step 6: Assign to the struct
         PlanetCompletionValues values = new PlanetCompletionValues
@@ -289,6 +297,7 @@ public class GameManager : Service
         data.LastPlanet = (int)lastPlanet;
         data.CurrentScore += currentScore;
         data.PlanetCompletionValues = values;
+        data.QualityLevel = qualityLevel;
         //   data.IsShittyDevice = (isShittyDevice == 1) ? true : false;
 
         Data = data;
