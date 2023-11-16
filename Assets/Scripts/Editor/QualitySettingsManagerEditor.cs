@@ -9,6 +9,8 @@ public class QualitySettingsManagerEditor : Editor
 {
     public override void OnInspectorGUI()
     {
+        DrawDefaultInspector();
+
         // Manually draw each property except 'qualityLevels'
         SerializedProperty prop = serializedObject.GetIterator();
         bool enterChildren = true;
