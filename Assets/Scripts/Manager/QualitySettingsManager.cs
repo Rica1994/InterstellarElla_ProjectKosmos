@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,7 +27,6 @@ public class QualitySettingsManager : Service
         High = 4,
     }
 
-    public GameObjectArray[] qualityLevels = new GameObjectArray[Enum.GetValues(typeof(QualityRank)).Length];
     public QualityObject[] _qualityObjects;
 
     protected override void Awake()
@@ -46,7 +46,9 @@ public class QualitySettingsManager : Service
 
     private void Initialize()
     {
+        for (int i = 0; i < _qualityObjects.Length; i++) _qualityObjects[i].DestroyEvent -= OnQualityObjectDestroyed;
         _qualityObjects = null;
+
         List<QualityObject> qualityObjectList = new List<QualityObject>();
 
         // Get all root objects in the scene
@@ -59,9 +61,17 @@ public class QualitySettingsManager : Service
             qualityObjectList.AddRange(childQualityObjects);
         }
 
+        qualityObjectList.ForEach(x => x.DestroyEvent += OnQualityObjectDestroyed);
         _qualityObjects = qualityObjectList.ToArray();
+        
 
         SetQualityLevelFeatures(GameManager.Data.QualityRank);
+    }
+
+    private void OnQualityObjectDestroyed(QualityObject qualityObject)
+    {
+        qualityObject.DestroyEvent -= OnQualityObjectDestroyed;
+        _qualityObjects = _qualityObjects.Where(x => x != qualityObject).ToArray();
     }
 
     public void ToggleQualityLevel()
@@ -71,51 +81,12 @@ public class QualitySettingsManager : Service
         var currentQualityLevelToRank = IndexToQualityRank(currentQualityLevelIndex);
 
         SetQualityLevelFeatures(currentQualityLevelToRank);
-
-        //if (QualitySettings.names.Length - 1 != QualitySettings.GetQualityLevel())
-        //{
-        //    QualitySettings.IncreaseLevel();
-        //}
-        //else
-        //{
-        //    QualitySettings.SetQualityLevel(0);
-        //}
-
     }
 
     private void SetQualityLevelFeatures(QualityRank qualityRank)
     {
         int qualityLevelIndex = QualityRankToIndex(qualityRank);
         QualitySettings.SetQualityLevel(qualityLevelIndex);
-
-
-        //for (int i = 0; i < qualityLevels.Length; i++)
-        //{
-        //    if (i != qualityRank)
-        //    {
-        //        foreach (GameObject go in qualityLevels[i].QualityLevelFeatures)
-        //        {
-        //            if (go != null)
-        //            {
-        //                go.SetActive(false);
-        //            }
-        //        }
-        //    }
-        //}
-
-        //for (int i = 0; i < qualityLevels.Length; i++)
-        //{
-        //    if (i == qualityRank)
-        //    {
-        //        foreach (GameObject go in qualityLevels[i].QualityLevelFeatures)
-        //        {
-        //            if (go != null)
-        //            {
-        //                go.SetActive(true);
-        //            }
-        //        }
-        //    }
-        //}
 
         if (Enum.IsDefined(typeof(QualityRank), qualityRank))
         {
@@ -129,6 +100,33 @@ public class QualitySettingsManager : Service
                 qualityObject.EnableObject(turnOnObject);
             }
         }
+
+
+    //   // Setting the resolution
+    //
+    //   int width = 800;
+    //   int height = 600;
+    //   int depth = 24;
+    //
+    //   switch (qualityRank)
+    //   {
+    //       case QualityRank.Low:
+    //           width = 800;
+    //           height = 600;
+    //           break;
+    //       case QualityRank.Medium:
+    //           width = 1280;
+    //           height = 720;
+    //           break;
+    //       case QualityRank.High:
+    //           width = 1920;
+    //           height = 1080;
+    //           break;
+    //   }
+    //
+    //   RenderTexture newRenderTexture = new RenderTexture(width, height, depth);
+    //   newRenderTexture.Create();
+    //   Camera.main.targetTexture = newRenderTexture;
     }
 
     private int QualityRankToIndex(QualityRank rank)
@@ -136,7 +134,7 @@ public class QualitySettingsManager : Service
         // Handle the case where rank is None or not defined
         if (!Enum.IsDefined(typeof(QualityRank), rank))
         {
-            return 0; 
+            return 0;
         }
 
         int index = 0;

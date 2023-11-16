@@ -25,7 +25,6 @@ public class QualitySettingsManagerEditor : Editor
         if (GUILayout.Button("Generate Quality Level Enum"))
         {
             GenerateQualityLevelEnum();
-            EditorApplication.delayCall += UpdateQualityLevelsArray;
         }
 
         // Custom drawing for 'qualityLevels' array
@@ -100,19 +99,6 @@ public class QualitySettingsManagerEditor : Editor
         Debug.Log("QualityRank enum updated successfully.");
 
         AssetDatabase.Refresh();
-    }
-
-
-
-    private void UpdateQualityLevelsArray()
-    {
-        QualitySettingsManager manager = (QualitySettingsManager)target;
-        int numberOfQualityLevels = Enum.GetValues(typeof(QualitySettingsManager.QualityRank)).Length;
-        Array.Resize(ref manager.qualityLevels, numberOfQualityLevels);
-
-        // Force the serialized object to update
-        serializedObject.Update();
-        EditorUtility.SetDirty(manager);
     }
 
     private void RepaintInspector()

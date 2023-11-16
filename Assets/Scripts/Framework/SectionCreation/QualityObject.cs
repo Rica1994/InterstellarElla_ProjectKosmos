@@ -5,6 +5,9 @@ using UnityEngine;
 [DefaultExecutionOrder(-503)]
 public class QualityObject : MonoBehaviour
 {
+    public delegate void QualityObjectDelegate(QualityObject qualityObject);
+    public event QualityObjectDelegate DestroyEvent;
+
     public QualitySettingsManager.QualityRank QualityRank;
 
     [SerializeField]
@@ -23,5 +26,10 @@ public class QualityObject : MonoBehaviour
                 _behaviours[i].enabled = enable;
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        DestroyEvent?.Invoke(this);
     }
 }
