@@ -7,11 +7,14 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
     private float _benchmarkDuration = 5f; // Duration of the benchmark in seconds
     [SerializeField]
     private float _lowerEndFPSThreshold = 30f;
+    [SerializeField]
+    private float _midEndFPSThresHold = 60.0f;
 
     private float _elapsedTime = 0f;
     private int _frameCount = 0;
     private float _totalDeltaTime = 0f;
     private float _averageFPS = 0f;
+
 
     private void Update()
     {
@@ -27,17 +30,23 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
 
             Debug.Log("Average FPS: " + _averageFPS);
 
+            var qualityLevel = QualitySettingsManager.QualityRank.Low;
+
             // Check if the average FPS falls below a threshold for a lower-end device
-            if (_averageFPS > _lowerEndFPSThreshold && Graphics.activeTier != GraphicsTier.Tier2)
+            if (_averageFPS > _midEndFPSThresHold)
             {
-                // Adjust graphics settings for high-end devices
- //               GameManager.Data.IsShittyDevice = false;
-                QualitySettings.SetQualityLevel(1); // Set the highest quality level or adjust as needed
+                qualityLevel = QualitySettingsManager.QualityRank.High;
+            }
+            else if (_averageFPS > _lowerEndFPSThreshold)
+            {
+                qualityLevel = QualitySettingsManager.QualityRank.Medium;
             }
             else
             {
-  //              GameManager.Data.IsShittyDevice = true;
+                qualityLevel = QualitySettingsManager.QualityRank.Low;
             }
+
+            GameManager.Data.QualityRank = qualityLevel;
 
             // Disable the benchmark script after measuring the performance
             enabled = false;

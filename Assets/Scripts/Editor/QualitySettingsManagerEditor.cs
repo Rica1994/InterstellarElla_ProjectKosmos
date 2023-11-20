@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System;
+using System.IO;
+using System.Text;
 
 [CustomEditor(typeof(QualitySettingsManager))]
 public class QualitySettingsManagerEditor : Editor
@@ -19,11 +21,10 @@ public class QualitySettingsManagerEditor : Editor
             }
         }
 
-        // Add a button
+        // Add a button for generating the QualityLevel enum
         if (GUILayout.Button("Generate Quality Level Enum"))
         {
-            QualityLevelEnumGenerator.GenerateQualityLevelEnum();
-            EditorApplication.delayCall += UpdateQualityLevelsArray;
+            GenerateQualityLevelEnum();
         }
 
         // Custom drawing for 'qualityLevels' array
@@ -35,7 +36,7 @@ public class QualitySettingsManagerEditor : Editor
         {
             for (int i = 0; i < qualityLevelsArray.arraySize; i++)
             {
-                string label = ((QualityLevel)i).ToString(); // Get the name from the enum
+                string label = Enum.GetName(typeof(QualitySettingsManager.QualityRank), i); // Get the name from the enum
                 EditorGUILayout.LabelField(label);
 
                 SerializedProperty gameObjectArrayProp = qualityLevelsArray.GetArrayElementAtIndex(i).FindPropertyRelative("_qualityLevelFeatures");
@@ -53,15 +54,51 @@ public class QualitySettingsManagerEditor : Editor
         }
     }
 
-    private void UpdateQualityLevelsArray()
+    private void GenerateQualityLevelEnum()
     {
-        QualitySettingsManager manager = (QualitySettingsManager)target;
-        int numberOfQualityLevels = Enum.GetValues(typeof(QualityLevel)).Length;
-        Array.Resize(ref manager.qualityLevels, numberOfQualityLevels);
+        string filePath = @"C:\Unity\InterstellarEllaGithub\Assets\Scripts\Manager\QualitySettingsManager.cs";
 
-        // Force the serialized object to update
-        serializedObject.Update();
-        EditorUtility.SetDirty(manager);
+        // Check if file exists
+        if (!File.Exists(filePath))
+        {
+            Debug.LogError("File not found: " + filePath);
+            return;
+        }
+
+        string fileContent = File.ReadAllText(filePath);
+
+        StringBuilder newEnumContent = new StringBuilder();
+        newEnumContent.AppendLine("public enum QualityRank");
+        newEnumContent.AppendLine("{");
+
+        int value = 1; // Start with 1 for the first enum value
+        int combinedValue = 0; // To accumulate all values for 'None'
+        foreach (var name in QualitySettings.names)
+        {
+            string validEnumName = name.Replace(" ", "_").Replace("-", "_");
+            newEnumContent.AppendLine($"    {validEnumName} = {value},");
+            combinedValue |= value; // Combine the value
+            value *= 2; // Double the value for each subsequent enum member
+        }
+
+        // Add 'None' at the end with the combined value of all other settings
+        newEnumContent.AppendLine($"    None = {combinedValue}");
+
+        newEnumContent.AppendLine("}");
+
+        string pattern = @"public\s+enum\s+QualityRank\s*{\s*(?:[^\}]*\s*)*}";
+        string modifiedContent = System.Text.RegularExpressions.Regex.Replace(fileContent, pattern, newEnumContent.ToString(), System.Text.RegularExpressions.RegexOptions.Singleline);
+
+        if (modifiedContent == fileContent)
+        {
+            Debug.LogError("No changes made to the file. Regular expression might not have matched.");
+            return;
+        }
+
+        File.WriteAllText(filePath, modifiedContent);
+        Debug.Log("QualityRank enum updated successfully.");
+
+        AssetDatabase.Refresh();
     }
 
     private void RepaintInspector()
