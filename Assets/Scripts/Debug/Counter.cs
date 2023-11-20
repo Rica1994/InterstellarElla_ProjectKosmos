@@ -15,7 +15,7 @@ public class Counter : MonoBehaviour
 
     private void Awake()
     {
-        ServiceLocator.Instance.GetService<SDKManager>().LoadedEvent += OnScoreLoaded;
+        SDKManager.LoadedEvent += OnScoreLoaded;
         _counterText.text = counter.ToString();
     }
 
@@ -35,12 +35,12 @@ public class Counter : MonoBehaviour
 
     public void Load()
     {
-        ServiceLocator.Instance.GetService<SDKManager>().LoadScore();
+        SDKManager.LoadScore();
     }
 
     public void Save()
     {
-        ServiceLocator.Instance.GetService<SDKManager>().SaveScore(counter);
+        SDKManager.SaveScore(counter);
     }
 
     public void Add()
