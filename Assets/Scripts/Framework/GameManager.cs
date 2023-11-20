@@ -208,7 +208,7 @@ public class GameManager : Service
 
 #if UNITY_EDITOR
         Data = new SaveData();
-        Data.QualityRank = QualitySettingsManager.QualityRank.Low;
+        Data.QualityRank = QualitySettingsManager.GetQualityRankFromSettings();
         //ParseData(Data.ToString());
 #elif !UNITY_EDITOR && UNITY_WEBGL
 

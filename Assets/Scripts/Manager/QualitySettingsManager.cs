@@ -16,7 +16,6 @@ public class GameObjectArray
     public GameObject[] QualityLevelFeatures => _qualityLevelFeatures;
 }
 
-
 [DefaultExecutionOrder(-999)]
 public class QualitySettingsManager : Service
 {
@@ -38,7 +37,6 @@ public class QualitySettingsManager : Service
     protected override void Awake()
     {
         base.Awake();
-
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -46,13 +44,12 @@ public class QualitySettingsManager : Service
     {
         Initialize();
     }
-
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
         Initialize();
     }
 
-    private void Initialize()
+    public void Initialize()
     {
         for (int i = 0; i < _qualityObjects.Length; i++) _qualityObjects[i].DestroyEvent -= OnQualityObjectDestroyed;
         _qualityObjects = null;
@@ -167,7 +164,24 @@ public class QualitySettingsManager : Service
         return QualityRank.Low;
     }
 
-    public void AdjustCameraAspectRatios()
+    public static QualityRank GetQualityRankFromSettings()
+    {
+        int qualityLevel = QualitySettings.GetQualityLevel();
+
+        switch (qualityLevel)
+        {
+            case 0: // Assuming '0' is Low in Unity's settings
+                return QualityRank.Low;
+            case 1: // Assuming '1' is Medium in Unity's settings
+                return QualityRank.Medium;
+            case 2: // Assuming '2' is High in Unity's settings
+                return QualityRank.High;
+            default:
+                return QualityRank.Low; // Default case, can be adjusted as needed
+        }
+    }
+
+    private void AdjustCameraAspectRatios()
     {
         Debug.Log("ScreenWidth: " + Screen.width);
         Debug.Log("ScreenHeight: " + Screen.height);
@@ -183,5 +197,4 @@ public class QualitySettingsManager : Service
             cam.aspect = targetAspect;
         }
     }
-
 }

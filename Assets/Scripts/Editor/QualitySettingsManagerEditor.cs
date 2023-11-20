@@ -7,6 +7,7 @@ using System.Text;
 [CustomEditor(typeof(QualitySettingsManager))]
 public class QualitySettingsManagerEditor : Editor
 {
+    private int selectedQualityIndex;
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
@@ -29,9 +30,50 @@ public class QualitySettingsManagerEditor : Editor
             GenerateQualityLevelEnum();
         }
 
+
         // Custom drawing for 'qualityLevels' array
         QualitySettingsManager manager = (QualitySettingsManager)target;
+
+
+        GUILayout.Label("Select Quality Level", EditorStyles.boldLabel);
+
         EditorGUI.BeginChangeCheck();
+        int newIndex = EditorGUILayout.Popup("Quality Level", selectedQualityIndex, QualitySettings.names);
+        if (EditorGUI.EndChangeCheck())
+        {
+            // If the index changed, apply the new quality setting
+            selectedQualityIndex = newIndex;
+            QualitySettings.SetQualityLevel(selectedQualityIndex, applyExpensiveChanges: true);
+            GameManager.Data.QualityRank = QualitySettingsManager.GetQualityRankFromSettings();
+            manager.Initialize();
+            Debug.Log("Quality level automatically set to: " + QualitySettings.names[selectedQualityIndex]);
+        }
+
+        EditorGUI.BeginChangeCheck();
+
+        SerializedProperty qualityLevelsArray = serializedObject.FindProperty("qualityLevels");
+        if (qualityLevelsArray != null && qualityLevelsArray.isArray)
+        {
+            for (int i = 0; i < qualityLevelsArray.arraySize; i++)
+            {
+                string label = Enum.GetName(typeof(QualitySettingsManager.QualityRank), i); // Get the name from the enum
+                EditorGUILayout.LabelField(label);
+
+                SerializedProperty gameObjectArrayProp = qualityLevelsArray.GetArrayElementAtIndex(i).FindPropertyRelative("_qualityLevelFeatures");
+                if (gameObjectArrayProp != null)
+                {
+                    EditorGUILayout.PropertyField(gameObjectArrayProp, GUIContent.none, true);
+                }
+            }
+        }
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            serializedObject.ApplyModifiedProperties();
+            EditorApplication.delayCall += RepaintInspector;
+        }
+
+
     }
 
     private void GenerateQualityLevelEnum()
@@ -81,13 +123,8 @@ public class QualitySettingsManagerEditor : Editor
         AssetDatabase.Refresh();
     }
 
-    private void OnSceneGUI()
+    private void RepaintInspector()
     {
-        var qualitySettingsManager = (QualitySettingsManager)target;
-
-        if (qualitySettingsManager != null)
-        {
-            qualitySettingsManager.AdjustCameraAspectRatios();
-        }
+        Repaint();
     }
 }
