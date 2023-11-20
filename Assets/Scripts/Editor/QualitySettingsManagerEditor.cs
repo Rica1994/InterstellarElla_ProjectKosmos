@@ -32,28 +32,6 @@ public class QualitySettingsManagerEditor : Editor
         // Custom drawing for 'qualityLevels' array
         QualitySettingsManager manager = (QualitySettingsManager)target;
         EditorGUI.BeginChangeCheck();
-
-        SerializedProperty qualityLevelsArray = serializedObject.FindProperty("qualityLevels");
-        if (qualityLevelsArray != null && qualityLevelsArray.isArray)
-        {
-            for (int i = 0; i < qualityLevelsArray.arraySize; i++)
-            {
-                string label = Enum.GetName(typeof(QualitySettingsManager.QualityRank), i); // Get the name from the enum
-                EditorGUILayout.LabelField(label);
-
-                SerializedProperty gameObjectArrayProp = qualityLevelsArray.GetArrayElementAtIndex(i).FindPropertyRelative("_qualityLevelFeatures");
-                if (gameObjectArrayProp != null)
-                {
-                    EditorGUILayout.PropertyField(gameObjectArrayProp, GUIContent.none, true);
-                }
-            }
-        }
-
-        if (EditorGUI.EndChangeCheck())
-        {
-            serializedObject.ApplyModifiedProperties();
-            EditorApplication.delayCall += RepaintInspector;
-        }
     }
 
     private void GenerateQualityLevelEnum()
@@ -103,8 +81,13 @@ public class QualitySettingsManagerEditor : Editor
         AssetDatabase.Refresh();
     }
 
-    private void RepaintInspector()
+    private void OnSceneGUI()
     {
-        Repaint();
+        var qualitySettingsManager = (QualitySettingsManager)target;
+
+        if (qualitySettingsManager != null)
+        {
+            qualitySettingsManager.AdjustCameraAspectRatios();
+        }
     }
 }

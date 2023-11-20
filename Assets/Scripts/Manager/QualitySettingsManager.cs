@@ -167,7 +167,7 @@ public class QualitySettingsManager : Service
         return QualityRank.Low;
     }
 
-    private void AdjustCameraAspectRatios()
+    public void AdjustCameraAspectRatios()
     {
         Debug.Log("ScreenWidth: " + Screen.width);
         Debug.Log("ScreenHeight: " + Screen.height);
@@ -183,4 +183,5 @@ public class QualitySettingsManager : Service
             cam.aspect = targetAspect;
         }
     }
+
 }
