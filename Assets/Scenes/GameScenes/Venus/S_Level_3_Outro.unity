@@ -406,7 +406,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 32
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: 7c919100343a5e447834db80246a06c9, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -541,7 +541,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 1024
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: 7c919100343a5e447834db80246a06c9, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -561,13 +561,14 @@ GameObject:
   m_Component:
   - component: {fileID: 461591714}
   - component: {fileID: 461591715}
+  - component: {fileID: 461591716}
   m_Layer: 0
   m_Name: PostProcessing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &461591714
 Transform:
   m_ObjectHideFlags: 0
@@ -599,6 +600,20 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 0
+--- !u!114 &461591716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461591713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 709653ec0cd482c4c9724ae2babc5005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  QualityRank: 4
+  _behaviours: []
 --- !u!1 &581974413
 GameObject:
   m_ObjectHideFlags: 0
@@ -728,6 +743,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3174480021489073328, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3174480021489073999, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
         type: 3}
@@ -987,7 +1007,7 @@ PrefabInstance:
     - target: {fileID: 7989393012952938753, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7989393012952938753, guid: a6f94caf64fd11e4a9f704dc90f1f4ff,
         type: 3}
@@ -1199,7 +1219,7 @@ SpriteRenderer:
   m_Size: {x: 10.24, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &685264199
@@ -2088,7 +2108,7 @@ SpriteRenderer:
   m_Size: {x: 10.24, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &2112903524
@@ -2131,6 +2151,7 @@ MonoBehaviour:
   _playAndCompleteAction: 0
   _playableDirector: {fileID: 1813917263}
   _skipButton: {fileID: 836456645}
+  _stopGameplayDuring: 0
 --- !u!4 &2112903526
 Transform:
   m_ObjectHideFlags: 0
@@ -2759,6 +2780,6 @@ SpriteRenderer:
   m_Size: {x: 20.48, y: 10.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
