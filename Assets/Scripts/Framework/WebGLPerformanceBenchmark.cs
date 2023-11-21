@@ -4,6 +4,9 @@ using UnityEngine.Rendering;
 public class WebGLPerformanceBenchmark : MonoBehaviour
 {
     [SerializeField]
+    private float _waitTime = 5.0f;
+
+    [SerializeField]
     private float _benchmarkDuration = 5f; // Duration of the benchmark in seconds
     [SerializeField]
     private float _lowerEndFPSThreshold = 30f;
@@ -18,15 +21,18 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
     private float _totalDeltaTime = 0f;
     private float _averageFPS = 0f;
 
+    public float BenchMarkingProgress => _elapsedTime / (_benchmarkDuration + _waitTime);
 
     private void Update()
     {
-
         _elapsedTime += Time.deltaTime;
+
+        if (_elapsedTime < _waitTime) return;
+
         _frameCount++;
         _totalDeltaTime += Time.deltaTime;
 
-        if (_elapsedTime >= _benchmarkDuration)
+        if (_elapsedTime >= _benchmarkDuration + _waitTime)
         {
             float averageDeltaTime = _totalDeltaTime / _frameCount;
             _averageFPS = 1f / averageDeltaTime;
