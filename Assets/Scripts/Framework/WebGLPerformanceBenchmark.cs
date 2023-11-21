@@ -10,6 +10,9 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
     [SerializeField]
     private float _midEndFPSThresHold = 60.0f;
 
+    [SerializeField]
+    private GameObject _rootTestObjects;
+
     private float _elapsedTime = 0f;
     private int _frameCount = 0;
     private float _totalDeltaTime = 0f;
@@ -50,6 +53,9 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
 
             // Disable the benchmark script after measuring the performance
             enabled = false;
+
+            _rootTestObjects.SetActive(false);
+            ServiceLocator.Instance.GetService<QualitySettingsManager>().SetQualityLevelFeatures(qualityLevel);
         }
     }
 }

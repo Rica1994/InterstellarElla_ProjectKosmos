@@ -91,7 +91,7 @@ public class QualitySettingsManager : Service
         SetQualityLevelFeatures(currentQualityLevelToRank);
     }
 
-    private void SetQualityLevelFeatures(QualityRank qualityRank)
+    public void SetQualityLevelFeatures(QualityRank qualityRank)
     {
         int qualityLevelIndex = QualityRankToIndex(qualityRank);
         QualitySettings.SetQualityLevel(qualityLevelIndex);
