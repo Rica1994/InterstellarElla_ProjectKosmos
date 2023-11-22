@@ -22,6 +22,7 @@ public class StartUpCheck : MonoBehaviour
 
     private void Start()
     {
+        _startButton.enabled = false;
         _buttonImage.fillAmount = 0;
         _buttonText.text = "LOADING";
     }
@@ -36,6 +37,7 @@ public class StartUpCheck : MonoBehaviour
         {
             _buttonImage.fillAmount = 1.0f;
             _buttonText.text = "START";
+            _startButton.enabled = true;
             enabled = false;
         }
     }
