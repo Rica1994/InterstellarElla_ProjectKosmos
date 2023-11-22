@@ -20,6 +20,9 @@ public class StartUpCheck : MonoBehaviour
     [SerializeField]
     private WebGLPerformanceBenchmark _performanceBenchmark;
 
+    [SerializeField]
+    private GameObject _startupScreenCanvas;
+
     private void Start()
     {
         _startButton.enabled = false;
@@ -62,6 +65,9 @@ public class StartUpCheck : MonoBehaviour
             toLoadScene = SceneType.S_GameStartUpScene;
             loadMode = LoadSceneMode.Additive;
         }
+
+        Helpers.FadeImage(new GameObject[] { _startupScreenCanvas }, 0.0f, 1.0f);
+        Helpers.FadeText(new GameObject[] { _startupScreenCanvas}, 0.0f, 1.0f);
 
         ServiceLocator.Instance.GetService<SceneController>().LoadIntermissionLoading(toLoadScene, loadMode: loadMode);
     }

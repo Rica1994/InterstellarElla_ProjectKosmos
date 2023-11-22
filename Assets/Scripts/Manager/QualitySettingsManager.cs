@@ -87,6 +87,7 @@ public class QualitySettingsManager : Service
         _currentQualityIndex = QualitySettings.GetQualityLevel();
         _currentQualityIndex = (_currentQualityIndex + 1) % QualitySettings.names.Length;
         var currentQualityLevelToRank = IndexToQualityRank(_currentQualityIndex);
+        GameManager.Data.QualityRank = currentQualityLevelToRank;
 
         SetQualityLevelFeatures(currentQualityLevelToRank);
     }
