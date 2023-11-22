@@ -158,6 +158,8 @@ MonoBehaviour:
   - {fileID: 1256294657}
   - {fileID: 1028249890}
   _startOnAwake: 1
+  _destroyAfter: 0
+  _loop: 0
 --- !u!4 &11710211
 Transform:
   m_ObjectHideFlags: 0
@@ -284,6 +286,66 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3231628105161582671, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3231628105161582671, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3231628105161582671, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3231628105161582671, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3779926365475570411, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3779926365475570411, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3779926365475570411, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3779926365475570411, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4275511756971617665, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4275511756971617665, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4275511756971617665, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4275511756971617665, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7926606816940189281, guid: 1b3ad37f3b38f694fb268141fa5866d0,
         type: 3}
       propertyPath: m_Name
@@ -442,6 +504,8 @@ MonoBehaviour:
   - {fileID: 1256294657}
   - {fileID: 1028249890}
   _startOnAwake: 1
+  _destroyAfter: 0
+  _loop: 0
 --- !u!4 &310008827
 Transform:
   m_ObjectHideFlags: 0
@@ -516,7 +580,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: 7c919100343a5e447834db80246a06c9, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -576,6 +640,8 @@ MonoBehaviour:
   - {fileID: 1256294657}
   - {fileID: 1028249890}
   _startOnAwake: 1
+  _destroyAfter: 0
+  _loop: 0
 --- !u!4 &478083618
 Transform:
   m_ObjectHideFlags: 0
@@ -621,7 +687,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -750,6 +819,8 @@ MonoBehaviour:
   - {fileID: 1256294657}
   - {fileID: 1028249890}
   _startOnAwake: 1
+  _destroyAfter: 0
+  _loop: 0
 --- !u!4 &603474716
 Transform:
   m_ObjectHideFlags: 0
@@ -809,7 +880,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 1
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -966,13 +1040,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
   _playAndCompleteAction: 0
   _sceneToLoad: 2
-  _endGame: 0
+  _endLevel: 0
+  _isLastLevel: 0
 --- !u!4 &1028249891
 Transform:
   m_ObjectHideFlags: 0
@@ -1017,7 +1095,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 1
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -1140,7 +1221,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -1270,6 +1354,8 @@ MonoBehaviour:
   - {fileID: 1256294657}
   - {fileID: 1028249890}
   _startOnAwake: 1
+  _destroyAfter: 0
+  _loop: 0
 --- !u!4 &1796135124
 Transform:
   m_ObjectHideFlags: 0
@@ -1315,7 +1401,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 1
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -1438,7 +1527,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 1
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -1561,7 +1653,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 0
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -1624,7 +1719,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useUserBasedAction: 1
-  _repeatUntilRequisiteIsMet: 0
+  _repeat: 0
+  _repeatUntilRequisitIsMet: 0
+  _repeatNumberOfTimes: 0
+  _timesToRepeat: 0
   _timeUntilNextRepeat: 10
   _requisiteLogic: 0
   _requisiteObjects: []
@@ -2079,7 +2177,7 @@ PrefabInstance:
     - target: {fileID: 4235481272775225334, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
         type: 3}
       propertyPath: m_RenderMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4235481272775225335, guid: 30018b3b67fa4b84ebee2698fad1e3c6,
         type: 3}
