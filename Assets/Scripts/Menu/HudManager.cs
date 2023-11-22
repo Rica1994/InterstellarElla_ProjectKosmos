@@ -1,7 +1,10 @@
+using DG.Tweening.Core.Easing;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -30,28 +33,6 @@ public class HudManager : Service
 
     public TouchButton TouchButton => _touchButton;
 
-    private void Start()
-    {
-        var gameManager = ServiceLocator.Instance.GetService<GameManager>();
-        var currentPlanet = gameManager.GetCurrentPlanet();
-
-        GameManager.CutsceneStartedEvent += OnCutSceneStarted;
-        GameManager.CutsceneEndedEvent += OnCutSceneEnded;
-
-        var isCurrentPlanetNone = currentPlanet == GameManager.Planet.None;
-        _scoreCanvas.SetActive(!isCurrentPlanetNone);
-        _pauseMenu.gameObject.SetActive(true);
-        _pauseMenu.Show(false, 0.0f);
-
-        _pauseScreenButton.onClick.AddListener(OpenPauseMenu);
-
-        if (!gameManager.IsMobileWebGl || isCurrentPlanetNone)
-        {
-            _joystick.SetActive(false);
-            _touchButton.gameObject.SetActive(false);
-        }
-    }
-
     private void OnCutSceneEnded()
     {
         _pauseScreenButton.gameObject.SetActive(true);
@@ -64,6 +45,34 @@ public class HudManager : Service
 
     public void Initialize(GameManager.Planet currentPlanet)
     {
+        var gameManager = ServiceLocator.Instance.GetService<GameManager>();
+
+        GameManager.CutsceneStartedEvent += OnCutSceneStarted;
+        GameManager.CutsceneEndedEvent += OnCutSceneEnded;
+
+        var isCurrentPlanetNone = currentPlanet == GameManager.Planet.None;
+
+        var sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName.IndexOf("intro", StringComparison.OrdinalIgnoreCase) >= 0 || sceneName.IndexOf("outro", StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            _scoreCanvas.SetActive(false);
+        }
+        else
+        {
+            _scoreCanvas.SetActive(!isCurrentPlanetNone);
+        }
+
+        _pauseMenu.gameObject.SetActive(true);
+        _pauseMenu.Show(false, 0.0f);
+
+        _pauseScreenButton.onClick.AddListener(OpenPauseMenu);
+
+        if (!gameManager.IsMobileWebGl || isCurrentPlanetNone)
+        {
+            _joystick.SetActive(false);
+            _touchButton.gameObject.SetActive(false);
+        }
+
         ServiceLocator.Instance.GetService<PickUpManager>().PickUpPickedUpEvent += OnPickupPickedUp;
 
         _pickupsCollectedText.text = GameManager.Data.CurrentScore.ToString();
