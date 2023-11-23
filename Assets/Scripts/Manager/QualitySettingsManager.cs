@@ -133,6 +133,8 @@ public class QualitySettingsManager : Service
         _qualityTexture.width = newWidth;
         _qualityTexture.height = newHeight;
         _qualityTexture.Create();
+
+       // Screen.SetResolution(newWidth, newHeight, false);
     }
 
     private int QualityRankToIndex(QualityRank rank)
