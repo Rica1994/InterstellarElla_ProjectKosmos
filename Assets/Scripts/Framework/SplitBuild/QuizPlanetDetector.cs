@@ -39,6 +39,7 @@ public class QuizPlanetDetector : MonoBehaviour
                 _mercuryQuizSequence.SetActive(true);
                 break;
             case GameManager.Planet.None:
+                _mercuryQuizSequence.SetActive(true);
                 Debug.LogError("Last planet was none");
                 break;
         }

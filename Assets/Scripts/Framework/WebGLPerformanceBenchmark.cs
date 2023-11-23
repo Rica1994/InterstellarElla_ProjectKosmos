@@ -4,26 +4,35 @@ using UnityEngine.Rendering;
 public class WebGLPerformanceBenchmark : MonoBehaviour
 {
     [SerializeField]
+    private float _waitTime = 5.0f;
+
+    [SerializeField]
     private float _benchmarkDuration = 5f; // Duration of the benchmark in seconds
     [SerializeField]
     private float _lowerEndFPSThreshold = 30f;
     [SerializeField]
     private float _midEndFPSThresHold = 60.0f;
 
+    [SerializeField]
+    private GameObject _rootTestObjects;
+
     private float _elapsedTime = 0f;
     private int _frameCount = 0;
     private float _totalDeltaTime = 0f;
     private float _averageFPS = 0f;
 
+    public float BenchMarkingProgress => _elapsedTime / (_benchmarkDuration + _waitTime);
 
     private void Update()
     {
-
         _elapsedTime += Time.deltaTime;
+
+        if (_elapsedTime < _waitTime) return;
+
         _frameCount++;
         _totalDeltaTime += Time.deltaTime;
 
-        if (_elapsedTime >= _benchmarkDuration)
+        if (_elapsedTime >= _benchmarkDuration + _waitTime)
         {
             float averageDeltaTime = _totalDeltaTime / _frameCount;
             _averageFPS = 1f / averageDeltaTime;
@@ -50,6 +59,9 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
 
             // Disable the benchmark script after measuring the performance
             enabled = false;
+
+            _rootTestObjects.SetActive(false);
+            ServiceLocator.Instance.GetService<QualitySettingsManager>().SetQualityLevelFeatures(qualityLevel);
         }
     }
 }
