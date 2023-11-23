@@ -76,7 +76,7 @@ public class FactSheet : MonoBehaviour
             }
         }
 
-        ShowSheet(false, false);
+        ShowSheet(false, false, 0.0f);
     }
 
     public void InitializeSheet(FactSheetData data)
