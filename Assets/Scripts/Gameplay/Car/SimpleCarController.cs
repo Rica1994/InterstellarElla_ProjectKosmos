@@ -508,19 +508,13 @@ public class SimpleCarController : PlayerController, IVehicle
     }
     private IEnumerator ParticleJetsRoutine(float duration = 0.5f)
     {
-        _particleLeftJet.gameObject.SetActive(true);
-        _particleRightJet.gameObject.SetActive(true);
+        _particleLeftJet.Play();
+        _particleRightJet.Play();
 
         yield return new WaitForSeconds(duration);
 
         _particleLeftJet.Stop();
-        _particleLeftJet.Stop();
-
-        yield return new WaitForSeconds(1f);
-
-        _particleLeftJet.gameObject.SetActive(false);
-        _particleRightJet.gameObject.SetActive(false);
-
+        _particleRightJet.Stop();
     }
     private IEnumerator ToggleFakeGravity(float timeOfFlight, float fakeGravity)
     {
@@ -553,7 +547,7 @@ public class SimpleCarController : PlayerController, IVehicle
 
         //   _sourceBoost.Play();
 
-        _particleStraight.gameObject.SetActive(true);
+        _particleStraight.Play();
 
         yield return new WaitForSeconds(1);
 
@@ -563,7 +557,6 @@ public class SimpleCarController : PlayerController, IVehicle
 
         yield return new WaitForSeconds(1);
 
-        _particleStraight.gameObject.SetActive(false);
 
         IsBoosting = false;
         OnNormalize?.Invoke();
