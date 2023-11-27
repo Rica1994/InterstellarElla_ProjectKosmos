@@ -89,6 +89,9 @@ public class EllaExploring : PlayerController, IElla
     [SerializeField] private AudioSource _sourceIgnitionBoots;
 
     [SerializeField] private AudioSource _sourceVoice;
+
+    [SerializeField] private LayerMask _ignoreLayerMask;
+
     AudioSource IElla.VoiceAudioSource { get { return _sourceVoice; } }
 
     private void Awake()
@@ -373,7 +376,7 @@ public class EllaExploring : PlayerController, IElla
     {
         var ray = new Ray(transform.position, Vector3.down);
 
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, 1.1f))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 1.1f, ~_ignoreLayerMask))
         {
             var slopeDirection = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
             var adjustedVelocity = slopeDirection * velocity;
