@@ -42,7 +42,7 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
             var qualityLevel = QualitySettingsManager.QualityRank.Low;
 
             // Check if the average FPS falls below a threshold for a lower-end device
-            if (_averageFPS > _midEndFPSThresHold)
+            if (_averageFPS > _midEndFPSThresHold && (SystemInfo.deviceModel.StartsWith("Safari") && ServiceLocator.Instance.GetService<GameManager>().IsMobileWebGl) == false)
             {
                 qualityLevel = QualitySettingsManager.QualityRank.High;
             }
