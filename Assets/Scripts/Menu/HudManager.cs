@@ -35,11 +35,13 @@ public class HudManager : Service
 
     private void OnCutSceneEnded()
     {
+        _hudRoot.SetActive(true);
         _pauseScreenButton.gameObject.SetActive(true);
     }
 
     private void OnCutSceneStarted()
     {
+        _hudRoot.SetActive(false);
         _pauseScreenButton.gameObject.SetActive(false);
     }
 

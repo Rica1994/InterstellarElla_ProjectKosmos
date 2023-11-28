@@ -113,13 +113,13 @@ public class GameManager : Service
         get => _isInCutScene;
         set
         {
-            var wasNotInCutScene = _isInCutScene;
+            var wasNotInCutScene = _isInCutScene == false;
             _isInCutScene = value;
-            var audioController = ServiceLocator.Instance.GetService<AudioController>();
-            if (audioController != null)
-            {
-                audioController.MixerAdjustment(value ? MixerType.MixerFXMuted : MixerType.MixerNormal);
-            }
+         //   var audioController = ServiceLocator.Instance.GetService<AudioController>();
+         //   if (audioController != null)
+         //   {
+         //       audioController.MixerAdjustment(value ? MixerType.MixerFXMuted : MixerType.MixerNormal);
+         //   }
 
             if (wasNotInCutScene && _isInCutScene)
             {
