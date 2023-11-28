@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using System;
@@ -64,3 +65,4 @@ public class FindComponentReferences : EditorWindow
         }
     }
 }
+#endif

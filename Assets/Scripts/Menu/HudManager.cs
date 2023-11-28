@@ -53,9 +53,12 @@ public class HudManager : Service
         var isCurrentPlanetNone = currentPlanet == GameManager.Planet.None;
 
         var sceneName = SceneManager.GetActiveScene().name;
-        if (sceneName.IndexOf("intro", StringComparison.OrdinalIgnoreCase) >= 0 || sceneName.IndexOf("outro", StringComparison.OrdinalIgnoreCase) >= 0)
+
+        if (sceneName.IndexOf("Intro", StringComparison.OrdinalIgnoreCase) >= 0 || sceneName.IndexOf("Outro", StringComparison.OrdinalIgnoreCase) >= 0)
         {
             _scoreCanvas.SetActive(false);
+            _joystick.SetActive(false);
+            _touchButton.gameObject.SetActive(false);
         }
         else
         {
