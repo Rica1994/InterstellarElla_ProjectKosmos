@@ -25,9 +25,11 @@ public class ChainActionEditor : Editor
         EditorGUILayout.LabelField("Repeat options", EditorStyles.boldLabel);
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("_repeat"));
+        
         bool repeat = serializedObject.FindProperty("_repeat").boolValue;
         if (repeat)
         {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("_completeImmediatelyIfRequisiteIsMet"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("_repeatUntilRequisitIsMet"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("_repeatNumberOfTimes"));
 
@@ -35,6 +37,7 @@ public class ChainActionEditor : Editor
             bool repeatNumberOfTimes = serializedObject.FindProperty("_repeatNumberOfTimes").boolValue;
 
             EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
+
 
             if (repeatUntilRequisitIsMet) serializedObject.FindProperty("_repeatNumberOfTimes").boolValue = false;
             else if (repeatNumberOfTimes) serializedObject.FindProperty("_repeatUntilRequisitIsMet").boolValue = false;

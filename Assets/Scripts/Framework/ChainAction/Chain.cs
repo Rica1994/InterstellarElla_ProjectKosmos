@@ -89,6 +89,14 @@ public class Chain
         try
         {
             _currentChainAction = _chainActions.Dequeue();
+
+            if (_currentChainAction.CompleteImmediatelyIfRequisiteIsMet && _currentChainAction.AreRequisitesMet())
+            {
+                EndCurrentChainAction();
+                return;
+            }
+
+
             _currentChainAction.ChainActionDone += OnCurrentChainActionDone;
             _currentChainAction.Execute();
             _currentChainAction.OnEnter();

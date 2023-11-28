@@ -45,6 +45,13 @@ public class MaggieChainAction : ChainAction
     public override void Execute()
     {
         base.Execute();
+
+        if (_maggieAudioClip == null)
+        {
+            Debug.Log("MaggieAudioClip was null");
+            return;
+        }
+
         _maggieMouthAnimation.Restart();
         _maggieMouthAnimation.MaggieMood = _maggieMood;
         _maggie.PopUp();

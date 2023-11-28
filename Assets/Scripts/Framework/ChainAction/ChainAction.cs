@@ -31,6 +31,9 @@ public class ChainAction : MonoBehaviour
     private bool _repeatUntilRequisitIsMet = false;
 
     [SerializeField, HideInInspector]
+    private bool _completeImmediatelyIfRequisiteIsMet = false;
+
+    [SerializeField, HideInInspector]
     private bool _repeatNumberOfTimes = false;
 
     [SerializeField, HideInInspector]
@@ -55,6 +58,7 @@ public class ChainAction : MonoBehaviour
     private bool _isBeingExecuted = false;
 
     public bool Repeat => _repeat;
+    public bool CompleteImmediatelyIfRequisiteIsMet => _completeImmediatelyIfRequisiteIsMet;
 
     [SerializeField]
     private bool _playAndCompleteAction = false;
