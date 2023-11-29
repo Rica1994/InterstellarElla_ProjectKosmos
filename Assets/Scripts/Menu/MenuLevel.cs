@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +21,7 @@ public class MenuLevel : MonoBehaviour
 
     [Header("Text components score")]
     [SerializeField]
-    private Text _textPlanet;
+    private TextMeshProUGUI _textPlanet;
 
     [SerializeField]
     private FactSheet.FactSheetData _factSheetData;

@@ -38,6 +38,7 @@ public class QualitySettingsManagerEditor : Editor
         GUILayout.Label("Select Quality Level", EditorStyles.boldLabel);
 
         EditorGUI.BeginChangeCheck();
+        Undo.RecordObject(target, "Quality level undo");
         int newIndex = EditorGUILayout.Popup("Quality Level", selectedQualityIndex, QualitySettings.names);
         if (EditorGUI.EndChangeCheck())
         {
@@ -47,6 +48,8 @@ public class QualitySettingsManagerEditor : Editor
             GameManager.Data.QualityRank = QualitySettingsManager.GetQualityRankFromSettings();
             manager.Initialize();
             Debug.Log("Quality level automatically set to: " + QualitySettings.names[selectedQualityIndex]);
+
+            EditorUtility.SetDirty(target);
         }
 
         EditorGUI.BeginChangeCheck();
