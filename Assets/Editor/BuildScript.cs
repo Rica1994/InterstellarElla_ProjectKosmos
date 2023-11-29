@@ -5,10 +5,12 @@ using UnityEngine;
 using System.IO;
 using UnityEditor.Build.Reporting;
 using System;
+using UnityEditor.SceneManagement;
 
 public class BuildWindow : EditorWindow
 {
     private string repositoryPath = string.Empty;
+    private QualitySettingsManager _qualitySettingsManager;
     private bool _selectAllScenesBoolean = false;
     private bool _lastSelectAllScenesBoolean = false;
     private Vector2 scrollPosition;
@@ -60,6 +62,12 @@ public class BuildWindow : EditorWindow
 
         _selectAllScenesBoolean = GUILayout.Toggle(_selectAllScenesBoolean, "Select all scenes");
         HandleSelectAllScenes();
+
+        // Find the QualitySettingsManager in the scene and assign it to the reference
+        if (_qualitySettingsManager == null)
+        {
+            _qualitySettingsManager = FindObjectOfType<QualitySettingsManager>();
+        }
 
         // Use the full width of the editor window for the scroll view
         scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.ExpandWidth(true), GUILayout.Height(400));
@@ -162,15 +170,6 @@ public class BuildWindow : EditorWindow
 
             var level = levels[i];
 
-            //     if (EditorUtility.DisplayCancelableProgressBar(
-            //         "Building Scenes",
-            //         $"Building {levels[i]} ({i + 1}/{levels.Length})",
-            //         (float)i / levels.Length))
-            //     {
-            //         Debug.Log("User pressed the cancel button");
-            //         break;
-            //     }
-
             string[] splitLevel = level.Split('\\');
             string sceneName = "";
             string scenePath = "";
@@ -195,6 +194,11 @@ public class BuildWindow : EditorWindow
                 buildPath = Path.Combine(repositoryPath, level);
             }
 
+            // Load the scene in the Unity editor
+            EditorSceneManager.OpenScene(scenePath);
+
+            // Set the quality to "Low" after opening the scene
+            SetQualityToLow();
 
             if (!Directory.Exists(buildPath))
             {
@@ -212,6 +216,25 @@ public class BuildWindow : EditorWindow
             {
                 Debug.LogError("Build failed for " + sceneName + " at " + buildPath);
             }
+
+        }
+    }
+
+    private void SetQualityToLow()
+    {
+        QualitySettings.SetQualityLevel(0); // 0 corresponds to "Low" quality level
+
+        // Find the QualitySettingsManager in the scene and assign it to the reference
+        if (_qualitySettingsManager == null)
+        {
+            _qualitySettingsManager = FindObjectOfType<QualitySettingsManager>();
+        }
+
+        // Check if the QualitySettingsManager reference is assigned
+        if (_qualitySettingsManager != null)
+        {
+            GameManager.Data.QualityRank = QualitySettingsManager.QualityRank.Low;
+            _qualitySettingsManager.Initialize();
         }
     }
 }
