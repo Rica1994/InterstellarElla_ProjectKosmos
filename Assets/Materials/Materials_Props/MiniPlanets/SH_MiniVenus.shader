@@ -12,6 +12,16 @@ Shader "SH_MiniVenus"
 		_Tiling_Clouds_Moving("Tiling_Clouds_Moving", Vector) = (3,3,0,0)
 		_Noise63("Noise63", 2D) = "white" {}
 		_Cloud_Movement("Cloud_Movement", Vector) = (0.05,0.02,0,0)
+		_HologramPattern("Hologram Pattern", 2D) = "white" {}
+		_FresnelColor("Fresnel Color", Color) = (0,0.8832197,1,0)
+		_FresnelScale("Fresnel Scale", Float) = 1
+		_FresnelPower("Fresnel Power", Float) = 5
+		_HologramPatternScale("Hologram Pattern Scale", Float) = 1
+		_HologramPatternPower("Hologram Pattern Power", Float) = 0.01
+		_HologramPatternSpeed("Hologram Pattern Speed", Vector) = (0,0,0,0)
+		_HologramPattern2Scale("Hologram Pattern 2 Scale", Float) = 1
+		_HologramPattern2("Hologram Pattern 2", 2D) = "white" {}
+		_DeformScale("Deform Scale", Float) = 0.1
 
 		//_TransmissionShadow( "Transmission Shadow", Range( 0, 1 ) ) = 0.5
 		//_TransStrength( "Trans Strength", Range( 0, 50 ) ) = 1
@@ -186,7 +196,9 @@ Shader "SH_MiniVenus"
 			#include "UnityPBSLighting.cginc"
 			#include "AutoLight.cginc"
 
-			
+			#define ASE_NEEDS_FRAG_WORLD_VIEW_DIR
+			#define ASE_NEEDS_FRAG_WORLD_NORMAL
+
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
@@ -251,6 +263,16 @@ Shader "SH_MiniVenus"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
+			uniform sampler2D _HologramPattern;
+			uniform float _HologramPatternScale;
+			uniform float2 _HologramPatternSpeed;
+			uniform float _DeformScale;
+			uniform float4 _FresnelColor;
+			uniform sampler2D _HologramPattern2;
+			uniform float _HologramPattern2Scale;
+			uniform float _HologramPatternPower;
+			uniform float _FresnelScale;
+			uniform float _FresnelPower;
 			uniform float4 _Color;
 			uniform float _EmissionStrength;
 			uniform sampler2D _Noise63;
@@ -269,6 +291,20 @@ Shader "SH_MiniVenus"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				float2 temp_cast_0 = (_HologramPatternScale).xx;
+				float2 panner31 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord30 = v.ase_texcoord.xy * temp_cast_0 + panner31;
+				float4 tex2DNode34 = tex2Dlod( _HologramPattern, float4( texCoord30, 0, 0.0) );
+				float2 break19_g3 = float2( 2,2 );
+				float temp_output_1_0_g3 = 0.0;
+				float sinIn7_g3 = sin( temp_output_1_0_g3 );
+				float sinInOffset6_g3 = sin( ( temp_output_1_0_g3 + 1.0 ) );
+				float lerpResult20_g3 = lerp( break19_g3.x , break19_g3.y , frac( ( sin( ( ( sinIn7_g3 - sinInOffset6_g3 ) * 91.2228 ) ) * 43758.55 ) ));
+				float2 temp_cast_1 = (( lerpResult20_g3 + sinIn7_g3 )).xx;
+				float dotResult4_g2 = dot( temp_cast_1 , float2( 12.9898,78.233 ) );
+				float lerpResult10_g2 = lerp( 0.0 , _DeformScale , frac( ( sin( dotResult4_g2 ) * 43758.55 ) ));
+				float4 appendResult49 = (float4(0.0 , 0.0 , lerpResult10_g2 , 0.0));
+				
 				o.ase_texcoord9.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -278,7 +314,7 @@ Shader "SH_MiniVenus"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = defaultVertexValue;
+				float3 vertexValue = ( tex2DNode34 * appendResult49 ).rgb;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -457,13 +493,22 @@ Shader "SH_MiniVenus"
 				float4 ScreenPos = IN.screenPos;
 				#endif
 
+				float2 temp_cast_0 = (_HologramPattern2Scale).xx;
+				float2 texCoord28 = IN.ase_texcoord9.xy * temp_cast_0 + float2( 0,0 );
+				float2 temp_cast_1 = (_HologramPatternScale).xx;
+				float2 panner31 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord30 = IN.ase_texcoord9.xy * temp_cast_1 + panner31;
+				float4 tex2DNode34 = tex2D( _HologramPattern, texCoord30 );
+				float fresnelNdotV39 = dot( WorldNormal, worldViewDir );
+				float fresnelNode39 = ( 0.0 + _FresnelScale * pow( 1.0 - fresnelNdotV39, _FresnelPower ) );
 				float2 texCoord15 = IN.ase_texcoord9.xy * _Tiling_Clouds_Moving + float2( 0,0 );
 				float2 panner17 = ( 0.4 * _Time.y * _Cloud_Movement + texCoord15);
-				float2 temp_cast_0 = (_NoiseScale1).xx;
-				float2 texCoord6 = IN.ase_texcoord9.xy * temp_cast_0 + float2( 0,0 );
-				float4 temp_output_14_0 = ( _Color * ( _EmissionStrength * tex2D( _Noise63, panner17 ) * tex2D( _TextureSample1, texCoord6 ) ) * _Color1 );
+				float4 clampResult57 = clamp( tex2D( _Noise63, panner17 ) , float4( 0.61,0.61,0.61,0 ) , float4( 1,1,1,0 ) );
+				float2 temp_cast_2 = (_NoiseScale1).xx;
+				float2 texCoord6 = IN.ase_texcoord9.xy * temp_cast_2 + float2( 0,0 );
+				float4 temp_output_14_0 = ( _Color * ( _EmissionStrength * clampResult57 * tex2D( _TextureSample1, texCoord6 ) ) * _Color1 );
 				
-				o.Albedo = temp_output_14_0.rgb;
+				o.Albedo = ( ( _FresnelColor * ( ( ( tex2D( _HologramPattern2, texCoord28 ) * tex2DNode34 ) * _HologramPatternPower ) + fresnelNode39 ) ) + temp_output_14_0 ).rgb;
 				o.Normal = fixed3( 0, 0, 1 );
 				o.Emission = temp_output_14_0.rgb;
 				#if defined(_SPECULAR_SETUP)
@@ -652,7 +697,9 @@ Shader "SH_MiniVenus"
 			#include "UnityPBSLighting.cginc"
 			#include "AutoLight.cginc"
 
-			
+			#define ASE_NEEDS_FRAG_WORLD_VIEW_DIR
+			#define ASE_NEEDS_FRAG_WORLD_NORMAL
+
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
@@ -710,6 +757,16 @@ Shader "SH_MiniVenus"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
+			uniform sampler2D _HologramPattern;
+			uniform float _HologramPatternScale;
+			uniform float2 _HologramPatternSpeed;
+			uniform float _DeformScale;
+			uniform float4 _FresnelColor;
+			uniform sampler2D _HologramPattern2;
+			uniform float _HologramPattern2Scale;
+			uniform float _HologramPatternPower;
+			uniform float _FresnelScale;
+			uniform float _FresnelPower;
 			uniform float4 _Color;
 			uniform float _EmissionStrength;
 			uniform sampler2D _Noise63;
@@ -728,6 +785,20 @@ Shader "SH_MiniVenus"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				float2 temp_cast_0 = (_HologramPatternScale).xx;
+				float2 panner31 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord30 = v.ase_texcoord.xy * temp_cast_0 + panner31;
+				float4 tex2DNode34 = tex2Dlod( _HologramPattern, float4( texCoord30, 0, 0.0) );
+				float2 break19_g3 = float2( 2,2 );
+				float temp_output_1_0_g3 = 0.0;
+				float sinIn7_g3 = sin( temp_output_1_0_g3 );
+				float sinInOffset6_g3 = sin( ( temp_output_1_0_g3 + 1.0 ) );
+				float lerpResult20_g3 = lerp( break19_g3.x , break19_g3.y , frac( ( sin( ( ( sinIn7_g3 - sinInOffset6_g3 ) * 91.2228 ) ) * 43758.55 ) ));
+				float2 temp_cast_1 = (( lerpResult20_g3 + sinIn7_g3 )).xx;
+				float dotResult4_g2 = dot( temp_cast_1 , float2( 12.9898,78.233 ) );
+				float lerpResult10_g2 = lerp( 0.0 , _DeformScale , frac( ( sin( dotResult4_g2 ) * 43758.55 ) ));
+				float4 appendResult49 = (float4(0.0 , 0.0 , lerpResult10_g2 , 0.0));
+				
 				o.ase_texcoord9.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -737,7 +808,7 @@ Shader "SH_MiniVenus"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = defaultVertexValue;
+				float3 vertexValue = ( tex2DNode34 * appendResult49 ).rgb;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -897,13 +968,22 @@ Shader "SH_MiniVenus"
 				#endif
 
 
+				float2 temp_cast_0 = (_HologramPattern2Scale).xx;
+				float2 texCoord28 = IN.ase_texcoord9.xy * temp_cast_0 + float2( 0,0 );
+				float2 temp_cast_1 = (_HologramPatternScale).xx;
+				float2 panner31 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord30 = IN.ase_texcoord9.xy * temp_cast_1 + panner31;
+				float4 tex2DNode34 = tex2D( _HologramPattern, texCoord30 );
+				float fresnelNdotV39 = dot( WorldNormal, worldViewDir );
+				float fresnelNode39 = ( 0.0 + _FresnelScale * pow( 1.0 - fresnelNdotV39, _FresnelPower ) );
 				float2 texCoord15 = IN.ase_texcoord9.xy * _Tiling_Clouds_Moving + float2( 0,0 );
 				float2 panner17 = ( 0.4 * _Time.y * _Cloud_Movement + texCoord15);
-				float2 temp_cast_0 = (_NoiseScale1).xx;
-				float2 texCoord6 = IN.ase_texcoord9.xy * temp_cast_0 + float2( 0,0 );
-				float4 temp_output_14_0 = ( _Color * ( _EmissionStrength * tex2D( _Noise63, panner17 ) * tex2D( _TextureSample1, texCoord6 ) ) * _Color1 );
+				float4 clampResult57 = clamp( tex2D( _Noise63, panner17 ) , float4( 0.61,0.61,0.61,0 ) , float4( 1,1,1,0 ) );
+				float2 temp_cast_2 = (_NoiseScale1).xx;
+				float2 texCoord6 = IN.ase_texcoord9.xy * temp_cast_2 + float2( 0,0 );
+				float4 temp_output_14_0 = ( _Color * ( _EmissionStrength * clampResult57 * tex2D( _TextureSample1, texCoord6 ) ) * _Color1 );
 				
-				o.Albedo = temp_output_14_0.rgb;
+				o.Albedo = ( ( _FresnelColor * ( ( ( tex2D( _HologramPattern2, texCoord28 ) * tex2DNode34 ) * _HologramPatternPower ) + fresnelNode39 ) ) + temp_output_14_0 ).rgb;
 				o.Normal = fixed3( 0, 0, 1 );
 				o.Emission = temp_output_14_0.rgb;
 				#if defined(_SPECULAR_SETUP)
@@ -1044,7 +1124,9 @@ Shader "SH_MiniVenus"
 			#include "Lighting.cginc"
 			#include "UnityPBSLighting.cginc"
 
-			
+			#define ASE_NEEDS_FRAG_WORLD_VIEW_DIR
+			#define ASE_NEEDS_FRAG_WORLD_NORMAL
+
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
@@ -1091,6 +1173,16 @@ Shader "SH_MiniVenus"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
+			uniform sampler2D _HologramPattern;
+			uniform float _HologramPatternScale;
+			uniform float2 _HologramPatternSpeed;
+			uniform float _DeformScale;
+			uniform float4 _FresnelColor;
+			uniform sampler2D _HologramPattern2;
+			uniform float _HologramPattern2Scale;
+			uniform float _HologramPatternPower;
+			uniform float _FresnelScale;
+			uniform float _FresnelPower;
 			uniform float4 _Color;
 			uniform float _EmissionStrength;
 			uniform sampler2D _Noise63;
@@ -1109,6 +1201,20 @@ Shader "SH_MiniVenus"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				float2 temp_cast_0 = (_HologramPatternScale).xx;
+				float2 panner31 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord30 = v.ase_texcoord.xy * temp_cast_0 + panner31;
+				float4 tex2DNode34 = tex2Dlod( _HologramPattern, float4( texCoord30, 0, 0.0) );
+				float2 break19_g3 = float2( 2,2 );
+				float temp_output_1_0_g3 = 0.0;
+				float sinIn7_g3 = sin( temp_output_1_0_g3 );
+				float sinInOffset6_g3 = sin( ( temp_output_1_0_g3 + 1.0 ) );
+				float lerpResult20_g3 = lerp( break19_g3.x , break19_g3.y , frac( ( sin( ( ( sinIn7_g3 - sinInOffset6_g3 ) * 91.2228 ) ) * 43758.55 ) ));
+				float2 temp_cast_1 = (( lerpResult20_g3 + sinIn7_g3 )).xx;
+				float dotResult4_g2 = dot( temp_cast_1 , float2( 12.9898,78.233 ) );
+				float lerpResult10_g2 = lerp( 0.0 , _DeformScale , frac( ( sin( dotResult4_g2 ) * 43758.55 ) ));
+				float4 appendResult49 = (float4(0.0 , 0.0 , lerpResult10_g2 , 0.0));
+				
 				o.ase_texcoord8.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -1118,7 +1224,7 @@ Shader "SH_MiniVenus"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = defaultVertexValue;
+				float3 vertexValue = ( tex2DNode34 * appendResult49 ).rgb;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -1279,13 +1385,22 @@ Shader "SH_MiniVenus"
 				float3 worldViewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 				half atten = 1;
 
+				float2 temp_cast_0 = (_HologramPattern2Scale).xx;
+				float2 texCoord28 = IN.ase_texcoord8.xy * temp_cast_0 + float2( 0,0 );
+				float2 temp_cast_1 = (_HologramPatternScale).xx;
+				float2 panner31 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord30 = IN.ase_texcoord8.xy * temp_cast_1 + panner31;
+				float4 tex2DNode34 = tex2D( _HologramPattern, texCoord30 );
+				float fresnelNdotV39 = dot( WorldNormal, worldViewDir );
+				float fresnelNode39 = ( 0.0 + _FresnelScale * pow( 1.0 - fresnelNdotV39, _FresnelPower ) );
 				float2 texCoord15 = IN.ase_texcoord8.xy * _Tiling_Clouds_Moving + float2( 0,0 );
 				float2 panner17 = ( 0.4 * _Time.y * _Cloud_Movement + texCoord15);
-				float2 temp_cast_0 = (_NoiseScale1).xx;
-				float2 texCoord6 = IN.ase_texcoord8.xy * temp_cast_0 + float2( 0,0 );
-				float4 temp_output_14_0 = ( _Color * ( _EmissionStrength * tex2D( _Noise63, panner17 ) * tex2D( _TextureSample1, texCoord6 ) ) * _Color1 );
+				float4 clampResult57 = clamp( tex2D( _Noise63, panner17 ) , float4( 0.61,0.61,0.61,0 ) , float4( 1,1,1,0 ) );
+				float2 temp_cast_2 = (_NoiseScale1).xx;
+				float2 texCoord6 = IN.ase_texcoord8.xy * temp_cast_2 + float2( 0,0 );
+				float4 temp_output_14_0 = ( _Color * ( _EmissionStrength * clampResult57 * tex2D( _TextureSample1, texCoord6 ) ) * _Color1 );
 				
-				o.Albedo = temp_output_14_0.rgb;
+				o.Albedo = ( ( _FresnelColor * ( ( ( tex2D( _HologramPattern2, texCoord28 ) * tex2DNode34 ) * _HologramPatternPower ) + fresnelNode39 ) ) + temp_output_14_0 ).rgb;
 				o.Normal = fixed3( 0, 0, 1 );
 				o.Emission = temp_output_14_0.rgb;
 				#if defined(_SPECULAR_SETUP)
@@ -1424,7 +1539,8 @@ Shader "SH_MiniVenus"
 			#include "UnityPBSLighting.cginc"
 			#include "UnityMetaPass.cginc"
 
-			
+			#define ASE_NEEDS_VERT_NORMAL
+
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
@@ -1445,6 +1561,8 @@ Shader "SH_MiniVenus"
 					float4 lightCoord : TEXCOORD2;
 				#endif
 				float4 ase_texcoord3 : TEXCOORD3;
+				float4 ase_texcoord4 : TEXCOORD4;
+				float4 ase_texcoord5 : TEXCOORD5;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -1457,6 +1575,16 @@ Shader "SH_MiniVenus"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
+			uniform sampler2D _HologramPattern;
+			uniform float _HologramPatternScale;
+			uniform float2 _HologramPatternSpeed;
+			uniform float _DeformScale;
+			uniform float4 _FresnelColor;
+			uniform sampler2D _HologramPattern2;
+			uniform float _HologramPattern2Scale;
+			uniform float _HologramPatternPower;
+			uniform float _FresnelScale;
+			uniform float _FresnelPower;
 			uniform float4 _Color;
 			uniform float _EmissionStrength;
 			uniform sampler2D _Noise63;
@@ -1475,16 +1603,37 @@ Shader "SH_MiniVenus"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				float2 temp_cast_0 = (_HologramPatternScale).xx;
+				float2 panner31 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord30 = v.ase_texcoord.xy * temp_cast_0 + panner31;
+				float4 tex2DNode34 = tex2Dlod( _HologramPattern, float4( texCoord30, 0, 0.0) );
+				float2 break19_g3 = float2( 2,2 );
+				float temp_output_1_0_g3 = 0.0;
+				float sinIn7_g3 = sin( temp_output_1_0_g3 );
+				float sinInOffset6_g3 = sin( ( temp_output_1_0_g3 + 1.0 ) );
+				float lerpResult20_g3 = lerp( break19_g3.x , break19_g3.y , frac( ( sin( ( ( sinIn7_g3 - sinInOffset6_g3 ) * 91.2228 ) ) * 43758.55 ) ));
+				float2 temp_cast_1 = (( lerpResult20_g3 + sinIn7_g3 )).xx;
+				float dotResult4_g2 = dot( temp_cast_1 , float2( 12.9898,78.233 ) );
+				float lerpResult10_g2 = lerp( 0.0 , _DeformScale , frac( ( sin( dotResult4_g2 ) * 43758.55 ) ));
+				float4 appendResult49 = (float4(0.0 , 0.0 , lerpResult10_g2 , 0.0));
+				
+				float3 ase_worldPos = mul(unity_ObjectToWorld, float4( (v.vertex).xyz, 1 )).xyz;
+				o.ase_texcoord4.xyz = ase_worldPos;
+				float3 ase_worldNormal = UnityObjectToWorldNormal(v.normal);
+				o.ase_texcoord5.xyz = ase_worldNormal;
+				
 				o.ase_texcoord3.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
 				o.ase_texcoord3.zw = 0;
+				o.ase_texcoord4.w = 0;
+				o.ase_texcoord5.w = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = defaultVertexValue;
+				float3 vertexValue = ( tex2DNode34 * appendResult49 ).rgb;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -1618,13 +1767,26 @@ Shader "SH_MiniVenus"
 					SurfaceOutputStandard o = (SurfaceOutputStandard)0;
 				#endif
 
+				float2 temp_cast_0 = (_HologramPattern2Scale).xx;
+				float2 texCoord28 = IN.ase_texcoord3.xy * temp_cast_0 + float2( 0,0 );
+				float2 temp_cast_1 = (_HologramPatternScale).xx;
+				float2 panner31 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord30 = IN.ase_texcoord3.xy * temp_cast_1 + panner31;
+				float4 tex2DNode34 = tex2D( _HologramPattern, texCoord30 );
+				float3 ase_worldPos = IN.ase_texcoord4.xyz;
+				float3 ase_worldViewDir = UnityWorldSpaceViewDir(ase_worldPos);
+				ase_worldViewDir = normalize(ase_worldViewDir);
+				float3 ase_worldNormal = IN.ase_texcoord5.xyz;
+				float fresnelNdotV39 = dot( ase_worldNormal, ase_worldViewDir );
+				float fresnelNode39 = ( 0.0 + _FresnelScale * pow( 1.0 - fresnelNdotV39, _FresnelPower ) );
 				float2 texCoord15 = IN.ase_texcoord3.xy * _Tiling_Clouds_Moving + float2( 0,0 );
 				float2 panner17 = ( 0.4 * _Time.y * _Cloud_Movement + texCoord15);
-				float2 temp_cast_0 = (_NoiseScale1).xx;
-				float2 texCoord6 = IN.ase_texcoord3.xy * temp_cast_0 + float2( 0,0 );
-				float4 temp_output_14_0 = ( _Color * ( _EmissionStrength * tex2D( _Noise63, panner17 ) * tex2D( _TextureSample1, texCoord6 ) ) * _Color1 );
+				float4 clampResult57 = clamp( tex2D( _Noise63, panner17 ) , float4( 0.61,0.61,0.61,0 ) , float4( 1,1,1,0 ) );
+				float2 temp_cast_2 = (_NoiseScale1).xx;
+				float2 texCoord6 = IN.ase_texcoord3.xy * temp_cast_2 + float2( 0,0 );
+				float4 temp_output_14_0 = ( _Color * ( _EmissionStrength * clampResult57 * tex2D( _TextureSample1, texCoord6 ) ) * _Color1 );
 				
-				o.Albedo = temp_output_14_0.rgb;
+				o.Albedo = ( ( _FresnelColor * ( ( ( tex2D( _HologramPattern2, texCoord28 ) * tex2DNode34 ) * _HologramPatternPower ) + fresnelNode39 ) ) + temp_output_14_0 ).rgb;
 				o.Normal = fixed3( 0, 0, 1 );
 				o.Emission = temp_output_14_0.rgb;
 				o.Alpha = 1;
@@ -1700,7 +1862,7 @@ Shader "SH_MiniVenus"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				
+				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -1722,7 +1884,11 @@ Shader "SH_MiniVenus"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			
+			uniform sampler2D _HologramPattern;
+			uniform float _HologramPatternScale;
+			uniform float2 _HologramPatternSpeed;
+			uniform float _DeformScale;
+
 
 			
 			v2f VertexFunction (appdata v  ) {
@@ -1732,13 +1898,26 @@ Shader "SH_MiniVenus"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				float2 temp_cast_0 = (_HologramPatternScale).xx;
+				float2 panner31 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord30 = v.ase_texcoord.xy * temp_cast_0 + panner31;
+				float4 tex2DNode34 = tex2Dlod( _HologramPattern, float4( texCoord30, 0, 0.0) );
+				float2 break19_g3 = float2( 2,2 );
+				float temp_output_1_0_g3 = 0.0;
+				float sinIn7_g3 = sin( temp_output_1_0_g3 );
+				float sinInOffset6_g3 = sin( ( temp_output_1_0_g3 + 1.0 ) );
+				float lerpResult20_g3 = lerp( break19_g3.x , break19_g3.y , frac( ( sin( ( ( sinIn7_g3 - sinInOffset6_g3 ) * 91.2228 ) ) * 43758.55 ) ));
+				float2 temp_cast_1 = (( lerpResult20_g3 + sinIn7_g3 )).xx;
+				float dotResult4_g2 = dot( temp_cast_1 , float2( 12.9898,78.233 ) );
+				float lerpResult10_g2 = lerp( 0.0 , _DeformScale , frac( ( sin( dotResult4_g2 ) * 43758.55 ) ));
+				float4 appendResult49 = (float4(0.0 , 0.0 , lerpResult10_g2 , 0.0));
 				
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = defaultVertexValue;
+				float3 vertexValue = ( tex2DNode34 * appendResult49 ).rgb;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -1760,7 +1939,8 @@ Shader "SH_MiniVenus"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				
+				float4 ase_texcoord : TEXCOORD0;
+
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -1780,7 +1960,7 @@ Shader "SH_MiniVenus"
 				o.normal = v.normal;
 				o.texcoord1 = v.texcoord1;
 				o.texcoord2 = v.texcoord2;
-				
+				o.ase_texcoord = v.ase_texcoord;
 				return o;
 			}
 
@@ -1822,7 +2002,7 @@ Shader "SH_MiniVenus"
 				o.normal = patch[0].normal * bary.x + patch[1].normal * bary.y + patch[2].normal * bary.z;
 				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
 				o.texcoord2 = patch[0].texcoord2 * bary.x + patch[1].texcoord2 * bary.y + patch[2].texcoord2 * bary.z;
-				
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
@@ -1906,38 +2086,96 @@ Shader "SH_MiniVenus"
 }
 /*ASEBEGIN
 Version=19108
+Node;AmplifyShaderEditor.CommentaryNode;53;-2690.581,-243.3041;Inherit;False;1514.8;1111.116;Comment;11;18;17;7;8;6;12;13;11;14;25;57;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ExtraPrePass;0;0;ExtraPrePass;6;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;0,0;Float;False;True;-1;2;ASEMaterialInspector;0;4;SH_MiniVenus;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardBase;0;1;ForwardBase;18;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;40;Workflow,InvertActionOnDeselection;1;0;Surface;0;0;  Blend;0;0;  Refraction Model;0;0;  Dither Shadows;1;0;Two Sided;1;0;Deferred Pass;1;0;Transmission;0;0;  Transmission Shadow;0.5,False,;0;Translucency;0;0;  Translucency Strength;1,False,;0;  Normal Distortion;0.5,False,;0;  Scattering;2,False,;0;  Direct;0.9,False,;0;  Ambient;0.1,False,;0;  Shadow;0.5,False,;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;Receive Shadows;1;0;GPU Instancing;1;0;LOD CrossFade;1;0;Built-in Fog;1;0;Ambient Light;1;0;Meta Pass;1;0;Add Pass;1;0;Override Baked GI;0;0;Extra Pre Pass;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,;0;  Type;0;0;  Tess;16,False,;0;  Min;10,False,;0;  Max;25,False,;0;  Edge Length;16,False,;0;  Max Displacement;25,False,;0;Fwd Specular Highlights Toggle;0;0;Fwd Reflections Toggle;0;0;Disable Batching;0;0;Vertex Position,InvertActionOnDeselection;1;0;0;6;False;True;True;True;True;True;False;;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardAdd;0;2;ForwardAdd;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;4;1;False;;1;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;True;1;LightMode=ForwardAdd;False;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Deferred;0;3;Deferred;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Deferred;True;2;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Meta;0;4;Meta;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;5;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ShadowCaster;0;5;ShadowCaster;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;;True;3;False;;False;True;1;LightMode=ShadowCaster;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.ColorNode;11;-1211.228,-209.5329;Inherit;False;Property;_Color;Color;2;0;Create;True;0;0;0;False;0;False;1,0.8438681,0.5235849,0;0.8588235,0.7821195,0.4568941,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;7;-1913.337,480.5836;Inherit;False;Property;_NoiseScale1;Noise Scale;1;0;Create;True;0;0;0;False;0;False;1;2.58;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SamplerNode;8;-1508.08,452.0506;Inherit;True;Property;_TextureSample1;Noise;0;0;Create;False;0;0;0;False;0;False;-1;ef2d075270368e145ab4d78fbc5565bc;ef2d075270368e145ab4d78fbc5565bc;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.TextureCoordinatesNode;6;-1745.396,459.1165;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;12;-1434.287,33.77645;Inherit;False;Property;_EmissionStrength;Emission Strength;4;0;Create;True;0;0;0;False;0;False;0.5;4.26;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;13;-1113.507,130.3221;Inherit;False;3;3;0;FLOAT;0;False;1;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;14;-871.9085,-64.77292;Inherit;False;3;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.ColorNode;25;-876.2332,415.2058;Inherit;False;Property;_Color1;Color;3;0;Create;True;0;0;0;False;0;False;1,0.8438681,0.5235849,0;0.8588235,0.6883293,0.4508824,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SamplerNode;18;-1943.18,145.7186;Inherit;True;Property;_Noise63;Noise63;6;0;Create;True;0;0;0;False;0;False;-1;ff023cd47bb523a4cbc64a19883de5d9;ff023cd47bb523a4cbc64a19883de5d9;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.TextureCoordinatesNode;15;-2399.702,115.1455;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector2Node;16;-2640.581,135.8818;Inherit;False;Property;_Tiling_Clouds_Moving;Tiling_Clouds_Moving;5;0;Create;True;0;0;0;False;0;False;3,3;5,5;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
-Node;AmplifyShaderEditor.Vector2Node;19;-2569.892,272.6089;Inherit;False;Property;_Cloud_Movement;Cloud_Movement;7;0;Create;True;0;0;0;False;0;False;0.05,0.02;1.59,0.53;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
-Node;AmplifyShaderEditor.PannerNode;17;-2144.159,177.9026;Inherit;False;3;0;FLOAT2;0,0;False;2;FLOAT2;0,0;False;1;FLOAT;0.4;False;1;FLOAT2;0
-WireConnection;1;0;14;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;-382.6107,-72.08627;Float;False;True;-1;2;ASEMaterialInspector;0;4;SH_MiniVenus;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardBase;0;1;ForwardBase;18;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;40;Workflow,InvertActionOnDeselection;1;0;Surface;0;0;  Blend;0;0;  Refraction Model;0;0;  Dither Shadows;1;0;Two Sided;1;0;Deferred Pass;1;0;Transmission;0;0;  Transmission Shadow;0.5,False,;0;Translucency;0;0;  Translucency Strength;1,False,;0;  Normal Distortion;0.5,False,;0;  Scattering;2,False,;0;  Direct;0.9,False,;0;  Ambient;0.1,False,;0;  Shadow;0.5,False,;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;Receive Shadows;1;0;GPU Instancing;1;0;LOD CrossFade;1;0;Built-in Fog;1;0;Ambient Light;1;0;Meta Pass;1;0;Add Pass;1;0;Override Baked GI;0;0;Extra Pre Pass;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,;0;  Type;0;0;  Tess;16,False,;0;  Min;10,False,;0;  Max;25,False,;0;  Edge Length;16,False,;0;  Max Displacement;25,False,;0;Fwd Specular Highlights Toggle;0;0;Fwd Reflections Toggle;0;0;Disable Batching;0;0;Vertex Position,InvertActionOnDeselection;1;0;0;6;False;True;True;True;True;True;False;;False;0
+Node;AmplifyShaderEditor.CommentaryNode;26;-3178.861,-1187.587;Inherit;False;2338.477;801.7822;Hologram Pattern;19;44;43;42;41;40;39;38;37;36;35;34;33;32;31;30;29;28;27;56;;0.0990566,0.7332056,1,1;0;0
+Node;AmplifyShaderEditor.SamplerNode;27;-2474.185,-1135.729;Inherit;True;Property;_HologramPattern2;Hologram Pattern 2;16;0;Create;True;0;0;0;False;0;False;-1;1fb236b5c107734489881f64fff0454b;1fb236b5c107734489881f64fff0454b;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TextureCoordinatesNode;28;-2685.823,-1137.587;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;29;-2925.069,-1136.28;Inherit;False;Property;_HologramPattern2Scale;Hologram Pattern 2 Scale;15;0;Create;True;0;0;0;False;0;False;1;29.1;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.TextureCoordinatesNode;30;-2695.731,-933.0948;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.PannerNode;31;-2891.861,-827.1439;Inherit;False;3;0;FLOAT2;0,0;False;2;FLOAT2;0,1.63;False;1;FLOAT;1;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.Vector2Node;32;-3128.861,-824.1439;Inherit;False;Property;_HologramPatternSpeed;Hologram Pattern Speed;14;0;Create;True;0;0;0;False;0;False;0,0;0,2;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
+Node;AmplifyShaderEditor.RangedFloatNode;33;-3128.555,-934.5629;Inherit;False;Property;_HologramPatternScale;Hologram Pattern Scale;12;0;Create;True;0;0;0;False;0;False;1;73.83;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SamplerNode;34;-2469.401,-932.2328;Inherit;True;Property;_HologramPattern;Hologram Pattern;8;0;Create;True;0;0;0;False;0;False;-1;3621a62e8758f344e9fddf5a650946ab;3621a62e8758f344e9fddf5a650946ab;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;35;-2075.763,-996.174;Inherit;True;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.RangedFloatNode;36;-2094.441,-698.3239;Inherit;False;Property;_HologramPatternPower;Hologram Pattern Power;13;0;Create;True;0;0;0;False;0;False;0.01;0.68;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;37;-1756.354,-830.5199;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;38;-1552.296,-831.6029;Inherit;True;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.FresnelNode;39;-1846.819,-592.8058;Inherit;False;Standard;WorldNormal;ViewDir;False;False;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;5;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;40;-2030.891,-504.1068;Inherit;False;Property;_FresnelPower;Fresnel Power;11;0;Create;True;0;0;0;False;0;False;5;3.76;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;41;-2027.039,-588.0918;Inherit;False;Property;_FresnelScale;Fresnel Scale;10;0;Create;True;0;0;0;False;0;False;1;3.18;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode;42;-1565.174,-1033.614;Inherit;False;Property;_FresnelColor;Fresnel Color;9;0;Create;True;0;0;0;False;0;False;0,0.8832197,1,0;0,0.8832197,1,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;43;-1314.496,-890.3458;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;44;-1075.384,-889.1678;Inherit;True;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.CommentaryNode;47;-2195.933,901.0541;Inherit;False;1137.637;388.35;Vertex Offset;6;52;51;50;49;48;54;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;48;-1293.296,970.9834;Inherit;True;2;2;0;COLOR;1,0,0,0;False;1;FLOAT4;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.DynamicAppendNode;49;-1495.656,994.5172;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.FunctionNode;50;-1887.698,1036.896;Inherit;False;Random Range;-1;;2;7b754edb8aebbfb4a9ace907af661cfc;0;3;1;FLOAT2;0.78,0;False;2;FLOAT;0;False;3;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;51;-2101.904,1173.404;Inherit;False;Property;_DeformScale;Deform Scale;17;0;Create;True;0;0;0;False;0;False;0.1;0.06;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;52;-2145.933,951.0541;Inherit;False;Noise Sine Wave;-1;;3;a6eff29f739ced848846e3b648af87bd;0;2;1;FLOAT;0;False;2;FLOAT2;2,2;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;7;-2362.362,441.8743;Inherit;False;Property;_NoiseScale1;Noise Scale;1;0;Create;True;0;0;0;False;0;False;1;2.58;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SamplerNode;8;-1957.106,413.3413;Inherit;True;Property;_TextureSample1;Noise;0;0;Create;False;0;0;0;False;0;False;-1;ef2d075270368e145ab4d78fbc5565bc;ef2d075270368e145ab4d78fbc5565bc;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TextureCoordinatesNode;6;-2194.42,420.4072;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;12;-1847.7,39.96992;Inherit;False;Property;_EmissionStrength;Emission Strength;4;0;Create;True;0;0;0;False;0;False;0.5;1.49;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;13;-1591.952,122.5802;Inherit;False;3;3;0;FLOAT;0;False;1;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.ColorNode;11;-1854.136,-193.3041;Inherit;False;Property;_Color;Color;2;0;Create;True;0;0;0;False;0;False;1,0.8438681,0.5235849,0;0.8588235,0.7821195,0.4568941,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;14;-1337.781,100.7277;Inherit;False;3;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.ColorNode;25;-1849.219,655.8121;Inherit;False;Property;_Color1;Color;3;0;Create;True;0;0;0;False;0;False;1,0.8438681,0.5235849,0;0.8588235,0.6883293,0.4508824,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.WireNode;54;-1379.113,951.4063;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;55;-3293.537,637.0145;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;56;-2247.435,-579.3846;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.TextureCoordinatesNode;15;-3003.702,107.1455;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector2Node;16;-3244.581,127.8818;Inherit;False;Property;_Tiling_Clouds_Moving;Tiling_Clouds_Moving;5;0;Create;True;0;0;0;False;0;False;3,3;5,5;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
+Node;AmplifyShaderEditor.Vector2Node;19;-3173.892,264.6089;Inherit;False;Property;_Cloud_Movement;Cloud_Movement;7;0;Create;True;0;0;0;False;0;False;0.05,0.02;1.59,0.53;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
+Node;AmplifyShaderEditor.PannerNode;17;-2748.159,169.9026;Inherit;False;3;0;FLOAT2;0,0;False;2;FLOAT2;0,0;False;1;FLOAT;0.4;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.SamplerNode;18;-2547.18,137.7186;Inherit;True;Property;_Noise63;Noise63;6;0;Create;True;0;0;0;False;0;False;-1;ff023cd47bb523a4cbc64a19883de5d9;ff023cd47bb523a4cbc64a19883de5d9;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.ClampOpNode;57;-2116.889,129.7076;Inherit;True;3;0;COLOR;0,0,0,0;False;1;COLOR;0.61,0.61,0.61,0;False;2;COLOR;1,1,1,0;False;1;COLOR;0
+WireConnection;1;0;44;0
 WireConnection;1;2;14;0
+WireConnection;1;15;48;0
+WireConnection;27;1;28;0
+WireConnection;28;0;29;0
+WireConnection;30;0;33;0
+WireConnection;30;1;31;0
+WireConnection;31;2;32;0
+WireConnection;34;1;30;0
+WireConnection;35;0;27;0
+WireConnection;35;1;34;0
+WireConnection;37;0;35;0
+WireConnection;37;1;36;0
+WireConnection;38;0;37;0
+WireConnection;38;1;39;0
+WireConnection;39;2;41;0
+WireConnection;39;3;40;0
+WireConnection;43;0;42;0
+WireConnection;43;1;38;0
+WireConnection;44;0;43;0
+WireConnection;44;1;14;0
+WireConnection;48;0;54;0
+WireConnection;48;1;49;0
+WireConnection;49;2;50;0
+WireConnection;50;1;52;0
+WireConnection;50;3;51;0
 WireConnection;8;1;6;0
 WireConnection;6;0;7;0
 WireConnection;13;0;12;0
-WireConnection;13;1;18;0
+WireConnection;13;1;57;0
 WireConnection;13;2;8;0
 WireConnection;14;0;11;0
 WireConnection;14;1;13;0
 WireConnection;14;2;25;0
-WireConnection;18;1;17;0
+WireConnection;54;0;55;0
+WireConnection;55;0;56;0
+WireConnection;56;0;34;0
 WireConnection;15;0;16;0
 WireConnection;17;0;15;0
 WireConnection;17;2;19;0
+WireConnection;18;1;17;0
+WireConnection;57;0;18;0
 ASEEND*/
-//CHKSM=C53D224E3DFB1197347C7EECA724A87C3FC7A110
+//CHKSM=D2A0359E9507434FCEF4D0E0C36DA2DEC21E5C7A

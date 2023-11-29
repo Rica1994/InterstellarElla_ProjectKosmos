@@ -12,6 +12,16 @@ Shader "SH_MiniPlanet"
 		_NoiseScale("Noise Scale", Float) = 5
 		_NoiseScale1("Noise Scale", Float) = 1
 		_T_MiniMercury_N("T_MiniMercury_N", 2D) = "bump" {}
+		_HologramPattern("Hologram Pattern", 2D) = "white" {}
+		_FresnelColor("Fresnel Color", Color) = (0,0.8832197,1,0)
+		_FresnelScale("Fresnel Scale", Float) = 1
+		_FresnelPower("Fresnel Power", Float) = 5
+		_HologramPatternScale("Hologram Pattern Scale", Float) = 1
+		_HologramPatternPower("Hologram Pattern Power", Float) = 0.01
+		_HologramPatternSpeed("Hologram Pattern Speed", Vector) = (0,0,0,0)
+		_HologramPattern2Scale("Hologram Pattern 2 Scale", Float) = 1
+		_HologramPattern2("Hologram Pattern 2", 2D) = "white" {}
+		_DeformScale("Deform Scale", Float) = 0.1
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
 
 		//_TransmissionShadow( "Transmission Shadow", Range( 0, 1 ) ) = 0.5
@@ -187,7 +197,9 @@ Shader "SH_MiniPlanet"
 			#include "UnityPBSLighting.cginc"
 			#include "AutoLight.cginc"
 
-			
+			#define ASE_NEEDS_FRAG_WORLD_VIEW_DIR
+			#define ASE_NEEDS_FRAG_WORLD_NORMAL
+
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
@@ -252,6 +264,16 @@ Shader "SH_MiniPlanet"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
+			uniform sampler2D _HologramPattern;
+			uniform float _HologramPatternScale;
+			uniform float2 _HologramPatternSpeed;
+			uniform float _DeformScale;
+			uniform float4 _FresnelColor;
+			uniform sampler2D _HologramPattern2;
+			uniform float _HologramPattern2Scale;
+			uniform float _HologramPatternPower;
+			uniform float _FresnelScale;
+			uniform float _FresnelPower;
 			uniform float4 _Color1;
 			uniform sampler2D _TextureSample1;
 			uniform float _NoiseScale1;
@@ -271,6 +293,20 @@ Shader "SH_MiniPlanet"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				float2 temp_cast_0 = (_HologramPatternScale).xx;
+				float2 panner101 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord100 = v.ase_texcoord.xy * temp_cast_0 + panner101;
+				float4 tex2DNode104 = tex2Dlod( _HologramPattern, float4( texCoord100, 0, 0.0) );
+				float2 break19_g3 = float2( 2,2 );
+				float temp_output_1_0_g3 = 0.0;
+				float sinIn7_g3 = sin( temp_output_1_0_g3 );
+				float sinInOffset6_g3 = sin( ( temp_output_1_0_g3 + 1.0 ) );
+				float lerpResult20_g3 = lerp( break19_g3.x , break19_g3.y , frac( ( sin( ( ( sinIn7_g3 - sinInOffset6_g3 ) * 91.2228 ) ) * 43758.55 ) ));
+				float2 temp_cast_1 = (( lerpResult20_g3 + sinIn7_g3 )).xx;
+				float dotResult4_g2 = dot( temp_cast_1 , float2( 12.9898,78.233 ) );
+				float lerpResult10_g2 = lerp( 0.0 , _DeformScale , frac( ( sin( dotResult4_g2 ) * 43758.55 ) ));
+				float4 appendResult120 = (float4(0.0 , 0.0 , lerpResult10_g2 , 0.0));
+				
 				o.ase_texcoord9.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -280,7 +316,7 @@ Shader "SH_MiniPlanet"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = defaultVertexValue;
+				float3 vertexValue = ( tex2DNode104 * appendResult120 ).rgb;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -459,15 +495,23 @@ Shader "SH_MiniPlanet"
 				float4 ScreenPos = IN.screenPos;
 				#endif
 
-				float2 temp_cast_0 = (_NoiseScale1).xx;
-				float2 texCoord90 = IN.ase_texcoord9.xy * temp_cast_0 + float2( 0,0 );
-				float2 temp_cast_1 = (_NoiseScale).xx;
-				float2 texCoord46 = IN.ase_texcoord9.xy * temp_cast_1 + float2( 0,0 );
+				float2 temp_cast_0 = (_HologramPattern2Scale).xx;
+				float2 texCoord98 = IN.ase_texcoord9.xy * temp_cast_0 + float2( 0,0 );
+				float2 temp_cast_1 = (_HologramPatternScale).xx;
+				float2 panner101 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord100 = IN.ase_texcoord9.xy * temp_cast_1 + panner101;
+				float4 tex2DNode104 = tex2D( _HologramPattern, texCoord100 );
+				float fresnelNdotV109 = dot( WorldNormal, worldViewDir );
+				float fresnelNode109 = ( 0.0 + _FresnelScale * pow( 1.0 - fresnelNdotV109, _FresnelPower ) );
+				float2 temp_cast_2 = (_NoiseScale1).xx;
+				float2 texCoord90 = IN.ase_texcoord9.xy * temp_cast_2 + float2( 0,0 );
+				float2 temp_cast_3 = (_NoiseScale).xx;
+				float2 texCoord46 = IN.ase_texcoord9.xy * temp_cast_3 + float2( 0,0 );
 				float4 lerpResult39 = lerp( _Color1 , ( ( 0.33 + tex2D( _TextureSample1, texCoord90 ).r ) * _Color ) , tex2D( _TextureSample0, texCoord46 ));
 				
 				float2 uv_T_MiniMercury_N = IN.ase_texcoord9.xy * _T_MiniMercury_N_ST.xy + _T_MiniMercury_N_ST.zw;
 				
-				o.Albedo = lerpResult39.rgb;
+				o.Albedo = ( ( _FresnelColor * ( ( ( tex2D( _HologramPattern2, texCoord98 ) * tex2DNode104 ) * _HologramPatternPower ) + fresnelNode109 ) ) + lerpResult39 ).rgb;
 				o.Normal = UnpackNormal( tex2D( _T_MiniMercury_N, uv_T_MiniMercury_N ) );
 				o.Emission = half3( 0, 0, 0 );
 				#if defined(_SPECULAR_SETUP)
@@ -656,7 +700,9 @@ Shader "SH_MiniPlanet"
 			#include "UnityPBSLighting.cginc"
 			#include "AutoLight.cginc"
 
-			
+			#define ASE_NEEDS_FRAG_WORLD_VIEW_DIR
+			#define ASE_NEEDS_FRAG_WORLD_NORMAL
+
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
@@ -714,6 +760,16 @@ Shader "SH_MiniPlanet"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
+			uniform sampler2D _HologramPattern;
+			uniform float _HologramPatternScale;
+			uniform float2 _HologramPatternSpeed;
+			uniform float _DeformScale;
+			uniform float4 _FresnelColor;
+			uniform sampler2D _HologramPattern2;
+			uniform float _HologramPattern2Scale;
+			uniform float _HologramPatternPower;
+			uniform float _FresnelScale;
+			uniform float _FresnelPower;
 			uniform float4 _Color1;
 			uniform sampler2D _TextureSample1;
 			uniform float _NoiseScale1;
@@ -733,6 +789,20 @@ Shader "SH_MiniPlanet"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				float2 temp_cast_0 = (_HologramPatternScale).xx;
+				float2 panner101 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord100 = v.ase_texcoord.xy * temp_cast_0 + panner101;
+				float4 tex2DNode104 = tex2Dlod( _HologramPattern, float4( texCoord100, 0, 0.0) );
+				float2 break19_g3 = float2( 2,2 );
+				float temp_output_1_0_g3 = 0.0;
+				float sinIn7_g3 = sin( temp_output_1_0_g3 );
+				float sinInOffset6_g3 = sin( ( temp_output_1_0_g3 + 1.0 ) );
+				float lerpResult20_g3 = lerp( break19_g3.x , break19_g3.y , frac( ( sin( ( ( sinIn7_g3 - sinInOffset6_g3 ) * 91.2228 ) ) * 43758.55 ) ));
+				float2 temp_cast_1 = (( lerpResult20_g3 + sinIn7_g3 )).xx;
+				float dotResult4_g2 = dot( temp_cast_1 , float2( 12.9898,78.233 ) );
+				float lerpResult10_g2 = lerp( 0.0 , _DeformScale , frac( ( sin( dotResult4_g2 ) * 43758.55 ) ));
+				float4 appendResult120 = (float4(0.0 , 0.0 , lerpResult10_g2 , 0.0));
+				
 				o.ase_texcoord9.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -742,7 +812,7 @@ Shader "SH_MiniPlanet"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = defaultVertexValue;
+				float3 vertexValue = ( tex2DNode104 * appendResult120 ).rgb;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -902,15 +972,23 @@ Shader "SH_MiniPlanet"
 				#endif
 
 
-				float2 temp_cast_0 = (_NoiseScale1).xx;
-				float2 texCoord90 = IN.ase_texcoord9.xy * temp_cast_0 + float2( 0,0 );
-				float2 temp_cast_1 = (_NoiseScale).xx;
-				float2 texCoord46 = IN.ase_texcoord9.xy * temp_cast_1 + float2( 0,0 );
+				float2 temp_cast_0 = (_HologramPattern2Scale).xx;
+				float2 texCoord98 = IN.ase_texcoord9.xy * temp_cast_0 + float2( 0,0 );
+				float2 temp_cast_1 = (_HologramPatternScale).xx;
+				float2 panner101 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord100 = IN.ase_texcoord9.xy * temp_cast_1 + panner101;
+				float4 tex2DNode104 = tex2D( _HologramPattern, texCoord100 );
+				float fresnelNdotV109 = dot( WorldNormal, worldViewDir );
+				float fresnelNode109 = ( 0.0 + _FresnelScale * pow( 1.0 - fresnelNdotV109, _FresnelPower ) );
+				float2 temp_cast_2 = (_NoiseScale1).xx;
+				float2 texCoord90 = IN.ase_texcoord9.xy * temp_cast_2 + float2( 0,0 );
+				float2 temp_cast_3 = (_NoiseScale).xx;
+				float2 texCoord46 = IN.ase_texcoord9.xy * temp_cast_3 + float2( 0,0 );
 				float4 lerpResult39 = lerp( _Color1 , ( ( 0.33 + tex2D( _TextureSample1, texCoord90 ).r ) * _Color ) , tex2D( _TextureSample0, texCoord46 ));
 				
 				float2 uv_T_MiniMercury_N = IN.ase_texcoord9.xy * _T_MiniMercury_N_ST.xy + _T_MiniMercury_N_ST.zw;
 				
-				o.Albedo = lerpResult39.rgb;
+				o.Albedo = ( ( _FresnelColor * ( ( ( tex2D( _HologramPattern2, texCoord98 ) * tex2DNode104 ) * _HologramPatternPower ) + fresnelNode109 ) ) + lerpResult39 ).rgb;
 				o.Normal = UnpackNormal( tex2D( _T_MiniMercury_N, uv_T_MiniMercury_N ) );
 				o.Emission = half3( 0, 0, 0 );
 				#if defined(_SPECULAR_SETUP)
@@ -1051,7 +1129,9 @@ Shader "SH_MiniPlanet"
 			#include "Lighting.cginc"
 			#include "UnityPBSLighting.cginc"
 
-			
+			#define ASE_NEEDS_FRAG_WORLD_VIEW_DIR
+			#define ASE_NEEDS_FRAG_WORLD_NORMAL
+
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
@@ -1098,6 +1178,16 @@ Shader "SH_MiniPlanet"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
+			uniform sampler2D _HologramPattern;
+			uniform float _HologramPatternScale;
+			uniform float2 _HologramPatternSpeed;
+			uniform float _DeformScale;
+			uniform float4 _FresnelColor;
+			uniform sampler2D _HologramPattern2;
+			uniform float _HologramPattern2Scale;
+			uniform float _HologramPatternPower;
+			uniform float _FresnelScale;
+			uniform float _FresnelPower;
 			uniform float4 _Color1;
 			uniform sampler2D _TextureSample1;
 			uniform float _NoiseScale1;
@@ -1117,6 +1207,20 @@ Shader "SH_MiniPlanet"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				float2 temp_cast_0 = (_HologramPatternScale).xx;
+				float2 panner101 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord100 = v.ase_texcoord.xy * temp_cast_0 + panner101;
+				float4 tex2DNode104 = tex2Dlod( _HologramPattern, float4( texCoord100, 0, 0.0) );
+				float2 break19_g3 = float2( 2,2 );
+				float temp_output_1_0_g3 = 0.0;
+				float sinIn7_g3 = sin( temp_output_1_0_g3 );
+				float sinInOffset6_g3 = sin( ( temp_output_1_0_g3 + 1.0 ) );
+				float lerpResult20_g3 = lerp( break19_g3.x , break19_g3.y , frac( ( sin( ( ( sinIn7_g3 - sinInOffset6_g3 ) * 91.2228 ) ) * 43758.55 ) ));
+				float2 temp_cast_1 = (( lerpResult20_g3 + sinIn7_g3 )).xx;
+				float dotResult4_g2 = dot( temp_cast_1 , float2( 12.9898,78.233 ) );
+				float lerpResult10_g2 = lerp( 0.0 , _DeformScale , frac( ( sin( dotResult4_g2 ) * 43758.55 ) ));
+				float4 appendResult120 = (float4(0.0 , 0.0 , lerpResult10_g2 , 0.0));
+				
 				o.ase_texcoord8.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -1126,7 +1230,7 @@ Shader "SH_MiniPlanet"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = defaultVertexValue;
+				float3 vertexValue = ( tex2DNode104 * appendResult120 ).rgb;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -1287,15 +1391,23 @@ Shader "SH_MiniPlanet"
 				float3 worldViewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 				half atten = 1;
 
-				float2 temp_cast_0 = (_NoiseScale1).xx;
-				float2 texCoord90 = IN.ase_texcoord8.xy * temp_cast_0 + float2( 0,0 );
-				float2 temp_cast_1 = (_NoiseScale).xx;
-				float2 texCoord46 = IN.ase_texcoord8.xy * temp_cast_1 + float2( 0,0 );
+				float2 temp_cast_0 = (_HologramPattern2Scale).xx;
+				float2 texCoord98 = IN.ase_texcoord8.xy * temp_cast_0 + float2( 0,0 );
+				float2 temp_cast_1 = (_HologramPatternScale).xx;
+				float2 panner101 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord100 = IN.ase_texcoord8.xy * temp_cast_1 + panner101;
+				float4 tex2DNode104 = tex2D( _HologramPattern, texCoord100 );
+				float fresnelNdotV109 = dot( WorldNormal, worldViewDir );
+				float fresnelNode109 = ( 0.0 + _FresnelScale * pow( 1.0 - fresnelNdotV109, _FresnelPower ) );
+				float2 temp_cast_2 = (_NoiseScale1).xx;
+				float2 texCoord90 = IN.ase_texcoord8.xy * temp_cast_2 + float2( 0,0 );
+				float2 temp_cast_3 = (_NoiseScale).xx;
+				float2 texCoord46 = IN.ase_texcoord8.xy * temp_cast_3 + float2( 0,0 );
 				float4 lerpResult39 = lerp( _Color1 , ( ( 0.33 + tex2D( _TextureSample1, texCoord90 ).r ) * _Color ) , tex2D( _TextureSample0, texCoord46 ));
 				
 				float2 uv_T_MiniMercury_N = IN.ase_texcoord8.xy * _T_MiniMercury_N_ST.xy + _T_MiniMercury_N_ST.zw;
 				
-				o.Albedo = lerpResult39.rgb;
+				o.Albedo = ( ( _FresnelColor * ( ( ( tex2D( _HologramPattern2, texCoord98 ) * tex2DNode104 ) * _HologramPatternPower ) + fresnelNode109 ) ) + lerpResult39 ).rgb;
 				o.Normal = UnpackNormal( tex2D( _T_MiniMercury_N, uv_T_MiniMercury_N ) );
 				o.Emission = half3( 0, 0, 0 );
 				#if defined(_SPECULAR_SETUP)
@@ -1434,7 +1546,8 @@ Shader "SH_MiniPlanet"
 			#include "UnityPBSLighting.cginc"
 			#include "UnityMetaPass.cginc"
 
-			
+			#define ASE_NEEDS_VERT_NORMAL
+
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 tangent : TANGENT;
@@ -1455,6 +1568,8 @@ Shader "SH_MiniPlanet"
 					float4 lightCoord : TEXCOORD2;
 				#endif
 				float4 ase_texcoord3 : TEXCOORD3;
+				float4 ase_texcoord4 : TEXCOORD4;
+				float4 ase_texcoord5 : TEXCOORD5;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -1467,6 +1582,16 @@ Shader "SH_MiniPlanet"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
+			uniform sampler2D _HologramPattern;
+			uniform float _HologramPatternScale;
+			uniform float2 _HologramPatternSpeed;
+			uniform float _DeformScale;
+			uniform float4 _FresnelColor;
+			uniform sampler2D _HologramPattern2;
+			uniform float _HologramPattern2Scale;
+			uniform float _HologramPatternPower;
+			uniform float _FresnelScale;
+			uniform float _FresnelPower;
 			uniform float4 _Color1;
 			uniform sampler2D _TextureSample1;
 			uniform float _NoiseScale1;
@@ -1483,16 +1608,37 @@ Shader "SH_MiniPlanet"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				float2 temp_cast_0 = (_HologramPatternScale).xx;
+				float2 panner101 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord100 = v.ase_texcoord.xy * temp_cast_0 + panner101;
+				float4 tex2DNode104 = tex2Dlod( _HologramPattern, float4( texCoord100, 0, 0.0) );
+				float2 break19_g3 = float2( 2,2 );
+				float temp_output_1_0_g3 = 0.0;
+				float sinIn7_g3 = sin( temp_output_1_0_g3 );
+				float sinInOffset6_g3 = sin( ( temp_output_1_0_g3 + 1.0 ) );
+				float lerpResult20_g3 = lerp( break19_g3.x , break19_g3.y , frac( ( sin( ( ( sinIn7_g3 - sinInOffset6_g3 ) * 91.2228 ) ) * 43758.55 ) ));
+				float2 temp_cast_1 = (( lerpResult20_g3 + sinIn7_g3 )).xx;
+				float dotResult4_g2 = dot( temp_cast_1 , float2( 12.9898,78.233 ) );
+				float lerpResult10_g2 = lerp( 0.0 , _DeformScale , frac( ( sin( dotResult4_g2 ) * 43758.55 ) ));
+				float4 appendResult120 = (float4(0.0 , 0.0 , lerpResult10_g2 , 0.0));
+				
+				float3 ase_worldPos = mul(unity_ObjectToWorld, float4( (v.vertex).xyz, 1 )).xyz;
+				o.ase_texcoord4.xyz = ase_worldPos;
+				float3 ase_worldNormal = UnityObjectToWorldNormal(v.normal);
+				o.ase_texcoord5.xyz = ase_worldNormal;
+				
 				o.ase_texcoord3.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
 				o.ase_texcoord3.zw = 0;
+				o.ase_texcoord4.w = 0;
+				o.ase_texcoord5.w = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = defaultVertexValue;
+				float3 vertexValue = ( tex2DNode104 * appendResult120 ).rgb;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -1626,13 +1772,25 @@ Shader "SH_MiniPlanet"
 					SurfaceOutputStandard o = (SurfaceOutputStandard)0;
 				#endif
 
-				float2 temp_cast_0 = (_NoiseScale1).xx;
-				float2 texCoord90 = IN.ase_texcoord3.xy * temp_cast_0 + float2( 0,0 );
-				float2 temp_cast_1 = (_NoiseScale).xx;
-				float2 texCoord46 = IN.ase_texcoord3.xy * temp_cast_1 + float2( 0,0 );
+				float2 temp_cast_0 = (_HologramPattern2Scale).xx;
+				float2 texCoord98 = IN.ase_texcoord3.xy * temp_cast_0 + float2( 0,0 );
+				float2 temp_cast_1 = (_HologramPatternScale).xx;
+				float2 panner101 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord100 = IN.ase_texcoord3.xy * temp_cast_1 + panner101;
+				float4 tex2DNode104 = tex2D( _HologramPattern, texCoord100 );
+				float3 ase_worldPos = IN.ase_texcoord4.xyz;
+				float3 ase_worldViewDir = UnityWorldSpaceViewDir(ase_worldPos);
+				ase_worldViewDir = normalize(ase_worldViewDir);
+				float3 ase_worldNormal = IN.ase_texcoord5.xyz;
+				float fresnelNdotV109 = dot( ase_worldNormal, ase_worldViewDir );
+				float fresnelNode109 = ( 0.0 + _FresnelScale * pow( 1.0 - fresnelNdotV109, _FresnelPower ) );
+				float2 temp_cast_2 = (_NoiseScale1).xx;
+				float2 texCoord90 = IN.ase_texcoord3.xy * temp_cast_2 + float2( 0,0 );
+				float2 temp_cast_3 = (_NoiseScale).xx;
+				float2 texCoord46 = IN.ase_texcoord3.xy * temp_cast_3 + float2( 0,0 );
 				float4 lerpResult39 = lerp( _Color1 , ( ( 0.33 + tex2D( _TextureSample1, texCoord90 ).r ) * _Color ) , tex2D( _TextureSample0, texCoord46 ));
 				
-				o.Albedo = lerpResult39.rgb;
+				o.Albedo = ( ( _FresnelColor * ( ( ( tex2D( _HologramPattern2, texCoord98 ) * tex2DNode104 ) * _HologramPatternPower ) + fresnelNode109 ) ) + lerpResult39 ).rgb;
 				o.Normal = fixed3( 0, 0, 1 );
 				o.Emission = half3( 0, 0, 0 );
 				o.Alpha = 1;
@@ -1708,7 +1866,7 @@ Shader "SH_MiniPlanet"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				
+				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -1730,7 +1888,11 @@ Shader "SH_MiniPlanet"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			
+			uniform sampler2D _HologramPattern;
+			uniform float _HologramPatternScale;
+			uniform float2 _HologramPatternSpeed;
+			uniform float _DeformScale;
+
 
 			
 			v2f VertexFunction (appdata v  ) {
@@ -1740,13 +1902,26 @@ Shader "SH_MiniPlanet"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				float2 temp_cast_0 = (_HologramPatternScale).xx;
+				float2 panner101 = ( 1.0 * _Time.y * _HologramPatternSpeed + float2( 0,0 ));
+				float2 texCoord100 = v.ase_texcoord.xy * temp_cast_0 + panner101;
+				float4 tex2DNode104 = tex2Dlod( _HologramPattern, float4( texCoord100, 0, 0.0) );
+				float2 break19_g3 = float2( 2,2 );
+				float temp_output_1_0_g3 = 0.0;
+				float sinIn7_g3 = sin( temp_output_1_0_g3 );
+				float sinInOffset6_g3 = sin( ( temp_output_1_0_g3 + 1.0 ) );
+				float lerpResult20_g3 = lerp( break19_g3.x , break19_g3.y , frac( ( sin( ( ( sinIn7_g3 - sinInOffset6_g3 ) * 91.2228 ) ) * 43758.55 ) ));
+				float2 temp_cast_1 = (( lerpResult20_g3 + sinIn7_g3 )).xx;
+				float dotResult4_g2 = dot( temp_cast_1 , float2( 12.9898,78.233 ) );
+				float lerpResult10_g2 = lerp( 0.0 , _DeformScale , frac( ( sin( dotResult4_g2 ) * 43758.55 ) ));
+				float4 appendResult120 = (float4(0.0 , 0.0 , lerpResult10_g2 , 0.0));
 				
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = defaultVertexValue;
+				float3 vertexValue = ( tex2DNode104 * appendResult120 ).rgb;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -1768,7 +1943,8 @@ Shader "SH_MiniPlanet"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				
+				float4 ase_texcoord : TEXCOORD0;
+
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -1788,7 +1964,7 @@ Shader "SH_MiniPlanet"
 				o.normal = v.normal;
 				o.texcoord1 = v.texcoord1;
 				o.texcoord2 = v.texcoord2;
-				
+				o.ase_texcoord = v.ase_texcoord;
 				return o;
 			}
 
@@ -1830,7 +2006,7 @@ Shader "SH_MiniPlanet"
 				o.normal = patch[0].normal * bary.x + patch[1].normal * bary.y + patch[2].normal * bary.z;
 				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
 				o.texcoord2 = patch[0].texcoord2 * bary.x + patch[1].texcoord2 * bary.y + patch[2].texcoord2 * bary.z;
-				
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
@@ -1914,37 +2090,103 @@ Shader "SH_MiniPlanet"
 }
 /*ASEBEGIN
 Version=19108
+Node;AmplifyShaderEditor.CommentaryNode;117;-2725.228,-1731.433;Inherit;False;1681.082;900.4699;Color;11;10;95;90;92;91;89;39;46;40;47;37;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardAdd;0;2;ForwardAdd;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;4;1;False;;1;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;True;1;LightMode=ForwardAdd;False;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Deferred;0;3;Deferred;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Deferred;True;2;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Meta;0;4;Meta;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;5;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ShadowCaster;0;5;ShadowCaster;0;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;;True;3;False;;False;True;1;LightMode=ShadowCaster;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;22.01801,-263.0671;Float;False;True;-1;2;ASEMaterialInspector;0;4;SH_MiniPlanet;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardBase;0;1;ForwardBase;18;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;40;Workflow,InvertActionOnDeselection;1;0;Surface;0;0;  Blend;0;0;  Refraction Model;0;0;  Dither Shadows;1;0;Two Sided;1;0;Deferred Pass;1;0;Transmission;0;0;  Transmission Shadow;0.5,False,;0;Translucency;0;0;  Translucency Strength;1,False,;0;  Normal Distortion;0.5,False,;0;  Scattering;2,False,;0;  Direct;0.9,False,;0;  Ambient;0.1,False,;0;  Shadow;0.5,False,;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;Receive Shadows;1;0;GPU Instancing;1;0;LOD CrossFade;1;0;Built-in Fog;1;0;Ambient Light;1;0;Meta Pass;1;0;Add Pass;1;0;Override Baked GI;0;0;Extra Pre Pass;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,;0;  Type;0;0;  Tess;16,False,;0;  Min;10,False,;0;  Max;25,False,;0;  Edge Length;16,False,;0;  Max Displacement;25,False,;0;Fwd Specular Highlights Toggle;0;0;Fwd Reflections Toggle;0;0;Disable Batching;0;0;Vertex Position,InvertActionOnDeselection;1;0;0;6;False;True;True;True;True;True;False;;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;-694.3705,-312.6115;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ExtraPrePass;0;0;ExtraPrePass;6;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.RangedFloatNode;11;-932.1589,94.28029;Inherit;False;Property;_Smoothness;Smoothness;0;0;Create;True;0;0;0;False;0;False;0.5;0.19;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.TextureCoordinatesNode;46;-1546.6,-563.3488;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SamplerNode;40;-1309.282,-570.4156;Inherit;True;Property;_TextureSample0;Noise;3;0;Create;False;0;0;0;False;0;False;-1;None;0338952b563fb0447a521e1e1728116c;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;47;-1714.54,-541.8823;Inherit;False;Property;_NoiseScale;Noise Scale;5;0;Create;True;0;0;0;False;0;False;5;5;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.LerpOp;39;-617.3274,-988.5229;Inherit;True;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.ColorNode;37;-959.0806,-1186.977;Inherit;False;Property;_Color1;Color;2;0;Create;True;0;0;0;False;0;False;0.7924528,0.1889853,0.1308295,0;0.6039216,0.1715138,0.1715138,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;89;-1166.424,-902.52;Inherit;True;2;2;0;FLOAT;0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.ColorNode;10;-1518.167,-821.5145;Inherit;False;Property;_Color;Color;1;0;Create;True;0;0;0;False;0;False;0.7924528,0.1889853,0.1308295,0;0.872,0.3220474,0.185736,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SamplerNode;93;-949.3794,-267.4138;Inherit;True;Property;_T_MiniMercury_N;T_MiniMercury_N;7;0;Create;True;0;0;0;False;0;False;-1;9e16243bd61022a44b6ef7329d2d0a68;9e16243bd61022a44b6ef7329d2d0a68;True;0;True;bump;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SimpleAddOpNode;95;-1335.197,-1151.691;Inherit;True;2;2;0;FLOAT;0.33;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.TextureCoordinatesNode;90;-1981.87,-1072.681;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;92;-2149.81,-1051.214;Inherit;False;Property;_NoiseScale1;Noise Scale;6;0;Create;True;0;0;0;False;0;False;1;5;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SamplerNode;91;-1744.552,-1079.747;Inherit;True;Property;_TextureSample1;Noise;4;0;Create;False;0;0;0;False;0;False;-1;ef2d075270368e145ab4d78fbc5565bc;0338952b563fb0447a521e1e1728116c;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-WireConnection;1;0;39;0
-WireConnection;1;1;93;0
-WireConnection;1;5;11;0
-WireConnection;46;0;47;0
-WireConnection;40;1;46;0
-WireConnection;39;0;37;0
-WireConnection;39;1;89;0
-WireConnection;39;2;40;0
-WireConnection;89;0;95;0
-WireConnection;89;1;10;0
+Node;AmplifyShaderEditor.CommentaryNode;118;-2177.025,-761.5192;Inherit;False;1137.637;388.35;Vertex Offset;6;123;122;121;120;119;0;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;96;-2716.334,-2566.096;Inherit;False;2338.477;801.7822;Hologram Pattern;20;114;113;112;111;110;109;108;107;106;105;104;103;102;101;100;99;98;97;130;131;;0.0990566,0.7332056,1,1;0;0
+Node;AmplifyShaderEditor.SamplerNode;97;-2011.658,-2514.238;Inherit;True;Property;_HologramPattern2;Hologram Pattern 2;16;0;Create;True;0;0;0;False;0;False;-1;1fb236b5c107734489881f64fff0454b;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TextureCoordinatesNode;98;-2223.296,-2516.096;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;99;-2462.542,-2514.789;Inherit;False;Property;_HologramPattern2Scale;Hologram Pattern 2 Scale;15;0;Create;True;0;0;0;False;0;False;1;1;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.TextureCoordinatesNode;100;-2233.204,-2311.604;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.PannerNode;101;-2429.334,-2205.653;Inherit;False;3;0;FLOAT2;0,0;False;2;FLOAT2;0,1.63;False;1;FLOAT;1;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.Vector2Node;102;-2666.334,-2202.653;Inherit;False;Property;_HologramPatternSpeed;Hologram Pattern Speed;14;0;Create;True;0;0;0;False;0;False;0,0;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
+Node;AmplifyShaderEditor.RangedFloatNode;103;-2666.028,-2313.072;Inherit;False;Property;_HologramPatternScale;Hologram Pattern Scale;12;0;Create;True;0;0;0;False;0;False;1;1;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SamplerNode;104;-2006.874,-2310.742;Inherit;True;Property;_HologramPattern;Hologram Pattern;8;0;Create;True;0;0;0;False;0;False;-1;3621a62e8758f344e9fddf5a650946ab;80d7e777e7c0a1a408224599acc77db8;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;105;-1613.236,-2374.683;Inherit;True;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.RangedFloatNode;106;-1631.914,-2076.833;Inherit;False;Property;_HologramPatternPower;Hologram Pattern Power;13;0;Create;True;0;0;0;False;0;False;0.01;0.01;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;107;-1293.827,-2209.029;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;108;-1089.769,-2210.112;Inherit;True;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.FresnelNode;109;-1384.292,-1971.315;Inherit;False;Standard;WorldNormal;ViewDir;False;False;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;5;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;110;-1568.364,-1882.616;Inherit;False;Property;_FresnelPower;Fresnel Power;11;0;Create;True;0;0;0;False;0;False;5;2;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;111;-1564.512,-1966.601;Inherit;False;Property;_FresnelScale;Fresnel Scale;10;0;Create;True;0;0;0;False;0;False;1;5;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode;112;-1102.647,-2412.123;Inherit;False;Property;_FresnelColor;Fresnel Color;9;0;Create;True;0;0;0;False;0;False;0,0.8832197,1,0;0,0.8832197,1,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;113;-851.9691,-2268.855;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;114;-612.8571,-2267.677;Inherit;True;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.ColorNode;10;-1972.085,-1271.956;Inherit;False;Property;_Color;Color;1;0;Create;True;0;0;0;False;0;False;0.7924528,0.1889853,0.1308295,0;0.872,0.3220474,0.185736,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleAddOpNode;95;-1968.516,-1504.632;Inherit;True;2;2;0;FLOAT;0.33;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.TextureCoordinatesNode;90;-2507.289,-1491.922;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;92;-2675.228,-1470.456;Inherit;False;Property;_NoiseScale1;Noise Scale;6;0;Create;True;0;0;0;False;0;False;1;5;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SamplerNode;91;-2269.97,-1498.988;Inherit;True;Property;_TextureSample1;Noise;4;0;Create;False;0;0;0;False;0;False;-1;ef2d075270368e145ab4d78fbc5565bc;0338952b563fb0447a521e1e1728116c;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;89;-1677.543,-1382.862;Inherit;True;2;2;0;FLOAT;0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.LerpOp;39;-1309.145,-1405.165;Inherit;True;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.TextureCoordinatesNode;46;-1997.878,-1053.896;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SamplerNode;40;-1760.56,-1060.963;Inherit;True;Property;_TextureSample0;Noise;3;0;Create;False;0;0;0;False;0;False;-1;None;0338952b563fb0447a521e1e1728116c;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;47;-2165.818,-1032.43;Inherit;False;Property;_NoiseScale;Noise Scale;5;0;Create;True;0;0;0;False;0;False;5;5;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode;37;-1678.159,-1681.433;Inherit;False;Property;_Color1;Color;2;0;Create;True;0;0;0;False;0;False;0.7924528,0.1889853,0.1308295,0;0.6039216,0.1715138,0.1715138,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SamplerNode;93;-312.037,-1471.717;Inherit;True;Property;_T_MiniMercury_N;T_MiniMercury_N;7;0;Create;True;0;0;0;False;0;False;-1;9e16243bd61022a44b6ef7329d2d0a68;9e16243bd61022a44b6ef7329d2d0a68;True;0;True;bump;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;11;-313.5085,-1266.235;Inherit;False;Property;_Smoothness;Smoothness;0;0;Create;True;0;0;0;False;0;False;0.5;0.19;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;181.3599,-1490.809;Float;False;True;-1;2;ASEMaterialInspector;0;4;SH_MiniPlanet;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardBase;0;1;ForwardBase;18;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;40;Workflow,InvertActionOnDeselection;1;0;Surface;0;0;  Blend;0;0;  Refraction Model;0;0;  Dither Shadows;1;0;Two Sided;1;0;Deferred Pass;1;0;Transmission;0;0;  Transmission Shadow;0.5,False,;0;Translucency;0;0;  Translucency Strength;1,False,;0;  Normal Distortion;0.5,False,;0;  Scattering;2,False,;0;  Direct;0.9,False,;0;  Ambient;0.1,False,;0;  Shadow;0.5,False,;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;Receive Shadows;1;0;GPU Instancing;1;0;LOD CrossFade;1;0;Built-in Fog;1;0;Ambient Light;1;0;Meta Pass;1;0;Add Pass;1;0;Override Baked GI;0;0;Extra Pre Pass;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,;0;  Type;0;0;  Tess;16,False,;0;  Min;10,False,;0;  Max;25,False,;0;  Edge Length;16,False,;0;  Max Displacement;25,False,;0;Fwd Specular Highlights Toggle;0;0;Fwd Reflections Toggle;0;0;Disable Batching;0;0;Vertex Position,InvertActionOnDeselection;1;0;0;6;False;True;True;True;True;True;False;;False;0
+Node;AmplifyShaderEditor.WireNode;128;-2749.835,-1766.796;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;127;-2762.342,-1737.089;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;126;-2759.378,-848.8569;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;125;-2743.794,-828.3549;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;129;-1401.539,-827.4899;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;124;-1379.097,-810.5064;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;-1536.321,-543.7573;Float;False;False;-1;2;ASEMaterialInspector;0;4;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ExtraPrePass;0;0;ExtraPrePass;6;False;True;0;1;False;;0;False;;0;1;False;;0;False;;True;0;False;;0;False;;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;False;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;1;LightMode=ForwardBase;False;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;119;-1274.389,-691.5898;Inherit;True;2;2;0;COLOR;1,0,0,0;False;1;FLOAT4;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.DynamicAppendNode;120;-1476.749,-668.056;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.FunctionNode;121;-1868.791,-625.677;Inherit;False;Random Range;-1;;2;7b754edb8aebbfb4a9ace907af661cfc;0;3;1;FLOAT2;0.78,0;False;2;FLOAT;0;False;3;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;122;-2082.997,-489.1689;Inherit;False;Property;_DeformScale;Deform Scale;17;0;Create;True;0;0;0;False;0;False;0.1;0.1;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;123;-2127.025,-711.5192;Inherit;False;Noise Sine Wave;-1;;3;a6eff29f739ced848846e3b648af87bd;0;2;1;FLOAT;0;False;2;FLOAT2;2,2;False;1;FLOAT;0
+Node;AmplifyShaderEditor.WireNode;131;-1740.391,-2127.589;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;130;-1723.391,-2147.589;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+WireConnection;97;1;98;0
+WireConnection;98;0;99;0
+WireConnection;100;0;103;0
+WireConnection;100;1;101;0
+WireConnection;101;2;102;0
+WireConnection;104;1;100;0
+WireConnection;105;0;97;0
+WireConnection;105;1;104;0
+WireConnection;107;0;105;0
+WireConnection;107;1;106;0
+WireConnection;108;0;107;0
+WireConnection;108;1;109;0
+WireConnection;109;2;111;0
+WireConnection;109;3;110;0
+WireConnection;113;0;112;0
+WireConnection;113;1;108;0
+WireConnection;114;0;113;0
+WireConnection;114;1;39;0
 WireConnection;95;1;91;1
 WireConnection;90;0;92;0
 WireConnection;91;1;90;0
+WireConnection;89;0;95;0
+WireConnection;89;1;10;0
+WireConnection;39;0;37;0
+WireConnection;39;1;89;0
+WireConnection;39;2;40;0
+WireConnection;46;0;47;0
+WireConnection;40;1;46;0
+WireConnection;1;0;114;0
+WireConnection;1;1;93;0
+WireConnection;1;5;11;0
+WireConnection;1;15;119;0
+WireConnection;128;0;131;0
+WireConnection;127;0;128;0
+WireConnection;126;0;127;0
+WireConnection;125;0;126;0
+WireConnection;129;0;125;0
+WireConnection;124;0;129;0
+WireConnection;119;0;124;0
+WireConnection;119;1;120;0
+WireConnection;120;2;121;0
+WireConnection;121;1;123;0
+WireConnection;121;3;122;0
+WireConnection;131;0;130;0
+WireConnection;130;0;104;0
 ASEEND*/
-//CHKSM=E0C3EE7BA266B201A6BA99BD9B70C8CCBE03D87C
+//CHKSM=C27C8EDB9B95565EF2195944C0852E76E45716DA
