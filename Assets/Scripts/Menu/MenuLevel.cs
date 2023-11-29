@@ -68,9 +68,31 @@ public class MenuLevel : MonoBehaviour
         ServiceLocator.Instance.GetService<MainMenuManager>().StartCoroutine(PoofAnimationRoutine());
     }
 
-    public void HideAllText()
+    public void ShowAllText(bool instant = true, float time = 1.0f)
     {
-        _textPlanet.gameObject.SetActive(false);
+        if (instant)
+        {
+            _textPlanet.gameObject.SetActive(true);
+        }
+        else
+        {
+            var color = _textPlanet.color;
+            _textPlanet.color = new Color(color.r, color.g, color.b, 0.0f);
+            _textPlanet.gameObject.SetActive(true);
+            Helpers.FadeText(new TMP_Text[] { _textPlanet }, 1.0f, time);
+        }
+    }
+
+    public void HideAllText(bool instant = true, float time = 1.0f)
+    {
+        if (instant)
+        {
+            _textPlanet.gameObject.SetActive(false);
+        }
+        else
+        {
+            Helpers.FadeText(new TMP_Text[] { _textPlanet }, 0.0f, time);
+        }
     }
 
 

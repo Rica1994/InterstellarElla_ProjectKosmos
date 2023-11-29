@@ -12,6 +12,7 @@ public class FactSheet : MonoBehaviour
     [Serializable]
     public struct FactSheetData
     {
+        public string Name;
         public string[] FactStrings;
         public float CompletionPercentage;
         public int Diameter;
@@ -29,6 +30,9 @@ public class FactSheet : MonoBehaviour
 
     [SerializeField]
     private List<Fact> _facts;
+
+    [SerializeField]
+    private TMP_Text _planetName;
 
     [SerializeField]
     private TMP_Text _diameter;
@@ -49,10 +53,16 @@ public class FactSheet : MonoBehaviour
     private Image _completionCircleImage;
 
     [SerializeField]
+    private GameObject _backgroundImageGO;
+
+    [SerializeField]
     private float _progressBarFillSpeed;
 
     [SerializeField]
     private List<TMP_Text> _allText = new List<TMP_Text>();
+
+    [SerializeField]
+    private List<Image> _allImages = new List<Image>();
 
     [SerializeField]
     private AudioClip _factPopSound;
@@ -76,6 +86,21 @@ public class FactSheet : MonoBehaviour
             }
         }
 
+        // remove the images of the facts
+        foreach (var fact in _facts)
+        {
+            var factImages = fact.GetComponentsInChildren<Image>();
+            
+            foreach(var factImage in factImages)
+            {
+                _images.Remove(factImage);
+            }
+        }
+
+        // Add the images of the background seperately
+        _images.AddRange(_backgroundImageGO.GetComponentsInChildren<Image>());
+
+        // Hide the sheet
         ShowSheet(false, false, 0.0f);
     }
 
@@ -83,6 +108,7 @@ public class FactSheet : MonoBehaviour
     {
         _factSheetData = data;
 
+        _planetName.text = data.Name;
         _amountofMoonsText.text = data.AmountOfMoons.ToString();
         _diameter.text = data.Diameter.ToString() + " km";
 
@@ -118,6 +144,7 @@ public class FactSheet : MonoBehaviour
         if (show)
         {
             gameObject.SetActive(show);
+            _backgroundImageGO.SetActive(show);
         }
 
         if (fade)
@@ -136,7 +163,11 @@ public class FactSheet : MonoBehaviour
         else
         {
             _facts.ForEach(fact => fact.ShowFact(false));
-            StartCoroutine(Helpers.DoAfter(fade ? time : 0.0f, () => gameObject.SetActive(false)));
+            StartCoroutine(Helpers.DoAfter(fade ? time : 0.0f, () => 
+            {
+                gameObject.SetActive(false);
+                _backgroundImageGO.SetActive(false);
+            }));
         }
     }
 
@@ -151,21 +182,23 @@ public class FactSheet : MonoBehaviour
         var soundManager = ServiceLocator.Instance.GetService<SoundManager>();
 
         float passedTime = 0.0f;
+        float passedTimePerFact = 0.0f;
         int factIndex = 0;
-        int amountOfFactsToShow = (int)(_factSheetData.CompletionPercentage / 10.0f);
+        int amountOfFactsToShow = (int)Mathf.Round(_factSheetData.CompletionPercentage / 10.0f);
 
         float timeTillProgressFilled = progress / _progressBarFillSpeed;
         float timePerFactShown = timeTillProgressFilled / amountOfFactsToShow;
 
         // Show fact while the progresscircle is being filled.
-        while (passedTime < timeTillProgressFilled)
+        while (passedTime < timeTillProgressFilled && factIndex < amountOfFactsToShow)
         {
             _completionCircleImage.fillAmount += _progressBarFillSpeed * Time.deltaTime;
             passedTime += Time.deltaTime;
+            passedTimePerFact += Time.deltaTime;
 
-            if (passedTime >= timePerFactShown && factIndex < _facts.Count && factIndex < amountOfFactsToShow)
+            if (passedTimePerFact >= timePerFactShown && factIndex < _facts.Count && factIndex < amountOfFactsToShow)
             {
-                passedTime = 0.0f;
+                passedTimePerFact = 0.0f;
 
                 soundManager.PlayNoteInMajorChord(_factPopSound, factIndex, 1.0f);
                 soundManager.PlaySFX(_factPopSoundPunch, false);

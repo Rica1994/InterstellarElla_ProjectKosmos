@@ -124,7 +124,7 @@ public class MainMenuManager : Service
         var lastPlanet = (GameManager.Planet)GameManager.Data.LastPlanet;
         if (lastPlanet == GameManager.Planet.None) return;
 
-        StartCoroutine(Helpers.DoAfterFrame(() => 
+        StartCoroutine(Helpers.DoAfterFrame(() =>
         {
             while (_currentLevel.MyPlanetType != lastPlanet)
             {
@@ -181,7 +181,7 @@ public class MainMenuManager : Service
 
             _factSheet.ShowSheet(false, true, 1.0f);
 
-            StartCoroutine(Helpers.DoAfter(1f, () => 
+            StartCoroutine(Helpers.DoAfter(1f, () =>
             {
                 _menuAnimator.CameraAnimation.Play(_camZoom);
             }));
@@ -214,6 +214,8 @@ public class MainMenuManager : Service
 
         if (show)
         {
+            _currentLevel.HideAllText(false, 1.0f);
+
             _buttonLevelSelect.DisableButton();
             _menuAnimator.PlayPlanetSelectAnimation(false);
             StartCoroutine(Helpers.DoAfter(0.25f, () => soundManager.PlaySFX(_zoomOnPlanetClip, true)));
@@ -233,14 +235,18 @@ public class MainMenuManager : Service
         }
         else
         {
+            // show planet text
+
             _buttonLevelSelect.EnableButton();
             _factSheet.ShowSheet(false, true, _closeFactSheetClip.length);
             soundManager.PlaySFX(_closeFactSheetClip, true);
 
             Helpers.FadeImage(new GameObject[] { _buttonForward.gameObject, _buttonBackward.gameObject }, 1.0f, _closeFactSheetClip.length);
 
-            StartCoroutine(Helpers.DoAfter(_closeFactSheetClip.length + 0.25f, () => {
+            StartCoroutine(Helpers.DoAfter(_closeFactSheetClip.length + 0.25f, () =>
+            {
                 soundManager.PlaySFX(_zoomOutPlanetClip, true);
+                _currentLevel.ShowAllText(false, 1.0f);
 
                 _menuAnimator.PlayPlanetSelectAnimation(true);
                 _buttonBackward.EnableButton();
