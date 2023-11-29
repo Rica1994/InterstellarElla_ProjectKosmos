@@ -376,7 +376,7 @@ public class EllaExploring : PlayerController, IElla
     {
         var ray = new Ray(transform.position, Vector3.down);
 
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, 1.1f, ~_ignoreLayerMask))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 1.1f))
         {
             var slopeDirection = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
             var adjustedVelocity = slopeDirection * velocity;
