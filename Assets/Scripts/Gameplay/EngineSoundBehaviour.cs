@@ -42,4 +42,16 @@ public class EngineSoundBehaviour : MonoBehaviour
             _engineAudioSource.pitch = Mathf.Clamp(_defaultEnginePitch * (currentVehicleSpeed / _defaultVehicleSpeed), 0.6f, 2);
         }
     }
+
+    public void EnableEngineAudioSource(bool enable)
+    {
+        if (enable)
+        {
+            _engineAudioSource.UnPause();
+        }
+        else
+        {
+            _engineAudioSource.Pause();
+        }
+    }
 }

@@ -109,6 +109,9 @@ public class SpeederGround : PlayerController, IVehicle, IElla
     [SerializeField] private AudioElement _soundBounce;
 
     [SerializeField]
+    private EngineSoundBehaviour _engineSoundBehaviour;
+
+    [SerializeField]
     private AudioSource _sourceVoiceElla;
 
     private AudioController _audioController;
@@ -261,6 +264,7 @@ public class SpeederGround : PlayerController, IVehicle, IElla
         // Apply landing
         if (wasGrounded == false && wasGrounded != _isGrounded)
         {
+            _engineSoundBehaviour.EnableEngineAudioSource(true);
             Land(lastYVelocity);
         }
 
@@ -479,6 +483,7 @@ public class SpeederGround : PlayerController, IVehicle, IElla
             _jumpComponent.Jump(ref _yVelocity, _gravityValue, _jumpHeight * _jumpBoostComponent.Multiplier);
 
             // play sound
+            _engineSoundBehaviour.EnableEngineAudioSource(false);
             _audioController.PlayAudio(_soundJump);
         }
 
