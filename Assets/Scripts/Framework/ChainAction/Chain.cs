@@ -72,7 +72,7 @@ public class Chain
         }
 
         Debug.Log($"ChainAction {_currentChainAction.name} completed");
-        playableDirector.Stop();
+        playableDirector.time = playableDirector.duration - 0.1f;
 
         if (_chainActions.Count > 0)
         {
