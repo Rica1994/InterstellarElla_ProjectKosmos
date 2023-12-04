@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class GameObjectArray
@@ -29,7 +30,13 @@ public class QualitySettingsManager : Service
 
     public QualityObject[] _qualityObjects;
     public RenderTexture _qualityTexture;
+    public RenderTexture _qualityTextureLow;
+    public RenderTexture _qualityTextureHigh;
+    [SerializeField]
+    private RawImage _rawImage;
     public Camera _gameplayCamera;
+    [SerializeField]
+    private List<Camera> _cameras = new List<Camera>();
 
     private int _currentQualityIndex = 0;
     private Vector2 _initialScreensize = Vector2.zero;
@@ -111,6 +118,21 @@ public class QualitySettingsManager : Service
         }
 
         // Setting the resolution
+        if (GameManager.Data.QualityRank == QualityRank.Low)
+        {
+            _qualityTexture = _qualityTextureLow;
+        }
+        else
+        {
+            _qualityTexture = _qualityTextureHigh;
+        }
+
+        _rawImage.texture = _qualityTexture;
+
+        for (int i = 0; i < _cameras.Count; i++)
+        {
+            _cameras[i].targetTexture = _qualityTexture;
+        }
 
         AdjustCameraAspectRatios();
 
@@ -134,7 +156,9 @@ public class QualitySettingsManager : Service
         _qualityTexture.height = newHeight;
         _qualityTexture.Create();
 
-       // Screen.SetResolution(newWidth, newHeight, false);
+        // Screen.SetResolution(newWidth, newHeight, false);
+
+
     }
 
     private int QualityRankToIndex(QualityRank rank)
