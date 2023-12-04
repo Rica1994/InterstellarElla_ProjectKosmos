@@ -380,6 +380,21 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -33.2
       objectReference: {fileID: 0}
+    - target: {fileID: 6289082098817924465, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: _cameras.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6289082098817924465, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: _cameras.Array.data[0]
+      value: 
+      objectReference: {fileID: 1795642824}
+    - target: {fileID: 6289082098817924465, guid: 1b3ad37f3b38f694fb268141fa5866d0,
+        type: 3}
+      propertyPath: _cameras.Array.data[1]
+      value: 
+      objectReference: {fileID: 1795642823}
     - target: {fileID: 7435362833130782617, guid: 1b3ad37f3b38f694fb268141fa5866d0,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -578,6 +593,7 @@ MonoBehaviour:
   _useUserBasedAction: 0
   _repeat: 0
   _repeatUntilRequisitIsMet: 0
+  _completeImmediatelyIfRequisiteIsMet: 0
   _repeatNumberOfTimes: 0
   _timesToRepeat: 0
   _timeUntilNextRepeat: 10
@@ -1631,6 +1647,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1795642821}
   m_PrefabAsset: {fileID: 0}
+--- !u!20 &1795642823 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 7204542325012986225, guid: fca895c95785b3a428d1f5c46cf2a570,
+    type: 3}
+  m_PrefabInstance: {fileID: 1795642821}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &1795642824 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 7204542325949278122, guid: fca895c95785b3a428d1f5c46cf2a570,
+    type: 3}
+  m_PrefabInstance: {fileID: 1795642821}
+  m_PrefabAsset: {fileID: 0}
 --- !u!320 &1813917263
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -2258,6 +2286,7 @@ MonoBehaviour:
   _useUserBasedAction: 0
   _repeat: 0
   _repeatUntilRequisitIsMet: 0
+  _completeImmediatelyIfRequisiteIsMet: 0
   _repeatNumberOfTimes: 0
   _timesToRepeat: 0
   _timeUntilNextRepeat: 10
