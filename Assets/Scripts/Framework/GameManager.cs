@@ -223,9 +223,18 @@ public class GameManager : Service
         else
         {
             Debug.Log("?data= not found in URL");
+            if (PlayerPrefs.HasKey("SaveData"))
+            {
+                Debug.Log("Found data: " + PlayerPrefs.GetString("SaveData"));
+
+                // adding this string below so it gets the same format as an url
+                url = "?data=" + PlayerPrefs.GetString("SaveData");
+                ParseData(url);
+
+            }
         }
 #endif
-    }   
+    }
 
     private void Start()
     {
