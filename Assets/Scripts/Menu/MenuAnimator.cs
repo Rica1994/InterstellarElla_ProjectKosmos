@@ -26,4 +26,9 @@ public class MenuAnimator : MonoBehaviour
         }
     }
 
+    public void ZoomPlanet()
+    {
+        CameraAnimator.SetTrigger("ZoomPlanet");
+    }
+
 }

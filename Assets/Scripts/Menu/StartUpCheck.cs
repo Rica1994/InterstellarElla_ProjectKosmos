@@ -12,7 +12,7 @@ public class StartUpCheck : MonoBehaviour
     private Button _startButton;
 
     [SerializeField]
-    private TMP_Text _buttonText;
+    private TextMeshProUGUI _buttonText;
 
     [SerializeField]
     private Image _buttonImage;
@@ -27,7 +27,7 @@ public class StartUpCheck : MonoBehaviour
     {
         _startButton.enabled = false;
         _buttonImage.fillAmount = 0;
-        _buttonText.text = "LOADING";
+        _buttonText.text = "LADEN";
     }
 
     private void Update()
@@ -40,6 +40,7 @@ public class StartUpCheck : MonoBehaviour
         {
             _buttonImage.fillAmount = 1.0f;
             _buttonText.text = "START";
+            _buttonText.color = new Color(0.48f, 0.0f, 0.48f, 1.0f);
             _startButton.enabled = true;
             enabled = false;
         }

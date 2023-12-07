@@ -122,7 +122,11 @@ public class MainMenuManager : Service
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
         var lastPlanet = (GameManager.Planet)GameManager.Data.LastPlanet;
-        if (lastPlanet == GameManager.Planet.None) return;
+        if (lastPlanet == GameManager.Planet.None)
+        {
+            // hier Help Maggie blabal
+            return;
+        }
 
         StartCoroutine(Helpers.DoAfterFrame(() =>
         {
@@ -183,7 +187,7 @@ public class MainMenuManager : Service
 
             StartCoroutine(Helpers.DoAfter(1f, () =>
             {
-                _menuAnimator.CameraAnimation.Play(_camZoom);
+                _menuAnimator.ZoomPlanet();
             }));
 
             SceneType sceneToLoad = ChooseCorrectSceneWork();

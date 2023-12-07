@@ -1,3 +1,4 @@
+using DG.Tweening;
 using DG.Tweening.Core.Easing;
 using System;
 using System.Collections;
@@ -32,6 +33,18 @@ public class HudManager : Service
     private TMP_Text _pickupsNeededText;
 
     public TouchButton TouchButton => _touchButton;
+
+    private DG.Tweening.Sequence _scoreTextSequence;
+
+    private Material _textMaterial;
+
+    [SerializeField]
+    private ParticleSystem _particleSystem;
+
+    private void Start()
+    {
+        _textMaterial = _pickupsCollectedText.fontSharedMaterial;
+    }
 
     private void OnCutSceneEnded()
     {
@@ -108,7 +121,25 @@ public class HudManager : Service
 
     private void OnPickupPickedUp(int pickUpsPickedUp)
     {
+        if (_scoreTextSequence != null)
+        {
+            _scoreTextSequence.Kill();
+        }
+
         _pickupsCollectedText.text = pickUpsPickedUp.ToString();
+        _pickupsCollectedText.transform.localScale = Vector3.one;
+        
+        _scoreTextSequence = DOTween.Sequence();
+
+        _scoreTextSequence.Append(_pickupsCollectedText.transform.DOScale(2.5f, 0.1f))
+            .Join(DOTween.To(() => _textMaterial.GetFloat(ShaderUtilities.ID_GlowPower), x => _textMaterial.SetFloat(ShaderUtilities.ID_GlowPower, x), 0.016f, 0.5f))
+            .Append(_pickupsCollectedText.transform.DOScale(1.0f, 0.2f))
+            .Join(DOTween.To(() => _textMaterial.GetFloat(ShaderUtilities.ID_GlowPower), x => _textMaterial.SetFloat(ShaderUtilities.ID_GlowPower, x), 0.0f, 0.4f));
+
+        if (_particleSystem != null)
+        {
+            _particleSystem.Play();
+        }
     }
 
     public void SetScore(int pickupsCollected)

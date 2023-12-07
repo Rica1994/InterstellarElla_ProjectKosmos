@@ -397,7 +397,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: Bevestigen
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0acbe8d4031b08347863b2b9e6360fc5, type: 2}
   m_sharedMaterial: {fileID: 4413085463529992274, guid: 0acbe8d4031b08347863b2b9e6360fc5,
@@ -566,6 +566,14 @@ MonoBehaviour:
   _submitButton: {fileID: 4235481271535144206}
   _questionTransform: {fileID: 5249860460866971265}
   _questionText: {fileID: 4704517807488275587}
+  _questionStartSound:
+    Clip: {fileID: 0}
+    Type: 0
+    Volume: 1
+    Pitch: 1
+    RandomizePitchSlightly: 0
+    PitchLowerLimitAddition: 0.2
+    PitchUpperLimitAddition: 0.2
   _questionCompleteSound:
     Clip: {fileID: 8300000, guid: b0ab98d19922bdd48a2c1f7b50303e66, type: 3}
     Type: 4
@@ -582,6 +590,24 @@ MonoBehaviour:
     RandomizePitchSlightly: 0
     PitchLowerLimitAddition: 0.2
     PitchUpperLimitAddition: 0.2
+  _endQuizSound:
+    Clip: {fileID: 0}
+    Type: 0
+    Volume: 1
+    Pitch: 1
+    RandomizePitchSlightly: 0
+    PitchLowerLimitAddition: 0.2
+    PitchUpperLimitAddition: 0.2
+  _maggieComment:
+    Clip: {fileID: 0}
+    Type: 0
+    Volume: 1
+    Pitch: 1
+    RandomizePitchSlightly: 0
+    PitchLowerLimitAddition: 0.2
+    PitchUpperLimitAddition: 0.2
+  _maggieWrongAnswerClips: []
+  _maggieRightAnswerClips: []
   _maggieAudioSource: {fileID: 7056356474354009957}
 --- !u!223 &4235481272775225334
 Canvas:
