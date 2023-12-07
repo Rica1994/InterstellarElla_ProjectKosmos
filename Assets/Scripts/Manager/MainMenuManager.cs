@@ -106,6 +106,21 @@ public class MainMenuManager : Service
 
     [SerializeField]
     private PlayableDirector _introTextPlayableDirector;
+
+    [SerializeField]
+    private GameObject _lockedSign;
+    [SerializeField]
+    private Material _mercuryMaterial;
+    [SerializeField]
+    private MeshRenderer _mercuryMesh;
+    [SerializeField]
+    private GameObject _mercuryText;
+
+    private bool _mercuryLocked => (GameManager.Data.PlanetCompletionValues.VenusCompletion > 0
+                && GameManager.Data.PlanetCompletionValues.MarsCompletion > 0
+                && GameManager.Data.PlanetCompletionValues.SaturnCompletion > 0
+                && GameManager.Data.PlanetCompletionValues.PlutoCompletion > 0) == false;
+
     #endregion
 
     protected override void Awake()
@@ -137,6 +152,13 @@ public class MainMenuManager : Service
         {
             _menuAnimator.ShowPlanets();
             StartCoroutine(EnableButtonsDelay(3));
+            
+            if (_mercuryLocked == false)
+            {
+                _mercuryMesh.material = _mercuryMaterial;
+                _lockedSign.SetActive(false);
+                _mercuryText.SetActive(true);
+            }
         }
 
         StartCoroutine(Helpers.DoAfterFrame(() =>
@@ -304,6 +326,15 @@ public class MainMenuManager : Service
         RotateLevelSetup(true);
 
         ScaleLevelUp();
+
+        if (_currentLevel.MyPlanetType == GameManager.Planet.Mercury && _mercuryLocked)
+        {
+            _buttonLevelSelect.DisableButton(true);
+        }
+        else
+        {
+            _buttonLevelSelect.EnableButton();
+        }
     }
 
     public void BackwardLevel()
@@ -325,6 +356,15 @@ public class MainMenuManager : Service
         RotateLevelSetup(false);
 
         ScaleLevelUp();
+
+        if (_currentLevel.MyPlanetType == GameManager.Planet.Mercury && _mercuryLocked)
+        {
+            _buttonLevelSelect.DisableButton(true);
+        }
+        else
+        {
+            _buttonLevelSelect.EnableButton();
+        }
     }
 
     private void RotateLevelSetup(bool isForward)

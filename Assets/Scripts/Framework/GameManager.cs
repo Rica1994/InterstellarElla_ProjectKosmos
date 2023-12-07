@@ -212,6 +212,11 @@ public class GameManager : Service
 #if UNITY_EDITOR
         Data = new SaveData();
         Data.QualityRank = QualitySettingsManager.GetQualityRankFromSettings();
+        //Data.PlanetCompletionValues.MarsCompletion = 100;
+        //Data.PlanetCompletionValues.VenusCompletion = 100;
+        //Data.PlanetCompletionValues.PlutoCompletion = 100;
+        //Data.PlanetCompletionValues.SaturnCompletion = 100;
+        //Data.LastPlanet = 2;
         //ParseData(Data.ToString());
 #elif !UNITY_EDITOR && UNITY_WEBGL
 
