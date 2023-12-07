@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityCore.Menus;
 using UnityCore.Scene;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 
@@ -103,6 +104,8 @@ public class MainMenuManager : Service
     private const string _camZoom = "A_CameraLevelZoom";
     private const string _camLevelSelected = "A_CameraPlanetSelected";
 
+    [SerializeField]
+    private PlayableDirector _introTextPlayableDirector;
     #endregion
 
     protected override void Awake()
@@ -124,8 +127,16 @@ public class MainMenuManager : Service
         var lastPlanet = (GameManager.Planet)GameManager.Data.LastPlanet;
         if (lastPlanet == GameManager.Planet.None)
         {
-            // hier Help Maggie blabal
+            _introTextPlayableDirector.Play();
+            float waitTime = (float)_introTextPlayableDirector.duration;
+            StartCoroutine(Helpers.DoAfter(waitTime, _menuAnimator.ShowPlanets));
+            StartCoroutine(EnableButtonsDelay(waitTime));
             return;
+        }
+        else
+        {
+            _menuAnimator.ShowPlanets();
+            StartCoroutine(EnableButtonsDelay(3));
         }
 
         StartCoroutine(Helpers.DoAfterFrame(() =>
@@ -158,9 +169,6 @@ public class MainMenuManager : Service
         }
         // size up level 1
         ScaleLevelUp();
-
-        // show buttons after delay
-        StartCoroutine(EnableButtonsDelay(0));
     }
 
 
