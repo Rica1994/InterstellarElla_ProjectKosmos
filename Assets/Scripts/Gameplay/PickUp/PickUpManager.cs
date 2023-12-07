@@ -134,8 +134,7 @@ public class PickUpManager : Service
             if (pickUps[i] as EllaPickUp)
             {
                 pickUps.RemoveAt(i);
-            }
-            
+            }          
         }
 
         // Add all pickups in the section to the list

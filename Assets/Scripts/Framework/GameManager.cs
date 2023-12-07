@@ -25,10 +25,12 @@ public class GameManager : Service
         public int CurrentScore;
         public int LastPlanet;
         public QualitySettingsManager.QualityRank QualityRank;
+        public BuildType BuildType;
 
         public override string ToString()
         {
-            return PlanetCompletionValues.ToString() + Helpers.FormatPercentageToString(CurrentScore) + LastPlanet.ToString() + ((int)QualityRank).ToString();
+            return PlanetCompletionValues.ToString() + Helpers.FormatPercentageToString(CurrentScore) + LastPlanet.ToString()
+                + ((int)QualityRank).ToString() + ((int)BuildType).ToString();
         }
     }
 
@@ -69,8 +71,8 @@ public class GameManager : Service
     }
     public enum BuildType
     {
-        Debug,
-        Client
+        Debug = 0,
+        Client = 1
     }
 
     public static int MARS_DATA_NEEDED = 300;
@@ -194,6 +196,7 @@ public class GameManager : Service
                 pickupManager.PickUpsPickedUp = Data.CurrentScore;
                 break;
             case Planet.None:
+                Data.CurrentScore = 0;
                 hud.EnableHUD(false);
                 break;
         }
@@ -275,11 +278,21 @@ public class GameManager : Service
 
         var qualityLevel = QualitySettingsManager.QualityRank.Low;
         int qualityValue = 0;
-        if (int.TryParse(planetCompletionsCompiled.Substring(19, 1), out qualityValue)) 
+        if (int.TryParse(planetCompletionsCompiled.Substring(19, 1), out qualityValue))
         {
             if (Enum.IsDefined(typeof(QualitySettingsManager.QualityRank), qualityValue))
             {
                 qualityLevel = (QualitySettingsManager.QualityRank)qualityValue;
+            }
+        }
+
+        var buildType = BuildType.Debug;
+        int buildTypeValue = 0;
+        if (int.TryParse(planetCompletionsCompiled.Substring(20, 1), out buildTypeValue))
+        {
+            if (Enum.IsDefined(typeof(BuildType), buildTypeValue))
+            {
+                buildType = (BuildType)buildTypeValue;
             }
         }
 
@@ -298,9 +311,11 @@ public class GameManager : Service
         data.CurrentScore += currentScore;
         data.PlanetCompletionValues = values;
         data.QualityRank = qualityLevel;
+        data.BuildType = buildType;
         //   data.IsShittyDevice = (isShittyDevice == 1) ? true : false;
 
         Data = data;
+        Debug.Log("Parsed Data: " + Data.ToString());
     }
 
     public void EndLevel(bool isLastLevel)
