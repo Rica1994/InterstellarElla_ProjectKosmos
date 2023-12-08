@@ -159,6 +159,9 @@ public class MainMenuManager : Service
                 _lockedSign.SetActive(false);
                 _mercuryText.SetActive(true);
             }
+
+            PlayerPrefs.SetString("SaveData", GameManager.Data.ToString());
+            PlayerPrefs.Save();
         }
 
         StartCoroutine(Helpers.DoAfterFrame(() =>

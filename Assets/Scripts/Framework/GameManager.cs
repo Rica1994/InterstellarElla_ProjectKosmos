@@ -176,6 +176,21 @@ public class GameManager : Service
             Debug.Log("?data= not found in URL");
         }
 #endif
+
+        // if we're coming from the startup scene, we will have data namely the quality rank. 
+        // so when coming in the mainmenu, we won't check if we have save data. 
+        // but we need to check though. 
+        if ((Planet)Data.LastPlanet == Planet.None)
+        {
+            if (PlayerPrefs.HasKey("SaveData"))
+            {
+                Debug.Log("Found data: " + PlayerPrefs.GetString("SaveData"));
+
+                // adding this string below so it gets the same format as an url
+                string newUrl = "?data=" + PlayerPrefs.GetString("SaveData");
+                ParseData(newUrl);
+            }
+        }
     }
 
     private void Initialize()
@@ -235,10 +250,24 @@ public class GameManager : Service
                 // adding this string below so it gets the same format as an url
                 url = "?data=" + PlayerPrefs.GetString("SaveData");
                 ParseData(url);
-
             }
         }
 #endif
+
+        // if we're coming from the startup scene, we will have data namely the quality rank. 
+        // so when coming in the mainmenu, we won't check if we have save data. 
+        // but we need to check though. 
+        if ((Planet)Data.LastPlanet == Planet.None)
+        {
+            if (PlayerPrefs.HasKey("SaveData"))
+            {
+                Debug.Log("Found data: " + PlayerPrefs.GetString("SaveData"));
+
+                // adding this string below so it gets the same format as an url
+                string newUrl = "?data=" + PlayerPrefs.GetString("SaveData");
+                ParseData(newUrl);
+            }
+        }
     }
 
     private void Start()
