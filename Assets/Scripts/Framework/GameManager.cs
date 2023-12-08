@@ -412,23 +412,23 @@ public class GameManager : Service
         switch (GetCurrentPlanet())
         {
             case Planet.Venus:
-                scoreRecalculated = score / 250.0f;
+                scoreRecalculated = score / VENUS_DATA_NEEDED;
                 scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
                 break;
             case Planet.Saturn:
-                scoreRecalculated = score / 250.0f;
+                scoreRecalculated = score / SATURN_DATA_NEEDED;
                 scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
                 break;
             case Planet.Mars:
-                scoreRecalculated = score / 250.0f;
+                scoreRecalculated = score / MARS_DATA_NEEDED;
                 scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
                 break;
             case Planet.Pluto:
-                scoreRecalculated = score / 250.0f;
+                scoreRecalculated = score / PLUTO_DATA_NEEDED;
                 scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
                 break;
             case Planet.Mercury:
-                scoreRecalculated = score / 250.0f;
+                scoreRecalculated = score / MERCURY_DATA_NEEDED;
                 scoreRecalculated = Mathf.Clamp(scoreRecalculated, 0.0f, 1.0f) * 100;
                 break;
             default:
