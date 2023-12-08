@@ -20,6 +20,9 @@ public class GameObjectArray
 [DefaultExecutionOrder(-999)]
 public class QualitySettingsManager : Service
 {
+    public delegate void QualityChangedDelegate(RenderTexture currentQualityTexture);
+    public event QualityChangedDelegate OnQualityChanged;
+
     [System.Flags]
     public enum QualityRank
     {
@@ -128,6 +131,8 @@ public class QualitySettingsManager : Service
         }
 
         _rawImage.texture = _qualityTexture;
+
+        OnQualityChanged?.Invoke(_qualityTexture);
 
         for (int i = 0; i < _cameras.Count; i++)
         {
