@@ -75,10 +75,10 @@ public class GameManager : Service
         Debug = 1
     }
 
-    public static int MARS_DATA_NEEDED = 300;
-    public static int PLUTO_DATA_NEEDED = 125;
+    public static int MARS_DATA_NEEDED = 475;
+    public static int PLUTO_DATA_NEEDED = 150;
     public static int VENUS_DATA_NEEDED = 250;
-    public static int SATURN_DATA_NEEDED = 350;
+    public static int SATURN_DATA_NEEDED = 475;
     public static int MERCURY_DATA_NEEDED = 350;
 
     #endregion
