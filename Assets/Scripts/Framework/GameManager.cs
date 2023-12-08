@@ -71,8 +71,8 @@ public class GameManager : Service
     }
     public enum BuildType
     {
-        Debug = 0,
-        Client = 1
+        Client = 0,
+        Debug = 1
     }
 
     public static int MARS_DATA_NEEDED = 300;
@@ -218,6 +218,8 @@ public class GameManager : Service
         //Data.PlanetCompletionValues.SaturnCompletion = 100;
         //Data.LastPlanet = 2;
         //ParseData(Data.ToString());
+
+
 #elif !UNITY_EDITOR && UNITY_WEBGL
 
         string url = Application.absoluteURL;
@@ -238,6 +240,7 @@ public class GameManager : Service
 
             }
         }
+        _targetBuildType = Data.BuildType;
 #endif
     }
 
