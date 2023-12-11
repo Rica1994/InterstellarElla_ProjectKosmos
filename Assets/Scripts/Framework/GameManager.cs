@@ -175,7 +175,6 @@ public class GameManager : Service
         {
             Debug.Log("?data= not found in URL");
         }
-#endif
 
         // if we're coming from the startup scene, we will have data namely the quality rank. 
         // so when coming in the mainmenu, we won't check if we have save data. 
@@ -191,6 +190,7 @@ public class GameManager : Service
                 ParseData(newUrl);
             }
         }
+#endif
     }
 
     private void Initialize()
@@ -255,7 +255,6 @@ public class GameManager : Service
             }
         }
         _targetBuildType = Data.BuildType;
-#endif
 
         // if we're coming from the startup scene, we will have data namely the quality rank. 
         // so when coming in the mainmenu, we won't check if we have save data. 
@@ -271,6 +270,7 @@ public class GameManager : Service
                 ParseData(newUrl);
             }
         }
+#endif
     }
 
     private void Start()
