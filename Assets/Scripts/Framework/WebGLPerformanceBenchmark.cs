@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class WebGLPerformanceBenchmark : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
     private float _elapsedTime = 0f;
     private int _frameCount = 0;
     private float _totalDeltaTime = 0f;
+    [SerializeField]
+    private Text _averageFPSText;
     private float _averageFPS = 0f;
 
     public float BenchMarkingProgress => _elapsedTime / (_benchmarkDuration + _waitTime);
@@ -38,11 +41,12 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
             _averageFPS = 1f / averageDeltaTime;
 
             Debug.Log("Average FPS: " + _averageFPS);
+            _averageFPSText.text = _averageFPS.ToString();
 
             var qualityLevel = QualitySettingsManager.QualityRank.Low;
 
             // Check if the average FPS falls below a threshold for a lower-end device
-            if (_averageFPS > _midEndFPSThresHold && (SystemInfo.deviceModel.StartsWith("Safari") && ServiceLocator.Instance.GetService<GameManager>().IsMobileWebGl) == false)
+            if (_averageFPS > _midEndFPSThresHold)
             {
                 qualityLevel = QualitySettingsManager.QualityRank.High;
             }
