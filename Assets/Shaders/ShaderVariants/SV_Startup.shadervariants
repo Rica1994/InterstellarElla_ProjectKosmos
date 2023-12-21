@@ -1,0 +1,178 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SV_Startup
+  m_Shaders:
+  - first: {fileID: 66, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 47, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: _EMISSION
+        passType: 8
+  - first: {fileID: 211, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: PROCEDURAL_INSTANCING_ON
+        passType: 8
+      - keywords: PROCEDURAL_INSTANCING_ON _ALPHABLEND_ON
+        passType: 8
+  - first: {fileID: 9000, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9001, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9002, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9003, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9004, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9006, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9007, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 10625, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 8
+  - first: {fileID: 10623, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH SHADOWS_SCREEN
+          SHADOWS_SPLIT_SPHERES UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL UNITY_HDR_ON
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS UNITY_HDR_ON
+        passType: 13
+  - first: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: BILLBOARD_FACE_CAMERA_POS ETC1_EXTERNAL_ALPHA UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: UNITY_HDR_ON
+        passType: 0
+      - keywords: FOG_EXP2 UNITY_HDR_ON
+        passType: 0
+      - keywords: BILLBOARD_FACE_CAMERA_POS UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: e5102242601886c4585879f27a00713b, type: 3}
+    second:
+      variants:
+      - keywords: BILLBOARD_FACE_CAMERA_POS UNITY_HDR_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 376ff0f2f0df29e4898a2dcfe6e5a948, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 10
+  - first: {fileID: 4800000, guid: 26d7059454977e64a9c014f5655ad6da, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 4
+      - keywords: DIRECTIONAL LIGHTPROBE_SH UNITY_HDR_ON _COLORVARIATION_ON _HASVERTEXMASKS1_ON
+          _HEIGHTMASKON1_ON _HEIGHTMASKON_ON _OBJECTSPACE_ON _VERTEXCOLORMASKS1_AO
+          _VERTEXCOLORMASKS_AO _VERTEXCOLORMASKS_BOTH _VERTEXCOLORMASKS_D _VERTEXMASKAO_AO
+          _VERTEXMASKGRUNGE_ON _VERTEXMASKS_AO
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH UNITY_HDR_ON
+          _COLORVARIATION_ON _HASVERTEXMASKS1_ON _HEIGHTMASKON1_ON _HEIGHTMASKON_ON
+          _OBJECTSPACE_ON _VERTEXCOLORMASKS1_AO _VERTEXCOLORMASKS_AO _VERTEXCOLORMASKS_BOTH
+          _VERTEXCOLORMASKS_D _VERTEXMASKAO_AO _VERTEXMASKGRUNGE_ON _VERTEXMASKS_AO
+        passType: 4
+      - keywords: 
+        passType: 5
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL UNITY_HDR_ON _COLORVARIATION_ON
+          _HASVERTEXMASKS1_ON _HEIGHTMASKON1_ON _HEIGHTMASKON_ON _OBJECTSPACE_ON
+          _VERTEXCOLORMASKS1_AO _VERTEXCOLORMASKS_AO _VERTEXCOLORMASKS_BOTH _VERTEXCOLORMASKS_D
+          _VERTEXMASKAO_AO _VERTEXMASKGRUNGE_ON _VERTEXMASKS_AO
+        passType: 5
+      - keywords: _COLORVARIATION_ON _HASVERTEXMASKS1_ON _HEIGHTMASKON1_ON _HEIGHTMASKON_ON
+          _OBJECTSPACE_ON _VERTEXCOLORMASKS1_AO _VERTEXCOLORMASKS_AO _VERTEXCOLORMASKS_BOTH
+          _VERTEXCOLORMASKS_D _VERTEXMASKAO_AO _VERTEXMASKGRUNGE_ON _VERTEXMASKS_AO
+        passType: 8
+      - keywords: 
+        passType: 11
+  - first: {fileID: 4800000, guid: b25c5e68cc22da142995b51ea39370e4, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: dd47c58b38b9924489b79c1f25666478, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH UNITY_HDR_ON
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS FOG_EXP2 SHADOWS_DEPTH SHADOWS_SPLIT_SPHERES
+        passType: 8
+  - first: {fileID: 4800000, guid: f6a1776d52b856744ba06793c78b26fa, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 4
+      - keywords: 
+        passType: 5
+      - keywords: 
+        passType: 11
+  - first: {fileID: 4800000, guid: 5c7bf4bd34997e04aad8cb1dfb7b7592, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL UNITY_HDR_ON _COLORVARIATION_ON _HASVERTEXMASKS1_ON
+          _HEIGHTMASKON1_ON _HEIGHTMASKON_ON _OBJECTSPACE_ON _VERTEXCOLORMASKS1_AO
+          _VERTEXCOLORMASKS_AO _VERTEXCOLORMASKS_BOTH _VERTEXCOLORMASKS_D _VERTEXMASKAO_AO
+          _VERTEXMASKGRUNGE_ON _VERTEXMASKS_AO
+        passType: 5
+  - first: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: b2be2adfeb6aea542b0d6e5c29cfb436, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL LIGHTPROBE_SH _COLORVARIATION_ON _HASVERTEXMASKS1_ON
+          _HEIGHTMASKON1_ON _HEIGHTMASKON_ON _OBJECTSPACE_ON _VERTEXCOLORMASKS1_AO
+          _VERTEXCOLORMASKS_AO _VERTEXCOLORMASKS_BOTH _VERTEXCOLORMASKS_D _VERTEXMASKAO_AO
+          _VERTEXMASKGRUNGE_ON _VERTEXMASKS_AO
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL LIGHTPROBE_SH _COLORVARIATION_ON
+          _HASVERTEXMASKS1_ON _HEIGHTMASKON1_ON _HEIGHTMASKON_ON _OBJECTSPACE_ON
+          _VERTEXCOLORMASKS1_AO _VERTEXCOLORMASKS_AO _VERTEXCOLORMASKS_BOTH _VERTEXCOLORMASKS_D
+          _VERTEXMASKAO_AO _VERTEXMASKGRUNGE_ON _VERTEXMASKS_AO
+        passType: 4

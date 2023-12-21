@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityCore.Menus;
@@ -159,9 +160,6 @@ public class MainMenuManager : Service
                 _lockedSign.SetActive(false);
                 _mercuryText.SetActive(true);
             }
-
-            PlayerPrefs.SetString("SaveData", GameManager.Data.ToString());
-            PlayerPrefs.Save();
         }
 
         StartCoroutine(Helpers.DoAfterFrame(() =>
@@ -224,14 +222,16 @@ public class MainMenuManager : Service
             }));
 
             SceneType sceneToLoad = ChooseCorrectSceneWork();
-
 #if UNITY_EDITOR
             // load the loading scene first, then the actual scene for gameplay
             _sceneController.LoadIntermissionLoading(sceneToLoad, false, null, false, PageType.Loading, _startLevelClip.length);
 #elif UNITY_WEBGL && !UNITY_EDITOR
+            sceneToLoad = GetSceneToLoad();
+            Debug.Log("Scene to load: " + sceneToLoad);
+            GameManager.Data.CurrentScore = GetPlanetLastScore();
+            Debug.Log("Last score to load: " + GameManager.Data.CurrentScore);
             StartCoroutine(Helpers.DoAfter(_startLevelClip.length, () => _sceneController.Load(sceneToLoad)));
 #endif
-
             // switch (ScenesToLoad)
             // {
             //     case SceneChoice.Work:
@@ -459,6 +459,131 @@ public class MainMenuManager : Service
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private int GetPlanetLastScore()
+    {
+        switch (_currentLevel.MyPlanetType)
+        {
+            case GameManager.Planet.Mars:
+                return GameManager.Data.PlanetLastScores.MarsLastScore;  
+            case GameManager.Planet.Pluto:
+                return GameManager.Data.PlanetLastScores.PlutoLastScore;  
+            case GameManager.Planet.Venus:
+                return GameManager.Data.PlanetLastScores.VenusLastScore;  
+            case GameManager.Planet.Saturn:
+                return GameManager.Data.PlanetLastScores.SaturnLastScore;  
+            case GameManager.Planet.Mercury:
+                return GameManager.Data.PlanetLastScores.MercuryLastScore;  
+            case GameManager.Planet.None:
+                return -1;
+        }
+        return -1;
+    }
+
+    private SceneType GetSceneToLoad()
+    {
+        switch (_currentLevel.MyPlanetType)
+        {
+            case GameManager.Planet.Mars:
+                switch (GameManager.Data.PlanetLastScenes.MarsLastScene)
+                {
+                    case 0:
+                        return SceneType.S_Level_1_Intro;
+                    case 1:
+                        return SceneType.S_Level_1_1_Work;
+                    case 2:
+                        return SceneType.S_Level_1_Outro;
+                    case 3:
+                        return SceneType.S_Quiz;
+                }
+                break;
+            case GameManager.Planet.Pluto:
+                switch (GameManager.Data.PlanetLastScenes.PlutoLastScene)
+                {
+                    case 0:
+                        return SceneType.S_Level_2_Intro;
+                    case 1:
+                        return SceneType.S_Level_2_0_Work;
+                    case 2:
+                        return SceneType.S_Level_2_1_Work;
+                    case 3:
+                        return SceneType.S_Level_2_2_Work;
+                    case 4:
+                        return SceneType.S_Level_2_Outro;
+                    case 5:
+                        return SceneType.S_Quiz;
+                }
+                break;
+            case GameManager.Planet.Venus:
+                switch (GameManager.Data.PlanetLastScenes.VenusLastScene)
+                {
+                    case 0:
+                        return SceneType.S_Level_3_Intro;
+                    case 1:
+                        return SceneType.S_Level_3_0_Work;
+                    case 2:
+                        return SceneType.S_Level_3_1_Work;
+                    case 3:
+                        return SceneType.S_Level_3_2_Work;
+                    case 4:
+                        return SceneType.S_Level_3_3_Work;
+                    case 5:
+                        return SceneType.S_Level_3_4_Work;
+                    case 6:
+                        return SceneType.S_Level_3_5_Work;
+                    case 7:
+                        return SceneType.S_Level_3_Outro;
+                    case 8:
+                        return SceneType.S_Quiz;
+                }
+                break;
+            case GameManager.Planet.Saturn:
+                switch (GameManager.Data.PlanetLastScenes.SaturnLastScene)
+                {
+                    case 0:
+                        return SceneType.S_Level_4_Intro;
+                    case 1:
+                        return SceneType.S_Level_4_0_Work;
+                    case 2:
+                        return SceneType.S_Level_4_1_Work;
+                    case 3:
+                        return SceneType.S_Level_4_2_Work;
+                    case 4:
+                        return SceneType.S_Level_4_3_Work;
+                    case 5:
+                        return SceneType.S_Level_4_4_Work;
+                    case 6:
+                        return SceneType.S_Level_4_5_Work;
+                    case 7:
+                        return SceneType.S_Level_4_Outro;
+                    case 8:
+                        return SceneType.S_Quiz;
+                }
+                break;
+            case GameManager.Planet.Mercury:
+                switch (GameManager.Data.PlanetLastScenes.MercuryLastScene)
+                {
+                    case 0:
+                        return SceneType.S_Level_5_Intro;
+                    case 1:
+                        return SceneType.S_Level_5_0_Work;
+                    case 2:
+                        return SceneType.S_Level_5_1_Work;
+                    case 3:
+                        return SceneType.S_Level_5_2_Work;
+                    case 4:
+                        return SceneType.S_Level_5_3_Work;
+                    case 5:
+                        return SceneType.S_Level_5_Outro;
+                    case 6:
+                        return SceneType.S_Quiz;
+                }
+                break;
+            case GameManager.Planet.None:
+                return SceneType.None;
+        }
+        return SceneType.None;
     }
 }
 

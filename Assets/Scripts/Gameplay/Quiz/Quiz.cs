@@ -219,4 +219,34 @@ public class Quiz : MonoBehaviour
     {
         ServiceLocator.Instance.GetService<AudioController>().PlayAudio(_endQuizSound);
     }
+
+    public void ResetPlanetLastData()
+    {
+        GameManager.Planet currentPlanet = (GameManager.Planet)GameManager.Data.LastPlanet;
+        switch (currentPlanet)
+        {
+            case GameManager.Planet.Mars:
+                GameManager.Data.PlanetLastScores.MarsLastScore = 0;
+                GameManager.Data.PlanetLastScenes.MarsLastScene = 0;
+                break;
+            case GameManager.Planet.Pluto:
+                GameManager.Data.PlanetLastScores.PlutoLastScore = 0;
+                GameManager.Data.PlanetLastScenes.PlutoLastScene = 0;
+                break;
+            case GameManager.Planet.Venus:
+                GameManager.Data.PlanetLastScores.VenusLastScore = 0;
+                GameManager.Data.PlanetLastScenes.VenusLastScene = 0;
+                break;
+            case GameManager.Planet.Saturn:
+                GameManager.Data.PlanetLastScores.SaturnLastScore = 0;
+                GameManager.Data.PlanetLastScenes.SaturnLastScene = 0;
+                break;
+            case GameManager.Planet.Mercury:
+                GameManager.Data.PlanetLastScores.MercuryLastScore = 0;
+                GameManager.Data.PlanetLastScenes.MercuryLastScene = 0;
+                break;
+            case GameManager.Planet.None:
+                break;
+        }
+    }
 }

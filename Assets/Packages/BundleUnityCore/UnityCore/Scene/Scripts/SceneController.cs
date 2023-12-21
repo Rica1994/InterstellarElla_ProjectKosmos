@@ -158,8 +158,10 @@ namespace UnityCore
                     string relativePath = GetRelativePath(currentSceneName, m_TargetScene);
 
                     string data = $"{UnityEngine.Networking.UnityWebRequest.EscapeURL(GameManager.Data.ToString())}";
-
-                    Application.ExternalEval($"window.location.href = '{relativePath + "/index.html" + "?data=" + data}';");
+                        
+                    Debug.Log("CurrentSceneName: " + CurrentSceneName);
+                    Application.ExternalEval($"window.location.href = '{"/" + m_TargetScene + ".html" + "?data=" + data}';");
+                    // OLD Application.ExternalEval($"window.location.href = '{relativePath + "/index.html" + "?data=" + data}';");
                     yield break;
                 }
 #endif
