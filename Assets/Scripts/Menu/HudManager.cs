@@ -93,25 +93,29 @@ public class HudManager : Service
 
         ServiceLocator.Instance.GetService<PickUpManager>().PickUpPickedUpEvent += OnPickupPickedUp;
 
-        _pickupsCollectedText.text = GameManager.Data.CurrentScore.ToString();
         _pauseScreenButton.gameObject.SetActive(true);
 
         switch (currentPlanet)
         {
             case GameManager.Planet.Mars:
                 _pickupsNeededText.text = GameManager.MARS_DATA_NEEDED.ToString();
+                _pickupsCollectedText.text = GameManager.Data.PlanetLastScores.MarsLastScore.ToString();
                 break;
             case GameManager.Planet.Pluto:
                 _pickupsNeededText.text = GameManager.PLUTO_DATA_NEEDED.ToString();
+                _pickupsCollectedText.text = GameManager.Data.PlanetLastScores.PlutoLastScore.ToString();
                 break;
             case GameManager.Planet.Venus:
                 _pickupsNeededText.text = GameManager.VENUS_DATA_NEEDED.ToString();
+                _pickupsCollectedText.text = GameManager.Data.PlanetLastScores.VenusLastScore.ToString();
                 break;
             case GameManager.Planet.Saturn:
                 _pickupsNeededText.text = GameManager.SATURN_DATA_NEEDED.ToString();
+                _pickupsCollectedText.text = GameManager.Data.PlanetLastScores.SaturnLastScore.ToString();
                 break;
             case GameManager.Planet.Mercury:
                 _pickupsNeededText.text = GameManager.MERCURY_DATA_NEEDED.ToString();
+                _pickupsCollectedText.text = GameManager.Data.PlanetLastScores.MercuryLastScore.ToString();
                 break;
             case GameManager.Planet.None:
                 _pauseScreenButton.gameObject.SetActive(false);
@@ -128,7 +132,7 @@ public class HudManager : Service
 
         _pickupsCollectedText.text = pickUpsPickedUp.ToString();
         _pickupsCollectedText.transform.localScale = Vector3.one;
-        
+
         _scoreTextSequence = DOTween.Sequence();
 
         _scoreTextSequence.Append(_pickupsCollectedText.transform.DOScale(2.5f, 0.1f))

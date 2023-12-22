@@ -195,31 +195,6 @@ public class GameManager : Service
         _isMobile = _simulateMobile;
 #if !UNITY_EDITOR && UNITY_WEBGL
         _isMobile = IsMobile();
-
-        string url = Application.absoluteURL;
-        if (url.IndexOf("?data=") != -1)
-        {
-            ParseData(url);
-        }
-        else
-        {
-            Debug.Log("?data= not found in URL");
-        }
-
-        // if we're coming from the startup scene, we will have data namely the quality rank. 
-        // so when coming in the mainmenu, we won't check if we have save data. 
-        // but we need to check though. 
-        if ((Planet)Data.LastPlanet == Planet.None)
-        {
-            if (PlayerPrefs.HasKey("SaveData"))
-            {
-                Debug.Log("Found data: " + PlayerPrefs.GetString("SaveData"));
-
-                // adding this string below so it gets the same format as an url
-                string newUrl = "?data=" + PlayerPrefs.GetString("SaveData");
-                ParseData(newUrl);
-            }
-        }
 #endif
     }
 
@@ -228,22 +203,36 @@ public class GameManager : Service
         var hud = ServiceLocator.Instance.GetService<HudManager>();
         var pickupManager = ServiceLocator.Instance.GetService<PickUpManager>();
         var currentPlanet = GetCurrentPlanet();
+        var lastPlanetScore = Data.PlanetLastScores.MarsLastScore;
 
         switch (currentPlanet)
         {
             case Planet.Mars:
+                lastPlanetScore = Data.PlanetLastScores.MarsLastScore;
+                break;
             case Planet.Pluto:
+                lastPlanetScore = Data.PlanetLastScores.PlutoLastScore;
+                break;
             case Planet.Venus:
+                lastPlanetScore = Data.PlanetLastScores.VenusLastScore;
+                break;
             case Planet.Saturn:
+                lastPlanetScore = Data.PlanetLastScores.SaturnLastScore;
+                break;
             case Planet.Mercury:
-                hud.EnableHUD(true);
-                hud.Initialize(currentPlanet);
-                pickupManager.PickUpsPickedUp = Data.CurrentScore;
+                lastPlanetScore = Data.PlanetLastScores.MercuryLastScore;
                 break;
             case Planet.None:
                 Data.CurrentScore = 0;
                 hud.EnableHUD(false);
                 break;
+        }
+
+        if (currentPlanet != Planet.None)
+        {
+            hud.EnableHUD(true);
+            hud.Initialize(currentPlanet);
+            pickupManager.PickUpsPickedUp = lastPlanetScore;
         }
     }
 
@@ -257,54 +246,24 @@ public class GameManager : Service
 #if UNITY_EDITOR
         Data = new SaveData();
         Data.QualityRank = QualitySettingsManager.GetQualityRankFromSettings();
-        //Data.PlanetCompletionValues.MarsCompletion = 100;
-        //Data.PlanetCompletionValues.VenusCompletion = 100;
-        //Data.PlanetCompletionValues.PlutoCompletion = 100;
-        //Data.PlanetCompletionValues.SaturnCompletion = 100;
-        //Data.LastPlanet = 2;
-        //ParseData(Data.ToString());
-
 
 #elif !UNITY_EDITOR && UNITY_WEBGL
 
-        string url = Application.absoluteURL;
-        if (url.IndexOf("?data=") != -1)
+        if (PlayerPrefs.HasKey("SaveData"))
         {
-            ParseData(url);
-        }
-        else
-        {
-            Debug.Log("?data= not found in URL");
-            if (PlayerPrefs.HasKey("SaveData"))
-            {
-                Debug.Log("Found data: " + PlayerPrefs.GetString("SaveData"));
+            Debug.Log("Found data: " + PlayerPrefs.GetString("SaveData"));
 
-                // adding this string below so it gets the same format as an url
-                url = "?data=" + PlayerPrefs.GetString("SaveData");
-                ParseData(url);
-            }
+            // adding this string below so it gets the same format as an saveDataString
+            var saveDataString = PlayerPrefs.GetString("SaveData");
+            ParseData(saveDataString);
         }
+
         _targetBuildType = Data.BuildType;
 
-        // if we're coming from the startup scene, we will have data namely the quality rank. 
-        // so when coming in the mainmenu, we won't check if we have save data. 
-        // but we need to check though. 
-        if ((Planet)Data.LastPlanet == Planet.None)
-        {
-            if (PlayerPrefs.HasKey("SaveData"))
-            {
-                Debug.Log("Found data: " + PlayerPrefs.GetString("SaveData"));
 
-
-                // adding this string below so it gets the same format as an url
-                string newUrl = "?data=" + PlayerPrefs.GetString("SaveData");
-                ParseData(newUrl);
-            }
-        }
-        //
-#endif
         // Check if we are in a level or quiz
         string sceneName = SceneManager.GetActiveScene().name;
+
         if (sceneName.Contains("Level") || sceneName.Contains("Quiz"))
         {
             // Get the current planet
@@ -319,31 +278,26 @@ public class GameManager : Service
             // Get the current scene index
             int currentSceneIndex = ParsePlanetSceneIndex(sceneName, currentPlanet);
 
-            // Overwrite planet last scene index and last score
+            // Overwrite planet last scene index
             switch (currentPlanet)
             {
                 case Planet.Mars:
                     Data.PlanetLastScenes.MarsLastScene = currentSceneIndex;
-                    Data.PlanetLastScores.MarsLastScore = Data.CurrentScore;
                     break;
                 case Planet.Pluto:
                     Data.PlanetLastScenes.PlutoLastScene = currentSceneIndex;
-                    Data.PlanetLastScores.PlutoLastScore= Data.CurrentScore;
                     break;
                 case Planet.Venus:
                     Data.PlanetLastScenes.VenusLastScene = currentSceneIndex;
-                    Data.PlanetLastScores.VenusLastScore = Data.CurrentScore;
                     break;
                 case Planet.Saturn:
                     Data.PlanetLastScenes.SaturnLastScene = currentSceneIndex;
-                    Data.PlanetLastScores.SaturnLastScore = Data.CurrentScore;
                     break;
                 case Planet.Mercury:
                     Data.PlanetLastScenes.MercuryLastScene = currentSceneIndex;
-                    Data.PlanetLastScores.MercuryLastScore = Data.CurrentScore;
                     break;
                 default:
-                Debug.LogError("Currently not in a planet");
+                    Debug.LogError("Currently not in a planet");
                     break;
             }
 
@@ -355,12 +309,24 @@ public class GameManager : Service
         {
             Debug.LogError("Currently not in a planet");
         }
+#endif
+
     }
 
     private void Start()
     {
         Initialize();
         SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    private void OnSceneUnloaded(Scene arg0)
+    {
+        Debug.Log($"{arg0.name} scene got unloaded");
+
+        // Save everytime we leave the scene.
+        PlayerPrefs.SetString("SaveData", Data.ToString());
+        PlayerPrefs.Save();
     }
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
@@ -377,28 +343,21 @@ public class GameManager : Service
     {
         string planetCompletionsCompiled = url;
 
-        // Step 2: Unescape the URL
-#if UNITY_WEBGL && !UNITY_EDITOR
-        // Step 1: Parse the URL for the data parameter
-        int dataIndex = url.IndexOf("?data=") + 6; // 6 is the length of "?data="
-        string encodedData = url.Substring(dataIndex);
-        planetCompletionsCompiled = UnityEngine.Networking.UnityWebRequest.UnEscapeURL(encodedData);
-#endif
-        // Step 3: Extract each planet's completion
+        // Step 1: Extract each planet's completion
         int mars = int.Parse(planetCompletionsCompiled.Substring(0, 3));
         int venus = int.Parse(planetCompletionsCompiled.Substring(3, 3));
         int saturn = int.Parse(planetCompletionsCompiled.Substring(6, 3));
         int pluto = int.Parse(planetCompletionsCompiled.Substring(9, 3));
         int mercury = int.Parse(planetCompletionsCompiled.Substring(12, 3));
 
-        // Step 4: Extract current score
+        // Step 2: Extract current score
         var currentScore = 0;
         if (GetCurrentPlanet() != Planet.None)
         {
             currentScore = int.Parse(planetCompletionsCompiled.Substring(15, 3));
         }
 
-        // Step 5: Extract current level
+        // Step 3: Extract current level
         var lastPlanet = Planet.None;
 
         int planetValue;
@@ -410,7 +369,7 @@ public class GameManager : Service
             }
         }
 
-        // Step 6: Extract quality rank
+        // Step 4: Extract quality rank
         var qualityLevel = QualitySettingsManager.QualityRank.Low;
         int qualityValue = 0;
         if (int.TryParse(planetCompletionsCompiled.Substring(19, 1), out qualityValue))
@@ -421,7 +380,7 @@ public class GameManager : Service
             }
         }
 
-        // Step 7: Extract build type
+        // Step 5: Extract build type
         var buildType = BuildType.Debug;
         int buildTypeValue = 0;
         if (int.TryParse(planetCompletionsCompiled.Substring(20, 1), out buildTypeValue))
@@ -432,14 +391,14 @@ public class GameManager : Service
             }
         }
 
-        // Step 8: Extract each planet's last scene
+        // Step 6: Extract each planet's last scene
         int marsLastScene = int.Parse(planetCompletionsCompiled.Substring(21, 1));
         int plutoLastScene = int.Parse(planetCompletionsCompiled.Substring(22, 1));
         int venusLastScene = int.Parse(planetCompletionsCompiled.Substring(23, 1));
         int saturnLastScene = int.Parse(planetCompletionsCompiled.Substring(24, 1));
         int mercuryLastScene = int.Parse(planetCompletionsCompiled.Substring(25, 1));
 
-        // Step 9: Assign planet completion values to the struct
+        // Step 7: Assign planet completion values to the struct
         PlanetCompletionValues values = new PlanetCompletionValues
         {
             MarsCompletion = mars,
@@ -450,7 +409,7 @@ public class GameManager : Service
         };
 
 
-        // Step 10: Assign planet last scenes to the struct
+        // Step 8: Assign planet last scenes to the struct
         PlanetLastScenes lastScenes = new PlanetLastScenes
         {
             MarsLastScene = marsLastScene,
@@ -460,14 +419,14 @@ public class GameManager : Service
             MercuryLastScene = mercuryLastScene
         };
 
-        // Step 11: Extract each planet's last scores
+        // Step 9: Extract each planet's last scores
         int marsLastScore = int.Parse(planetCompletionsCompiled.Substring(26, 3));
         int plutoLastScore = int.Parse(planetCompletionsCompiled.Substring(29, 3));
         int venusLastScore = int.Parse(planetCompletionsCompiled.Substring(32, 3));
         int saturnLastScore = int.Parse(planetCompletionsCompiled.Substring(35, 3));
         int mercuryLastScore = int.Parse(planetCompletionsCompiled.Substring(38, 3));
 
-        // Step 12: Assign planet last scenes to the struct
+        // Step 10: Assign planet last scenes to the struct
         PlanetLastScores lastScores = new PlanetLastScores
         {
             MarsLastScore = marsLastScore,
@@ -478,7 +437,7 @@ public class GameManager : Service
         };
 
 
-        // Parse to the data variable
+        // Step 11: Parse to the data variable
         var data = new SaveData();
         data.LastPlanet = (int)lastPlanet;
         data.CurrentScore += currentScore;
@@ -487,7 +446,6 @@ public class GameManager : Service
         data.BuildType = buildType;
         data.PlanetLastScenes = lastScenes;
         data.PlanetLastScores = lastScores;
-        //   data.IsShittyDevice = (isShittyDevice == 1) ? true : false;
 
         Data = data;
         Debug.Log("Parsed Data: " + Data.ToString());
@@ -499,35 +457,58 @@ public class GameManager : Service
         var pickUpsCollected = pickUpManager.PickUpsPickedUp;
         Debug.Log($"You collected {pickUpsCollected} / {pickUpManager.PickUps.Count} this level.");
 
-        // Add the collected pickups of the last level, to the current score.
-        Data.CurrentScore = pickUpsCollected;
+        // converting the current score to a percentage number (between 0 and 100)
+        Data.CurrentScore = ConvertPlanetScoreToPercentage(pickUpsCollected);
+        var currentPlanet = GetCurrentPlanet();
+
+        // Updating the last score of the current planet played
+        switch (currentPlanet)
+        {
+            case Planet.Mars:
+                Data.PlanetLastScores.MarsLastScore = Data.CurrentScore;
+                break;
+            case Planet.Pluto:
+                Data.PlanetLastScores.PlutoLastScore = Data.CurrentScore;
+                break;
+            case Planet.Venus:
+                Data.PlanetLastScores.VenusLastScore = Data.CurrentScore;
+                break;
+            case Planet.Saturn:
+                Data.PlanetLastScores.SaturnLastScore = Data.CurrentScore;
+                break;
+            case Planet.Mercury:
+                Data.PlanetLastScores.MercuryLastScore = Data.CurrentScore;
+                break;
+        }
+
 
         if (isLastLevel)
         {
             Debug.Log("Game Ended");
 
-            // converting the current score to a percentage number (between 0 and 100)
-            Data.CurrentScore = ConvertPlanetScoreToPercentage(Data.CurrentScore);
-
-            var currentPlanet = GetCurrentPlanet();
             Data.LastPlanet = (int)currentPlanet;
             Debug.Log("End Game called, with current planet: " + currentPlanet.ToString() + " and current score: " + Data.CurrentScore);
             switch (currentPlanet)
             {
                 case Planet.Mars:
                     if (Data.CurrentScore > Data.PlanetCompletionValues.MarsCompletion) Data.PlanetCompletionValues.MarsCompletion = Data.CurrentScore;
+                    Data.PlanetLastScores.MarsLastScore = 0;
                     break;
                 case Planet.Venus:
                     if (Data.CurrentScore > Data.PlanetCompletionValues.VenusCompletion) Data.PlanetCompletionValues.VenusCompletion = Data.CurrentScore;
+                    Data.PlanetLastScores.VenusLastScore = 0;
                     break;
                 case Planet.Saturn:
                     if (Data.CurrentScore > Data.PlanetCompletionValues.SaturnCompletion) Data.PlanetCompletionValues.SaturnCompletion = Data.CurrentScore;
+                    Data.PlanetLastScores.SaturnLastScore = 0;
                     break;
                 case Planet.Pluto:
                     if (Data.CurrentScore > Data.PlanetCompletionValues.PlutoCompletion) Data.PlanetCompletionValues.PlutoCompletion = Data.CurrentScore;
+                    Data.PlanetLastScores.PlutoLastScore = 0;
                     break;
                 case Planet.Mercury:
                     if (Data.CurrentScore > Data.PlanetCompletionValues.MercuryCompletion) Data.PlanetCompletionValues.MercuryCompletion = Data.CurrentScore;
+                    Data.PlanetLastScores.MercuryLastScore = 0;
                     break;
             }
 
@@ -626,9 +607,9 @@ public class GameManager : Service
         switch (planet)
         {
             case Planet.Mars:
-                if(sceneName.Contains("_1_1_Work")) return 1;
-                else if(sceneName.Contains("Outro")) return 2;
-                else if(sceneName.Contains("Quiz")) return 3;
+                if (sceneName.Contains("_1_1_Work")) return 1;
+                else if (sceneName.Contains("Outro")) return 2;
+                else if (sceneName.Contains("Quiz")) return 3;
                 break;
             case Planet.Pluto:
                 if (sceneName.Contains("_2_0_Work")) return 1;
@@ -653,8 +634,8 @@ public class GameManager : Service
                 else if (sceneName.Contains("_4_2_Work")) return 3;
                 else if (sceneName.Contains("_4_3_Work")) return 4;
                 else if (sceneName.Contains("_4_4_Work")) return 5;
-                else if(sceneName.Contains("_4_5_Work")) return 6;
-                else if(sceneName.Contains("Outro")) return 7;
+                else if (sceneName.Contains("_4_5_Work")) return 6;
+                else if (sceneName.Contains("Outro")) return 7;
                 else if (sceneName.Contains("Quiz")) return 8;
                 break;
             case Planet.Mercury:
@@ -666,7 +647,7 @@ public class GameManager : Service
                 else if (sceneName.Contains("Quiz")) return 6;
                 break;
         }
-       
+
         Debug.LogError("Could not parse follwing scene: " + sceneName);
         return -1;
     }
