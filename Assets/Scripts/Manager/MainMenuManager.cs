@@ -196,6 +196,9 @@ public class MainMenuManager : Service
                 break;
         }
 
+        GameManager.Data.LastPlanet = (int)GameManager.Planet.None;
+        PlayerPrefs.SetString("SaveData", GameManager.Data.ToString());
+        PlayerPrefs.Save();
     }
 
     private void Start()
