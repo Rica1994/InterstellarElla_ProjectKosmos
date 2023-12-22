@@ -230,9 +230,9 @@ public class GameManager : Service
 
         if (currentPlanet != Planet.None)
         {
+            pickupManager.PickUpsPickedUp = lastPlanetScore;
             hud.EnableHUD(true);
             hud.Initialize(currentPlanet);
-            pickupManager.PickUpsPickedUp = lastPlanetScore;
         }
     }
 
@@ -449,6 +449,13 @@ public class GameManager : Service
 
         Data = data;
         Debug.Log("Parsed Data: " + Data.ToString());
+        Debug.Log("LastPlanet" + lastPlanet.ToString());
+        Debug.Log("CurrentScore: " + currentScore);
+        Debug.Log("PlanetCompletionValues: " + values.ToString());
+        Debug.Log("QualityRank: " + qualityLevel.ToString());
+        Debug.Log("BuildType: " + buildType.ToString());
+        Debug.Log("PlanetLastScenes: " + lastScenes.ToString());
+        Debug.Log("PlanetLastScores: " + lastScores.ToString());
     }
 
     public void EndLevel(bool isLastLevel)
@@ -457,30 +464,32 @@ public class GameManager : Service
         var pickUpsCollected = pickUpManager.PickUpsPickedUp;
         Debug.Log($"You collected {pickUpsCollected} / {pickUpManager.PickUps.Count} this level.");
 
-        // converting the current score to a percentage number (between 0 and 100)
-        Data.CurrentScore = ConvertPlanetScoreToPercentage(pickUpsCollected);
+
         var currentPlanet = GetCurrentPlanet();
 
         // Updating the last score of the current planet played
         switch (currentPlanet)
         {
             case Planet.Mars:
-                Data.PlanetLastScores.MarsLastScore = Data.CurrentScore;
+                Data.PlanetLastScores.MarsLastScore = pickUpsCollected;
                 break;
             case Planet.Pluto:
-                Data.PlanetLastScores.PlutoLastScore = Data.CurrentScore;
+                Data.PlanetLastScores.PlutoLastScore = pickUpsCollected;
                 break;
             case Planet.Venus:
-                Data.PlanetLastScores.VenusLastScore = Data.CurrentScore;
+                Data.PlanetLastScores.VenusLastScore = pickUpsCollected;
                 break;
             case Planet.Saturn:
-                Data.PlanetLastScores.SaturnLastScore = Data.CurrentScore;
+                Data.PlanetLastScores.SaturnLastScore = pickUpsCollected;
                 break;
             case Planet.Mercury:
-                Data.PlanetLastScores.MercuryLastScore = Data.CurrentScore;
+                Data.PlanetLastScores.MercuryLastScore = pickUpsCollected;
                 break;
         }
 
+
+        // converting the current score to a percentage number (between 0 and 100)
+        Data.CurrentScore = ConvertPlanetScoreToPercentage(pickUpsCollected);
 
         if (isLastLevel)
         {
@@ -518,6 +527,8 @@ public class GameManager : Service
         // save new data
         PlayerPrefs.SetString("SaveData", Data.ToString());
         PlayerPrefs.Save();
+
+        Debug.Log("We saved our data" + Data.ToString());
     }
 
     public int ConvertPlanetScoreToPercentage(float score)

@@ -61,6 +61,9 @@ public class WebGLPerformanceBenchmark : MonoBehaviour
 
             GameManager.Data.QualityRank = qualityLevel;
 
+            PlayerPrefs.SetString("SaveData", GameManager.Data.ToString());
+            PlayerPrefs.Save();
+
             // Disable the benchmark script after measuring the performance
             enabled = false;
 

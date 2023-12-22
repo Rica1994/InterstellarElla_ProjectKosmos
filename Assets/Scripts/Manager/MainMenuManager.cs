@@ -141,6 +141,8 @@ public class MainMenuManager : Service
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
         var lastPlanet = (GameManager.Planet)GameManager.Data.LastPlanet;
+
+        // If we come from the startupscene
         if (lastPlanet == GameManager.Planet.None)
         {
             _introTextPlayableDirector.Play();
@@ -150,6 +152,7 @@ public class MainMenuManager : Service
             return;
         }
         else
+        // if we come from the quiz
         {
             _menuAnimator.ShowPlanets();
             StartCoroutine(EnableButtonsDelay(3));
@@ -171,6 +174,28 @@ public class MainMenuManager : Service
 
             ShowPlanetSheet(true);
         }));
+
+        // reset the lastplanetindex
+
+        switch (lastPlanet)
+        {
+            case GameManager.Planet.Mars:
+                GameManager.Data.PlanetLastScenes.MarsLastScene = 0;
+                break;
+            case GameManager.Planet.Pluto:
+                GameManager.Data.PlanetLastScenes.PlutoLastScene = 0;
+                break;
+            case GameManager.Planet.Venus:
+                GameManager.Data.PlanetLastScenes.VenusLastScene = 0;
+                break;
+            case GameManager.Planet.Saturn:
+                GameManager.Data.PlanetLastScenes.SaturnLastScene = 0;
+                break;
+            case GameManager.Planet.Mercury:
+                GameManager.Data.PlanetLastScenes.MercuryLastScene = 0;
+                break;
+        }
+
     }
 
     private void Start()
