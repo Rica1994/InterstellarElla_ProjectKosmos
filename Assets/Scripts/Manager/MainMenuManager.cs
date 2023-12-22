@@ -175,24 +175,40 @@ public class MainMenuManager : Service
             ShowPlanetSheet(true);
         }));
 
-        // reset the lastplanetindex
 
+
+        // reset the lastplanetindex if we come from the last scene of the last planet.
         switch (lastPlanet)
         {
             case GameManager.Planet.Mars:
-                GameManager.Data.PlanetLastScenes.MarsLastScene = 0;
+                if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.MarsLastScene)
+                {
+                    GameManager.Data.PlanetLastScenes.MarsLastScene = 0;
+                }
                 break;
             case GameManager.Planet.Pluto:
-                GameManager.Data.PlanetLastScenes.PlutoLastScene = 0;
+                if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.PlutoLastScene)
+                {
+                    GameManager.Data.PlanetLastScenes.PlutoLastScene = 0;
+                }
                 break;
             case GameManager.Planet.Venus:
-                GameManager.Data.PlanetLastScenes.VenusLastScene = 0;
+                if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.VenusLastScene)
+                {
+                    GameManager.Data.PlanetLastScenes.VenusLastScene = 0;
+                }
                 break;
             case GameManager.Planet.Saturn:
-                GameManager.Data.PlanetLastScenes.SaturnLastScene = 0;
+                if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.SaturnLastScene)
+                {
+                    GameManager.Data.PlanetLastScenes.SaturnLastScene = 0;
+                }
                 break;
             case GameManager.Planet.Mercury:
-                GameManager.Data.PlanetLastScenes.MercuryLastScene = 0;
+                if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.MercuryLastScene)
+                {
+                    GameManager.Data.PlanetLastScenes.MercuryLastScene = 0;
+                }
                 break;
         }
 

@@ -6,6 +6,7 @@ using UnityCore.Audio;
 using UnityCore.Scene;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static GameManager;
 
 public class GameManager : Service
 {
@@ -283,18 +284,23 @@ public class GameManager : Service
             {
                 case Planet.Mars:
                     Data.PlanetLastScenes.MarsLastScene = currentSceneIndex;
+                    Data.LastPlanet = (int)Planet.Mars;
                     break;
                 case Planet.Pluto:
                     Data.PlanetLastScenes.PlutoLastScene = currentSceneIndex;
+                    Data.LastPlanet = (int)Planet.Pluto;
                     break;
                 case Planet.Venus:
                     Data.PlanetLastScenes.VenusLastScene = currentSceneIndex;
+                    Data.LastPlanet = (int)Planet.Venus;
                     break;
                 case Planet.Saturn:
                     Data.PlanetLastScenes.SaturnLastScene = currentSceneIndex;
+                    Data.LastPlanet = (int)Planet.Saturn;
                     break;
                 case Planet.Mercury:
                     Data.PlanetLastScenes.MercuryLastScene = currentSceneIndex;
+                    Data.LastPlanet = (int)Planet.Mercury;
                     break;
                 default:
                     Debug.LogError("Currently not in a planet");
@@ -660,6 +666,25 @@ public class GameManager : Service
         }
 
         Debug.LogError("Could not parse follwing scene: " + sceneName);
+        return -1;
+    }
+
+    public static int GetLastPlanetIndex(Planet planet)
+    {
+        switch (planet)
+        {
+            case Planet.Mars:
+                return 3;
+            case Planet.Pluto:
+                return 5;
+            case Planet.Venus:
+                return 8;
+            case Planet.Saturn:
+                return 8;
+            case Planet.Mercury:
+                return 6;
+        }
+
         return -1;
     }
 }
