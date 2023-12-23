@@ -140,6 +140,15 @@ public class MainMenuManager : Service
     // Opens the fact sheet when the scene is loaded and it comes from a quiz
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
+        // Unlock mercury if necessary
+        if (_mercuryLocked == false)
+        {
+            _mercuryMesh.material = _mercuryMaterial;
+            _lockedSign.SetActive(false);
+            _mercuryText.SetActive(true);
+        }
+
+
         var lastPlanet = (GameManager.Planet)GameManager.Data.LastPlanet;
 
         // If we come from the startupscene
@@ -156,65 +165,58 @@ public class MainMenuManager : Service
         {
             _menuAnimator.ShowPlanets();
             StartCoroutine(EnableButtonsDelay(3));
-            
-            if (_mercuryLocked == false)
+
+            StartCoroutine(Helpers.DoAfterFrame(() =>
             {
-                _mercuryMesh.material = _mercuryMaterial;
-                _lockedSign.SetActive(false);
-                _mercuryText.SetActive(true);
-            }
-        }
+                while (_currentLevel.MyPlanetType != lastPlanet)
+                {
+                    ForwardLevel();
+                }
 
-        StartCoroutine(Helpers.DoAfterFrame(() =>
-        {
-            while (_currentLevel.MyPlanetType != lastPlanet)
+                ShowPlanetSheet(true);
+            }));
+
+
+
+            // reset the lastplanetindex if we come from the last scene of the last planet.
+            switch (lastPlanet)
             {
-                ForwardLevel();
+                case GameManager.Planet.Mars:
+                    if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.MarsLastScene)
+                    {
+                        GameManager.Data.PlanetLastScenes.MarsLastScene = 0;
+                    }
+                    break;
+                case GameManager.Planet.Pluto:
+                    if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.PlutoLastScene)
+                    {
+                        GameManager.Data.PlanetLastScenes.PlutoLastScene = 0;
+                    }
+                    break;
+                case GameManager.Planet.Venus:
+                    if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.VenusLastScene)
+                    {
+                        GameManager.Data.PlanetLastScenes.VenusLastScene = 0;
+                    }
+                    break;
+                case GameManager.Planet.Saturn:
+                    if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.SaturnLastScene)
+                    {
+                        GameManager.Data.PlanetLastScenes.SaturnLastScene = 0;
+                    }
+                    break;
+                case GameManager.Planet.Mercury:
+                    if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.MercuryLastScene)
+                    {
+                        GameManager.Data.PlanetLastScenes.MercuryLastScene = 0;
+                    }
+                    break;
             }
 
-            ShowPlanetSheet(true);
-        }));
-
-
-
-        // reset the lastplanetindex if we come from the last scene of the last planet.
-        switch (lastPlanet)
-        {
-            case GameManager.Planet.Mars:
-                if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.MarsLastScene)
-                {
-                    GameManager.Data.PlanetLastScenes.MarsLastScene = 0;
-                }
-                break;
-            case GameManager.Planet.Pluto:
-                if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.PlutoLastScene)
-                {
-                    GameManager.Data.PlanetLastScenes.PlutoLastScene = 0;
-                }
-                break;
-            case GameManager.Planet.Venus:
-                if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.VenusLastScene)
-                {
-                    GameManager.Data.PlanetLastScenes.VenusLastScene = 0;
-                }
-                break;
-            case GameManager.Planet.Saturn:
-                if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.SaturnLastScene)
-                {
-                    GameManager.Data.PlanetLastScenes.SaturnLastScene = 0;
-                }
-                break;
-            case GameManager.Planet.Mercury:
-                if (GameManager.GetLastPlanetIndex(lastPlanet) == GameManager.Data.PlanetLastScenes.MercuryLastScene)
-                {
-                    GameManager.Data.PlanetLastScenes.MercuryLastScene = 0;
-                }
-                break;
+            GameManager.Data.LastPlanet = (int)GameManager.Planet.None;
+            PlayerPrefs.SetString("SaveData", GameManager.Data.ToString());
+            PlayerPrefs.Save();
         }
-
-        GameManager.Data.LastPlanet = (int)GameManager.Planet.None;
-        PlayerPrefs.SetString("SaveData", GameManager.Data.ToString());
-        PlayerPrefs.Save();
     }
 
     private void Start()
