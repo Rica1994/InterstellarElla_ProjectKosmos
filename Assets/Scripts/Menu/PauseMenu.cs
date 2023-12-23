@@ -43,6 +43,8 @@ public class PauseMenu : MonoBehaviour
             _menuButton.enabled = false;
             _settingsButton.enabled = false;
             _continuePlayingButton.enabled = false;
+
+            if (Mathf.Approximately(0.0f, popUpTime)) gameObject.SetActive(false);
         }
 
         Helpers.FadeImage(new GameObject[] { this.gameObject }, targetAlpha, popUpTime, true);

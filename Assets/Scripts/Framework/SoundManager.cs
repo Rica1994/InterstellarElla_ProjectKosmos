@@ -332,6 +332,7 @@ public class SoundManager : Service
         {
             for (int i = 0; i < _inSceneAudioSources.Length; i++)
             {
+                if (_inSceneAudioSources[i] == null) continue;
                 if (_inSceneAudioSources[i].isPlaying) _inSceneAudioSources[i].Pause();
             }
         }
@@ -339,6 +340,7 @@ public class SoundManager : Service
         {
             for (int i = 0; i < _inSceneAudioSources.Length; i++)
             {
+                if (_inSceneAudioSources[i] == null) continue;
                 _inSceneAudioSources[i].UnPause();
             }
         }
